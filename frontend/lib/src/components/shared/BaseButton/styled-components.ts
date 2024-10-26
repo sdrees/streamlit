@@ -102,6 +102,7 @@ export const StyledBaseButton = styled.button<RequiredBaseButtonProps>(
       lineHeight: theme.lineHeights.base,
       color: "inherit",
       width: fluidWidth ? buttonWidth : "auto",
+      cursor: "pointer",
       userSelect: "none",
       "&:focus": {
         outline: "none",

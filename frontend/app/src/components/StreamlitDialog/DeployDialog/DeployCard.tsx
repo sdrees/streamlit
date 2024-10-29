@@ -82,7 +82,7 @@ function DeployCard(
         },
         Body: {
           style: {
-            padding: spacing.threeXL,
+            padding: spacing.twoXL,
             marginBottom: 0,
             marginTop: 0,
             marginLeft: 0,

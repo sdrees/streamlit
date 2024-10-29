@@ -28,6 +28,6 @@ describe("Countdown Component", () => {
     render(<Countdown countdown={10} />)
     const countdownElement = screen.getByText("10")
 
-    expect(countdownElement).toBeInTheDocument()
+    expect(countdownElement).toBeVisible()
   })
 })

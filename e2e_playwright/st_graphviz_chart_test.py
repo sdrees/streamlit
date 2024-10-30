@@ -23,7 +23,7 @@ def get_first_graph_svg(app: Page):
 
 
 def click_fullscreen(app: Page):
-    app.get_by_test_id("StyledFullScreenButton").nth(0).click()
+    app.get_by_role("button", name="Fullscreen").nth(0).click()
     # Wait for the animation to finish
     app.wait_for_timeout(1000)
 

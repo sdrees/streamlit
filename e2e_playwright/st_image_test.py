@@ -90,7 +90,7 @@ def test_st_image_use_container_width_parameter(
 
 def test_fullscreen_button_exists(app: Page):
     """Test that element has the fullscreen button."""
-    expect(app.get_by_test_id("StyledFullScreenButton").first).to_be_attached()
+    expect(app.get_by_role("button", name="Fullscreen").first).to_be_attached()
 
 
 def test_image_from_file(app: Page, assert_snapshot: ImageCompareFunction):

@@ -14,55 +14,22 @@
  * limitations under the License.
  */
 
-import React, { ComponentType, memo, ReactElement } from "react"
+import React, { ComponentType, ReactElement } from "react"
 
 import hoistNonReactStatics from "hoist-non-react-statics"
 
-import FullScreenWrapper from "./FullScreenWrapper"
+import ElementFullscreenWrapper from "@streamlit/lib/src/components/shared/ElementFullscreen/ElementFullscreenWrapper"
 
-export interface Props {
-  width: number
-  height?: number
-  disableFullscreenMode?: boolean
-}
-
-// Our wrapper takes the wrapped component's props, plus "width", "height?".
-// It will pass "isFullScreen" to the wrapped component automatically
-// (but the wrapped component is free to ignore that prop).
-type WrapperProps<P> = Omit<P & Props, "isFullScreen" | "collapse" | "expand">
-
-function withFullScreenWrapper<P>(
-  WrappedComponent: ComponentType<React.PropsWithChildren<P>>,
-  forceDisableFullScreenMode = false
-): ComponentType<React.PropsWithChildren<WrapperProps<P>>> {
-  const ComponentWithFullScreenWrapper = memo(function (
-    props: WrapperProps<P>
-  ): ReactElement {
-    const { width, height, disableFullscreenMode } = props
-
+function withFullScreenWrapper<P extends { width: number }>(
+  WrappedComponent: ComponentType<React.PropsWithChildren<P>>
+): ComponentType<React.PropsWithChildren<P>> {
+  const ComponentWithFullScreenWrapper = (props: P): ReactElement => {
     return (
-      <FullScreenWrapper
-        width={width}
-        height={height}
-        disableFullscreenMode={
-          forceDisableFullScreenMode || disableFullscreenMode
-        }
-      >
-        {({ width, height, expanded, expand, collapse }) => (
-          // `(props as P)` is required due to a TS bug:
-          // https://github.com/microsoft/TypeScript/issues/28938#issuecomment-450636046
-          <WrappedComponent
-            {...(props as P)}
-            width={width}
-            height={height}
-            isFullScreen={expanded}
-            expand={expand}
-            collapse={collapse}
-          />
-        )}
-      </FullScreenWrapper>
+      <ElementFullscreenWrapper width={props.width}>
+        <WrappedComponent {...(props as P)}></WrappedComponent>
+      </ElementFullscreenWrapper>
     )
-  })
+  }
   ComponentWithFullScreenWrapper.displayName = `withFullScreenWrapper(${
     WrappedComponent.displayName || WrappedComponent.name
   })`

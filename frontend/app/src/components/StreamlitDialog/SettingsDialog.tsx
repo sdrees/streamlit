@@ -34,7 +34,7 @@ import {
   ThemeConfig,
   UISelectbox,
 } from "@streamlit/lib"
-import { SegmentMetricsManager } from "@streamlit/app/src/SegmentMetricsManager"
+import { MetricsManager } from "@streamlit/app/src/MetricsManager"
 
 import {
   StyledButtonContainer,
@@ -56,7 +56,7 @@ export interface Props {
   developerMode: boolean
   openThemeCreator: () => void
   animateModal: boolean
-  metricsMgr: SegmentMetricsManager
+  metricsMgr: MetricsManager
 }
 
 const ThemeCreatorButton: FC<Pick<Props, "openThemeCreator">> = ({

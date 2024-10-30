@@ -24,7 +24,7 @@ import { logError } from "@streamlit/lib/src/util/log"
 import { render } from "@streamlit/lib/src/test_util"
 import { GraphVizChart as GraphVizChartProto } from "@streamlit/lib/src/proto"
 
-import { GraphVizChart, GraphVizChartProps } from "./GraphVizChart"
+import GraphVizChart, { GraphVizChartProps } from "./GraphVizChart"
 
 jest.mock("d3-graphviz", () => ({
   graphviz: jest.fn().mockReturnValue({
@@ -54,7 +54,7 @@ const getProps = (
     elementId: "1",
     ...elementProps,
   }),
-  isFullScreen: false,
+  width: 700,
 })
 
 describe("GraphVizChart Element", () => {
@@ -123,18 +123,6 @@ describe("GraphVizChart Element", () => {
 
     expect(screen.getByTestId("stGraphVizChart")).toHaveStyle(
       "height: auto; width: auto"
-    )
-  })
-
-  it("shoud render with height and width set to 100%", () => {
-    const props = {
-      ...getProps(),
-      isFullScreen: true,
-    }
-    render(<GraphVizChart {...props} />)
-
-    expect(screen.getByTestId("stGraphVizChart")).toHaveStyle(
-      "height: 100%; width: 100%"
     )
   })
 })

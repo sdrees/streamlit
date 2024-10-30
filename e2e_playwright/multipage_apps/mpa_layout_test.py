@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+
 from playwright.sync_api import Page, expect
 
 from e2e_playwright.conftest import (
@@ -22,6 +24,7 @@ page_order = {
     "default": 13,
     "wide": 14,
     "dynamic": 15,
+    "fragment": 16,
 }
 
 
@@ -72,4 +75,40 @@ def test_page_dynamic_layout(app: Page):
     wait_for_app_run(app)
     expect(app.get_by_test_id("stAppViewContainer")).to_have_attribute(
         "data-layout", "wide"
+    )
+
+
+def test_page_with_fragment_and_dynamic_layout(app: Page):
+    """Test that page with fragment and dynamic layout keeps last layout when switched back."""
+    get_page_link(app, "fragment").click()
+    wait_for_app_run(app)
+    expect(app.get_by_test_id("stAppViewContainer")).to_have_attribute(
+        "data-layout", "narrow"
+    )
+
+    app.get_by_text("wide button").click()
+    # wait for fragment to rerun
+    time.sleep(1)
+    expect(app.get_by_test_id("stAppViewContainer")).to_have_attribute(
+        "data-layout", "wide"
+    )
+
+    # visit another page
+    get_page_link(app, "default").click()
+    wait_for_app_run(app)
+    expect(app.get_by_test_id("stAppViewContainer")).to_have_attribute(
+        "data-layout", "narrow"
+    )
+    # wide layout should be preserved
+    get_page_link(app, "fragment").click()
+    wait_for_app_run(app)
+    expect(app.get_by_test_id("stAppViewContainer")).to_have_attribute(
+        "data-layout", "wide"
+    )
+
+    app.get_by_text("centered button").click()
+    # wait for fragment to rerun
+    time.sleep(1)
+    expect(app.get_by_test_id("stAppViewContainer")).to_have_attribute(
+        "data-layout", "narrow"
     )

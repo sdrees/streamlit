@@ -90,6 +90,7 @@ export const customRenderLibContext = (
     currentPageScriptHash: "",
     libConfig: {},
     fragmentIdsThisRun: [],
+    locale: "en-US",
   }
 
   return reactTestingLibraryRender(component, {

@@ -18,6 +18,7 @@ import React, {
   memo,
   ReactElement,
   useCallback,
+  useContext,
   useMemo,
   useState,
 } from "react"
@@ -43,6 +44,9 @@ import {
 } from "@streamlit/lib/src/components/widgets/BaseWidget"
 import TooltipIcon from "@streamlit/lib/src/components/shared/TooltipIcon"
 import { Placement } from "@streamlit/lib/src/components/shared/Tooltip"
+import { LibContext } from "@streamlit/lib/src/components/core/LibContext"
+
+import { useIntlLocale } from "./useIntlLocale"
 
 export interface Props {
   disabled: boolean
@@ -95,6 +99,9 @@ function DateInput({
   const [isEmpty, setIsEmpty] = useState(false)
 
   const { colors, fontSizes, lineHeights, spacing, sizes } = useTheme()
+
+  const { locale } = useContext(LibContext)
+  const loadedLocale = useIntlLocale(locale)
 
   const style = { width }
   const minDate = moment(element.min, DATE_FORMAT).toDate()
@@ -178,6 +185,7 @@ function DateInput({
         )}
       </WidgetLabel>
       <UIDatePicker
+        locale={loadedLocale}
         density={DENSITY.high}
         formatString={dateFormat}
         mask={element.isRange ? `${dateMask} – ${dateMask}` : dateMask}

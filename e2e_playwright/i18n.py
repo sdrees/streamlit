@@ -12,16 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import date
+
 import streamlit as st
 
-
-@st.fragment(run_every="0.25s")
-def rerun():
-    count = 0
-    for i in range(100):
-        count += i
-
-
-st.button("wide button", on_click=lambda: st.set_page_config(layout="wide"))
-st.button("centered button", on_click=lambda: st.set_page_config(layout="centered"))
-rerun()
+st.date_input(
+    "Single date",
+    date(1970, 1, 1),
+    min_value=date(1970, 1, 1),
+)

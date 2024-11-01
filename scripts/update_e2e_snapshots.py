@@ -24,6 +24,7 @@ import shutil
 import zipfile
 import argparse
 from typing import Any, Dict, List
+import time
 
 
 SNAPSHOT_UPDATE_FOLDER = "snapshot-updates"
@@ -68,12 +69,12 @@ def get_last_commit_sha() -> str:
     return result.stdout.strip()
 
 
-def get_workflow_run(
+def get_latest_workflow_run(
     owner: str, repo: str, workflow_file_name: str, commit_sha: str, token: str
 ) -> Dict[str, Any]:
-    """Get the latest completed workflow run for a given workflow file name and commit SHA."""
+    """Get the latest workflow run for a given workflow file name and commit SHA."""
     url = f"https://api.github.com/repos/{owner}/{repo}/actions/workflows/{workflow_file_name}/runs"
-    params = {"head_sha": commit_sha, "status": "completed"}
+    params = {"head_sha": commit_sha}
     headers = {
         "Accept": "application/vnd.github.v3+json",
         "Authorization": f"token {token}",
@@ -87,11 +88,34 @@ def get_workflow_run(
     runs = data.get("workflow_runs", [])
     if not runs:
         print(
-            f"No completed workflow runs found for {workflow_file_name} with head SHA {commit_sha}"
+            f"No workflow runs found for {workflow_file_name} with head SHA {commit_sha}"
         )
         sys.exit(1)
     # Assuming the latest one is the first in the list
     return runs[0]  # type: ignore
+
+
+def wait_for_workflow_completion(
+    owner: str, repo: str, workflow_file_name: str, commit_sha: str, token: str
+) -> Dict[str, Any]:
+    """Wait for the workflow to complete, checking every 30 seconds."""
+    while True:
+        workflow_run = get_latest_workflow_run(
+            owner, repo, workflow_file_name, commit_sha, token
+        )
+        status = workflow_run.get("status")
+        conclusion = workflow_run.get("conclusion")
+
+        if status == "completed":
+            if conclusion != "success":
+                print(f"The latest workflow run failed with status: {conclusion}")
+                sys.exit(1)
+            return workflow_run
+
+        print(
+            f"Workflow is still {status}. Waiting 30 seconds before checking again..."
+        )
+        time.sleep(30)
 
 
 def get_artifacts(
@@ -167,35 +191,48 @@ def copy_tree(src: str, dst: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Download GitHub Action Artifact")
-    parser.add_argument("--token", required=False, help="GitHub Personal Access Token")
+    parser.add_argument(
+        "--token",
+        required=False,
+        help="GitHub Personal Access Token (only basic read-only access is needed)",
+    )
     args = parser.parse_args()
     token = args.token
 
     if not token:
         print(
-            "GitHub token not provided. Attempting to retrieve it from the Git credential manager..."
+            "GitHub token not provided via argument. Attempting to retrieve it from the Git credential manager..."
         )
         token = get_token_from_credential_manager()
         if not token:
-            print(
-                "GitHub token is required. Please provide it via --token or configure your git credential manager."
-            )
-            sys.exit(1)
+            # Add interactive prompt for token
+            try:
+                token = input(
+                    "Please enter your GitHub Personal Access Token (only basic read-only access is needed): "
+                ).strip()
+            except (KeyboardInterrupt, EOFError):
+                token = None
+
+            if not token:
+                print(
+                    "GitHub token is required. Please provide it via --token or configure your git credential manager."
+                )
+                sys.exit(1)
         else:
             print("Token retrieved from git credential manager.")
 
-    print("Updating e2e snapshots...")
+    print("Retrieving latest workflow run...")
 
     try:
         commit_sha = get_last_commit_sha()
         print(f"Current head SHA: {commit_sha}")
 
-        # Get the latest completed workflow run for playwright.yml
-        workflow_run = get_workflow_run(
+        # Wait for the workflow to complete
+        workflow_run = wait_for_workflow_completion(
             GITHUB_OWNER, GITHUB_REPO, GITHUB_WORKFLOW_FILE_NAME, commit_sha, token
         )
         run_id = workflow_run["id"]
-        print(f"Found workflow run ID: {run_id}")
+        print(f"Found completed workflow run ID: {run_id}")
 
         # Get artifacts for this run
         artifacts = get_artifacts(GITHUB_OWNER, GITHUB_REPO, run_id, token)

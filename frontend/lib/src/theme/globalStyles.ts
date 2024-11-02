@@ -20,11 +20,6 @@ import { darken, transparentize } from "color2k"
 import { EmotionTheme } from "@streamlit/lib/src/theme"
 
 export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
-  a,
-  a:visited {
-    color: ${theme.colors.primary};
-  }
-
   // Override the base font-size value here.
   // This overrides the value set in reboot.scss.
   html {
@@ -39,12 +34,6 @@ export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
       print-color-adjust: exact;
       -webkit-print-color-adjust: exact;
     }
-  }
-
-  a:hover,
-  a:active {
-    color: ${theme.colors.primary};
-    text-decoration: underline;
   }
 
   iframe {
@@ -310,19 +299,6 @@ export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
     font-family: ${theme.genericFonts.codeFont};
   }
 
-  samp {
-    font-family: ${theme.genericFonts.codeFont};
-  }
-
-  // Blockquote
-  samp,
-  blockquote {
-    margin: 1em 0 1em -1px;
-    padding: 0 0 0 1.2em;
-    font-size: 1rem;
-    border-left: ${theme.sizes.borderWidth} solid ${theme.colors.lightGray};
-  }
-
   kbd {
     padding: 0.2rem 0.4rem;
     color: ${theme.colors.codeTextColor};
@@ -335,14 +311,6 @@ export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
       font-weight: ${theme.fontWeights.bold};
       font-size: 1em;
     }
-  }
-
-  // Figures
-  //
-  // Apply a consistent margin strategy (matches our type styles).
-
-  figure {
-    margin: 0 0 1rem;
   }
 
   // Images and content
@@ -580,12 +548,6 @@ export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
     display: inline-block;
   }
 
-  // Remove border from iframe
-
-  iframe {
-    border: 0;
-  }
-
   // Summary
   //
   // 1. Add the correct display in all browsers
@@ -593,14 +555,6 @@ export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
   summary {
     display: list-item; // 1
     cursor: pointer;
-  }
-
-  // Progress
-  //
-  // Add the correct vertical alignment in Chrome, Firefox, and Opera.
-
-  progress {
-    vertical-align: baseline;
   }
 
   // Hidden attribute

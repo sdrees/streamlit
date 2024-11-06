@@ -359,7 +359,7 @@ export function RenderedMarkdown({
     ...(overrideComponents || {}),
   }
   const theme = useTheme()
-  const { red, orange, yellow, green, blue, violet, purple, gray } =
+  const { red, orange, yellow, green, blue, violet, purple, gray, primary } =
     getMarkdownTextColors(theme)
   const {
     redbg,
@@ -370,6 +370,7 @@ export function RenderedMarkdown({
     violetbg,
     purplebg,
     graybg,
+    primarybg,
   } = getMarkdownBgColors(theme)
   const colorMapping = new Map(
     Object.entries({
@@ -380,6 +381,7 @@ export function RenderedMarkdown({
       orange: `color: ${orange}`,
       gray: `color: ${gray}`,
       grey: `color: ${gray}`,
+      primary: `color: ${primary}`,
       // Gradient from red, orange, yellow, green, blue, violet, purple
       rainbow: `color: transparent; background-clip: text; -webkit-background-clip: text; background-image: linear-gradient(to right,
         ${red}, ${orange}, ${yellow}, ${green}, ${blue}, ${violet}, ${purple});`,
@@ -390,6 +392,7 @@ export function RenderedMarkdown({
       "orange-background": `background-color: ${orangebg}`,
       "gray-background": `background-color: ${graybg}`,
       "grey-background": `background-color: ${graybg}`,
+      "primary-background": `background-color: ${primarybg}`,
       // Gradient from red, orange, yellow, green, blue, violet, purple
       "rainbow-background": `background: linear-gradient(to right,
         ${redbg}, ${orangebg}, ${yellowbg}, ${greenbg}, ${bluebg}, ${violetbg}, ${purplebg});`,

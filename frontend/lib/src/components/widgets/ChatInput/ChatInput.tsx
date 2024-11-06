@@ -30,7 +30,6 @@ import { ChatInput as ChatInputProto } from "@streamlit/lib/src/proto"
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
 import Icon from "@streamlit/lib/src/components/shared/Icon"
 import InputInstructions from "@streamlit/lib/src/components/shared/InputInstructions/InputInstructions"
-import { hasLightBackgroundColor } from "@streamlit/lib/src/theme"
 
 import {
   StyledChatInput,
@@ -166,11 +165,7 @@ function ChatInput({
   }, [chatInputRef])
 
   const { disabled, placeholder, maxChars } = element
-  const lightTheme = hasLightBackgroundColor(theme)
   const { minHeight, maxHeight } = heightGuidance.current
-  const placeholderColor = lightTheme
-    ? theme.colors.gray70
-    : theme.colors.gray80
 
   const isInputExtended =
     scrollHeight > 0 && chatInputRef.current
@@ -220,7 +215,7 @@ function ChatInput({
                 lineHeight: theme.lineHeights.inputWidget,
                 backgroundColor: theme.colors.transparent,
                 "::placeholder": {
-                  color: placeholderColor,
+                  opacity: "0.7",
                 },
                 height: isInputExtended
                   ? `${scrollHeight + ROUNDING_OFFSET}px`

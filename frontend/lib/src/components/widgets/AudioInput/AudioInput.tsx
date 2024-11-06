@@ -163,7 +163,10 @@ const AudioInput: React.FC<Props> = ({
       }
 
       const url = URL.createObjectURL(wavBlob)
-      const file = new File([wavBlob], "audio.wav", { type: wavBlob.type })
+      const timestamp = new Date().toISOString().slice(0, 16).replace(":", "-")
+      const file = new File([wavBlob], `${timestamp}_audio.wav`, {
+        type: wavBlob.type,
+      })
 
       setRecordingUrl(url)
 

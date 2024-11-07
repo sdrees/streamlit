@@ -203,6 +203,8 @@ function Checkbox({
           },
           Label: {
             style: {
+              lineHeight: theme.lineHeights.small,
+              paddingLeft: theme.spacing.sm,
               position: "relative",
               color,
             },

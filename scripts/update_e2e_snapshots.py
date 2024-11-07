@@ -162,7 +162,6 @@ def extract_and_merge_snapshots(zip_path: str, destination_folder: str) -> None:
     """Extract and merge the 'snapshot-updates/' folder from an artifact into the destination folder."""
     with zipfile.ZipFile(zip_path, "r") as zip_ref:
         namelist = zip_ref.namelist()
-        print(namelist)
         snapshot_files = [
             name for name in namelist if name.startswith(SNAPSHOT_UPDATE_FOLDER)
         ]

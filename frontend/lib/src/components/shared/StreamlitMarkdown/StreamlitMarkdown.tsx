@@ -620,11 +620,12 @@ const StreamlitMarkdown: React.FC<Props> = ({
   isToast,
 }) => {
   const isInSidebar = useContext(IsSidebarContext)
+  const isInDialog = useContext(IsDialogContext)
 
   return (
     <StyledStreamlitMarkdown
       isCaption={Boolean(isCaption)}
-      isInSidebar={isInSidebar}
+      isInSidebarOrDialog={isInSidebar || isInDialog}
       isLabel={isLabel}
       boldLabel={boldLabel}
       largerLabel={largerLabel}

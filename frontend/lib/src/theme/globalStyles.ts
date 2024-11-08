@@ -93,91 +93,6 @@ export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
     outline: 0 !important;
   }
 
-  // Content grouping
-  //
-  // 1. Reset Firefox's gray color
-  // 2. Set correct height and prevent the size attribute to make the hr look like an input field
-
-  hr {
-    margin: 2em 0;
-    padding: 0;
-    color: inherit; // 1
-    background-color: transparent;
-    border: none;
-    border-bottom: ${theme.sizes.borderWidth} solid ${theme.colors.borderColor};
-  }
-
-  hr:not([size]) {
-    height: 1px; // 2
-  }
-
-  h1 {
-    font-family: ${theme.genericFonts.headingFont};
-    font-weight: ${theme.fontWeights.extrabold};
-    font-size: 2.75rem;
-    // Use rem so we can remove it when first child, knowing that the
-    // element-container above always adds 1rem.
-    padding: 1.25rem 0 1rem 0;
-    margin: 0;
-
-    line-height: 1.2;
-  }
-
-  h2 {
-    font-family: ${theme.genericFonts.headingFont};
-    font-weight: ${theme.fontWeights.bold};
-    font-size: 2.25rem;
-    letter-spacing: -0.005em;
-
-    // Use rem so we can remove it when first child, knowing that the
-    // element-container above always adds 1rem.
-    padding: 1rem 0 1rem 0;
-    margin: 0;
-
-    line-height: 1.2;
-  }
-
-  h3 {
-    font-family: ${theme.genericFonts.headingFont};
-    font-weight: ${theme.fontWeights.bold};
-    font-size: 1.75rem;
-    letter-spacing: -0.005em;
-
-    // Use rem so we can remove it when first child, knowing that the
-    // element-container above always adds 1rem.
-    padding: 0.5rem 0 1rem 0;
-    margin: 0;
-
-    line-height: 1.2;
-  }
-
-  h4 {
-    font-family: ${theme.genericFonts.headingFont};
-    font-weight: ${theme.fontWeights.bold};
-    font-size: 1.5rem;
-    padding: 0.75rem 0 1rem 0;
-    margin: 0;
-    line-height: 1.2;
-  }
-
-  h5 {
-    font-family: ${theme.genericFonts.headingFont};
-    font-weight: ${theme.fontWeights.bold};
-    font-size: 1.25rem;
-    padding: 0 0 1rem 0;
-    margin: 0;
-    line-height: 1.2;
-  }
-
-  h6 {
-    font-family: ${theme.genericFonts.headingFont};
-    font-weight: ${theme.fontWeights.bold};
-    font-size: 1rem;
-    padding: 0 0 1rem 0;
-    margin: 0;
-    line-height: 1.2;
-  }
-
   // Abbreviations
   //
   // 1. Duplicate behavior to the data-* attribute for our tooltip plugin
@@ -245,12 +160,6 @@ export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
   b,
   strong {
     font-weight: ${theme.fontWeights.bold};
-  }
-
-  // Override h1 font weight to default weight
-  h1 b,
-  h1 strong {
-    font-weight: ${theme.fontWeights.extrabold};
   }
 
   // Small

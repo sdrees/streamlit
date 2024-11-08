@@ -17,7 +17,7 @@ import React from "react"
 
 import "@testing-library/jest-dom"
 import { act, fireEvent, screen } from "@testing-library/react"
-import { default as userEvent } from "@testing-library/user-event"
+import { userEvent } from "@testing-library/user-event"
 
 import {
   LabelVisibilityMessage as LabelVisibilityMessageProto,
@@ -154,6 +154,24 @@ describe("NumberInput widget", () => {
 
     expect(numberInput).toHaveAttribute("min", "-Infinity")
     expect(numberInput).toHaveAttribute("max", "Infinity")
+  })
+
+  it("sets input mode to empty string", () => {
+    const props = getIntProps()
+    render(<NumberInput {...props} />)
+
+    const numberInput = screen.getByTestId("stNumberInputField")
+
+    expect(numberInput).toHaveAttribute("inputmode", "")
+  })
+
+  it("sets input type to number", () => {
+    const props = getIntProps()
+    render(<NumberInput {...props} />)
+
+    const numberInput = screen.getByTestId("stNumberInputField")
+
+    expect(numberInput).toHaveAttribute("type", "number")
   })
 
   it("sets min/max values", () => {

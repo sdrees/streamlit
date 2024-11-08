@@ -19,7 +19,7 @@ import styled from "@emotion/styled"
 
 export interface StyledStreamlitMarkdownProps {
   isCaption: boolean
-  isInSidebar: boolean
+  isInSidebarOrDialog: boolean
   isLabel?: boolean
   boldLabel?: boolean
   largerLabel?: boolean
@@ -39,12 +39,123 @@ function sharedMarkdownStyle(theme: Theme): any {
   }
 }
 
+/**
+ * Caption sizes taken from default styles, but using em instead of rem, so it
+ * inherits the <small>'s shrunk size
+ *
+ */
+function convertFontSizes(
+  fontSize: string,
+  smallFontSize: string,
+  captionFontSize: string,
+  smallCaptionFontSize: string,
+  useSmallerHeadings: boolean,
+  isCaption: boolean
+): string {
+  if (useSmallerHeadings) {
+    return isCaption ? convertRemToEm(smallCaptionFontSize) : smallFontSize
+  }
+
+  return isCaption ? convertRemToEm(captionFontSize) : fontSize
+}
+
+function getMarkdownHeadingDefinitions(
+  theme: Theme,
+  useSmallerHeadings: boolean,
+  isCaption: boolean
+): any {
+  return {
+    "h1, h2, h3, h4, h5, h6": {
+      fontFamily: theme.genericFonts.headingFont,
+      fontWeight: theme.fontWeights.bold,
+      lineHeight: theme.lineHeights.headings,
+      margin: 0,
+      color: "inherit",
+    },
+    h1: {
+      fontSize: convertFontSizes(
+        theme.fontSizes.fourXL,
+        theme.fontSizes.xl,
+        theme.fontSizes.threeXL,
+        theme.fontSizes.xl,
+        useSmallerHeadings,
+        isCaption
+      ),
+      fontWeight: useSmallerHeadings
+        ? theme.fontWeights.bold
+        : theme.fontWeights.extrabold,
+      padding: `${theme.spacing.xl} 0 ${theme.spacing.lg} 0`,
+    },
+    "h1 b, h1 strong": {
+      fontWeight: theme.fontWeights.extrabold,
+    },
+    "h2, h3": {
+      letterSpacing: "-0.005em",
+    },
+    h2: {
+      fontSize: convertFontSizes(
+        theme.fontSizes.threeXL,
+        theme.fontSizes.lg,
+        theme.fontSizes.twoXL,
+        theme.fontSizes.lg,
+        useSmallerHeadings,
+        isCaption
+      ),
+      padding: `${theme.spacing.lg} 0 ${theme.spacing.lg} 0`,
+    },
+    h3: {
+      fontSize: convertFontSizes(
+        theme.fontSizes.twoXL,
+        theme.fontSizes.mdLg,
+        theme.fontSizes.lg,
+        theme.fontSizes.mdLg,
+        useSmallerHeadings,
+        isCaption
+      ),
+      padding: `${theme.spacing.sm} 0 ${theme.spacing.lg} 0`,
+    },
+    h4: {
+      fontSize: convertFontSizes(
+        theme.fontSizes.xl,
+        theme.fontSizes.md,
+        theme.fontSizes.md,
+        theme.fontSizes.md,
+        useSmallerHeadings,
+        isCaption
+      ),
+      padding: `${theme.spacing.md} 0 ${theme.spacing.lg} 0`,
+    },
+    h5: {
+      fontSize: convertFontSizes(
+        theme.fontSizes.lg,
+        theme.fontSizes.sm,
+        theme.fontSizes.md,
+        theme.fontSizes.md,
+        useSmallerHeadings,
+        isCaption
+      ),
+      padding: `0 0 ${theme.spacing.lg} 0`,
+    },
+    h6: {
+      fontSize: convertFontSizes(
+        theme.fontSizes.md,
+        theme.fontSizes.twoSm,
+        theme.fontSizes.md,
+        theme.fontSizes.md,
+        useSmallerHeadings,
+        isCaption
+      ),
+      padding: `0 0 ${theme.spacing.lg} 0`,
+    },
+  }
+}
+
 export const StyledStreamlitMarkdown =
   styled.div<StyledStreamlitMarkdownProps>(
     ({
       theme,
       isCaption,
-      isInSidebar,
+      isInSidebarOrDialog,
       isLabel,
       boldLabel,
       largerLabel,
@@ -57,6 +168,11 @@ export const StyledStreamlitMarkdown =
         fontFamily: theme.genericFonts.bodyFont,
         marginBottom: isLabel ? "" : `-${theme.spacing.lg}`,
         ...sharedMarkdownStyle(theme),
+        ...getMarkdownHeadingDefinitions(
+          theme,
+          isInSidebarOrDialog,
+          isCaption
+        ),
 
         p: {
           wordBreak: "break-word",
@@ -82,10 +198,27 @@ export const StyledStreamlitMarkdown =
           fontSize: theme.fontSizes.md,
         },
 
+        // Handles quotes:
         blockquote: {
           margin: "1em 0 1em 0",
           padding: "0 0 0 1.2em",
           borderLeft: `${theme.sizes.borderWidth} solid ${theme.colors.lightGray}`,
+        },
+
+        // Handles the horizontal divider:
+        hr: {
+          margin: "2em 0",
+          padding: 0,
+          // Reset Firefox's gray color:
+          color: "inherit",
+          backgroundColor: "transparent",
+          border: "none",
+          borderBottom: `${theme.sizes.borderWidth} solid ${theme.colors.borderColor}`,
+          // Set correct height and prevent the size attribute
+          // to make the hr look like an input field:
+          "&:not([size])": {
+            height: theme.sizes.borderWidth,
+          },
         },
 
         table: {
@@ -124,40 +257,12 @@ export const StyledStreamlitMarkdown =
 
         ...(isCaption
           ? {
-              color: isInSidebar
+              color: isInSidebarOrDialog
                 ? theme.colors.gray
                 : theme.colors.fadedText60,
               fontSize: theme.fontSizes.sm,
               "p, ol, ul, dl, li": {
                 fontSize: "inherit",
-              },
-
-              "h1, h2, h3, h4, h5, h6": {
-                color: "inherit",
-              },
-
-              // sizes taken from default styles, but using em instead of rem, so it
-              // inherits the <small>'s shrunk size
-              h1: {
-                fontSize: isInSidebar
-                  ? convertRemToEm(theme.fontSizes.xl)
-                  : convertRemToEm(theme.fontSizes.threeXL),
-              },
-              h2: {
-                fontSize: isInSidebar
-                  ? convertRemToEm(theme.fontSizes.lg)
-                  : convertRemToEm(theme.fontSizes.twoXL),
-              },
-              h3: {
-                fontSize: isInSidebar
-                  ? convertRemToEm(theme.fontSizes.mdLg)
-                  : convertRemToEm(theme.fontSizes.lg),
-              },
-
-              // these are normally shrunk further to 0.8rem, but since we're already
-              // inside a small, just make them 1em.
-              "h4, h5, h6": {
-                fontSize: convertRemToEm(theme.fontSizes.md),
               },
             }
           : {}),

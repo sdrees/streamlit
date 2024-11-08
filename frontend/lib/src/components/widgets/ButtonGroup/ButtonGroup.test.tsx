@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable jest/expect-expect */
 import React from "react"
 
 import { act, fireEvent, screen, within } from "@testing-library/react"
@@ -42,6 +41,7 @@ const expectHighlightStyle = (
   element: HTMLElement,
   should_exist = true
 ): void => {
+  // eslint-disable-next-line vitest/valid-expect
   let expectCheck: any = expect(element)
   if (!should_exist) {
     expectCheck = expect.not
@@ -404,6 +404,7 @@ describe("ButtonGroup widget", () => {
     })
 
     describe("visualizes selection behavior", () => {
+      // eslint-disable-next-line vitest/expect-expect
       it("visualize only selected option", () => {
         const props = getProps({
           selectionVisualization:
@@ -418,6 +419,7 @@ describe("ButtonGroup widget", () => {
         expectHighlightStyle(buttons[2], false)
       })
 
+      // eslint-disable-next-line vitest/expect-expect
       it("visualizes all up to the selected option", () => {
         const props = getProps({
           selectionVisualization:
@@ -436,6 +438,7 @@ describe("ButtonGroup widget", () => {
         expectHighlightStyle(buttons[3], false)
       })
 
+      // eslint-disable-next-line vitest/expect-expect
       it("has no default visualization when selected content present", () => {
         // used for example by feedback stars
         const disabledVisualizationOption = [

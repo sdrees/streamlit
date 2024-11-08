@@ -18,10 +18,7 @@ import styled from "@emotion/styled"
 import { transparentize } from "color2k"
 
 import { StyledMaterialIcon } from "@streamlit/lib/src/components/shared/Icon/Material/styled-components"
-import {
-  getWrappedHeadersStyle,
-  hasLightBackgroundColor,
-} from "@streamlit/lib/src/theme"
+import { hasLightBackgroundColor } from "@streamlit/lib/src/theme"
 
 // Check for custom text color & handle colors in SidebarNav accordingly
 const conditionalCustomColor = (
@@ -209,8 +206,6 @@ export const StyledSidebarUserContent =
     paddingBottom: theme.sizes.sidebarTopSpace,
     paddingLeft: theme.spacing.twoXL,
     paddingRight: theme.spacing.twoXL,
-
-    ...getWrappedHeadersStyle(theme),
   }))
 
 export const StyledSidebarContent = styled.div(({}) => ({

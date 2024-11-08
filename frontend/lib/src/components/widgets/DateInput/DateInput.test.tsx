@@ -18,7 +18,7 @@ import React from "react"
 
 import "@testing-library/jest-dom"
 import { act, fireEvent, screen, within } from "@testing-library/react"
-import userEvent from "@testing-library/user-event"
+import { userEvent } from "@testing-library/user-event"
 
 import { customRenderLibContext, render } from "@streamlit/lib/src/test_util"
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"

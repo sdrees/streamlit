@@ -294,7 +294,7 @@ describe("Running Icon", () => {
     )
 
     const icon = await screen.findByRole("img")
-    expect(icon).toHaveAttribute("src", "icon_running.gif")
+    expect(icon).toHaveAttribute("src", "/src/assets/img/icon_running.gif")
   })
 
   it("renders firework gif on Dec 31st", async () => {
@@ -307,7 +307,7 @@ describe("Running Icon", () => {
     )
 
     const icon = await screen.findByRole("img")
-    expect(icon).toHaveAttribute("src", "fireworks.gif")
+    expect(icon).toHaveAttribute("src", "/src/assets/img/fireworks.gif")
   })
 
   it("renders firework gif on Jan 6th", async () => {
@@ -320,7 +320,7 @@ describe("Running Icon", () => {
     )
 
     const icon = await screen.findByRole("img")
-    expect(icon).toHaveAttribute("src", "fireworks.gif")
+    expect(icon).toHaveAttribute("src", "/src/assets/img/fireworks.gif")
   })
 
   it("renders regular running gif after New Years", async () => {
@@ -333,7 +333,7 @@ describe("Running Icon", () => {
     )
 
     const icon = await screen.findByRole("img")
-    expect(icon).toHaveAttribute("src", "icon_running.gif")
+    expect(icon).toHaveAttribute("src", "/src/assets/img/icon_running.gif")
   })
 
   it("delays render of running gif", () => {
@@ -349,6 +349,6 @@ describe("Running Icon", () => {
     jest.runAllTimers()
 
     icon = screen.queryByRole("img")
-    expect(icon).toHaveAttribute("src", "icon_running.gif")
+    expect(icon).toHaveAttribute("src", "/src/assets/img/icon_running.gif")
   })
 })

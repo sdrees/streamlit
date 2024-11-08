@@ -91,10 +91,16 @@ export const StyledStreamlitMarkdown =
         table: {
           // Add some space below the markdown tables
           marginBottom: theme.spacing.lg,
+          // Prevent double borders
+          borderCollapse: "collapse",
         },
 
         tr: {
           borderTop: `${theme.sizes.borderWidth} solid ${theme.colors.borderColor}`,
+        },
+
+        th: {
+          textAlign: "inherit",
         },
 
         "th, td": {

@@ -293,24 +293,9 @@ export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
   // Code
 
   pre,
-  code,
-  kbd {
+  code {
     font-size: 1em;
     font-family: ${theme.genericFonts.codeFont};
-  }
-
-  kbd {
-    padding: 0.2rem 0.4rem;
-    color: ${theme.colors.codeTextColor};
-    background-color: ${theme.colors.codeHighlightColor};
-    font-size: ${theme.fontSizes.sm};
-    border-radius: ${theme.radii.md};
-
-    kbd {
-      padding: 0;
-      font-weight: ${theme.fontWeights.bold};
-      font-size: 1em;
-    }
   }
 
   // Images and content
@@ -318,41 +303,6 @@ export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
   img,
   svg {
     vertical-align: middle;
-  }
-
-  // Tables
-  //
-  // Prevent double borders
-
-  table {
-    caption-side: bottom;
-    border-collapse: collapse;
-  }
-
-  table caption {
-    padding-top: ${theme.spacing.sm};
-    padding-bottom: 0;
-    color: ${theme.colors.gray60};
-    text-align: left;
-  }
-
-  // 1. Matches default <td> alignment by inheriting text-align.
-  // 2. Fix alignment for Safari
-
-  th {
-    text-align: inherit; // 1
-    text-align: -webkit-match-parent; // 2
-  }
-
-  thead,
-  tbody,
-  tfoot,
-  tr,
-  td,
-  th {
-    border-color: inherit;
-    border-style: solid;
-    border-width: 0;
   }
 
   // Forms

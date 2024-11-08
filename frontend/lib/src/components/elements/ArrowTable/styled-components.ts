@@ -29,8 +29,16 @@ export const StyledTable = styled.table(({ theme }) => ({
   width: theme.sizes.full,
   marginBottom: theme.spacing.lg,
   color: theme.colors.bodyText,
+  // Prevent double borders
   borderCollapse: "collapse",
+  captionSide: "bottom",
   border: `${theme.sizes.borderWidth} solid ${theme.colors.borderColorLight}`,
+  "& caption": {
+    paddingTop: theme.spacing.sm,
+    paddingBottom: 0,
+    color: theme.colors.fadedText60,
+    textAlign: "left",
+  },
 }))
 
 const styleCellFunction = (theme: EmotionTheme): CSSObject => ({
@@ -46,7 +54,7 @@ export const StyledTableCell = styled.td(({ theme }) =>
 )
 export const StyledTableCellHeader = styled.th(({ theme }) => ({
   ...styleCellFunction(theme),
-
+  textAlign: "inherit",
   color: theme.colors.fadedText60,
 }))
 

@@ -41,4 +41,16 @@ export const StyledStackTrace = styled.pre(({ theme }) => ({
   backgroundColor: theme.colors.transparent,
   overflowX: "auto",
   margin: `0 0 ${theme.spacing.lg} 0`,
+  borderRadius: theme.radii.default,
 }))
+
+// This extra div makes sure that we also have a padding on the right side of the stack
+// trace when scrolled to the right.
+export const StyledStackTraceContent = styled.div({
+  display: "inline-block",
+  minWidth: "100%",
+})
+
+export const StyledExceptionMessage = styled.div({
+  wordWrap: "break-word",
+})

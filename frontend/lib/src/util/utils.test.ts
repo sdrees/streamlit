@@ -466,7 +466,7 @@ describe("getLoadingScreenType", () => {
       delete window.location
       // @ts-expect-error
       window.location = {
-        assign: jest.fn(),
+        assign: vi.fn(),
         search: "foo=bar",
       }
       expect(preserveEmbedQueryParams()).toBe("")
@@ -477,7 +477,7 @@ describe("getLoadingScreenType", () => {
       delete window.location
       // @ts-expect-error
       window.location = {
-        assign: jest.fn(),
+        assign: vi.fn(),
         search: "embed=true&foo=bar",
       }
       expect(preserveEmbedQueryParams()).toBe("embed=true")
@@ -488,7 +488,7 @@ describe("getLoadingScreenType", () => {
       delete window.location
       // @ts-expect-error
       window.location = {
-        assign: jest.fn(),
+        assign: vi.fn(),
         search:
           "embed=true&embed_options=option1&embed_options=option2&foo=bar",
       }

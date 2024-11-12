@@ -16,7 +16,6 @@
 
 import React from "react"
 
-import "@testing-library/jest-dom"
 import * as reactDeviceDetect from "react-device-detect"
 import { fireEvent, screen } from "@testing-library/react"
 
@@ -27,7 +26,7 @@ import SidebarNav, { Props } from "./SidebarNav"
 vi.mock("@streamlit/lib/src/util/Hooks", async () => ({
   __esModule: true,
   ...(await vi.importActual("@streamlit/lib/src/util/Hooks")),
-  useIsOverflowing: jest.fn(),
+  useIsOverflowing: vi.fn(),
 }))
 
 const getProps = (props: Partial<Props> = {}): Props => ({
@@ -45,11 +44,11 @@ const getProps = (props: Partial<Props> = {}): Props => ({
     },
   ],
   navSections: [],
-  collapseSidebar: jest.fn(),
+  collapseSidebar: vi.fn(),
   currentPageScriptHash: "",
   hasSidebarElements: false,
   expandSidebarNav: false,
-  onPageChange: jest.fn(),
+  onPageChange: vi.fn(),
   endpoints: mockEndpoints(),
   ...props,
 })

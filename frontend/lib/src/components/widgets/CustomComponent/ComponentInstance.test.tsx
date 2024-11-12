@@ -17,7 +17,6 @@
 import React from "react"
 
 import { Mock } from "vitest"
-import "@testing-library/jest-dom"
 import { act, fireEvent, screen } from "@testing-library/react"
 
 import {
@@ -88,8 +87,8 @@ describe("ComponentInstance", () => {
         theme={mockTheme.emotion}
         widgetMgr={
           new WidgetStateManager({
-            sendRerunBackMsg: jest.fn(),
-            formsDataChanged: jest.fn(),
+            sendRerunBackMsg: vi.fn(),
+            formsDataChanged: vi.fn(),
           })
         }
       />
@@ -112,8 +111,8 @@ describe("ComponentInstance", () => {
         theme={mockTheme.emotion}
         widgetMgr={
           new WidgetStateManager({
-            sendRerunBackMsg: jest.fn(),
-            formsDataChanged: jest.fn(),
+            sendRerunBackMsg: vi.fn(),
+            formsDataChanged: vi.fn(),
           })
         }
       />
@@ -133,8 +132,8 @@ describe("ComponentInstance", () => {
         theme={mockTheme.emotion}
         widgetMgr={
           new WidgetStateManager({
-            sendRerunBackMsg: jest.fn(),
-            formsDataChanged: jest.fn(),
+            sendRerunBackMsg: vi.fn(),
+            formsDataChanged: vi.fn(),
           })
         }
       />
@@ -160,8 +159,8 @@ describe("ComponentInstance", () => {
         theme={mockTheme.emotion}
         widgetMgr={
           new WidgetStateManager({
-            sendRerunBackMsg: jest.fn(),
-            formsDataChanged: jest.fn(),
+            sendRerunBackMsg: vi.fn(),
+            formsDataChanged: vi.fn(),
           })
         }
       />
@@ -185,8 +184,8 @@ describe("ComponentInstance", () => {
         theme={mockTheme.emotion}
         widgetMgr={
           new WidgetStateManager({
-            sendRerunBackMsg: jest.fn(),
-            formsDataChanged: jest.fn(),
+            sendRerunBackMsg: vi.fn(),
+            formsDataChanged: vi.fn(),
           })
         }
       />
@@ -210,8 +209,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -246,8 +245,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -284,8 +283,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -311,8 +310,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -361,8 +360,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -393,8 +392,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -416,8 +415,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -448,8 +447,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -471,8 +470,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -509,8 +508,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -531,8 +530,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -565,8 +564,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -626,8 +625,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
           // Also verify that we can pass a fragmentID down to setBytesValue.
@@ -695,8 +694,8 @@ describe("ComponentInstance", () => {
           theme={mockTheme.emotion}
           widgetMgr={
             new WidgetStateManager({
-              sendRerunBackMsg: jest.fn(),
-              formsDataChanged: jest.fn(),
+              sendRerunBackMsg: vi.fn(),
+              formsDataChanged: vi.fn(),
             })
           }
         />
@@ -739,8 +738,8 @@ describe("ComponentInstance", () => {
             theme={mockTheme.emotion}
             widgetMgr={
               new WidgetStateManager({
-                sendRerunBackMsg: jest.fn(),
-                formsDataChanged: jest.fn(),
+                sendRerunBackMsg: vi.fn(),
+                formsDataChanged: vi.fn(),
               })
             }
           />
@@ -798,8 +797,8 @@ describe("ComponentInstance", () => {
             theme={mockTheme.emotion}
             widgetMgr={
               new WidgetStateManager({
-                sendRerunBackMsg: jest.fn(),
-                formsDataChanged: jest.fn(),
+                sendRerunBackMsg: vi.fn(),
+                formsDataChanged: vi.fn(),
               })
             }
           />

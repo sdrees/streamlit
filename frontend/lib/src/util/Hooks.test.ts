@@ -21,10 +21,10 @@ const stateSetters: Array<any> = []
 vi.mock("react", async () => ({
   __esModule: true,
   ...(await vi.importActual("react")),
-  useCallback: jest.fn().mockImplementation(cb => cb),
-  useEffect: jest.fn().mockImplementation(cb => cb()),
-  useState: jest.fn().mockImplementation(() => {
-    const setValue = jest.fn()
+  useCallback: vi.fn().mockImplementation(cb => cb),
+  useEffect: vi.fn().mockImplementation(cb => cb()),
+  useState: vi.fn().mockImplementation(() => {
+    const setValue = vi.fn()
     stateSetters.push(setValue)
 
     return [false, setValue]

@@ -17,13 +17,16 @@
 import * as polyfill from "polyfill-pseudoclass-has"
 import "vitest-canvas-mock"
 import { vi } from "vitest"
+import "@testing-library/jest-dom/vitest"
 
-// TODO(vite-update): This is a placeholder to avoid massive set of
-// changes since vi is mostly a drop-in replacement of jest
+// In the event a sub-library uses the jest global, we need to make sure it's
+// aliased to the vi global. An example is timers using dom testing library
+// which is used by the react testing library and waitFor.
+// (See https://github.com/testing-library/dom-testing-library/issues/987)
 global.jest = vi
 
 if (typeof window.URL.createObjectURL === "undefined") {
-  window.URL.createObjectURL = jest.fn()
+  window.URL.createObjectURL = vi.fn()
 }
 
 // TODO: Hides console error for running FE tests

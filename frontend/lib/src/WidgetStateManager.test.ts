@@ -1112,8 +1112,8 @@ describe("WidgetStateDict", () => {
 
   it("supplies WidgetStates with for active widgets based on input", () => {
     const widgetStateManager = new WidgetStateManager({
-      sendRerunBackMsg: jest.fn(),
-      formsDataChanged: jest.fn(),
+      sendRerunBackMsg: vi.fn(),
+      formsDataChanged: vi.fn(),
     })
 
     widgetStateManager.setStringValue(

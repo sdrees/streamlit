@@ -25,14 +25,14 @@ import {
 
 import useDataExporter, { toCsvRow } from "./useDataExporter"
 
-const mockWrite = jest.fn()
-const mockClose = jest.fn()
+const mockWrite = vi.fn()
+const mockClose = vi.fn()
 
 // The native-file-system-adapter is not available in tests, so we need to mock it.
 vi.mock("native-file-system-adapter", () => ({
-  showSaveFilePicker: jest.fn().mockImplementation((_object: any) => {
+  showSaveFilePicker: vi.fn().mockImplementation((_object: any) => {
     return {
-      createWritable: jest.fn().mockImplementation(() => {
+      createWritable: vi.fn().mockImplementation(() => {
         return {
           write: mockWrite,
           close: mockClose,

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import "@testing-library/jest-dom"
 
 import { PlotlyChart as PlotlyChartProto } from "@streamlit/lib/src/proto"
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
@@ -29,9 +28,9 @@ import {
 } from "./PlotlyChart"
 
 vi.mock("./CustomTheme", () => ({
-  replaceTemporaryColors: jest.fn().mockReturnValue("{}"),
-  applyStreamlitTheme: jest.fn(),
-  layoutWithThemeDefaults: jest.fn().mockReturnValue({}),
+  replaceTemporaryColors: vi.fn().mockReturnValue("{}"),
+  applyStreamlitTheme: vi.fn(),
+  layoutWithThemeDefaults: vi.fn().mockReturnValue({}),
 }))
 
 /**
@@ -90,8 +89,8 @@ describe("parsePlotlySelections", () => {
 })
 
 const getWidgetMgr = (): WidgetStateManager => {
-  const sendRerunBackMsg = jest.fn()
-  const formsDataChanged = jest.fn()
+  const sendRerunBackMsg = vi.fn()
+  const formsDataChanged = vi.fn()
   return new WidgetStateManager({
     sendRerunBackMsg,
     formsDataChanged,

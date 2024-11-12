@@ -46,7 +46,7 @@ def test_text_input_widget_rendering(
 def test_text_input_has_correct_initial_values(app: Page):
     """Test that st.text_input has the correct initial values."""
     markdown_elements = app.get_by_test_id("stMarkdown")
-    expect(markdown_elements).to_have_count(12)
+    expect(markdown_elements).to_have_count(13)
 
     expected = [
         "value 1: ",
@@ -144,6 +144,36 @@ def test_text_input_has_correct_value_on_click_outside(app: Page):
     expect(app.get_by_test_id("stMarkdown").first).to_have_text(
         "value 1: hello world", use_inner_text=True
     )
+
+
+def test_text_input_does_not_trigger_rerun_when_value_does_not_change_and_click_outside(
+    app: Page,
+):
+    """Test that st.text_input has the correct value on click outside."""
+
+    expect(
+        app.get_by_test_id("stMarkdown").filter(has_text="Rerun counter: 1")
+    ).to_be_attached()
+
+    first_text_input_field = (
+        app.get_by_test_id("stTextInput").first.locator("input").first
+    )
+    first_text_input_field.focus()
+    first_text_input_field.fill("hello world")
+    app.get_by_test_id("stMarkdown").first.click()
+
+    expect(app.get_by_test_id("stMarkdown").first).to_have_text(
+        "value 1: hello world", use_inner_text=True
+    )
+    expect(
+        app.get_by_test_id("stMarkdown").filter(has_text="Rerun counter: 2")
+    ).to_be_attached()
+
+    first_text_input_field.focus()
+    app.get_by_test_id("stMarkdown").first.click()
+    expect(
+        app.get_by_test_id("stMarkdown").filter(has_text="Rerun counter: 2")
+    ).to_be_attached()
 
 
 def test_empty_text_input_behaves_correctly(app: Page):

@@ -18,7 +18,6 @@ import React from "react"
 
 import { act, fireEvent, screen, within } from "@testing-library/react"
 
-import "@testing-library/jest-dom"
 import { render } from "@streamlit/lib/src/test_util"
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
 import {
@@ -100,8 +99,8 @@ const getProps = (
   }),
   disabled: false,
   widgetMgr: new WidgetStateManager({
-    sendRerunBackMsg: jest.fn(),
-    formsDataChanged: jest.fn(),
+    sendRerunBackMsg: vi.fn(),
+    formsDataChanged: vi.fn(),
   }),
   ...widgetProps,
 })
@@ -159,7 +158,7 @@ describe("ButtonGroup widget", () => {
 
   it("sets widget value on mount", () => {
     const props = getProps()
-    jest.spyOn(props.widgetMgr, "setIntArrayValue")
+    vi.spyOn(props.widgetMgr, "setIntArrayValue")
 
     render(<ButtonGroup {...props} />)
     expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledWith(
@@ -185,7 +184,7 @@ describe("ButtonGroup widget", () => {
 
     it("onClick prop for single select", () => {
       const props = getProps()
-      jest.spyOn(props.widgetMgr, "setIntArrayValue")
+      vi.spyOn(props.widgetMgr, "setIntArrayValue")
 
       render(<ButtonGroup {...props} />)
 
@@ -234,7 +233,7 @@ describe("ButtonGroup widget", () => {
       const props = getProps({
         clickMode: ButtonGroupProto.ClickMode.MULTI_SELECT,
       })
-      jest.spyOn(props.widgetMgr, "setIntArrayValue")
+      vi.spyOn(props.widgetMgr, "setIntArrayValue")
       render(<ButtonGroup {...props} />)
 
       const buttons = getButtonGroupButtons()
@@ -279,7 +278,7 @@ describe("ButtonGroup widget", () => {
           fragmentId: "myFragmentId",
         }
       )
-      jest.spyOn(props.widgetMgr, "setIntArrayValue")
+      vi.spyOn(props.widgetMgr, "setIntArrayValue")
       render(<ButtonGroup {...props} />)
 
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledWith(
@@ -313,7 +312,7 @@ describe("ButtonGroup widget", () => {
 
     it("sets widget value on update", () => {
       const props = getProps({ value: [3], setValue: true })
-      jest.spyOn(props.widgetMgr, "setIntArrayValue")
+      vi.spyOn(props.widgetMgr, "setIntArrayValue")
 
       render(<ButtonGroup {...props} />)
       const buttons = getButtonGroupButtons()
@@ -521,7 +520,7 @@ describe("ButtonGroup widget", () => {
     })
     props.widgetMgr.setFormSubmitBehaviors("form", true)
 
-    jest.spyOn(props.widgetMgr, "setIntArrayValue")
+    vi.spyOn(props.widgetMgr, "setIntArrayValue")
 
     render(<ButtonGroup {...props} />)
 

@@ -16,8 +16,8 @@
 
 import React, { ReactElement } from "react"
 
-import "@testing-library/jest-dom"
 import ReactMarkdown from "react-markdown"
+// eslint-disable-next-line testing-library/no-manual-cleanup
 import { cleanup, screen } from "@testing-library/react"
 import { transparentize } from "color2k"
 

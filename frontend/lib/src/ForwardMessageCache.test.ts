@@ -29,12 +29,12 @@ function createCache(): MockCache {
   const mockFetchCachedForwardMsg = vi.fn()
 
   const cache = new ForwardMsgCache({
-    buildComponentURL: jest.fn(),
-    buildMediaURL: jest.fn(),
-    buildFileUploadURL: jest.fn(),
-    buildAppPageURL: jest.fn(),
-    uploadFileUploaderFile: jest.fn(),
-    deleteFileAtURL: jest.fn(),
+    buildComponentURL: vi.fn(),
+    buildMediaURL: vi.fn(),
+    buildFileUploadURL: vi.fn(),
+    buildAppPageURL: vi.fn(),
+    uploadFileUploaderFile: vi.fn(),
+    deleteFileAtURL: vi.fn(),
     fetchCachedForwardMsg: mockFetchCachedForwardMsg,
   })
 

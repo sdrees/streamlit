@@ -64,3 +64,10 @@ st.write("value 10:", v10)
 
 v11 = st.text_input("text input 11 (type=password)", "my password", type="password")
 st.write("value 11:", v11)
+
+
+if "rerun_counter" not in st.session_state:
+    st.session_state.rerun_counter = 0
+
+st.session_state.rerun_counter += 1
+st.write("Rerun counter:", st.session_state.rerun_counter)

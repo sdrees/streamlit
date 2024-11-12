@@ -1,6 +1,6 @@
 {
   "name": "@streamlit/lib",
-  "version": "1.40.0",
+  "version": "1.40.1",
   "private": true,
   "license": "Apache-2.0",
   "main": "dist/index.js",
@@ -23,7 +23,6 @@
     "typecheck": "tsc",
     "test": "vitest run",
     "testWatch": "vitest",
-    "test:coverage": "env NODE_OPTIONS=--max_old_space_size=8192 jest --env=../jest/jsdom-polyfill-env.js --coverage --watchAll false --watch false ./",
     "lint": "eslint --ext .js --ext .jsx --ext .ts --ext .tsx --max-warnings 0 src"
   },
   "dependencies": {
@@ -131,9 +130,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@testing-library/dom": "^8.19.0",
-    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.1.2",
+    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.4.3",
     "@types/d3": "^7.4.0",
@@ -147,7 +145,6 @@
     "@types/react-plotly.js": "^2.6.3",
     "@types/react-syntax-highlighter": "^15.5.5",
     "@types/sprintf-js": "^1.1.4",
-    "@types/testing-library__jest-dom": "^5.14.5",
     "@types/ua-parser-js": "^0.7.39",
     "@types/uuid": "^9.0.2",
     "@types/wavesurfer.js": "^6.0.12",

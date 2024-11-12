@@ -32,7 +32,7 @@ describe("useScrollToBottom", () => {
     const mockedUseStateRef = useStateRef as MockedFunction<typeof useStateRef>
     mockedUseStateRef.mockImplementation(initialValue => [
       initialValue,
-      jest.fn(),
+      vi.fn(),
       { current: initialValue },
     ])
     const { result } = renderHook(() => useScrollToBottom())

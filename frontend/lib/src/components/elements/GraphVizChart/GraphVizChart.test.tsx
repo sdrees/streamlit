@@ -17,7 +17,6 @@
 import React from "react"
 
 import { Mock } from "vitest"
-import "@testing-library/jest-dom"
 import { screen } from "@testing-library/react"
 import { graphviz } from "d3-graphviz"
 
@@ -28,13 +27,13 @@ import { GraphVizChart as GraphVizChartProto } from "@streamlit/lib/src/proto"
 import GraphVizChart, { GraphVizChartProps } from "./GraphVizChart"
 
 vi.mock("d3-graphviz", () => ({
-  graphviz: jest.fn().mockReturnValue({
+  graphviz: vi.fn().mockReturnValue({
     zoom: () => ({
       fit: () => ({
         scale: () => ({
           engine: () => ({
             renderDot: () => ({
-              on: jest.fn(),
+              on: vi.fn(),
             }),
           }),
         }),
@@ -43,8 +42,8 @@ vi.mock("d3-graphviz", () => ({
   }),
 }))
 vi.mock("@streamlit/lib/src/util/log", () => ({
-  logError: jest.fn(),
-  logMessage: jest.fn(),
+  logError: vi.fn(),
+  logMessage: vi.fn(),
 }))
 
 const getProps = (
@@ -83,12 +82,12 @@ describe("GraphVizChart Element", () => {
 
   it("should update chart and log error when crashes", () => {
     // Mock graphviz().renderDot() to throw an error for the "crash" spec
-    const mockRenderDot = jest.fn().mockImplementation(spec => {
+    const mockRenderDot = vi.fn().mockImplementation(spec => {
       if (spec === "crash") {
         throw new Error("Simulated GraphViz crash")
       }
       return {
-        on: jest.fn(),
+        on: vi.fn(),
       }
     })
 

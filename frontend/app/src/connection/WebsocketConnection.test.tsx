@@ -59,12 +59,12 @@ function createMockArgs(overrides?: Partial<Args>): Args {
         basePath: "/",
       },
     ],
-    onMessage: jest.fn(),
-    onConnectionStateChange: jest.fn(),
-    onRetry: jest.fn(),
+    onMessage: vi.fn(),
+    onConnectionStateChange: vi.fn(),
+    onRetry: vi.fn(),
     claimHostAuthToken: () => Promise.resolve(undefined),
-    resetHostAuthToken: jest.fn(),
-    onHostConfigResp: jest.fn(),
+    resetHostAuthToken: vi.fn(),
+    onHostConfigResp: vi.fn(),
     ...overrides,
   }
 }
@@ -77,16 +77,16 @@ describe("doInitPings", () => {
     ],
     timeoutMs: 10,
     maxTimeoutMs: 100,
-    retryCallback: jest.fn(),
-    setAllowedOrigins: jest.fn(),
+    retryCallback: vi.fn(),
+    setAllowedOrigins: vi.fn(),
   }
 
   let originalAxiosGet: any
 
   beforeEach(() => {
     originalAxiosGet = axios.get
-    MOCK_PING_DATA.retryCallback = jest.fn()
-    MOCK_PING_DATA.setAllowedOrigins = jest.fn()
+    MOCK_PING_DATA.retryCallback = vi.fn()
+    MOCK_PING_DATA.setAllowedOrigins = vi.fn()
   })
 
   afterEach(() => {
@@ -683,7 +683,7 @@ describe("WebsocketConnection auth token handling", () => {
     websocketSpy = vi.spyOn(window, "WebSocket")
 
     originalAxiosGet = axios.get
-    axios.get = jest.fn()
+    axios.get = vi.fn()
   })
 
   afterEach(() => {
@@ -693,7 +693,7 @@ describe("WebsocketConnection auth token handling", () => {
   })
 
   it("always sets first Sec-WebSocket-Protocol option to 'streamlit'", async () => {
-    const resetHostAuthToken = jest.fn()
+    const resetHostAuthToken = vi.fn()
     const ws = new WebsocketConnection(createMockArgs({ resetHostAuthToken }))
 
     // Set correct state for this action
@@ -710,7 +710,7 @@ describe("WebsocketConnection auth token handling", () => {
   })
 
   it("sets second Sec-WebSocket-Protocol option to value from claimHostAuthToken", async () => {
-    const resetHostAuthToken = jest.fn()
+    const resetHostAuthToken = vi.fn()
     const ws = new WebsocketConnection(
       createMockArgs({
         claimHostAuthToken: () => Promise.resolve("iAmAnAuthToken"),
@@ -763,7 +763,7 @@ describe("WebsocketConnection auth token handling", () => {
     sessionInfo.setCurrent(mockSessionInfoProps())
     expect(sessionInfo.last?.sessionId).toBe("lastSessionId")
 
-    const resetHostAuthToken = jest.fn()
+    const resetHostAuthToken = vi.fn()
     const ws = new WebsocketConnection(
       createMockArgs({
         sessionInfo,

@@ -1,4 +1,4 @@
-name: Ensure Relative Imports in Frontend
+name: Enforce Pre-Commit Hooks
 
 on:
   push:
@@ -15,11 +15,11 @@ on:
 
 # Avoid duplicate workflows on same branch
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-ensure-relative-imports
+  group: ${{ github.workflow }}-${{ github.ref }}-enforce-pre-commit
   cancel-in-progress: true
 
 jobs:
-  ensure-relative-imports:
+  enforce-pre-commit:
     runs-on: ubuntu-latest
 
     defaults:
@@ -40,13 +40,18 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "${{ env.PYTHON_MAX_VERSION }}"
-      - name: Setup virtual env
-        uses: ./.github/actions/make_init
-      - name: Run make develop
-        run: make develop
-      - name: Run make protobuf
-        run: make protobuf
-      - name: Run make frontend-lib-prod
-        run: make frontend-lib-prod
-      - name: Ensure relative imports exist in the @streamlit/lib/dist folder
-        run: make ensure-relative-imports
+      - name: Restore pre-commit cache
+        id: cache-pre-commit
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: v1-pre-commit-${{ env.pythonLocation }}-${{ hashFiles('**/.pre-commit-config.yaml') }}
+      - name: Install pre-commit
+        run: |
+          pip install pre-commit
+          pre-commit install-hooks
+        shell: bash
+      - name: Install prettier
+        run: cd frontend && yarn install
+      - name: Run pre-commit hooks
+        run: PRE_COMMIT_NO_CONCURRENCY=true pre-commit run --show-diff-on-failure --color=always --all-files

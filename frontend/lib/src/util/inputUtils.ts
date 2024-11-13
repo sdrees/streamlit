@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-import styled from "@emotion/styled"
+type EnterKeyEvent = Pick<
+  React.KeyboardEvent<HTMLElement>,
+  "key" | "keyCode" | "nativeEvent"
+>
 
-export const StyledStackTrace = styled.pre(({ theme }) => ({
-  whiteSpace: "pre-wrap",
-  wordWrap: "break-word",
-  color: "inherit",
-  fontSize: theme.fontSizes.sm,
-  fontFamily: theme.genericFonts.codeFont,
-  backgroundColor: theme.colors.transparent,
-  overflowX: "auto",
-  margin: `0 0 ${theme.spacing.lg} 0`,
-  borderRadius: theme.radii.default,
-  padding: theme.spacing.lg,
-  border: `${theme.sizes.borderWidth} solid ${theme.colors.borderColor}`,
-}))
+export function isEnterKeyPressed(event: EnterKeyEvent): boolean {
+  const { keyCode, key } = event
 
-export const StyledErrorName = styled.strong(({ theme }) => ({
-  fontWeight: theme.fontWeights.bold,
-}))
+  // Using keyCode as well due to some different behaviors on Windows
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=79407
+  return (
+    (key === "Enter" || keyCode === 13 || keyCode === 10) &&
+    // Do not send the sentence being composed when Enter is typed into the IME.
+    !(event.nativeEvent?.isComposing === true)
+  )
+}

@@ -28,7 +28,7 @@ def test_text_input_widget_rendering(
 ):
     """Test that the st.text_input widgets are correctly rendered via screenshot matching."""
     text_input_widgets = themed_app.get_by_test_id("stTextInput")
-    expect(text_input_widgets).to_have_count(11)
+    expect(text_input_widgets).to_have_count(12)
 
     assert_snapshot(text_input_widgets.nth(0), name="st_text_input-default")
     assert_snapshot(text_input_widgets.nth(1), name="st_text_input-value_some_text")
@@ -46,7 +46,7 @@ def test_text_input_widget_rendering(
 def test_text_input_has_correct_initial_values(app: Page):
     """Test that st.text_input has the correct initial values."""
     markdown_elements = app.get_by_test_id("stMarkdown")
-    expect(markdown_elements).to_have_count(13)
+    expect(markdown_elements).to_have_count(14)
 
     expected = [
         "value 1: ",
@@ -204,6 +204,12 @@ def test_empty_text_input_behaves_correctly(app: Page):
     )
 
 
+def test_text_input_shows_state_value(app: Page):
+    expect(app.get_by_test_id("stTextInput").nth(11).locator("input")).to_have_value(
+        "xyz"
+    )
+
+
 def test_calls_callback_on_change(app: Page):
     """Test that it correctly calls the callback on change."""
     text_input_field = app.get_by_test_id("stTextInput").nth(8).locator("input").first
@@ -255,4 +261,4 @@ def test_check_top_level_class(app: Page):
 
 def test_custom_css_class_via_key(app: Page):
     """Test that the element can have a custom css class via the key argument."""
-    expect(get_element_by_key(app, "text_input9")).to_be_visible()
+    expect(get_element_by_key(app, "text_input_9")).to_be_visible()

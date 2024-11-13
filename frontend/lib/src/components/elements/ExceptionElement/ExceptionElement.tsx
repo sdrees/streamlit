@@ -23,11 +23,11 @@ import AlertContainer, {
 import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown"
 import { Exception as ExceptionProto } from "@streamlit/lib/src/proto"
 import { StyledCode } from "@streamlit/lib/src/components/elements/CodeBlock/styled-components"
+import { StyledStackTrace } from "@streamlit/lib/src/components/shared/ErrorElement/styled-components"
 
 import {
   StyledExceptionMessage,
   StyledMessageType,
-  StyledStackTrace,
   StyledStackTraceContent,
   StyledStackTraceRow,
   StyledStackTraceTitle,

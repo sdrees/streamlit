@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { FC, memo, useCallback, useRef, useState } from "react"
 
 import { Textarea as UITextArea } from "baseui/textarea"
 import { useTheme } from "@emotion/react"
@@ -32,6 +25,7 @@ import {
   Source,
   WidgetStateManager,
 } from "@streamlit/lib/src/WidgetStateManager"
+import useUpdateUiValue from "@streamlit/lib/src/hooks/useUpdateUiValue"
 import InputInstructions from "@streamlit/lib/src/components/shared/InputInstructions/InputInstructions"
 import {
   StyledWidgetLabelHelp,
@@ -47,7 +41,7 @@ import { EmotionTheme } from "@streamlit/lib/src/theme"
 import {
   useBasicWidgetState,
   ValueWithSource,
-} from "@streamlit/lib/src/useBasicWidgetState"
+} from "@streamlit/lib/src/hooks/useBasicWidgetState"
 
 export interface Props {
   disabled: boolean
@@ -133,16 +127,7 @@ const TextArea: FC<Props> = ({
     onFormCleared,
   })
 
-  useEffect(() => {
-    // the UI did not sync its value
-    if (dirty) {
-      return
-    }
-    // If the incoming value changes, update the UI value (e.g. set via state)
-    if (value !== uiValue) {
-      setUiValue(value)
-    }
-  }, [value, uiValue, dirty])
+  useUpdateUiValue(value, uiValue, setUiValue, dirty)
 
   const theme: EmotionTheme = useTheme()
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, useCallback, useEffect, useState } from "react"
+import React, { ReactElement, useCallback, useState } from "react"
 
 import uniqueId from "lodash/uniqueId"
 import { Input as UIInput } from "baseui/input"
@@ -25,7 +25,8 @@ import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
 import {
   useBasicWidgetState,
   ValueWithSource,
-} from "@streamlit/lib/src/useBasicWidgetState"
+} from "@streamlit/lib/src/hooks/useBasicWidgetState"
+import useUpdateUiValue from "@streamlit/lib/src/hooks/useUpdateUiValue"
 import InputInstructions from "@streamlit/lib/src/components/shared/InputInstructions/InputInstructions"
 import {
   StyledWidgetLabelHelp,
@@ -87,16 +88,7 @@ function TextInput({
     onFormCleared,
   })
 
-  useEffect(() => {
-    // the UI did not sync its value
-    if (dirty) {
-      return
-    }
-    // If the incoming value changes, update the UI value (e.g. set via state)
-    if (value !== uiValue) {
-      setUiValue(value)
-    }
-  }, [value, uiValue, dirty])
+  useUpdateUiValue(value, uiValue, setUiValue, dirty)
 
   /**
    * Whether the input is currently focused.

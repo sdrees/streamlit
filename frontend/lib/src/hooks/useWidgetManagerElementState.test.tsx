@@ -133,6 +133,8 @@ describe("useWidgetManagerElementState hook", () => {
     expect(widgetMgr.getElementState(elementId, stateKey)).toBe(defaultValue)
 
     // change the input value
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(inputElement, { target: { value: newValue } })
 
     // verify new value is set

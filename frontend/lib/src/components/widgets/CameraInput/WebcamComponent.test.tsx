@@ -123,6 +123,8 @@ describe("Test Webcam Component", () => {
       screen.getByTestId("stCameraInputSwitchButton")
     ).getByRole("button")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(switchButton)
 
     expect(props.setFacingMode).toHaveBeenCalledTimes(1)
@@ -135,6 +137,8 @@ describe("Test Webcam Component", () => {
       screen.getByTestId("stCameraInputWebcamComponent")
     ).toBeInTheDocument()
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByRole("button", { name: "Take Photo" }))
 
     expect(props.handleCapture).toHaveBeenCalled()

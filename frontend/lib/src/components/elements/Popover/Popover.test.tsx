@@ -74,6 +74,8 @@ describe("Popover container", () => {
       </Popover>
     )
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByText("label"))
     // Text should be visible now
     expect(screen.queryByText("test")).toBeVisible()

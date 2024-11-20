@@ -168,6 +168,8 @@ describe("Radio widget", () => {
 
     const secondOption = radioOptions[1]
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(secondOption)
 
     expect(secondOption).toBeChecked()

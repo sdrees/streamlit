@@ -127,6 +127,8 @@ describe("Toast Component", () => {
     expect(toast).toContainElement(expandButton)
 
     // Click view more button & expand the message
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(expandButton)
     expect(toast).toHaveTextContent(
       "Random toast message that is a really really really really really really really really really long message, going way past the 3 line limit"
@@ -135,6 +137,8 @@ describe("Toast Component", () => {
     // Click view less button & collapse the message
     const collapseButton = screen.getByRole("button", { name: "view less" })
     expect(toast).toContainElement(collapseButton)
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(collapseButton)
     expect(toastText).toHaveTextContent(
       "Random toast message that is a really really really really really really really really really long"
@@ -151,6 +155,8 @@ describe("Toast Component", () => {
     expect(toast).toBeInTheDocument()
     expect(closeButton).toBeInTheDocument()
     // Click close button
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(closeButton)
     // Wait for toast to be removed from DOM
     await waitFor(() => expect(toast).not.toBeInTheDocument())
@@ -212,6 +218,8 @@ describe("Toast Component", () => {
     renderComponent(props)
 
     const expandButton = screen.getByRole("button", { name: "view more" })
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(expandButton) // Expand
 
     const toastExpanded = screen
@@ -220,6 +228,8 @@ describe("Toast Component", () => {
     expect(toastExpanded).toEqual(messageWithBreaks) // Check full message is displayed
 
     const collapseButton = screen.getByRole("button", { name: "view less" })
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(collapseButton) // Collapse
 
     const toastCollapsed = screen

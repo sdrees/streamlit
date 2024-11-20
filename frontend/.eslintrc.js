@@ -222,6 +222,14 @@ module.exports = {
         "streamlit-custom/no-hardcoded-theme-values": ["off"],
       },
     },
+    {
+      // test-only rules
+      files: ["**/*.test.ts", "**/*.test.tsx"],
+      extends: ["plugin:testing-library/react"],
+      rules: {
+        "testing-library/prefer-user-event": "error",
+      },
+    },
   ],
   settings: {
     react: {

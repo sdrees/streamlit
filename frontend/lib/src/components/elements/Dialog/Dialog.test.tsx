@@ -81,6 +81,8 @@ describe("Dialog container", () => {
     )
 
     expect(screen.getByText("test")).toBeVisible()
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByLabelText("Close"))
     // dialog should be closed by clicking outside and, thus, the content should be gone
     expect(() => screen.getByText("test")).toThrow()

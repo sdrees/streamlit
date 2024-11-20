@@ -128,6 +128,8 @@ describe("PageLink", () => {
     })
 
     const pageNavLink = screen.getByTestId("stPageLink-NavLink")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(pageNavLink)
     expect(mockOnPageChange).toHaveBeenCalledWith("main_page_hash")
   })
@@ -140,6 +142,8 @@ describe("PageLink", () => {
     })
 
     const pageNavLink = screen.getByTestId("stPageLink-NavLink")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(pageNavLink)
     expect(mockOnPageChange).not.toHaveBeenCalled()
   })
@@ -152,6 +156,8 @@ describe("PageLink", () => {
     })
 
     const pageNavLink = screen.getByTestId("stPageLink-NavLink")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(pageNavLink)
     expect(mockOnPageChange).not.toHaveBeenCalled()
   })

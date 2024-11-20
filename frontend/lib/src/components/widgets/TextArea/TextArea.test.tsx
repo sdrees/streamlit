@@ -153,6 +153,8 @@ describe("TextArea widget", () => {
     render(<TextArea {...props} />)
 
     const textArea = screen.getByRole("textbox")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(textArea, { target: { value: "testing" } })
     fireEvent.blur(textArea)
 
@@ -173,7 +175,11 @@ describe("TextArea widget", () => {
 
     const textArea = screen.getByRole("textbox")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(textArea, { target: { value: "testing" } })
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.keyDown(textArea, { ctrlKey: true, key: "Enter" })
 
     expect(props.widgetMgr.setStringValue).toHaveBeenCalledWith(
@@ -195,9 +201,13 @@ describe("TextArea widget", () => {
 
     const textArea = screen.getByRole("textbox")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(textArea, { target: { value: "0123456789" } })
     expect(textArea).toHaveValue("0123456789")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(textArea, { target: { value: "0123456789a" } })
     expect(textArea).toHaveValue("0123456789")
   })
@@ -208,6 +218,8 @@ describe("TextArea widget", () => {
     render(<TextArea {...props} />)
 
     const textArea = screen.getByRole("textbox")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(textArea, { target: { value: "TEST" } })
 
     // Check that the last call was in componentDidMount.
@@ -252,6 +264,8 @@ describe("TextArea widget", () => {
 
     // Change the widget value
     const textArea = screen.getByRole("textbox")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(textArea, { target: { value: "TEST" } })
     expect(textArea).toHaveValue("TEST")
 
@@ -356,7 +370,11 @@ describe("TextArea widget", () => {
       vi.spyOn(props.widgetMgr, "setStringValue")
       render(<TextArea {...props} />)
       const textArea = screen.getByRole("textbox")
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.change(textArea, { target: { value: "testing" } })
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.keyDown(textArea, { metaKey: true, key: "Enter" })
 
       expect(props.widgetMgr.setStringValue).toHaveBeenCalledWith(
@@ -379,6 +397,8 @@ describe("TextArea widget", () => {
 
     // Make some change to cause a rerender
     const textArea = screen.getByRole("textbox")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(textArea, { target: { value: "testing" } })
     fireEvent.blur(textArea)
 

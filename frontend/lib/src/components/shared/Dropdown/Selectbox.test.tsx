@@ -111,6 +111,8 @@ describe("Selectbox widget", () => {
   it("renders options", () => {
     render(<Selectbox {...props} />)
     const selectbox = screen.getByRole("combobox")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(selectbox)
     const options = screen.getAllByRole("option")
 
@@ -132,8 +134,12 @@ describe("Selectbox widget", () => {
     render(<Selectbox {...props} />)
     const selectbox = screen.getByRole("combobox")
     // Open the dropdown
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(selectbox)
     const options = screen.getAllByRole("option")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(options[1])
 
     expect(props.onChange).toHaveBeenCalledWith(1)
@@ -143,6 +149,8 @@ describe("Selectbox widget", () => {
   it("doesn't filter options based on index", () => {
     render(<Selectbox {...props} />)
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(screen.getByRole("combobox"), { target: { value: "1" } })
     expect(screen.getByText("No results")).toBeInTheDocument()
   })
@@ -151,11 +159,15 @@ describe("Selectbox widget", () => {
     render(<Selectbox {...props} />)
     const selectbox = screen.getByRole("combobox")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(selectbox, { target: { value: "b" } })
     let options = screen.getAllByRole("option")
     expect(options).toHaveLength(1)
     expect(options[0]).toHaveTextContent("b")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(selectbox, { target: { value: "B" } })
     options = screen.getAllByRole("option")
     expect(options).toHaveLength(1)

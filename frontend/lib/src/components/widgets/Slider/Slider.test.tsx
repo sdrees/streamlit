@@ -57,7 +57,11 @@ const triggerChangeEvent = (
   key: "ArrowLeft" | "ArrowRight"
 ): void => {
   fireEvent.focus(element)
+  // TODO: Utilize user-event instead of fireEvent
+  // eslint-disable-next-line testing-library/prefer-user-event
   fireEvent.keyDown(element, { key })
+  // TODO: Utilize user-event instead of fireEvent
+  // eslint-disable-next-line testing-library/prefer-user-event
   fireEvent.keyUp(element, { key })
 }
 

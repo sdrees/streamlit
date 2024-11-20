@@ -49,6 +49,8 @@ describe("Tooltip element", () => {
     expect(tooltipTarget).toBeInTheDocument()
 
     // Hover to see tooltip content
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.mouseOver(tooltipTarget)
 
     const tooltipContent = await screen.findByTestId("stTooltipContent")
@@ -70,6 +72,8 @@ describe("Tooltip element", () => {
     expect(tooltipTarget).toBeInTheDocument()
 
     // Hover to see tooltip content
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.mouseOver(tooltipTarget)
 
     const tooltipContent = await screen.findByTestId("stTooltipContent")

@@ -90,6 +90,8 @@ describe("ToolbarActions", () => {
     render(<ToolbarActions {...props} />)
 
     const favoriteButton = screen.getAllByTestId("stBaseButton-header")[0]
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(favoriteButton)
     expect(props.sendMessageToHost).toHaveBeenLastCalledWith({
       type: "TOOLBAR_ITEM_CALLBACK",
@@ -97,6 +99,8 @@ describe("ToolbarActions", () => {
     })
 
     const shareButton = screen.getByRole("button", { name: "Share" })
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(shareButton)
     expect(props.sendMessageToHost).toHaveBeenLastCalledWith({
       type: "TOOLBAR_ITEM_CALLBACK",

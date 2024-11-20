@@ -129,6 +129,8 @@ describe("Checkbox widget", () => {
 
     render(<Checkbox {...props} />)
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByRole("checkbox"))
 
     expect(props.widgetMgr.setBoolValue).toHaveBeenCalledWith(
@@ -146,6 +148,8 @@ describe("Checkbox widget", () => {
 
     render(<Checkbox {...props} />)
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByRole("checkbox"))
 
     expect(props.widgetMgr.setBoolValue).toHaveBeenCalledWith(
@@ -166,6 +170,8 @@ describe("Checkbox widget", () => {
     render(<Checkbox {...props} />)
 
     // Change the widget value
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByRole("checkbox"))
 
     expect(screen.getByRole("checkbox")).toBeChecked()

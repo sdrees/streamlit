@@ -85,6 +85,8 @@ describe("ColorPicker widget", () => {
     render(<ColorPicker {...props} />)
 
     const colorBlock = screen.getByTestId("stColorPickerBlock")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(colorBlock)
     expect(colorBlock).toHaveStyle("background-color: #000000")
 
@@ -100,12 +102,18 @@ describe("ColorPicker widget", () => {
 
     const newColor = "#e91e63"
     const colorBlock = screen.getByTestId("stColorPickerBlock")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(colorBlock)
 
     // Our widget should be updated.
     const colorInput = screen.getByRole("textbox")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(colorInput, { target: { value: newColor } })
     // Close out of the popover
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(colorBlock)
 
     // And the WidgetMgr should also be updated.
@@ -128,12 +136,18 @@ describe("ColorPicker widget", () => {
     // Choose a new color
     const newColor = "#e91e63"
     const colorBlock = screen.getByTestId("stColorPickerBlock")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(colorBlock)
 
     // Update the color
     const colorInput = screen.getByRole("textbox")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(colorInput, { target: { value: newColor } })
     // Close out of the popover
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(colorBlock)
 
     expect(colorInput).toHaveValue(newColor)

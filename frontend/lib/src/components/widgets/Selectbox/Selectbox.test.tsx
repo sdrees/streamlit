@@ -47,8 +47,12 @@ const getProps = (
 })
 
 const pickOption = (selectbox: HTMLElement, value: string): void => {
+  // TODO: Utilize user-event instead of fireEvent
+  // eslint-disable-next-line testing-library/prefer-user-event
   fireEvent.click(selectbox)
   const valueElement = screen.getByText(value)
+  // TODO: Utilize user-event instead of fireEvent
+  // eslint-disable-next-line testing-library/prefer-user-event
   fireEvent.click(valueElement)
 }
 

@@ -20,6 +20,7 @@
     "lintLib": "yarn workspace @streamlit/lib lint",
     "format": "prettier --write --config .prettierrc './{app,lib}/src/**/*.{js,ts,jsx,tsx}'",
     "formatCheck": "prettier --check --config .prettierrc './{app,lib}/src/**/*.{js,ts,jsx,tsx}'",
+    "lint:interactive": "yarn eslint-interactive ./app/src ./lib/src",
     "test": "yarn workspace @streamlit/lib test && yarn workspace @streamlit/app test",
     "testcoverage": "yarn workspace @streamlit/lib test --coverage && yarn workspace @streamlit/app test --coverage",
     "testLib": "yarn workspace @streamlit/lib testWatch",

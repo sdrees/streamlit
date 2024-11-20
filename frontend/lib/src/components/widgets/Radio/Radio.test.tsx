@@ -172,6 +172,8 @@ describe("Radio widget", () => {
     const radioOptions = screen.getAllByRole("radio")
     const secondOption = radioOptions[1]
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(secondOption)
 
     expect(props.widgetMgr.setIntValue).toHaveBeenLastCalledWith(
@@ -195,6 +197,8 @@ describe("Radio widget", () => {
     const secondOption = radioOptions[1]
 
     // Change the widget value
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(secondOption)
     expect(secondOption).toBeChecked()
 

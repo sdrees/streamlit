@@ -79,6 +79,8 @@ describe("VideoRecordedDialog", () => {
     })
 
     expect(downloadButton).toBeInTheDocument()
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(downloadButton)
     expect(props.onClose).toHaveBeenCalled()
   })

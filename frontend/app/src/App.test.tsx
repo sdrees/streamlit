@@ -356,11 +356,15 @@ function sendForwardMessage(
 }
 
 function openCacheModal(): void {
+  // TODO: Utilize user-event instead of fireEvent
+  // eslint-disable-next-line testing-library/prefer-user-event
   fireEvent.keyDown(document.body, {
     key: "c",
     which: 67,
   })
 
+  // TODO: Utilize user-event instead of fireEvent
+  // eslint-disable-next-line testing-library/prefer-user-event
   fireEvent.keyUp(document.body, {
     key: "c",
     which: 67,
@@ -516,6 +520,8 @@ describe("App", () => {
       getStoredValue<WidgetStateManager>(WidgetStateManager)
     expect(widgetStateManager.sendUpdateWidgetsMessage).not.toHaveBeenCalled()
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.keyDown(document.body, {
       key: "r",
       which: 82,
@@ -1122,6 +1128,8 @@ describe("App", () => {
         const navLinks = screen.queryAllByTestId("stSidebarNavLink")
         expect(navLinks).toHaveLength(2)
 
+        // TODO: Utilize user-event instead of fireEvent
+        // eslint-disable-next-line testing-library/prefer-user-event
         fireEvent.click(navLinks[1])
 
         const connectionManager = getMockConnectionManager()
@@ -1714,6 +1722,8 @@ describe("App", () => {
       const navLinks = screen.queryAllByTestId("stSidebarNavLink")
       expect(navLinks).toHaveLength(2)
 
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(navLinks[1])
 
       const connectionManager = getMockConnectionManager()
@@ -2278,6 +2288,8 @@ describe("App", () => {
 
       getMockConnectionManager(true)
 
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.keyPress(screen.getByTestId("stApp"), {
         key: "c",
         which: 67,

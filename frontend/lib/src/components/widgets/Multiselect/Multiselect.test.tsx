@@ -159,6 +159,8 @@ describe("Multiselect widget", () => {
     render(<Multiselect {...props} />)
 
     const expandListButton = screen.getAllByTitle("open")[0]
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(expandListButton)
 
     const options = screen.getAllByRole("option")
@@ -174,9 +176,13 @@ describe("Multiselect widget", () => {
 
     const multiSelect = screen.getByRole("combobox")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(multiSelect, { target: { value: "1" } })
     expect(screen.getByText("No results")).toBeInTheDocument()
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(multiSelect, { target: { value: "a" } })
     const match = screen.getByRole("option")
     expect(match).toHaveTextContent("a")
@@ -194,8 +200,12 @@ describe("Multiselect widget", () => {
     render(<Multiselect {...props} />)
 
     const multiSelect = screen.getByRole("combobox")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(multiSelect, { target: { value: "b" } })
     const match = screen.getByRole("option")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(match)
 
     const selections = screen.getAllByRole("button")
@@ -209,10 +219,14 @@ describe("Multiselect widget", () => {
 
     // Clear current selection
     const deleteOptionButton = screen.getAllByTitle("Delete")[0]
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(deleteOptionButton)
 
     // Should now see all options available again
     const expandListButton = screen.getAllByTitle("open")[0]
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(expandListButton)
 
     const options = screen.getAllByRole("option")
@@ -228,10 +242,14 @@ describe("Multiselect widget", () => {
 
     // Clear all selections
     const clearAllButton = screen.getByRole("button", { name: "Clear all" })
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(clearAllButton)
 
     // Should now see all options available again
     const expandListButton = screen.getAllByTitle("open")[0]
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(expandListButton)
 
     const options = screen.getAllByRole("option")
@@ -252,9 +270,13 @@ describe("Multiselect widget", () => {
 
     // Change the widget value
     const multiSelect = screen.getByRole("combobox")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(multiSelect, { target: { value: "b" } })
     const match = screen.getByRole("option")
     // Select b
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(match)
 
     // Options list should only have c available - a & b selected
@@ -276,6 +298,8 @@ describe("Multiselect widget", () => {
 
     // Our widget should be reset, and the widgetMgr should be updated
     const expandListButton = screen.getAllByTitle("open")[0]
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(expandListButton)
     // Options list should only have b & c available - default a selected
     const updatedOptions = screen.getAllByRole("option")
@@ -307,6 +331,8 @@ describe("Multiselect widget", () => {
 
       // Type something with no matches
       const multiSelect = screen.getByRole("combobox")
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.change(multiSelect, { target: { value: "z" } })
 
       expect(screen.getByText("No results")).toBeInTheDocument()
@@ -326,6 +352,8 @@ describe("Multiselect widget", () => {
 
       // Type something with no matches
       const multiSelect = screen.getByRole("combobox")
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.change(multiSelect, { target: { value: "z" } })
 
       expect(screen.getByText("No results")).toBeInTheDocument()
@@ -345,8 +373,12 @@ describe("Multiselect widget", () => {
 
       // Select another option, b
       const multiSelect = screen.getByRole("combobox")
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.change(multiSelect, { target: { value: "b" } })
       const match = screen.getByRole("option")
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(match)
 
       expect(
@@ -369,6 +401,8 @@ describe("Multiselect widget", () => {
       render(<Multiselect {...props} />)
 
       const multiSelect = screen.getByRole("combobox")
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(multiSelect)
 
       expect(
@@ -392,10 +426,14 @@ describe("Multiselect widget", () => {
 
       // Clear a selection
       const deleteOptionButton = screen.getAllByTitle("Delete")[0]
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(deleteOptionButton)
 
       // Options list should only have a & c available - b selected
       const expandListButton = screen.getAllByTitle("open")[0]
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(expandListButton)
       const updatedOptions = screen.getAllByRole("option")
       expect(updatedOptions.length).toBe(2)

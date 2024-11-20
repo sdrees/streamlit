@@ -199,6 +199,8 @@ describe("ButtonGroup widget", () => {
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledTimes(1)
 
       // click element at index 1 to select it
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(buttons[1])
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledWith(
         props.element,
@@ -209,6 +211,8 @@ describe("ButtonGroup widget", () => {
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledTimes(2)
 
       // click element at index 0 to select it
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(getButtonGroupButtons()[0])
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledWith(
         props.element,
@@ -219,6 +223,8 @@ describe("ButtonGroup widget", () => {
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledTimes(3)
 
       // click on same button does deselect it
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(getButtonGroupButtons()[0])
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledWith(
         props.element,
@@ -244,6 +250,8 @@ describe("ButtonGroup widget", () => {
         undefined
       )
 
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(buttons[1])
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledWith(
         props.element,
@@ -253,6 +261,8 @@ describe("ButtonGroup widget", () => {
         undefined
       )
 
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(getButtonGroupButtons()[0])
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledWith(
         props.element,
@@ -262,6 +272,8 @@ describe("ButtonGroup widget", () => {
       )
 
       // unselect the second button
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(getButtonGroupButtons()[1])
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledWith(
         props.element,
@@ -289,6 +301,8 @@ describe("ButtonGroup widget", () => {
       )
 
       const button = getButtonGroupButtons()[0]
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(button)
       expect(props.widgetMgr.setIntArrayValue).toHaveBeenCalledWith(
         props.element,
@@ -397,6 +411,8 @@ describe("ButtonGroup widget", () => {
       const tooltip = screen.getByTestId("stTooltipHoverTarget")
       expect(tooltip).toBeInTheDocument()
 
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.mouseOver(tooltip)
       const helpText = await screen.findByText("help text")
       expect(helpText).toBeInTheDocument()
@@ -411,6 +427,8 @@ describe("ButtonGroup widget", () => {
         })
         render(<ButtonGroup {...props} />)
 
+        // TODO: Utilize user-event instead of fireEvent
+        // eslint-disable-next-line testing-library/prefer-user-event
         fireEvent.click(getButtonGroupButtons()[0])
         const buttons = getButtonGroupButtons()
         expectHighlightStyle(buttons[0])
@@ -429,6 +447,8 @@ describe("ButtonGroup widget", () => {
         const buttonGroupWidget = screen.getByTestId("stButtonGroup")
         const buttons = within(buttonGroupWidget).getAllByRole("button")
         const buttonToClick = buttons[2]
+        // TODO: Utilize user-event instead of fireEvent
+        // eslint-disable-next-line testing-library/prefer-user-event
         fireEvent.click(buttonToClick)
         expectHighlightStyle(buttonToClick)
         expectHighlightStyle(buttons[0])
@@ -460,6 +480,8 @@ describe("ButtonGroup widget", () => {
         const buttonGroupWidget = screen.getByTestId("stButtonGroup")
         const buttons = within(buttonGroupWidget).getAllByRole("button")
         const buttonToClick = buttons[1]
+        // TODO: Utilize user-event instead of fireEvent
+        // eslint-disable-next-line testing-library/prefer-user-event
         fireEvent.click(buttonToClick)
         expectHighlightStyle(buttonToClick, false)
         expectHighlightStyle(buttons[0], false)
@@ -477,6 +499,8 @@ describe("ButtonGroup widget", () => {
         expect(icon.textContent).toContain(materialIconNames[index])
       })
 
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(buttons[1])
       expect(getButtonGroupButtons()[1].textContent).toContain(
         "icon_2_selected"
@@ -526,7 +550,11 @@ describe("ButtonGroup widget", () => {
 
     // Change the widget value
     // de-select default value
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(getButtonGroupButtons()[0])
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(getButtonGroupButtons()[1])
     let buttons = getButtonGroupButtons()
     expectHighlightStyle(buttons[0])

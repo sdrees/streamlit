@@ -99,6 +99,8 @@ describe("FormSubmitButton", () => {
 
     const formSubmitButton = screen.getByRole("button")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(formSubmitButton)
     expect(props.widgetMgr.submitForm).toHaveBeenCalledWith(
       props.element.formId,
@@ -114,6 +116,8 @@ describe("FormSubmitButton", () => {
 
     const formSubmitButton = screen.getByRole("button")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(formSubmitButton)
     expect(props.widgetMgr.submitForm).toHaveBeenCalledWith(
       props.element.formId,

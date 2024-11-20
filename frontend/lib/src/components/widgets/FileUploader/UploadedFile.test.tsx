@@ -71,6 +71,8 @@ describe("UploadedFile widget", () => {
     render(<UploadedFile {...props} />)
     expect(screen.getByTestId("stFileUploaderFile")).toBeInTheDocument()
     const deleteBtn = screen.getByRole("button")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(deleteBtn)
     expect(props.onDelete).toHaveBeenCalledWith(1)
   })

@@ -127,6 +127,8 @@ describe("StatusWidget element", () => {
     vi.runAllTimers()
     const baseButtonHeader = screen.getByTestId("stBaseButton-header")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(baseButtonHeader)
 
     expect(stopScript).toHaveBeenCalled()
@@ -161,6 +163,8 @@ describe("StatusWidget element", () => {
     expect(buttons[1]).toHaveTextContent("Always rerun")
 
     // Click "Rerun" button
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(buttons[0])
 
     expect(rerunScript).toHaveBeenCalledWith(false)
@@ -195,6 +199,8 @@ describe("StatusWidget element", () => {
     expect(buttons[1]).toHaveTextContent("Always rerun")
 
     // Click "Always Rerun" button
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(buttons[1])
 
     expect(rerunScript).toHaveBeenCalledWith(true)
@@ -252,6 +258,8 @@ describe("StatusWidget element", () => {
     // Verify the Always rerun is visible
     expect(screen.getByText("Always rerun")).toBeInTheDocument()
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.keyDown(document.body, {
       key: "a",
       which: 65,

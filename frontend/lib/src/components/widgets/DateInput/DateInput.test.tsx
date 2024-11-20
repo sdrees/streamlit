@@ -157,6 +157,8 @@ describe("DateInput widget", () => {
 
     render(<DateInput {...props} />)
     const datePicker = screen.getByTestId("stDateInputField")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(datePicker, { target: { value: newDate } })
 
     expect(screen.getByTestId("stDateInputField")).toHaveValue(newDate)
@@ -177,6 +179,8 @@ describe("DateInput widget", () => {
     render(<DateInput {...props} />)
     const dateInput = screen.getByTestId("stDateInputField")
 
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(dateInput, {
       target: { value: newDate },
     })
@@ -184,6 +188,8 @@ describe("DateInput widget", () => {
     expect(dateInput).toHaveValue(newDate)
 
     // Simulating clearing the date input
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(dateInput, {
       target: { value: null },
     })
@@ -268,6 +274,8 @@ describe("DateInput widget", () => {
     render(<DateInput {...props} />)
 
     const dateInput = screen.getByTestId("stDateInputField")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(dateInput, {
       target: { value: newDate },
     })

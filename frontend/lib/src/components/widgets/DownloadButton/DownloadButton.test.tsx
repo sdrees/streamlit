@@ -85,6 +85,8 @@ describe("DownloadButton widget", () => {
 
       const downloadButton = screen.getByRole("button")
 
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(downloadButton)
 
       expect(props.widgetMgr.setTriggerValue).toHaveBeenCalledWith(
@@ -120,6 +122,8 @@ describe("DownloadButton widget", () => {
       render(<DownloadButton {...props} />)
 
       const downloadButton = screen.getByRole("button")
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(downloadButton)
 
       expect(props.widgetMgr.setTriggerValue).toHaveBeenCalledWith(

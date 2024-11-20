@@ -93,6 +93,8 @@ describe("Button element", () => {
     const onClick = vi.fn()
     render(<BaseButton {...getProps({ onClick })}>Hello</BaseButton>)
     const buttonWidget = screen.getByRole("button")
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(buttonWidget)
 
     expect(onClick).toHaveBeenCalled()

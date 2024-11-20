@@ -54,6 +54,8 @@ describe("AudioInputActionButton", () => {
     )
 
     expect(screen.getByLabelText("Record")).toBeInTheDocument()
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByLabelText("Record"))
     expect(startRecording).toHaveBeenCalled()
   })
@@ -69,6 +71,8 @@ describe("AudioInputActionButton", () => {
     )
 
     expect(screen.getByLabelText("Stop recording")).toBeInTheDocument()
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByLabelText("Stop recording"))
     expect(stopRecording).toHaveBeenCalled()
   })
@@ -85,6 +89,8 @@ describe("AudioInputActionButton", () => {
 
     expect(screen.getByLabelText("Record")).toBeInTheDocument()
     expect(screen.getByLabelText("Play")).toBeInTheDocument()
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByLabelText("Play"))
     expect(onClickPlayPause).toHaveBeenCalled()
   })
@@ -102,6 +108,8 @@ describe("AudioInputActionButton", () => {
 
     expect(screen.getByLabelText("Record")).toBeInTheDocument()
     expect(screen.getByLabelText("Pause")).toBeInTheDocument()
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.click(screen.getByLabelText("Pause"))
     expect(onClickPlayPause).toHaveBeenCalled()
   })
@@ -118,6 +126,8 @@ describe("AudioInputActionButton", () => {
       )
 
       expect(screen.getByLabelText("Record")).toBeInTheDocument()
+      // TODO: Utilize user-event instead of fireEvent
+      // eslint-disable-next-line testing-library/prefer-user-event
       fireEvent.click(screen.getByLabelText("Record"))
       expect(startRecording).not.toHaveBeenCalled()
     })

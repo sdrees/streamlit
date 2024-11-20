@@ -47,6 +47,8 @@ describe("TextElement element", () => {
     render(<TextElement {...props} />)
     const tooltip = screen.getByTestId("stTooltipHoverTarget")
     expect(tooltip).toBeInTheDocument()
+    // TODO: Utilize user-event instead of fireEvent
+    // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.mouseOver(tooltip)
 
     const helpText = await screen.findAllByText("help text")

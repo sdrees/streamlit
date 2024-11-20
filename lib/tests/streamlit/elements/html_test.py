@@ -41,3 +41,55 @@ class StHtmlAPITest(DeltaGeneratorTestCase):
 
         el = self.get_delta_from_queue().new_element
         self.assertEqual(el.html.body, "<button>Corgi</button>")
+
+    def test_st_html_with_dunderstr(self):
+        """Test st.html with __str__."""
+
+        class MyClass:
+            def __str__(self):
+                return "mystr"
+
+        obj = MyClass()
+
+        st.html(obj)
+
+        el = self.get_delta_from_queue().new_element
+        self.assertEqual(el.html.body, "mystr")
+
+    def test_st_html_with_repr_html(self):
+        """Test st.html with _repr_html_."""
+
+        class MyClass:
+            def _repr_html_(self):
+                return "<div>html</div>"
+
+        obj = MyClass()
+
+        st.html(obj)
+
+        el = self.get_delta_from_queue().new_element
+        self.assertEqual(el.html.body, "<div>html</div>")
+
+    def test_st_html_with_repr_html_and_dunderstr(self):
+        """Test st.html with _repr_html_ and dunderstr: html should win."""
+
+        class MyClass:
+            def __str__(self):
+                return "mystr"
+
+            def _repr_html_(self):
+                return "<div>html</div>"
+
+        obj = MyClass()
+
+        st.html(obj)
+
+        el = self.get_delta_from_queue().new_element
+        self.assertEqual(el.html.body, "<div>html</div>")
+
+    def test_st_html_with_nonhtml_filelike_str(self):
+        """Test st.html with a string that's neither HTML-like nor a real file."""
+        st.html("foo/fake.html")
+
+        el = self.get_delta_from_queue().new_element
+        self.assertEqual(el.html.body, "foo/fake.html")

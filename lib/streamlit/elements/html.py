@@ -16,11 +16,12 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from streamlit.proto.Html_pb2 import Html as HtmlProto
 from streamlit.runtime.metrics_util import gather_metrics
 from streamlit.string_util import clean_text
+from streamlit.type_util import SupportsReprHtml, SupportsStr, has_callable_attr
 
 if TYPE_CHECKING:
     from streamlit.delta_generator import DeltaGenerator
@@ -30,7 +31,7 @@ class HtmlMixin:
     @gather_metrics("html")
     def html(
         self,
-        body: str | Path,
+        body: str | Path | SupportsStr | SupportsReprHtml,
     ) -> DeltaGenerator:
         """Insert HTML into your app.
 
@@ -46,13 +47,17 @@ class HtmlMixin:
 
         Parameters
         ----------
-        body : str, Path
+        body : str or Path or object
             The HTML code to insert, or path to an HTML code file which is
             loaded and inserted.
 
             If the provided string is the path of a local file, Streamlit will
             load the file and render its contents as HTML. Otherwise, Streamlit
             will render the string directly as HTML.
+
+            If anything other than a string or file path is passed, it will
+            be converted to a string behind the scenes by calling
+            `body._repr_html_()`, if present, and `str(body)`, otherwise.
 
         Example
         -------
@@ -69,15 +74,33 @@ class HtmlMixin:
         """
         html_proto = HtmlProto()
 
-        # Check if the body is a file path. If it's a Path object, open it directly.
-        if os.path.isfile(body) or isinstance(body, Path):
-            with open(body, encoding="utf-8") as f:
+        # If body supports _repr_html_, use that.
+        if has_callable_attr(body, "_repr_html_"):
+            html_proto.body = cast(SupportsReprHtml, body)._repr_html_()
+
+        # Check if the body is a file path. May include filesystem lookup.
+        elif isinstance(body, Path) or _is_file(body):
+            with open(cast(str, body), encoding="utf-8") as f:
                 html_proto.body = f.read()
+
+        # OK, let's just try converting to string and hope for the best.
         else:
-            html_proto.body = clean_text(body)
+            html_proto.body = clean_text(cast(SupportsStr, body))
+
         return self.dg._enqueue("html", html_proto)
 
     @property
     def dg(self) -> DeltaGenerator:
         """Get our DeltaGenerator."""
         return cast("DeltaGenerator", self)
+
+
+def _is_file(obj: Any) -> bool:
+    """Checks if obj is a file, and doesn't throw if not.
+
+    The "not throwing" part is important!
+    """
+    try:
+        return os.path.isfile(obj)
+    except TypeError:
+        return False

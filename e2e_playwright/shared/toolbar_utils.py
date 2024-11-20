@@ -51,6 +51,11 @@ def assert_fullscreen_toolbar_button_interactions(
     # Click on expand to fullscreen button:
     fullscreen_toolbar_button.click()
 
+    # Make sure that the button shows the close fullscreen button
+    expect(
+        widget_toolbar.get_by_role("button", name="Close fullscreen")
+    ).to_be_visible()
+
     # Check that it is visible
     assert_snapshot(
         app,
@@ -60,6 +65,10 @@ def assert_fullscreen_toolbar_button_interactions(
 
     # Click again on fullscreen button to close fullscreen mode:
     fullscreen_toolbar_button.click()
+
+    # Make sure that the button shows the open fullscreen button
+    expect(widget_toolbar.get_by_role("button", name="Fullscreen")).to_be_visible()
+
     assert_snapshot(
         fullscreen_wrapper,
         name=f"{filename_prefix if filename_prefix != '' else widget_test_id}-fullscreen_collapsed",

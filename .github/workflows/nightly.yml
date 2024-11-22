@@ -89,6 +89,12 @@ jobs:
     with:
       ref: ${{needs.create-nightly-tag.outputs.tag}}
 
+  performance-lighthouse:
+    uses: ./.github/workflows/performance-lighthouse.yml
+    with:
+      ref: ${{needs.create-nightly-tag.outputs.tag}}
+      externalCall: true
+
   test-status-notification:
     runs-on: ubuntu-latest
 

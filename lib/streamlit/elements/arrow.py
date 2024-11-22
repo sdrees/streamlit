@@ -233,7 +233,7 @@ class ArrowMixin:
         column_order: Iterable[str] | None = None,
         column_config: ColumnConfigMappingInput | None = None,
         key: Key | None = None,
-        on_select: Literal["ignore"],  # No default value here to make it work with mypy
+        on_select: Literal["ignore"] = "ignore",
         selection_mode: SelectionMode | Iterable[SelectionMode] = "multi-row",
     ) -> DeltaGenerator: ...
 
@@ -249,7 +249,7 @@ class ArrowMixin:
         column_order: Iterable[str] | None = None,
         column_config: ColumnConfigMappingInput | None = None,
         key: Key | None = None,
-        on_select: Literal["rerun"] | WidgetCallback = "rerun",
+        on_select: Literal["rerun"] | WidgetCallback,
         selection_mode: SelectionMode | Iterable[SelectionMode] = "multi-row",
     ) -> DataframeState: ...
 

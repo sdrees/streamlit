@@ -172,3 +172,12 @@ def dialog_with_chart():
 
 if st.button("Open Chart Dialog"):
     dialog_with_chart()
+
+
+@st.dialog("Dialog with dataframe")
+def dialog_with_dataframe():
+    st.dataframe(pd.DataFrame(data, columns=["a", "b", "c"]), use_container_width=True)
+
+
+if st.button("Open Dialog with dataframe"):
+    dialog_with_dataframe()

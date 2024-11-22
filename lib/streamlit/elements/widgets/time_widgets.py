@@ -67,15 +67,8 @@ TimeValue: TypeAlias = Union[time, datetime, str, Literal["now"]]
 # Type for things that point to a specific date (even if a default date, including None).
 NullableScalarDateValue: TypeAlias = Union[date, datetime, str, Literal["today"], None]
 
-# Same as above, plus "default_value_today".
-ExtendedNullableScalarDateValue: TypeAlias = Union[
-    Literal["default_value_today"], NullableScalarDateValue
-]
-
 # The accepted input value for st.date_input. Can be a date scalar or a date range.
-DateValue: TypeAlias = Union[
-    ExtendedNullableScalarDateValue, Sequence[ExtendedNullableScalarDateValue]
-]
+DateValue: TypeAlias = Union[NullableScalarDateValue, Sequence[NullableScalarDateValue]]
 
 # The return value of st.date_input.
 DateWidgetReturn: TypeAlias = Union[
@@ -119,7 +112,7 @@ def _convert_timelike_to_time(value: TimeValue) -> time:
 
 
 def _convert_datelike_to_date(
-    value: ExtendedNullableScalarDateValue,
+    value: NullableScalarDateValue,
 ) -> date:
     if isinstance(value, datetime):
         return value.date()
@@ -127,7 +120,7 @@ def _convert_datelike_to_date(
     if isinstance(value, date):
         return value
 
-    if value in {"today", "default_value_today"}:
+    if value in {"today"}:
         return datetime.now().date()
 
     if isinstance(value, str):
@@ -149,14 +142,14 @@ def _parse_date_value(value: DateValue) -> tuple[list[date] | None, bool]:
     if value is None:
         return None, False
 
-    value_tuple: Sequence[ExtendedNullableScalarDateValue]
+    value_tuple: Sequence[NullableScalarDateValue]
 
     if isinstance(value, Sequence) and not isinstance(value, str):
         is_range = True
         value_tuple = value
     else:
         is_range = False
-        value_tuple = [cast(ExtendedNullableScalarDateValue, value)]
+        value_tuple = [cast(NullableScalarDateValue, value)]
 
     if len(value_tuple) not in {0, 1, 2}:
         raise StreamlitAPIException(
@@ -231,7 +224,7 @@ class _DateInputValues:
             parsed_dates=parsed_value,
         )
 
-        if value == "default_value_today":
+        if value == "today":
             v = cast(List[date], parsed_value)[0]
             if v < parsed_min:
                 parsed_value = [parsed_min]
@@ -575,7 +568,7 @@ class TimeWidgetsMixin:
     def date_input(
         self,
         label: str,
-        value: ExtendedNullableScalarDateValue | None = "default_value_today",
+        value: NullableScalarDateValue | None = "today",
         min_value: NullableScalarDateValue = None,
         max_value: NullableScalarDateValue = None,
         key: Key | None = None,
@@ -744,7 +737,7 @@ class TimeWidgetsMixin:
     def _date_input(
         self,
         label: str,
-        value: ExtendedNullableScalarDateValue = "default_value_today",
+        value: NullableScalarDateValue = "today",
         min_value: NullableScalarDateValue = None,
         max_value: NullableScalarDateValue = None,
         key: Key | None = None,
@@ -764,7 +757,7 @@ class TimeWidgetsMixin:
             self.dg,
             key,
             on_change,
-            default_value=value if value != "default_value_today" else None,
+            default_value=value if value != "today" else None,
         )
         maybe_raise_label_warnings(label, label_visibility)
 
@@ -786,7 +779,7 @@ class TimeWidgetsMixin:
         parsed_max_date = parse_date_deterministic_for_id(max_value)
 
         parsed: str | None | list[str | None]
-        if value == "default_value_today":
+        if value == "today":
             parsed = None
         elif isinstance(value, Sequence):
             parsed = [
@@ -822,7 +815,7 @@ class TimeWidgetsMixin:
             max_value=max_value,
         )
 
-        if value == "default_value_today":
+        if value == "today":
             # We need to know if this is a single or range date_input, but don't have
             # a default value, so we check if session_state can tell us.
             # We already calculated the id, so there is no risk of this causing

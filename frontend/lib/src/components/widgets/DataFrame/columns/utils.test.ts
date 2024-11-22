@@ -24,6 +24,7 @@ import {
   formatNumber,
   getEmptyCell,
   getErrorCell,
+  getLinkDisplayValueFromRegex,
   getTextCell,
   isErrorCell,
   isMissingValueCell,
@@ -602,4 +603,87 @@ describe("formatMoment", () => {
 test("removeLineBreaks should remove line breaks", () => {
   expect(removeLineBreaks("\n")).toBe(" ")
   expect(removeLineBreaks("\nhello\n\nworld")).toBe(" hello  world")
+})
+
+describe("getLinkDisplayValueFromRegex", () => {
+  it.each([
+    [
+      new RegExp("https://(.*?).streamlit.app"),
+      "https://example.streamlit.app",
+      "example",
+    ],
+    [
+      new RegExp("https://(.*?).streamlit.app"),
+      "https://my-cool-app.streamlit.app",
+      "my-cool-app",
+    ],
+    [
+      new RegExp("https://(.*?).streamlit.app"),
+      "https://example.streamlit.app?param=value",
+      "example",
+    ],
+    [
+      new RegExp("https://(.*?).streamlit.app"),
+      "https://example.streamlit.app?param1=value1&param2=value2",
+      "example",
+    ],
+    [new RegExp("id=(.*?)&"), "https://example.com?id=123&type=user", "123"],
+    [
+      new RegExp("[?&]user=(.*?)(?:&|$)"),
+      "https://example.com?page=1&user=john_doe&sort=desc",
+      "john_doe",
+    ],
+    [
+      new RegExp("https://(.*?).streamlit.app"),
+      "https://my%20cool%20app.streamlit.app",
+      "my cool app",
+    ],
+    [
+      new RegExp("https://(.*?).streamlit.app"),
+      "https://special%21chars%40app.streamlit.app",
+      "special!chars@app",
+    ],
+    [
+      new RegExp("user=(.*?)(?:&|$)"),
+      "https://example.com?user=john%20doe%40email.com",
+      "john doe@email.com",
+    ],
+    [
+      new RegExp("name=(.*?)&"),
+      "https://example.com?name=%E2%9C%A8special%20user%E2%9C%A8&type=vip",
+      "✨special user✨",
+    ],
+    [
+      new RegExp("q=(.*?)&"),
+      "https://example.com?q=%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82&lang=ru",
+      "привет",
+    ],
+    [
+      new RegExp("path/(.*?)/"),
+      "https://example.com/path/user%20name%20%26%20company/settings",
+      "user name & company",
+    ],
+    [
+      new RegExp("search/(.*?)\\?"),
+      "https://example.com/search/space%20%26%20time?page=1",
+      "space & time",
+    ],
+    [
+      new RegExp("https://(.*?).other.app"),
+      "https://example.streamlit.app",
+      "https://example.streamlit.app",
+    ],
+    [new RegExp("https://(.*?).streamlit.app"), null, ""],
+    [new RegExp("https://(.*?).streamlit.app"), undefined, ""],
+    [
+      new RegExp(".*meal=(.*)"),
+      "https://example.com/feedme?meal=fish+%26+chips%3A+%C2%A39",
+      "fish & chips: £9",
+    ],
+  ])(
+    "extracts display value from %p with href %p to be %p",
+    (regex: RegExp, href: string | null | undefined, expected: string) => {
+      expect(getLinkDisplayValueFromRegex(regex, href)).toBe(expected)
+    }
+  )
 })

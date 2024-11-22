@@ -95,7 +95,6 @@ function ModalBody({ children }: Readonly<ModalBodyProps>): ReactElement {
         paddingLeft: spacing.twoXL,
         color: colors.bodyText,
         fontSize: fontSizes.md,
-        overflowY: "auto",
       }}
     >
       {children}

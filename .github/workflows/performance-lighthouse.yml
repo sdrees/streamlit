@@ -24,7 +24,7 @@ jobs:
   performance-lighthouse:
     # Only run this job if the PR has the label 'perf:lighthouse' or if it's been called by another workflow
     # See https://github.com/actions/runner/discussions/1884 for discussion on why `externalCall` is used
-    if: contains(github.event.pull_request.labels.*.name, 'perf:lighthouse') || github.event.inputs.externalCall
+    if: contains(github.event.pull_request.labels.*.name, 'perf:lighthouse') || inputs.externalCall
     runs-on: ubuntu-latest
 
     defaults:

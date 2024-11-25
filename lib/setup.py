@@ -33,7 +33,7 @@ INSTALL_REQUIRES = [
     "blinker>=1.0.0, <2",
     "cachetools>=4.0, <6",
     "click>=7.0, <9",
-    "numpy>=1.20, <3",
+    "numpy>=1.23, <3",
     "packaging>=20, <25",
     # Pandas <1.4 has a bug related to deleting columns in a DataFrame changing
     # the index dtype.
@@ -62,8 +62,7 @@ INSTALL_REQUIRES = [
 SNOWPARK_CONDA_EXCLUDED_DEPENDENCIES = [
     "gitpython>=3.0.7, <4, !=3.1.19",
     "pydeck>=0.8.0b4, <1",
-    # Tornado 6.0.3 was the current Tornado version when Python 3.8, our earliest supported Python version,
-    # was released (Oct 14, 2019).
+    # Tornado 6.0.3 was the current version when Python 3.8 was released (Oct 14, 2019).
     "tornado>=6.0.3, <7",
 ]
 
@@ -126,7 +125,6 @@ setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
@@ -141,7 +139,7 @@ setup(
     # We exclude Python 3.9.7 from our compatible versions due to a bug in that version
     # with typing.Protocol. See https://github.com/streamlit/streamlit/issues/5140 and
     # https://bugs.python.org/issue45121
-    python_requires=">=3.8, !=3.9.7",
+    python_requires=">=3.9, !=3.9.7",
     # PEP 561: https://mypy.readthedocs.io/en/stable/installed_packages.html
     package_data={"streamlit": ["py.typed", "hello/**/*.py"]},
     packages=find_packages(exclude=["tests", "tests.*"]),

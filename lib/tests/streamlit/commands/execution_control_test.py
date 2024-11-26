@@ -96,3 +96,8 @@ def test_st_rerun_is_fragment_scoped_rerun_flag_True(patched_get_script_run_ctx)
             is_fragment_scoped_rerun=True,
         )
     )
+
+
+def test_st_rerun_invalid_scope_throws_error():
+    with pytest.raises(StreamlitAPIException):
+        rerun(scope="foo")

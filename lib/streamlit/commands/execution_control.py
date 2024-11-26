@@ -128,6 +128,11 @@ def rerun(  # type: ignore[misc]
 
     """
 
+    if scope not in ["app", "fragment"]:
+        raise StreamlitAPIException(
+            f"'{scope}'is not a valid rerun scope. Valid scopes are 'app' and 'fragment'."
+        )
+
     ctx = get_script_run_ctx()
 
     if ctx and ctx.script_requests:

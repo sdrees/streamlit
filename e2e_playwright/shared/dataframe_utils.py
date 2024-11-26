@@ -244,3 +244,16 @@ def get_open_cell_overlay(app: Locator) -> Locator:
     cell_overlay = app.get_by_test_id("portal").locator(".gdg-clip-region")
     expect(cell_overlay).to_be_visible()
     return cell_overlay
+
+
+def expect_canvas_to_be_visible(locator: Locator):
+    """Expect canvas to be visible.
+
+    Should be used before trying to click on it or similar.
+
+    Parameters
+    ----------
+
+    locator : Locator
+    """
+    expect(locator.locator("canvas").first).to_be_visible()

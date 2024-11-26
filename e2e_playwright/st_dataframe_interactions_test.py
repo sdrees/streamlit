@@ -19,7 +19,11 @@ from playwright.sync_api import FrameLocator, Locator, Page, Route, expect
 
 from e2e_playwright.conftest import IframedPage, ImageCompareFunction, wait_for_app_run
 from e2e_playwright.shared.app_utils import expect_prefixed_markdown, get_element_by_key
-from e2e_playwright.shared.dataframe_utils import click_on_cell, get_open_cell_overlay
+from e2e_playwright.shared.dataframe_utils import (
+    click_on_cell,
+    expect_canvas_to_be_visible,
+    get_open_cell_overlay,
+)
 from e2e_playwright.shared.toolbar_utils import (
     assert_fullscreen_toolbar_button_interactions,
 )
@@ -74,6 +78,7 @@ def test_data_editor_delete_row_via_toolbar(
     data_editor_element = themed_app.get_by_test_id("stDataFrame").nth(1)
     data_editor_toolbar = data_editor_element.get_by_test_id("stElementToolbar")
 
+    expect_canvas_to_be_visible(data_editor_element)
     # Select the second row
     data_editor_element.click(position={"x": 10, "y": 100})
     # Take a snapshot to check if row is selected:
@@ -359,6 +364,7 @@ def test_number_cell_read_only_overlay_formatting(
 ):
     """Test that the number cell overlay is formatted correctly."""
     overlay_test_df = themed_app.get_by_test_id("stDataFrame").nth(2)
+    expect_canvas_to_be_visible(overlay_test_df)
     # Click on the first cell of the table
     click_on_cell(overlay_test_df, 1, 0, double_click=True, column_width="medium")
     cell_overlay = get_open_cell_overlay(themed_app)
@@ -370,9 +376,16 @@ def test_number_cell_read_only_overlay_formatting(
 def test_number_cell_editing(themed_app: Page, assert_snapshot: ImageCompareFunction):
     """Test that the number cell can be edited."""
     cell_overlay_test_df = themed_app.get_by_test_id("stDataFrame").nth(3)
+    expect_canvas_to_be_visible(cell_overlay_test_df)
+
     # Click on the first cell of the table
     click_on_cell(cell_overlay_test_df, 1, 0, double_click=True, column_width="medium")
     cell_overlay = get_open_cell_overlay(themed_app)
+    # On some browsers the cell content is highlighted, so we enforce it to make the test
+    # consistent and stable across all browsers
+    cell_overlay.click()
+    cell_overlay.press("ControlOrMeta+A")
+
     # Get the (number) input element and check the value
     expect(cell_overlay.locator(".gdg-input")).to_have_attribute("value", "1231231.41")
     assert_snapshot(cell_overlay, name="st_data_editor-number_col_editor")
@@ -392,9 +405,12 @@ def test_text_cell_read_only_overlay_formatting(
 ):
     """Test that the text cell overlay is formatted correctly."""
     overlay_test_df = themed_app.get_by_test_id("stDataFrame").nth(2)
+    expect_canvas_to_be_visible(overlay_test_df)
+
     # Click on the first cell of the table
     click_on_cell(overlay_test_df, 1, 1, double_click=True, column_width="medium")
     cell_overlay = get_open_cell_overlay(themed_app)
+
     # Get the (text) input element and check the value
     expect(cell_overlay.locator(".gdg-input")).to_have_text("hello\nworld")
     assert_snapshot(cell_overlay, name="st_dataframe-text_col_overlay")
@@ -403,9 +419,16 @@ def test_text_cell_read_only_overlay_formatting(
 def test_text_cell_editing(themed_app: Page, assert_snapshot: ImageCompareFunction):
     """Test that the number cell can be edited."""
     cell_overlay_test_df = themed_app.get_by_test_id("stDataFrame").nth(3)
+    expect_canvas_to_be_visible(cell_overlay_test_df)
+
     # Click on the first cell of the table
     click_on_cell(cell_overlay_test_df, 1, 1, double_click=True, column_width="medium")
     cell_overlay = get_open_cell_overlay(themed_app)
+
+    # On some browsers the cell content is highlighted, so we enforce it to make the test
+    # consistent and stable across all browsers
+    cell_overlay.click()
+    cell_overlay.press("ControlOrMeta+A")
     # Get the (number) input element and check the value
     expect(cell_overlay.locator(".gdg-input")).to_have_text("hello\nworld")
     assert_snapshot(cell_overlay, name="st_data_editor-text_col_editor")

@@ -37,6 +37,13 @@ def test_code_blocks_render_correctly(
     """Test that the code blocks render as expected via screenshot matching."""
     code_blocks = themed_app.get_by_test_id("stCode")
     expect(code_blocks).to_have_count(15)
+    # The code blocks might require a bit more time for rendering, so wait until
+    # the text is truly visible. Otherwise we might get blank code blocks in the
+    # screenshots.
+    foo_func_count = 5
+    themed_app.wait_for_function(
+        f"()=>document.body.textContent.split('def foo()').length === {foo_func_count}"
+    )
 
     assert_snapshot(code_blocks.nth(0), name="st_code-auto_lang")
     assert_snapshot(code_blocks.nth(1), name="st_code-empty")

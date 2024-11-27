@@ -82,7 +82,7 @@ def _create_test_session(
     ):
         return AppSession(
             script_data=ScriptData("/fake/script_path.py", is_hello=False),
-            uploaded_file_manager=MagicMock(),
+            uploaded_file_manager=MagicMock(spec=UploadedFileManager),
             script_cache=MagicMock(),
             message_enqueued_callback=None,
             user_info={"email": "test@example.com"},

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
  *
@@ -20,6 +21,7 @@
 import lighthouse from "lighthouse"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as chromeLauncher from "chrome-launcher"
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { default as treeKill } from "tree-kill"
 
 import fs from "fs"
@@ -171,18 +173,17 @@ export class LighthouseOrchestrator {
    */
   async runLighthouse(appName, mode, runId) {
     const sanitizedRunId = path.basename(runId)
-    console.log(`Running Lighthouse for ${appName} in ${mode} mode`)
+    const appBaseName = (appName.split("/").pop() || "")?.split(".")[0]
+
+    console.log(`Running Lighthouse for ${appBaseName} in ${mode} mode`)
 
     if (!this.chrome) {
       throw new Error("Chrome is not running")
     }
 
-    const REPORT_NAME = [
-      sanitizedRunId,
-      appName.split(".")[0],
-      mode,
-      "lhreport",
-    ].join("_-_")
+    const REPORT_NAME = [sanitizedRunId, appBaseName, mode, "lhreport"].join(
+      "_-_"
+    )
 
     const runnerResult = await lighthouse(
       "http://localhost:3001/",

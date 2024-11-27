@@ -217,6 +217,14 @@ def test_selection_state_remains_after_unmounting(
     wait_for_app_run(app)
 
     click_button(app, "Create some elements to unmount component")
+    # wait for the "Another element" texts to appear on the screen before
+    # getting the chart element to make sure that the chart is the new one
+    # and not the old one which is going to be replaced and can lead to a
+    # "Element not in DOM" error when trying to take the snapshot.
+    added_elements = app.get_by_text("Another element")
+    # for each added element, we sleep 1 second, so let's add some more seconds to the
+    # timeout
+    expect(added_elements).to_have_count(3, timeout=8000)
 
     chart = app.get_by_test_id("stPlotlyChart").nth(5)
     expect(chart).to_be_visible()

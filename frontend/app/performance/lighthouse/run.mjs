@@ -22,6 +22,7 @@ import path from "path"
 import { LighthouseOrchestrator } from "./LighthouseOrchestrator.mjs"
 import {
   MODES,
+  MULTIPAGE_APPS,
   PERFORMANCE_APPS_DIRECTORY,
   STREAMLIT_ROOT,
 } from "./constants.mjs"
@@ -30,8 +31,10 @@ import {
  * Run the Lighthouse performance test suite.
  * @param {string} appsDirectory The directory containing the streamlit apps to
  * run
+ * @param {string[]} additionalApps An array of additional performance apps to
+ * run
  */
-const run = async appsDirectory => {
+const run = async (appsDirectory, additionalApps = []) => {
   // Get the current date and time, convert it to an ISO string, remove
   // characters '-', ':', '.', 'T', and 'Z'.
   const now = new Date().toISOString().replace(/[-:.TZ]/g, "")
@@ -42,7 +45,7 @@ const run = async appsDirectory => {
    * An array of performance app filenames.
    * @type {string[]}
    */
-  const performanceApps = fs
+  const appsFromAppsDirectory = fs
     .readdirSync(appsDirectory, { withFileTypes: true })
     .filter(entry => {
       return (
@@ -53,6 +56,7 @@ const run = async appsDirectory => {
     })
     .map(({ name }) => name)
 
+  const performanceApps = [...appsFromAppsDirectory, ...additionalApps]
   const orchestrator = new LighthouseOrchestrator()
 
   process.on("SIGINT", async () => {
@@ -86,6 +90,6 @@ const run = async appsDirectory => {
   orchestrator.destroy()
 }
 
-await run(PERFORMANCE_APPS_DIRECTORY)
+await run(PERFORMANCE_APPS_DIRECTORY, MULTIPAGE_APPS)
 
 process.exit(0)

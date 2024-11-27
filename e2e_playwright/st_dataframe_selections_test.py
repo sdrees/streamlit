@@ -341,6 +341,8 @@ def test_in_form_selection_and_session_state(app: Page):
 
 def test_multi_row_and_multi_column_selection_with_callback(app: Page):
     canvas = _get_callback_df(app)
+    expect_canvas_to_be_visible(canvas)
+    canvas.scroll_into_view_if_needed()
     _select_some_rows_and_columns(app, canvas)
 
     expect_prefixed_markdown(
@@ -373,6 +375,8 @@ def test_selection_state_remains_after_unmounting(
 ):
     """Test that the selection state remains after unmounting the component."""
     canvas = _get_multi_row_and_column_select_df(app)
+    expect_canvas_to_be_visible(canvas)
+
     _select_some_rows_and_columns(app, canvas)
     _expect_multi_row_multi_column_selection(app)
 

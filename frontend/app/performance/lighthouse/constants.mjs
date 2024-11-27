@@ -47,6 +47,8 @@ export const PERFORMANCE_APPS_DIRECTORY = path.resolve(
   "./frontend/app/performance/apps"
 )
 
+export const MULTIPAGE_APPS = ["./multipage/multipage_app.py"]
+
 /**
  * Mode configurations that Lighthouse will run in.
  * @see https://github.com/GoogleChrome/lighthouse/blob/main/docs/configuration.md

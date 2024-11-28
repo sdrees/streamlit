@@ -27,7 +27,7 @@ export const StyledCheckbox = styled.div<StyledCheckboxProps>(
     width,
     display: "flex",
     alignItems: "center",
-    minHeight: theme.sizes.minElementHeight,
+    minHeight: theme.sizes.smallElementHeight,
   })
 )
 

@@ -57,9 +57,9 @@ class PyplotMixin:
             If False, the figure will not be cleared after being rendered.
             If left unspecified, we pick a default based on the value of ``fig``.
 
-            * If ``fig`` is set, defaults to ``False``.
+            - If ``fig`` is set, defaults to ``False``.
 
-            * If ``fig`` is not set, defaults to ``True``. This simulates Jupyter's
+            - If ``fig`` is not set, defaults to ``True``. This simulates Jupyter's
               approach to matplotlib rendering.
 
         use_container_width : bool

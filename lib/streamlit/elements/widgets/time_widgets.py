@@ -387,12 +387,12 @@ class TimeWidgetsMixin:
         value : datetime.time/datetime.datetime, str, "now" or None
             The value of this widget when it first renders. Must be one of:
 
-            * A ``datetime.time`` object.
-            * A ``datetime.datetime``, in which case only the time component will be used.
-            * An ISO-formatted time string ("hh:mm", "hh:mm:ss", or "hh:mm:ss.sss"). If
+            - A ``datetime.time`` object.
+            - A ``datetime.datetime``, in which case only the time component will be used.
+            - An ISO-formatted time string ("hh:mm", "hh:mm:ss", or "hh:mm:ss.sss"). If
               it includes a date, only the time component will be used.
-            * The string "now" (default), to initialize with the current time.
-            * ``None``, will initialize empty and return ``None`` until the user selects a time.
+            - The string "now" (default), to initialize with the current time.
+            - ``None``, will initialize empty and return ``None`` until the user selects a time.
 
         key : str or int
             An optional string or integer to use as the unique key for the widget.
@@ -613,13 +613,13 @@ class TimeWidgetsMixin:
         value : datetime.date or datetime.datetime or str or list/tuple of datetime.date or datetime.datetime or str, "today", or None
             The value of this widget when it first renders. Must be one of:
 
-            * A ``datetime.date`` object.
-            * A ``datetime.datetime``, in which case only the date component will be used.
-            * An ISO-formatted date string ("YYYY-MM-DD"). If it includes time, only the
+            - A ``datetime.date`` object.
+            - A ``datetime.datetime``, in which case only the date component will be used.
+            - An ISO-formatted date string ("YYYY-MM-DD"). If it includes time, only the
               date component will be used ("YYYY-MM-DD hh:mm:ss").
-            * The string "today" (default), to initialize with the current date.
-            * ``None``, to initialize empty and return ``None`` until the user selects a time.
-            * A date interval in the form of a list/tuple with up to 2 of the above.
+            - The string "today" (default), to initialize with the current date.
+            - ``None``, to initialize empty and return ``None`` until the user selects a time.
+            - A date interval in the form of a list/tuple with up to 2 of the above.
 
         min_value : datetime.date or datetime.datetime or str or "today"
             The minimum selectable date. Support ISO strings. If ``value`` is not

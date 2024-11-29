@@ -161,16 +161,16 @@ class ImageProtoTest(DeltaGeneratorTestCase):
     def test_marshall_images(self, data_in: AtomicImage, format: str):
         """Test streamlit.elements.lib.image_utils.marshall_images.
         Need to test the following:
-        * if list
-        * if not list (is rgb vs is bgr)
-        * if captions is not list but image is
-        * if captions length doesn't match image length
-        * if the caption is set.
-        * PIL Images
-        * Numpy Arrays
-        * Url
-        * Path
-        * Bytes
+        - if list
+        - if not list (is rgb vs is bgr)
+        - if captions is not list but image is
+        - if captions length doesn't match image length
+        - if the caption is set.
+        - PIL Images
+        - Numpy Arrays
+        - Url
+        - Path
+        - Bytes
         """
         mimetype = f"image/{format}"
         if isinstance(data_in, bytes):
@@ -362,9 +362,9 @@ class ImageProtoTest(DeltaGeneratorTestCase):
     def test_verify_np_shape(self):
         """Test streamlit.image.verify_np_shape.
         Need to test the following:
-        * check shape not (2, 3)
-        * check shape 3 but dims 1, 3, 4
-        * if only one channel convert to just 2 dimensions.
+        - check shape not (2, 3)
+        - check shape 3 but dims 1, 3, 4
+        - if only one channel convert to just 2 dimensions.
         """
         with pytest.raises(StreamlitAPIException) as shape_exc:
             st.image(np.ndarray(shape=1))
@@ -382,10 +382,10 @@ class ImageProtoTest(DeltaGeneratorTestCase):
     def test_clip_image(self):
         """Test streamlit.image.clip_image.
         Need to test the following:
-        * float
-        * int
-        * float with clipping
-        * int  with clipping
+        - float
+        - int
+        - float with clipping
+        - int  with clipping
         """
         pass
 

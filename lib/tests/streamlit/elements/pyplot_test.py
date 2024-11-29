@@ -44,8 +44,8 @@ class PyplotTest(DeltaGeneratorTestCase):
         """Test st.pyplot.
 
         Need to test:
-        * Failed import of matplotlib.
-        * Passing in a figure.
+        - Failed import of matplotlib.
+        - Passing in a figure.
         """
 
         # Make this deterministic

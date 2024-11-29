@@ -201,9 +201,9 @@ class LayoutsMixin:
         spec : int or Iterable of numbers
             Controls the number and width of columns to insert. Can be one of:
 
-            * An integer that specifies the number of columns. All columns have equal
+            - An integer that specifies the number of columns. All columns have equal
               width in this case.
-            * An Iterable of numbers (int or float) that specify the relative width of
+            - An Iterable of numbers (int or float) that specify the relative width of
               each column. E.g. ``[0.7, 0.3]`` creates two columns where the first
               one takes up 70% of the available with and the second one takes up 30%.
               Or ``[1, 2, 3]`` creates three columns where the second one is two times
@@ -501,10 +501,10 @@ class LayoutsMixin:
             is ``None`` (default), no icon is displayed. If ``icon`` is a
             string, the following options are valid:
 
-            * A single-character emoji. For example, you can set ``icon="🚨"``
+            - A single-character emoji. For example, you can set ``icon="🚨"``
               or ``icon="🔥"``. Emoji short codes are not supported.
 
-            * An icon from the Material Symbols library (rounded style) in the
+            - An icon from the Material Symbols library (rounded style) in the
               format ``":material/icon_name:"`` where "icon_name" is the name
               of the icon in snake case.
 
@@ -622,10 +622,10 @@ class LayoutsMixin:
             is ``None`` (default), no icon is displayed. If ``icon`` is a
             string, the following options are valid:
 
-            * A single-character emoji. For example, you can set ``icon="🚨"``
+            - A single-character emoji. For example, you can set ``icon="🚨"``
               or ``icon="🔥"``. Emoji short codes are not supported.
 
-            * An icon from the Material Symbols library (rounded style) in the
+            - An icon from the Material Symbols library (rounded style) in the
               format ``":material/icon_name:"`` where "icon_name" is the name
               of the icon in snake case.
 
@@ -755,11 +755,11 @@ class LayoutsMixin:
             The initial state of the status container which determines which icon is
             shown:
 
-            * ``running`` (default): A spinner icon is shown.
+            - ``running`` (default): A spinner icon is shown.
 
-            * ``complete``: A checkmark icon is shown.
+            - ``complete``: A checkmark icon is shown.
 
-            * ``error``: An error icon is shown.
+            - ``error``: An error icon is shown.
 
         Returns
         -------

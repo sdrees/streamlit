@@ -73,10 +73,10 @@ def declare_component(
         A short, descriptive name for the component, like "slider".
 
     path: str, Path, or None
-        The path to serve the component's frontend files from. If ``path`` is
-        ``None`` (default), Streamlit will serve the component from the
-        location in ``url``. Either ``path`` or ``url`` must be specified, but
-        not both.
+        The path to serve the component's frontend files from. The path should
+        be absolute. If ``path`` is ``None`` (default), Streamlit will serve
+        the component from the location in ``url``. Either ``path`` or ``url``
+        must be specified, but not both.
 
     url: str or None
         The URL that the component is served from. If ``url`` is ``None``

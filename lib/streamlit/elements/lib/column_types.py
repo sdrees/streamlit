@@ -530,11 +530,11 @@ def LinkColumn(
     display_text: str or None
         The text that is displayed in the cell. Can be one of:
 
-        * ``None`` (default) to display the URL itself.
+        - ``None`` (default) to display the URL itself.
 
-        * A string that is displayed in every cell, e.g. ``"Open link"``.
+        - A string that is displayed in every cell, e.g. ``"Open link"``.
 
-        * A regular expression (JS flavor, detected by usage of parentheses)
+        - A regular expression (JS flavor, detected by usage of parentheses)
           to extract a part of the URL via a capture group, e.g. ``"https://(.*?)\\.example\\.com"``
           to extract the display text "foo" from the URL "\\https://foo.example.com".
 

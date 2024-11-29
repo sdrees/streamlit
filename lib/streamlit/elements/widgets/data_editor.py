@@ -655,11 +655,11 @@ class DataEditorMixin:
             This needs to be a dictionary where each key is a column name and the value
             is one of:
 
-            * ``None`` to hide the column.
+            - ``None`` to hide the column.
 
-            * A string to set the display label of the column.
+            - A string to set the display label of the column.
 
-            * One of the column types defined under ``st.column_config``, e.g.
+            - One of the column types defined under ``st.column_config``, e.g.
               ``st.column_config.NumberColumn("Dollar values”, format=”$ %d")`` to show
               a column as dollar amounts. See more info on the available column types
               and config options `here <https://docs.streamlit.io/develop/api-reference/data/st.column_config>`_.

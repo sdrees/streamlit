@@ -132,12 +132,12 @@ class MapMixin:
 
             Can be:
 
-            * None, to use the default color.
-            * A hex string like "#ffaa00" or "#ffaa0088".
-            * An RGB or RGBA tuple with the red, green, blue, and alpha
+            - None, to use the default color.
+            - A hex string like "#ffaa00" or "#ffaa0088".
+            - An RGB or RGBA tuple with the red, green, blue, and alpha
               components specified as ints from 0 to 255 or floats from 0.0 to
               1.0.
-            * The name of the column to use for the color. Cells in this column
+            - The name of the column to use for the color. Cells in this column
               should contain colors represented as a hex string or color tuple,
               as described above.
 
@@ -146,10 +146,10 @@ class MapMixin:
 
             This can be:
 
-            * None, to use the default size.
-            * A number like 100, to specify a single size to use for all
+            - None, to use the default size.
+            - A number like 100, to specify a single size to use for all
               datapoints.
-            * The name of the column to use for the size. This allows each
+            - The name of the column to use for the size. This allows each
               datapoint to be represented by a circle of a different size.
 
         zoom : int

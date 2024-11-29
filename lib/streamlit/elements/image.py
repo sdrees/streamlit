@@ -63,17 +63,24 @@ class ImageMixin:
 
         Parameters
         ----------
-        image : numpy.ndarray, [numpy.ndarray], BytesIO, str, [str], Path, or [Path]
-            Monochrome image of shape (w,h) or (w,h,1)
-            OR a color image of shape (w,h,3)
-            OR an RGBA image of shape (w,h,4)
-            OR a URL to fetch the image from
-            OR a path of a local image file (str or Path object)
-            OR an SVG XML string like `<svg xmlns=...</svg>`
-            OR a list of one of the above, to display multiple images.
+        image : numpy.ndarray, BytesIO, str, Path, or list of these
+            The image to display. This can be one of the following:
+
+            - A URL (string) for a hosted image.
+            - A path to a local image file. The path can be a ``str``
+              or ``Path`` object. Paths can be absolute or relative to the
+              working directory (where you execute ``streamlit run``).
+            - An SVG string like ``<svg xmlns=...</svg>``.
+            - A byte array defining an image. This includes monochrome images of
+              shape (w,h) or (w,h,1), color images of shape (w,h,3), or RGBA
+              images of shape (w,h,4), where w and h are the image width and
+              height, respectively.
+            - A list of any of the above (to display multiple images).
         caption : str or list of str
-            Image caption. If displaying multiple images, caption should be a
-            list of captions (one for each image).
+            Image caption(s). If this is ``None`` (default), no caption is
+            displayed. If ``image`` is a list of multiple images,
+            ``caption`` must be a list of captions (one caption for each
+            image) or ``None``.
         width : int or None
             Image width. If this is ``None`` (default), Streamlit will use the
             image's native width, up to the width of the parent container.
@@ -86,22 +93,25 @@ class ImageMixin:
             If "never" or False, set the image's width to its natural size.
             Note: if set, `use_column_width` takes precedence over the `width` parameter.
         clamp : bool
-            Clamp image pixel values to a valid range ([0-255] per channel).
-            This is only meaningful for byte array images; the parameter is
-            ignored for image URLs. If this is not set, and an image has an
-            out-of-range value, an error will be thrown.
+            Whether to clamp image pixel values to a valid range (0-255 per
+            channel). This is only used for byte array images; the parameter is
+            ignored for image URLs and files. If this is ``False`` (default)
+            and an image has an out-of-range value, a ``RuntimeError`` will be
+            raised.
         channels : "RGB" or "BGR"
-            If image is an nd.array, this parameter denotes the format used to
-            represent color information. Defaults to "RGB", meaning
-            `image[:, :, 0]` is the red channel, `image[:, :, 1]` is green, and
-            `image[:, :, 2]` is blue. For images coming from libraries like
-            OpenCV you should set this to "BGR", instead.
+            The color format when ``image`` is an ``nd.array``. This is ignored
+            for other image types. If this is ``"RGB"`` (default),
+            ``image[:, :, 0]`` is the red channel, ``image[:, :, 1]`` is the
+            green channel, and ``image[:, :, 2]`` is the blue channel. For
+            images coming from libraries like OpenCV, you should set this to
+            ``"BGR"`` instead.
         output_format : "JPEG", "PNG", or "auto"
-            This parameter specifies the format to use when transferring the
-            image data. Photos should use the JPEG format for lossy compression
-            while diagrams should use the PNG format for lossless compression.
-            Defaults to "auto" which identifies the compression type based
-            on the type and format of the image argument.
+            The output format to use when transferring the image data. If this
+            is ``"auto"`` (default), Streamlit identifies the compression type
+            based on the type and format of the image. Photos should use the
+            ``"JPEG"`` format for lossy compression while diagrams should use
+            the ``"PNG"`` format for lossless compression.
+
         use_container_width : bool
             Whether to override ``width`` with the width of the parent
             container. If ``use_container_width`` is ``False`` (default),

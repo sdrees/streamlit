@@ -177,11 +177,11 @@ class AppSession:
         """Register handlers to be called when various files are changed.
 
         Files that we watch include:
-          * source files that already exist (for edits)
-          * `.py` files in the the main script's `pages/` directory (for file additions
+          - source files that already exist (for edits)
+          - `.py` files in the the main script's `pages/` directory (for file additions
             and deletions)
-          * project and user-level config.toml files
-          * the project-level secrets.toml files
+          - project and user-level config.toml files
+          - the project-level secrets.toml files
 
         This method is called automatically on AppSession construction, but it may be
         called again in the case when a session is disconnected and is being reconnect

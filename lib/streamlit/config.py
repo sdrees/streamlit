@@ -480,12 +480,12 @@ _create_option(
         and settings dialog (top right of the app).
 
         Allowed values:
-        * "auto"      : Show the developer options if the app is accessed through
+        - "auto"      : Show the developer options if the app is accessed through
                         localhost or through Streamlit Community Cloud as a developer.
                         Hide them otherwise.
-        * "developer" : Show the developer options.
-        * "viewer"    : Hide the developer options.
-        * "minimal"   : Show only options set externally (e.g. through
+        - "developer" : Show the developer options.
+        - "viewer"    : Hide the developer options.
+        - "minimal"   : Show only options set externally (e.g. through
                         Streamlit Community Cloud) or through st.set_page_config.
                         If there are no options left, hide the menu.
     """,
@@ -567,9 +567,9 @@ _create_option(
         https://docs.streamlit.io/develop/concepts/design/custom-classes#enums
 
         Allowed values:
-        * "off": Disables Enum coercion.
-        * "nameOnly": Enum classes can be coerced if their member names match.
-        * "nameAndValue": Enum classes can be coerced if their member names AND
+        - "off": Disables Enum coercion.
+        - "nameOnly": Enum classes can be coerced if their member names match.
+        - "nameAndValue": Enum classes can be coerced if their member names AND
           member values match.
     """,
     default_val="nameOnly",
@@ -599,11 +599,11 @@ _create_option(
         completely.
 
         Allowed values:
-        * "auto"     : Streamlit will attempt to use the watchdog module, and
+        - "auto"     : Streamlit will attempt to use the watchdog module, and
                        falls back to polling if watchdog is not available.
-        * "watchdog" : Force Streamlit to use the watchdog module.
-        * "poll"     : Force Streamlit to always use polling.
-        * "none"     : Streamlit will not watch files.
+        - "watchdog" : Force Streamlit to use the watchdog module.
+        - "poll"     : Force Streamlit to always use polling.
+        - "none"     : Streamlit will not watch files.
     """,
     default_val="auto",
     type_=str,

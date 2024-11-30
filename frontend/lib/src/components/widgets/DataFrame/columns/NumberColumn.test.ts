@@ -48,6 +48,7 @@ const NUMBER_COLUMN_TEMPLATE: Partial<BaseColumnProps> = {
   isEditable: false,
   isHidden: false,
   isIndex: false,
+  isPinned: false,
   isStretched: false,
 }
 

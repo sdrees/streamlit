@@ -74,7 +74,8 @@ function SelectboxColumn(props: BaseColumnProps): BaseColumn {
     copyData: "",
     contentAlign: props.contentAlignment,
     readonly: !props.isEditable,
-    style: props.isIndex ? "faded" : "normal",
+    // The text in pinned columns should be faded.
+    style: props.isPinned ? "faded" : "normal",
     data: {
       kind: "dropdown-cell",
       allowedValues: [

@@ -131,7 +131,8 @@ function BaseDateTimeColumn(
     copyData: "",
     readonly: !props.isEditable,
     contentAlign: props.contentAlignment,
-    style: props.isIndex ? "faded" : "normal",
+    // The text in pinned columns should be faded.
+    style: props.isPinned ? "faded" : "normal",
     data: {
       kind: "date-picker-cell",
       date: undefined,

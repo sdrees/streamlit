@@ -63,7 +63,8 @@ function TextColumn(props: BaseColumnProps): BaseColumn {
     allowOverlay: true,
     contentAlignment: props.contentAlignment,
     readonly: !props.isEditable,
-    style: props.isIndex ? "faded" : "normal",
+    // The text in pinned columns should be faded.
+    style: props.isPinned ? "faded" : "normal",
   } as TextCell
 
   const validateInput = (data?: any): boolean | string => {

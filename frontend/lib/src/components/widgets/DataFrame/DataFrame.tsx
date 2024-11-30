@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement } from "react"
+import React, { ReactElement, useMemo } from "react"
 
 import {
   CompactSelection,
@@ -565,12 +565,30 @@ function DataFrame({
   const isDynamicAndEditable =
     !isEmptyTable && element.editingMode === DYNAMIC && !disabled
 
-  // The index columns are always at the beginning of the table,
-  // so we can just count them to determine the number of columns
-  // that should be frozen.
-  const freezeColumns = isEmptyTable
-    ? 0
-    : columns.filter((col: BaseColumn) => col.isIndex).length
+  // This is a simple heuristic to prevent the pinned columns
+  // from taking up too much space and prevent horizontal scrolling.
+  // Since its not easy to determine the current width of auto-sized columns,
+  // we just use 2x of the min column width as a fallback.
+  // The combined width of all pinned columns should not exceed 60%
+  // of the container width.
+  const isPinnedColumnsWidthTooLarge = useMemo(() => {
+    return (
+      columns
+        .filter((col: BaseColumn) => col.isPinned)
+        .reduce(
+          (acc, col) => acc + (col.width ?? gridTheme.minColumnWidth * 2),
+          0
+        ) >
+      containerWidth * 0.6
+    )
+  }, [columns, containerWidth, gridTheme.minColumnWidth])
+
+  // All pinned columns are expected to be moved to the beginning
+  // in useColumnLoader. So we can just count all pinned columns here.
+  const freezeColumns =
+    isEmptyTable || isPinnedColumnsWidthTooLarge
+      ? 0
+      : columns.filter((col: BaseColumn) => col.isPinned).length
 
   // Determine if the table requires horizontal or vertical scrolling:
   React.useEffect(() => {
@@ -589,7 +607,6 @@ function DataFrame({
         // are activated or deactivated.
         // const scrollAreaBounds = dataEditorRef.current?.getBounds()
         // Also see: https://github.com/glideapps/glide-data-grid/issues/784
-
         if (scrollAreaBounds) {
           setHasVerticalScroll(
             scrollAreaBounds.height >

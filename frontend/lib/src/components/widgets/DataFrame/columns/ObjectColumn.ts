@@ -41,7 +41,8 @@ function ObjectColumn(props: BaseColumnProps): BaseColumn {
     allowOverlay: true,
     contentAlignment: props.contentAlignment,
     readonly: true,
-    style: props.isIndex ? "faded" : "normal",
+    // The text in pinned columns should be faded.
+    style: props.isPinned ? "faded" : "normal",
   } as TextCell
   return {
     ...props,

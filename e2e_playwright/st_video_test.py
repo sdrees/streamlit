@@ -14,7 +14,7 @@
 import re
 
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Locator, Page, expect
 
 from e2e_playwright.conftest import ImageCompareFunction, wait_until
 from e2e_playwright.shared.app_utils import (
@@ -24,6 +24,15 @@ from e2e_playwright.shared.app_utils import (
 )
 
 VIDEO_ELEMENTS_COUNT = 12
+
+
+def _wait_until_video_has_data(app: Page, video_element: Locator):
+    # To prevent flakiness, we wait for the video to load and start playing
+    # The readyState is defined in https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState
+    # 2 means there is some data to play
+    wait_until(
+        app, lambda: video_element.evaluate("el => el.readyState") >= 2, timeout=15000
+    )
 
 
 # Chromium miss codecs required to play that mp3 videos
@@ -167,10 +176,7 @@ def test_video_autoplay(app: Page):
 
     click_checkbox(app, "Autoplay")
 
-    # To prevent flakiness, we wait for the video to load and start playing
-    wait_until(
-        app, lambda: video_element.evaluate("el => el.readyState") == 4, timeout=15000
-    )
+    _wait_until_video_has_data(app, video_element)
     expect(video_element).to_have_js_property("autoplay", True)
     expect(video_element).to_have_js_property("paused", False)
 
@@ -180,15 +186,11 @@ def test_video_muted_autoplay(app: Page):
     video_elements = app.get_by_test_id("stVideo")
     expect(video_elements).to_have_count(VIDEO_ELEMENTS_COUNT)
 
-    expect(video_elements.nth(11)).to_be_visible()
-
     video_element = video_elements.nth(11)
+    expect(video_element).to_be_visible()
     video_element.scroll_into_view_if_needed()
 
-    # To prevent flakiness, we wait for the video to load and start playing
-    wait_until(
-        app, lambda: video_element.evaluate("el => el.readyState") == 4, timeout=15000
-    )
+    _wait_until_video_has_data(app, video_element)
     expect(video_element).to_have_js_property("muted", True)
     expect(video_element).to_have_js_property("autoplay", True)
     expect(video_element).to_have_js_property("paused", False)
@@ -206,10 +208,7 @@ def test_video_remount_no_autoplay(app: Page):
     expect(video_element).to_have_js_property("paused", True)
     expect(video_element).to_have_js_property("autoplay", False)
 
-    # To prevent flakiness, we wait for the video to load and start playing
-    wait_until(
-        app, lambda: video_element.evaluate("el => el.readyState") == 4, timeout=15000
-    )
+    _wait_until_video_has_data(app, video_element)
 
     click_checkbox(app, "Autoplay")
 

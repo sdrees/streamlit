@@ -76,7 +76,7 @@ function LinkColumn(props: BaseColumnProps): BaseColumn {
     readonly: !props.isEditable,
     allowOverlay: true,
     contentAlign: props.contentAlignment,
-    style: props.isIndex ? "faded" : "normal",
+    style: "normal",
     hoverEffect: true,
     data: "",
     displayData: "",

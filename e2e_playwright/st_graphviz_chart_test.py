@@ -15,7 +15,7 @@
 from playwright.sync_api import Page, expect
 
 from e2e_playwright.conftest import ImageCompareFunction, wait_for_app_run, wait_until
-from e2e_playwright.shared.app_utils import check_top_level_class
+from e2e_playwright.shared.app_utils import check_top_level_class, get_radio_button
 
 
 def get_first_graph_svg(app: Page):
@@ -101,11 +101,12 @@ def test_renders_with_specified_engines(
     """Test if it renders with specified engines."""
 
     engines = ["dot", "neato", "twopi", "circo", "fdp", "osage", "patchwork"]
+    radio_group = app.get_by_test_id("stRadio")
+    radios = radio_group.get_by_role("radio")
+    expect(radios).to_have_count(len(engines))
 
-    radios = app.query_selector_all('label[data-baseweb="radio"]')
-
-    for idx, engine in enumerate(engines):
-        radios[idx].click(force=True)
+    for engine in engines:
+        get_radio_button(radio_group, engine).click(force=True)
         wait_for_app_run(app)
         expect(app.get_by_test_id("stMarkdown").nth(0)).to_have_text(engine)
 

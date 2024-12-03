@@ -15,7 +15,11 @@
 """exception Unittest."""
 
 import os
+import traceback
 import unittest
+from pathlib import Path
+from typing import cast
+from unittest.mock import MagicMock, patch
 
 from parameterized import parameterized
 
@@ -25,11 +29,13 @@ from streamlit.elements import exception
 from streamlit.elements.exception import (
     _GENERIC_UNCAUGHT_EXCEPTION_TEXT,
     _format_syntax_error_message,
+    _split_list,
 )
 from streamlit.errors import StreamlitAPIException, UncaughtAppException
 from streamlit.proto.Exception_pb2 import Exception as ExceptionProto
 from tests import testutil
 from tests.delta_generator_test_case import DeltaGeneratorTestCase
+from tests.streamlit.elements.support_files import exception_test_utils as user_module
 
 
 class ExceptionProtoTest(unittest.TestCase):
@@ -63,33 +69,86 @@ SyntaxError: invalid syntax
         exception.marshall(proto, errors.DuplicateWidgetID("oh no!"))
         self.assertTrue(proto.message_is_markdown)
 
-    def test_strip_streamlit_stack_entries(self):
-        """Test that StreamlitAPIExceptions don't include Streamlit entries
-        in the stack trace.
+    @parameterized.expand(
+        [
+            (user_module.st_call_with_arguments_missing, 2),
+            (user_module.st_call_with_bad_arguments, 7),
+            (user_module.pandas_call_with_bad_arguments, 2),
+            (user_module.internal_python_call_with_bad_arguments, 2),
+        ]
+    )
+    @patch("streamlit.elements.exception.get_script_run_ctx")
+    def test_external_error_stack_starts_with_user_module(
+        self, user_func, stack_len, patched_get_script_run_ctx
+    ):
+        """Test stack traces for exceptions thrown by user code start from the first
+        line of user code.
 
         """
-        # Create a StreamlitAPIException.
+        ctx = MagicMock()
+        user_module_path = Path(user_module.__file__).parent
+        ctx.main_script_parent = user_module_path
+        patched_get_script_run_ctx.return_value = ctx
+
         err = None
+
         try:
-            st.image(
-                "http://not_an_image.png",
-                width=-1,
-                use_column_width=True,
-                use_container_width=True,
-            )
-        except StreamlitAPIException as e:
+            user_func()
+        except Exception as e:
             err = e
+
         self.assertIsNotNone(err)
 
         # Marshall it.
         proto = ExceptionProto()
-        exception.marshall(proto, err)
+        exception.marshall(proto, cast(Exception, err))
 
-        # The streamlit package should not appear in any stack entry.
-        streamlit_dir = os.path.dirname(st.__file__)
-        streamlit_dir = os.path.join(os.path.realpath(streamlit_dir), "")
-        for line in proto.stack_trace:
-            self.assertNotIn(streamlit_dir, line, "Streamlit stack entry not stripped")
+        user_module_path = os.path.join(os.path.realpath(user_module_path), "")
+        self.assertIn(user_module_path, proto.stack_trace[0], "Stack not stripped")
+        self.assertEqual(
+            len(proto.stack_trace),
+            stack_len,
+            f"Stack does not have length {stack_len}: {proto.stack_trace}",
+        )
+
+    @patch("streamlit.elements.exception.get_script_run_ctx")
+    def test_internal_error_stack_doesnt_start_with_user_module(
+        self, patched_get_script_run_ctx
+    ):
+        """Test stack traces for exceptions thrown by Streamlit code *not* called by the
+        user.
+
+        """
+        ctx = MagicMock()
+        user_module_path = Path(user_module.__file__).parent
+        ctx.main_script_parent = user_module_path
+        patched_get_script_run_ctx.return_value = ctx
+
+        err = None
+
+        def func_with_error():
+            raise RuntimeError("This function throws on purpose")
+
+        try:
+            func_with_error()
+        except Exception as e:
+            err = e
+
+        self.assertIsNotNone(err)
+
+        original_stack_len = len(traceback.extract_tb(err.__traceback__))
+
+        # Marshall it.
+        proto = ExceptionProto()
+        exception.marshall(proto, cast(Exception, err))
+
+        user_module_path = os.path.join(os.path.realpath(user_module_path), "")
+        self.assertFalse(any(user_module_path in t for t in proto.stack_trace))
+        self.assertEqual(
+            len(proto.stack_trace),
+            original_stack_len,
+            f"Stack does not have length {original_stack_len}: {proto.stack_trace}",
+        )
 
     def test_uncaught_app_exception(self):
         err = None
@@ -132,3 +191,21 @@ class StExceptionAPITest(DeltaGeneratorTestCase):
             # We will test stack_trace when testing
             # streamlit.elements.exception_element
             self.assertEqual(el.exception.stack_trace, [])
+
+
+class SplitListTest(unittest.TestCase):
+    @parameterized.expand(
+        [
+            (["a", "b", "c", "-", "d", "e"], 3),
+            (["-", "a", "b", "c", "d", "e"], 0),
+            (["a", "b", "c", "d", "e", "-"], 5),
+            (["a", "b", "c", "d", "e", "f"], 100),
+            (["a", "-", "c", "d", "-", "f"], 1),
+            ([], 100),
+        ]
+    )
+    def test_split_list(self, input_list, split_index):
+        before, after = _split_list(input_list, split_point=lambda x: x == "-")
+
+        self.assertEqual(before, input_list[:split_index])
+        self.assertEqual(after, input_list[split_index:])

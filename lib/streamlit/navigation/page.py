@@ -178,7 +178,7 @@ class StreamlitPage:
         if not ctx:
             return
 
-        main_path = Path(ctx.pages_manager.main_script_path).parent
+        main_path = ctx.pages_manager.main_script_parent
         if isinstance(page, str):
             page = Path(page)
         if isinstance(page, Path):

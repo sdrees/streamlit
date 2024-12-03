@@ -39,6 +39,8 @@ from streamlit.errors import (
 from streamlit.logger import get_logger
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from streamlit.cursor import RunningCursor
     from streamlit.proto.ForwardMsg_pb2 import ForwardMsg
     from streamlit.proto.PageProfile_pb2 import Command
@@ -113,6 +115,10 @@ class ScriptRunContext:
     @property
     def active_script_hash(self):
         return self._active_script_hash
+
+    @property
+    def main_script_parent(self) -> Path:
+        return self.pages_manager.main_script_parent
 
     @contextlib.contextmanager
     def run_with_active_hash(self, page_hash: str):

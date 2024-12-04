@@ -88,6 +88,8 @@ const TextArea: FC<Props> = ({
   fragmentId,
   width,
 }) => {
+  // TODO: Update to match React best practices
+  // eslint-disable-next-line react-compiler/react-compiler
   const id = useRef(uniqueId("text_area_")).current
 
   /**

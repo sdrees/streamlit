@@ -94,7 +94,7 @@ class ButtonMixin:
         args: WidgetArgs | None = None,
         kwargs: WidgetKwargs | None = None,
         *,  # keyword-only arguments:
-        type: Literal["primary", "secondary"] = "secondary",
+        type: Literal["primary", "secondary", "tertiary"] = "secondary",
         icon: str | None = None,
         disabled: bool = False,
         use_container_width: bool = False,
@@ -138,10 +138,10 @@ class ButtonMixin:
         kwargs : dict
             An optional dict of kwargs to pass to the callback.
 
-        type : "secondary" or "primary"
+        type : "primary", "secondary", or "tertiary"
             An optional string that specifies the button type. Can be "primary" for a
-            button with additional emphasis or "secondary" for a normal button. Defaults
-            to "secondary".
+            button with additional emphasis, "secondary" for a normal button, or "tertiary"
+            for a subtle button. Defaults to "secondary".
 
         icon : str or None
             An optional emoji or icon to display next to the button label. If ``icon``
@@ -214,11 +214,11 @@ class ButtonMixin:
         key = to_key(key)
         ctx = get_script_run_ctx()
 
-        # Checks whether the entered button type is one of the allowed options - either "primary" or "secondary"
-        if type not in ["primary", "secondary"]:
+        # Checks whether the entered button type is one of the allowed options
+        if type not in ["primary", "secondary", "tertiary"]:
             raise StreamlitAPIException(
-                'The type argument to st.button must be "primary" or "secondary". \n'
-                f'The argument passed was "{type}".'
+                'The type argument to st.button must be "primary", "secondary", or "tertiary". '
+                f'\nThe argument passed was "{type}".'
             )
 
         return self.dg._button(
@@ -249,7 +249,7 @@ class ButtonMixin:
         args: WidgetArgs | None = None,
         kwargs: WidgetKwargs | None = None,
         *,  # keyword-only arguments:
-        type: Literal["primary", "secondary"] = "secondary",
+        type: Literal["primary", "secondary", "tertiary"] = "secondary",
         icon: str | None = None,
         disabled: bool = False,
         use_container_width: bool = False,
@@ -320,10 +320,10 @@ class ButtonMixin:
         kwargs : dict
             An optional dict of kwargs to pass to the callback.
 
-        type : "secondary" or "primary"
+        type : "primary", "secondary", or "tertiary"
             An optional string that specifies the button type. Can be "primary" for a
-            button with additional emphasis or "secondary" for a normal button. Defaults
-            to "secondary".
+            button with additional emphasis, "secondary" for a normal button, or "tertiary"
+            for a subtle button. Defaults to "secondary".
 
         icon : str or None
             An optional emoji or icon to display next to the button label. If ``icon``
@@ -415,9 +415,9 @@ class ButtonMixin:
         """
         ctx = get_script_run_ctx()
 
-        if type not in ["primary", "secondary"]:
+        if type not in ["primary", "secondary", "tertiary"]:
             raise StreamlitAPIException(
-                'The type argument to st.button must be "primary" or "secondary". \n'
+                'The type argument to st.download_button must be "primary", "secondary", or "tertiary". \n'
                 f'The argument passed was "{type}".'
             )
 
@@ -445,7 +445,7 @@ class ButtonMixin:
         url: str,
         *,
         help: str | None = None,
-        type: Literal["primary", "secondary"] = "secondary",
+        type: Literal["primary", "secondary", "tertiary"] = "secondary",
         icon: str | None = None,
         disabled: bool = False,
         use_container_width: bool = False,
@@ -482,10 +482,10 @@ class ButtonMixin:
             An optional tooltip that gets displayed when the button is
             hovered over.
 
-        type : "secondary" or "primary"
+        type : "primary", "secondary", or "tertiary"
             An optional string that specifies the button type. Can be "primary" for a
-            button with additional emphasis or "secondary" for a normal button. Defaults
-            to "secondary".
+            button with additional emphasis, "secondary" for a normal button, or "tertiary"
+            for a subtle button. Defaults to "secondary".
 
         icon : str or None
             An optional emoji or icon to display next to the button label. If ``icon``
@@ -529,9 +529,9 @@ class ButtonMixin:
 
         """
         # Checks whether the entered button type is one of the allowed options - either "primary" or "secondary"
-        if type not in ["primary", "secondary"]:
+        if type not in ["primary", "secondary", "tertiary"]:
             raise StreamlitAPIException(
-                'The type argument to st.link_button must be "primary" or "secondary". '
+                'The type argument to st.link_button must be "primary", "secondary", or "tertiary". '
                 f'\nThe argument passed was "{type}".'
             )
 
@@ -673,7 +673,7 @@ class ButtonMixin:
         args: WidgetArgs | None = None,
         kwargs: WidgetKwargs | None = None,
         *,  # keyword-only arguments:
-        type: Literal["primary", "secondary"] = "secondary",
+        type: Literal["primary", "secondary", "tertiary"] = "secondary",
         icon: str | None = None,
         disabled: bool = False,
         use_container_width: bool = False,
@@ -747,7 +747,7 @@ class ButtonMixin:
         url: str,
         help: str | None,
         *,  # keyword-only arguments:
-        type: Literal["primary", "secondary"] = "secondary",
+        type: Literal["primary", "secondary", "tertiary"] = "secondary",
         icon: str | None = None,
         disabled: bool = False,
         use_container_width: bool = False,
@@ -859,7 +859,7 @@ class ButtonMixin:
         args: WidgetArgs | None = None,
         kwargs: WidgetKwargs | None = None,
         *,  # keyword-only arguments:
-        type: Literal["primary", "secondary"] = "secondary",
+        type: Literal["primary", "secondary", "tertiary"] = "secondary",
         icon: str | None = None,
         disabled: bool = False,
         use_container_width: bool = False,

@@ -23,6 +23,7 @@ import {
   StyledBorderlessIconButton,
   StyledBorderlessIconButtonActive,
   StyledElementToolbarButton,
+  StyledGhostButton,
   StyledHeaderButton,
   StyledHeaderNoPaddingButton,
   StyledIconButton,
@@ -37,6 +38,7 @@ import {
   StyledSegmentedControlButton,
   StyledSegmentedControlButtonActive,
   StyledTertiaryButton,
+  StyledTertiaryFormSubmitButton,
 } from "./styled-components"
 
 function BaseButton(props: Readonly<BaseButtonPropsT>): ReactElement {
@@ -49,6 +51,8 @@ function BaseButton(props: Readonly<BaseButtonPropsT>): ReactElement {
     ComponentType = StyledSecondaryButton
   } else if (kind === BaseButtonKind.TERTIARY) {
     ComponentType = StyledTertiaryButton
+  } else if (kind === BaseButtonKind.GHOST) {
+    ComponentType = StyledGhostButton
   } else if (kind === BaseButtonKind.LINK) {
     ComponentType = StyledLinkButton
   } else if (kind === BaseButtonKind.ICON) {
@@ -71,6 +75,8 @@ function BaseButton(props: Readonly<BaseButtonPropsT>): ReactElement {
     ComponentType = StyledPrimaryFormSubmitButton
   } else if (kind === BaseButtonKind.SECONDARY_FORM_SUBMIT) {
     ComponentType = StyledSecondaryFormSubmitButton
+  } else if (kind === BaseButtonKind.TERTIARY_FORM_SUBMIT) {
+    ComponentType = StyledTertiaryFormSubmitButton
   } else if (kind === BaseButtonKind.HEADER_BUTTON) {
     ComponentType = StyledHeaderButton
   } else if (kind === BaseButtonKind.HEADER_NO_PADDING) {

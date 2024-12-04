@@ -396,6 +396,8 @@ export function PlotlyChart({
 
     return JSON.parse(element.spec)
     // We want to reload the initialFigureSpec object whenever the element id changes
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [element.id, element.spec])
 
@@ -478,6 +480,8 @@ export function PlotlyChart({
     }
     return config
     // We want to reload the plotlyConfig object whenever the element id changes
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     element.id,
@@ -568,6 +572,8 @@ export function PlotlyChart({
     })
     // We want to reload these options whenever the element id changes
     // or the selection modes change.
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     element.id,
@@ -626,6 +632,8 @@ export function PlotlyChart({
     },
     // We are using element.id here instead of element since we don't
     // shallow reference equality will not work correctly for element.
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [element.id, widgetMgr, fragmentId]
   )
@@ -668,6 +676,8 @@ export function PlotlyChart({
     },
     // We are using element.id here instead of element since we don't
     // shallow reference equality will not work correctly for element.
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [element.id, widgetMgr, fragmentId]
   )
@@ -731,6 +741,8 @@ export function PlotlyChart({
       })
     }
     // We only want to trigger this effect if the dragmode changes.
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plotlyFigure.layout?.dragmode])
 

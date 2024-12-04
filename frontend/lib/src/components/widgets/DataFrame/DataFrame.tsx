@@ -243,6 +243,8 @@ function DataFrame({
     },
     // We only want to run this effect once during the initial component load
     // so we disable the eslint rule.
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
@@ -266,6 +268,8 @@ function DataFrame({
    */
   // The debounce method doesn't allow dependency inspection. Therefore, we
   // need to disable the eslint rule for exhaustive-deps.
+  // TODO: Update to match React best practices
+  // eslint-disable-next-line react-compiler/react-compiler
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const syncSelectionState = React.useCallback(
     // Use debounce to prevent rapid updates to the widget state.
@@ -351,6 +355,8 @@ function DataFrame({
     // to play around and get to the bottom of it.
     clearSelection(true, true)
     // Only run this on changes to the fullscreen mode:
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFullScreen])
 
@@ -417,6 +423,8 @@ function DataFrame({
     },
     // We only want to run this effect once during the initial component load
     // so we disable the eslint rule.
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
@@ -440,6 +448,8 @@ function DataFrame({
    */
   // The debounce method doesn't allow dependency inspection. Therefore, we
   // need to disable the eslint rule for exhaustive-deps.
+  // TODO: Update to match React best practices
+  // eslint-disable-next-line react-compiler/react-compiler
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const syncEditState = React.useCallback(
     // Use debounce to prevent rapid updates to the widget state.

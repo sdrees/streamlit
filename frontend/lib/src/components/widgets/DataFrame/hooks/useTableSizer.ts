@@ -15,6 +15,8 @@
  */
 
 // TODO: fix incorrect hook usage and delete this lint suppression
+// TODO: Update to match React best practices
+// eslint-disable-next-line react-compiler/react-compiler
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import React from "react"

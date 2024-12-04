@@ -64,6 +64,10 @@ st.button(
 st.button("Like Button", icon=":material/thumb_up:")
 st.button("Star Button", icon="⭐")
 
+st.button("Tertiary Button", type="tertiary")
+st.button("Disabled Tertiary Button", type="tertiary", disabled=True)
+
+
 cols = st.columns(3)
 
 # Order of conn_types matters to preserve the order in st_button.spec.js and the snapshot

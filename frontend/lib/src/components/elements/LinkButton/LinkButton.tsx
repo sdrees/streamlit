@@ -36,10 +36,12 @@ function LinkButton(props: Readonly<Props>): ReactElement {
   const { disabled, element, width } = props
   const style = { width }
 
-  const kind =
-    element.type === "primary"
-      ? BaseButtonKind.PRIMARY
-      : BaseButtonKind.SECONDARY
+  let kind = BaseButtonKind.SECONDARY
+  if (element.type === "primary") {
+    kind = BaseButtonKind.PRIMARY
+  } else if (element.type === "tertiary") {
+    kind = BaseButtonKind.TERTIARY
+  }
 
   // When useContainerWidth true & has help tooltip,
   // we need to pass the container width down to the button

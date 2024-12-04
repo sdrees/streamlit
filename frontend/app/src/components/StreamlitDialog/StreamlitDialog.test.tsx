@@ -78,10 +78,8 @@ describe("StreamlitDialog", () => {
       </Fragment>
     )
 
-    const baseButtonSecondary = await screen.findByTestId(
-      "stBaseButton-tertiary"
-    )
-    expect(baseButtonSecondary).toBeDefined()
+    const baseButtonGhost = await screen.findByTestId("stBaseButton-ghost")
+    expect(baseButtonGhost).toBeDefined()
   })
 })
 

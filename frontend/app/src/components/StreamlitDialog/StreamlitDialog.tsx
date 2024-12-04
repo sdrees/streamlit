@@ -202,7 +202,7 @@ function clearCacheDialog(props: ClearCacheProps): ReactElement {
           <StreamlitMarkdown source={clearCacheInfo} allowHTML={false} />
         </ModalBody>
         <ModalFooter>
-          <ModalButton kind={BaseButtonKind.TERTIARY} onClick={props.onClose}>
+          <ModalButton kind={BaseButtonKind.GHOST} onClick={props.onClose}>
             Cancel
           </ModalButton>
           <ModalButton
@@ -304,7 +304,7 @@ function deployErrorDialog({
         <StyledDeployErrorContent>{msg}</StyledDeployErrorContent>
       </ModalBody>
       <ModalFooter>
-        <ModalButton kind={BaseButtonKind.TERTIARY} onClick={onTryAgain}>
+        <ModalButton kind={BaseButtonKind.GHOST} onClick={onTryAgain}>
           Try again
         </ModalButton>
         <ModalButton

@@ -313,6 +313,8 @@ const AudioInput: React.FC<Props> = ({
     }
     // note: intentionally excluding theme so that we don't have to recreate the wavesurfer instance
     // and colors will be updated separately
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcodeAndUploadFile])
 

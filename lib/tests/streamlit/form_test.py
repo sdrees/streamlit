@@ -18,6 +18,8 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
+from parameterized import parameterized
+
 import streamlit as st
 from streamlit.errors import StreamlitAPIException
 from streamlit.runtime.state.session_state import RegisterWidgetResult
@@ -316,14 +318,15 @@ class FormSubmitButtonTest(DeltaGeneratorTestCase):
         last_delta = self.get_delta_from_queue()
         self.assertEqual("secondary", last_delta.new_element.button.type)
 
-    def test_submit_button_primary_type(self):
-        """Test that a submit button can be called with type="primary"."""
+    @parameterized.expand(["primary", "secondary", "tertiary"])
+    def test_submit_button_types(self, type):
+        """Test that a submit button can be called with different types."""
 
         form = st.form("foo")
-        form.form_submit_button(type="primary")
+        form.form_submit_button(type=type)
 
         last_delta = self.get_delta_from_queue()
-        self.assertEqual("primary", last_delta.new_element.button.type)
+        self.assertEqual(type, last_delta.new_element.button.type)
 
     def test_submit_button_emoji_icon(self):
         """Test that a submit button can be called with an emoji icon."""

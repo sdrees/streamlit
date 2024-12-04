@@ -202,6 +202,8 @@ export function useBasicWidgetState<
   // "event", this time using the .setValue property of the proto.
   useEffect(() => {
     if (!element.setValue) return
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     element.setValue = false // Clear "event".
 
     setNextValueWithSource({

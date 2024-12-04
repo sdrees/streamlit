@@ -14,73 +14,21 @@
  * limitations under the License.
  */
 
-import timezoneMock from "timezone-mock"
+import { withTimezones } from "@streamlit/lib/src/util/withTimezones"
 
 import formatTime from "./formatTime"
 
-describe("formatTime", () => {
-  describe("US/Pacific Timezone", () => {
-    beforeAll(() => {
-      timezoneMock.register("US/Pacific")
-    })
-
-    afterAll(() => {
-      timezoneMock.unregister()
-    })
-
-    it('should format 0 milliseconds as "00:00" in Pacific Time', () => {
+withTimezones(() => {
+  describe("formatTime", () => {
+    it('should format 0 milliseconds as "00:00"', () => {
       expect(formatTime(0)).toBe("00:00")
     })
 
-    it('should format 1000 milliseconds as "00:01" in Pacific Time', () => {
+    it('should format 1000 milliseconds as "00:01"', () => {
       expect(formatTime(1000)).toBe("00:01")
     })
 
-    it('should format 90000 milliseconds as "01:30" in Pacific Time', () => {
-      expect(formatTime(90000)).toBe("01:30")
-    })
-  })
-
-  describe("US/Eastern Timezone", () => {
-    beforeAll(() => {
-      timezoneMock.register("US/Eastern")
-    })
-
-    afterAll(() => {
-      timezoneMock.unregister()
-    })
-
-    it('should format 0 milliseconds as "00:00" in Eastern Time', () => {
-      expect(formatTime(0)).toBe("00:00")
-    })
-
-    it('should format 1000 milliseconds as "00:01" in Eastern Time', () => {
-      expect(formatTime(1000)).toBe("00:01")
-    })
-
-    it('should format 90000 milliseconds as "01:30" in Eastern Time', () => {
-      expect(formatTime(90000)).toBe("01:30")
-    })
-  })
-
-  describe("Australia/Adelaide Timezone", () => {
-    beforeAll(() => {
-      timezoneMock.register("Australia/Adelaide")
-    })
-
-    afterAll(() => {
-      timezoneMock.unregister()
-    })
-
-    it('should format 0 milliseconds as "00:00" in Adelaide Time', () => {
-      expect(formatTime(0)).toBe("00:00")
-    })
-
-    it('should format 1000 milliseconds as "00:01" in Adelaide Time', () => {
-      expect(formatTime(1000)).toBe("00:01")
-    })
-
-    it('should format 90000 milliseconds as "01:30" in Adelaide Time', () => {
+    it('should format 90000 milliseconds as "01:30"', () => {
       expect(formatTime(90000)).toBe("01:30")
     })
   })

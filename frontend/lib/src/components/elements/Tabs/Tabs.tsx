@@ -63,6 +63,8 @@ function Tabs(props: Readonly<TabProps>): ReactElement {
       setActiveTabKey(0)
       setActiveTabName(allTabLabels[0])
     }
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allTabLabels])
 
@@ -82,6 +84,8 @@ function Tabs(props: Readonly<TabProps>): ReactElement {
       setActiveTabName(allTabLabels[0])
     }
 
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [node.children.length])
 

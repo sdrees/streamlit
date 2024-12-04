@@ -136,6 +136,8 @@ function ChatInput({
   useEffect(() => {
     if (element.setValue) {
       // We are intentionally setting this to avoid regularly calling this effect.
+      // TODO: Update to match React best practices
+      // eslint-disable-next-line react-compiler/react-compiler
       element.setValue = false
       const val = element.value || ""
       setValue(val)

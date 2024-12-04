@@ -54,6 +54,8 @@ export const useFullscreen = (): UseFullscreenShape => {
   }, [setExpandedState])
 
   const zoomOut = useCallback(() => {
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     document.body.style.overflow = "unset"
     setExpandedState(false)
   }, [setExpandedState])

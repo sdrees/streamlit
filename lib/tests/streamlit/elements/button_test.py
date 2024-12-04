@@ -14,6 +14,8 @@
 
 """button unit test."""
 
+from parameterized import parameterized
+
 import streamlit as st
 from tests.delta_generator_test_case import DeltaGeneratorTestCase
 
@@ -33,12 +35,13 @@ class ButtonTest(DeltaGeneratorTestCase):
         self.assertEqual(c.is_form_submitter, False)
         self.assertEqual(c.disabled, False)
 
-    def test_type(self):
+    @parameterized.expand(["primary", "secondary", "tertiary"])
+    def test_type(self, type):
         """Test that it can be called with type param."""
-        st.button("the label", type="primary")
+        st.button("the label", type=type)
 
         c = self.get_delta_from_queue().new_element.button
-        self.assertEqual(c.type, "primary")
+        self.assertEqual(c.type, type)
 
     def test_emoji_icon(self):
         """Test that it can be called with emoji icon."""

@@ -17,7 +17,6 @@
 import React from "react"
 
 import { act, fireEvent, screen } from "@testing-library/react"
-import TimezoneMock from "timezone-mock"
 
 import {
   LabelVisibilityMessage as LabelVisibilityMessageProto,
@@ -25,6 +24,8 @@ import {
 } from "@streamlit/lib/src/proto"
 import { render } from "@streamlit/lib/src/test_util"
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
+
+import { withTimezones } from "src/util/withTimezones"
 
 import Slider, { Props } from "./Slider"
 
@@ -381,35 +382,29 @@ describe("Slider widget", () => {
   })
 
   describe("Datetime slider", () => {
-    TimezoneMock.register("UTC")
+    withTimezones(() => {
+      it("formats min and max as dates", () => {
+        const DAYS_IN_MICROS = 24 * 60 * 60 * 1000 * 1000
+        const WEEK_IN_MICROS = 7 * DAYS_IN_MICROS
 
-    it("should be in UTC", () => {
-      // We use a less idiomiatic Jest call, since getTimezoneOffset can return
-      // -0, and Object.is(-0, 0) is false: https://stackoverflow.com/a/59343755
-      expect(new Date().getTimezoneOffset() === 0).toBeTruthy()
-    })
+        const props = getProps({
+          // The default value should be divisible by step.
+          // Otherwise, we get a warning from `react-range`.
+          default: [0],
+          min: 0,
+          max: 4 * WEEK_IN_MICROS,
+          step: DAYS_IN_MICROS,
+          format: "YYYY-MM-DD",
+          dataType: SliderProto.DataType.DATETIME,
+        })
+        render(<Slider {...props} />)
 
-    it("formats min and max as dates", () => {
-      const DAYS_IN_MICROS = 24 * 60 * 60 * 1000 * 1000
-      const WEEK_IN_MICROS = 7 * DAYS_IN_MICROS
+        const min = screen.getByTestId("stSliderTickBarMin")
+        const max = screen.getByTestId("stSliderTickBarMax")
 
-      const props = getProps({
-        // The default value should be divisible by step.
-        // Otherwise, we get a warning from `react-range`.
-        default: [0],
-        min: 0,
-        max: 4 * WEEK_IN_MICROS,
-        step: DAYS_IN_MICROS,
-        format: "YYYY-MM-DD",
-        dataType: SliderProto.DataType.DATETIME,
+        expect(min).toHaveTextContent("1970-01-01")
+        expect(max).toHaveTextContent("1970-01-29")
       })
-      render(<Slider {...props} />)
-
-      const min = screen.getByTestId("stSliderTickBarMin")
-      const max = screen.getByTestId("stSliderTickBarMax")
-
-      expect(min).toHaveTextContent("1970-01-01")
-      expect(max).toHaveTextContent("1970-01-29")
     })
   })
 

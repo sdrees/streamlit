@@ -50,6 +50,8 @@ export default function Html({
     if (sanitizeString(body) !== sanitizedHtml) {
       setSanitizedHtml(sanitizeString(body))
     }
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [body])
 

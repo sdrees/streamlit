@@ -46,6 +46,9 @@ from streamlit.runtime.caching.cached_message_replay import (
     replay_cached_messages,
 )
 from streamlit.runtime.caching.hashing import HashFuncsDict, update_hash
+from streamlit.runtime.scriptrunner_utils.script_run_context import (
+    in_cached_function,
+)
 from streamlit.util import HASHLIB_KWARGS
 
 if TYPE_CHECKING:
@@ -202,24 +205,23 @@ class CachedFunc:
     def __call__(self, *args, **kwargs) -> Any:
         """The wrapper. We'll only call our underlying function on a cache miss."""
 
-        name = self._info.func.__qualname__
-
-        if isinstance(self._info.show_spinner, bool):
+        spinner_message: str | None = None
+        if isinstance(self._info.show_spinner, str):
+            spinner_message = self._info.show_spinner
+        elif self._info.show_spinner is True:
+            name = self._info.func.__qualname__
             if len(args) == 0 and len(kwargs) == 0:
-                message = f"Running `{name}()`."
+                spinner_message = f"Running `{name}()`."
             else:
-                message = f"Running `{name}(...)`."
-        else:
-            message = self._info.show_spinner
+                spinner_message = f"Running `{name}(...)`."
 
-        if self._info.show_spinner or isinstance(self._info.show_spinner, str):
-            with spinner(message, _cache=True):
-                return self._get_or_create_cached_value(args, kwargs)
-        else:
-            return self._get_or_create_cached_value(args, kwargs)
+        return self._get_or_create_cached_value(args, kwargs, spinner_message)
 
     def _get_or_create_cached_value(
-        self, func_args: tuple[Any, ...], func_kwargs: dict[str, Any]
+        self,
+        func_args: tuple[Any, ...],
+        func_kwargs: dict[str, Any],
+        spinner_message: str | None = None,
     ) -> Any:
         # Retrieve the function's cache object. We must do this "just-in-time"
         # (as opposed to in the constructor), because caches can be invalidated
@@ -239,10 +241,27 @@ class CachedFunc:
         with contextlib.suppress(CacheKeyNotFoundError):
             cached_result = cache.read_result(value_key)
             return self._handle_cache_hit(cached_result)
-        return self._handle_cache_miss(cache, value_key, func_args, func_kwargs)
+
+        # only show spinner if there is a message to show and always only for the
+        # outermost cache function if cache functions are nested, because the outermost
+        # function has to wait for the inner functions anyways. This avoids surprising
+        # users with slowdowned apps in case the inner functions are called very often,
+        # which would lead to a ton of (empty/spinner) proto messages that will make the
+        # app slow (see https://github.com/streamlit/streamlit/issues/9951). This is
+        # basically like auto-setting "show_spinner=False" on the @st.cache decorators
+        # on behalf of the user.
+        is_nested_cache_function = in_cached_function.get()
+        spinner_or_no_context = (
+            spinner(spinner_message, _cache=True)
+            if spinner_message is not None and not is_nested_cache_function
+            else contextlib.nullcontext()
+        )
+        with spinner_or_no_context:
+            return self._handle_cache_miss(cache, value_key, func_args, func_kwargs)
 
     def _handle_cache_hit(self, result: CachedResult) -> Any:
-        """Handle a cache hit: replay the result's cached messages, and return its value."""
+        """Handle a cache hit: replay the result's cached messages, and return its
+        value."""
         replay_cached_messages(
             result,
             self._info.cache_type,

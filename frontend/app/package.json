@@ -89,6 +89,7 @@
     "eslint-plugin-no-relative-import-paths": "^1.5.2",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-compiler": "^19.0.0-beta-df7b47d-20241124",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-streamlit-custom": "file:../eslint-plugin-streamlit-custom",
     "eslint-plugin-testing-library": "^6.2.2",

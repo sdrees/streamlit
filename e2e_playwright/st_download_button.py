@@ -85,6 +85,19 @@ st.download_button(
     icon=":material/download:",
 )
 
+st.download_button(
+    "Tertiary download button",
+    data="Hello world!",
+    type="tertiary",
+)
+
+st.download_button(
+    "Disabled tertiary download button",
+    data="Hello world!",
+    type="tertiary",
+    disabled=True,
+)
+
 random_str = str(random())
 clicked = st.download_button(label="Download random text", data=random_str)
 

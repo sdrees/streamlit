@@ -53,3 +53,12 @@ st.link_button(
     "https://streamlit.io",
     icon=":material/bolt:",
 )
+
+st.link_button("Tertiary link button", url="https://streamlit.io", type="tertiary")
+
+st.link_button(
+    "Disabled tertiary link button",
+    url="https://streamlit.io",
+    type="tertiary",
+    disabled=True,
+)

@@ -69,6 +69,8 @@ function Radio({
     setValue(defaultValue ?? null)
 
     // Exclude value from the dependency list on purpose to avoid a loop.
+    // TODO: Update to match React best practices
+    // eslint-disable-next-line react-compiler/react-compiler
     /* eslint-disable react-hooks/exhaustive-deps */
   }, [defaultValue])
 

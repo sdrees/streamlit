@@ -180,6 +180,7 @@ class LayoutsMixin:
         *,
         gap: Literal["small", "medium", "large"] = "small",
         vertical_alignment: Literal["top", "center", "bottom"] = "top",
+        border: bool = False,
     ) -> list[DeltaGenerator]:
         """Insert containers laid out as side-by-side columns.
 
@@ -216,6 +217,11 @@ class LayoutsMixin:
             The vertical alignment of the content inside the columns. The
             default is ``"top"``.
 
+        border : bool
+            Whether to show a border around the column containers. If this is
+            ``False`` (default), no border is shown. If this is ``True``, a
+            border is shown around each column.
+
         Returns
         -------
         list of containers
@@ -223,7 +229,10 @@ class LayoutsMixin:
 
         Examples
         --------
-        You can use the ``with`` notation to insert any element into a column:
+
+        **Example 1: Use context management**
+
+        You can use the ``with`` statement to insert any element into a column:
 
         >>> import streamlit as st
         >>>
@@ -245,7 +254,10 @@ class LayoutsMixin:
             https://doc-columns1.streamlit.app/
             height: 620px
 
-        Or you can just call methods directly on the returned objects:
+
+        **Example 2: Use commands as container methods**
+
+        You can just call methods directly on the returned objects:
 
         >>> import streamlit as st
         >>> import numpy as np
@@ -263,6 +275,8 @@ class LayoutsMixin:
             https://doc-columns2.streamlit.app/
             height: 550px
 
+        **Example 3: Align widgets**
+
         Use ``vertical_alignment="bottom"`` to align widgets.
 
         >>> import streamlit as st
@@ -276,6 +290,8 @@ class LayoutsMixin:
         .. output ::
             https://doc-columns-bottom-widgets.streamlit.app/
             height: 200px
+
+        **Example 4: Use vertical alignment to create grids**
 
         Adjust vertical alignment to customize your grid layouts.
 
@@ -294,6 +310,23 @@ class LayoutsMixin:
         .. output ::
             https://doc-columns-vertical-alignment.streamlit.app/
             height: 600px
+
+        **Example 5: Add borders**
+
+        Add borders to your columns instead of nested containers for consistent
+        heights.
+
+        >>> import streamlit as st
+        >>>
+        >>> left, middle, right = st.columns(3, border=True)
+        >>>
+        >>> left.markdown("Lorem ipsum " * 10)
+        >>> middle.markdown("Lorem ipsum " * 5)
+        >>> right.markdown("Lorem ipsum ")
+
+        .. output ::
+            https://doc-columns-borders.streamlit.app/
+            height: 250px
 
         """
         weights = spec
@@ -338,6 +371,7 @@ class LayoutsMixin:
             col_proto.column.vertical_alignment = vertical_alignment_mapping[
                 vertical_alignment
             ]
+            col_proto.column.show_border = border
             col_proto.allow_empty = True
             return col_proto
 

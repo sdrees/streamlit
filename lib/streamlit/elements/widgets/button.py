@@ -139,9 +139,15 @@ class ButtonMixin:
             An optional dict of kwargs to pass to the callback.
 
         type : "primary", "secondary", or "tertiary"
-            An optional string that specifies the button type. Can be "primary" for a
-            button with additional emphasis, "secondary" for a normal button, or "tertiary"
-            for a subtle button. Defaults to "secondary".
+            An optional string that specifies the button type. This can be one
+            of the following:
+
+            - ``"primary"``: The button's background is the app's primary color
+              for additional emphasis.
+            - ``"secondary"`` (default): The button's background coordinates
+              with the app's background color for normal emphasis.
+            - ``"tertiary"``: The button is plain text without a border or
+              background for subtly.
 
         icon : str or None
             An optional emoji or icon to display next to the button label. If ``icon``
@@ -181,6 +187,9 @@ class ButtonMixin:
 
         Examples
         --------
+
+        **Example 1: Customize your button type**
+
         >>> import streamlit as st
         >>>
         >>> st.button("Reset", type="primary")
@@ -188,10 +197,15 @@ class ButtonMixin:
         ...     st.write("Why hello there")
         ... else:
         ...     st.write("Goodbye")
+        >>>
+        >>> if st.button("Aloha", type="tertiary"):
+        ...     st.write("Ciao")
 
         .. output::
            https://doc-buton.streamlit.app/
-           height: 220px
+           height: 300px
+
+        **Example 2: Add icons to your button**
 
         Although you can add icons to your buttons through Markdown, the
         ``icon`` parameter is a convenient and consistent alternative.
@@ -321,9 +335,15 @@ class ButtonMixin:
             An optional dict of kwargs to pass to the callback.
 
         type : "primary", "secondary", or "tertiary"
-            An optional string that specifies the button type. Can be "primary" for a
-            button with additional emphasis, "secondary" for a normal button, or "tertiary"
-            for a subtle button. Defaults to "secondary".
+            An optional string that specifies the button type. This can be one
+            of the following:
+
+            - ``"primary"``: The button's background is the app's primary color
+              for additional emphasis.
+            - ``"secondary"`` (default): The button's background coordinates
+              with the app's background color for normal emphasis.
+            - ``"tertiary"``: The button is plain text without a border or
+              background for subtly.
 
         icon : str or None
             An optional emoji or icon to display next to the button label. If ``icon``
@@ -483,9 +503,15 @@ class ButtonMixin:
             hovered over.
 
         type : "primary", "secondary", or "tertiary"
-            An optional string that specifies the button type. Can be "primary" for a
-            button with additional emphasis, "secondary" for a normal button, or "tertiary"
-            for a subtle button. Defaults to "secondary".
+            An optional string that specifies the button type. This can be one
+            of the following:
+
+            - ``"primary"``: The button's background is the app's primary color
+              for additional emphasis.
+            - ``"secondary"`` (default): The button's background coordinates
+              with the app's background color for normal emphasis.
+            - ``"tertiary"``: The button is plain text without a border or
+              background for subtly.
 
         icon : str or None
             An optional emoji or icon to display next to the button label. If ``icon``

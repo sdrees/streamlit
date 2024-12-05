@@ -23,6 +23,7 @@ export const StyledImageList = styled.div(({ theme }) => ({
   // Not supported in Safari, but at least it's not a regression for those users:
   rowGap: theme.spacing.lg,
   maxWidth: "100%",
+  width: "fit-content",
 }))
 
 export const StyledImageContainer = styled.div({

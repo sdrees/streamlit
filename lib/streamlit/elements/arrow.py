@@ -404,8 +404,8 @@ class ArrowMixin:
 
         selection_mode : "single-row", "multi-row", "single-column", \
             "multi-column", or Iterable of these
-            The types of selections Streamlit should allow. This can be one of
-            the following:
+            The types of selections Streamlit should allow when selections are
+            enabled with ``on_select``. This can be one of the following:
 
             - "multi-row" (default): Multiple rows can be selected at a time.
             - "single-row": Only one row can be selected at a time.
@@ -428,6 +428,9 @@ class ArrowMixin:
 
         Examples
         --------
+
+        **Example 1: Display a dataframe**
+
         >>> import streamlit as st
         >>> import pandas as pd
         >>> import numpy as np
@@ -439,6 +442,8 @@ class ArrowMixin:
         .. output::
            https://doc-dataframe.streamlit.app/
            height: 500px
+
+        **Example 2: Use Pandas Styler**
 
         You can also pass a Pandas Styler object to change the style of
         the rendered DataFrame:
@@ -455,7 +460,9 @@ class ArrowMixin:
            https://doc-dataframe1.streamlit.app/
            height: 500px
 
-        Or you can customize the dataframe via ``column_config``, ``hide_index``, or ``column_order``:
+        **Example 3: Use column configuration**
+
+        You can customize a dataframe via ``column_config``, ``hide_index``, or ``column_order``.
 
         >>> import random
         >>> import pandas as pd
@@ -489,6 +496,33 @@ class ArrowMixin:
         .. output::
            https://doc-dataframe-config.streamlit.app/
            height: 350px
+
+        **Example 4: Customize your index**
+
+        You can use column configuration to format your index.
+
+        >>> import streamlit as st
+        >>> import pandas as pd
+        >>> from datetime import date
+        >>>
+        >>> df = pd.DataFrame(
+        >>>     {
+        >>>         "Date": [date(2024, 1, 1), date(2024, 2, 1), date(2024, 3, 1)],
+        >>>         "Total": [13429, 23564, 23452],
+        >>>     }
+        >>> )
+        >>> df.set_index("Date", inplace=True)
+        >>>
+        >>> config = {
+        >>>     "_index": st.column_config.DateColumn("Month", format="MMM YYYY"),
+        >>>     "Total": st.column_config.NumberColumn("Total ($)"),
+        >>> }
+        >>>
+        >>> st.dataframe(df, column_config=config)
+
+        .. output::
+           https://doc-dataframe-config-index.streamlit.app/
+           height: 225px
 
         """
         import pyarrow as pa

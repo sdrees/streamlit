@@ -193,6 +193,12 @@ def test_image_list(app: Page, assert_snapshot: ImageCompareFunction):
     assert_snapshot(image_list, name="st_image-image_list")
 
 
+def test_image_list_overflow(app: Page, assert_snapshot: ImageCompareFunction):
+    """Test that st.image can display a list of images."""
+    image_list = get_image(app, "Overflow")
+    assert_snapshot(image_list, name="st_image-image_list_overflow")
+
+
 def test_check_top_level_class(app: Page):
     """Check that the top level class is correctly set."""
     check_top_level_class(app, "stImage")

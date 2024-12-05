@@ -73,9 +73,12 @@ class MarkdownMixin:
             - Colored text and background colors for text, using the syntax
               ``:color[text to be colored]`` and ``:color-background[text to be colored]``,
               respectively. ``color`` must be replaced with any of the following
-              supported colors: blue, green, orange, red, violet, gray/grey, rainbow.
-              For example, you can use ``:orange[your text here]`` or
-              ``:blue-background[your text here]``.
+              supported colors: blue, green, orange, red, violet, gray/grey,
+              rainbow, or primary. For example, you can use
+              ``:orange[your text here]`` or ``:blue-background[your text here]``.
+              If you use "primary" for color, Streamlit will use the default
+              primary accent color unless you set the ``theme.primaryColor``
+              configuration option.
 
         unsafe_allow_html : bool
             Whether to render HTML within ``body``. If this is ``False``

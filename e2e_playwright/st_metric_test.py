@@ -76,6 +76,13 @@ def test_none_results_in_dash_in_value(
     )
 
 
+def test_border(themed_app: Page, assert_snapshot: ImageCompareFunction):
+    assert_snapshot(
+        themed_app.get_by_test_id("stMetric").nth(10),
+        name="st_metric-border",
+    )
+
+
 def test_label_visibility_set_to_hidden(
     themed_app: Page, assert_snapshot: ImageCompareFunction
 ):

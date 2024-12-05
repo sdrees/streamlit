@@ -47,3 +47,5 @@ with col1:
     )
 
 st.metric("Test 9", -4.56, 1.23, help="Test help with code `select * from table`")
+
+st.metric("Test 10", -4.56, 1.23, border=True, help="Test help text")

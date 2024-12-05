@@ -225,3 +225,10 @@ col7.image(img, use_container_width=False)
 col7.image(img, width=50)
 # 50 px since the width parameter is given, and use_container_width is not True
 col7.image(img, use_container_width=False, width=50)
+
+
+st.image(
+    [img, img, img, img, img],
+    caption=[f"Overflow {i}" for i in range(5)],
+    width=200,
+)

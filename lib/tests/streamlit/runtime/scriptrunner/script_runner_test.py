@@ -275,7 +275,7 @@ class ScriptRunnerTest(AsyncTestCase):
 
         Runtime._instance.media_file_mgr.clear_session_refs.assert_called_once()
 
-    @patch("streamlit.exception")
+    @patch("streamlit.elements.exception._exception")
     def test_run_nonexistent_fragment(self, mocked_st_exception):
         """Tests that we raise an exception when trying to run a nonexistent fragment."""
         scriptrunner = TestScriptRunner("good_script.py")
@@ -565,7 +565,7 @@ class ScriptRunnerTest(AsyncTestCase):
 
         patched_call_callbacks.assert_called_once()
 
-    @patch("streamlit.exception")
+    @patch("streamlit.elements.exception._exception")
     @patch("streamlit.runtime.state.session_state.SessionState._call_callbacks")
     def test_calls_widget_callbacks_error(
         self, patched_call_callbacks, patched_st_exception

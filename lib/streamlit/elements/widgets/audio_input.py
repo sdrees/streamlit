@@ -132,7 +132,9 @@ class AudioInputMixin:
             based on its content. No two widgets may have the same key.
 
         help : str
-            A tooltip that gets displayed next to the audio input.
+            An optional tooltip that gets displayed next to the widget label.
+            Streamlit only displays the tooltip when
+            ``label_visibility="visible"``.
 
         on_change : callable
             An optional callback invoked when this audio input's value

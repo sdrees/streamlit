@@ -18,10 +18,10 @@ import os
 import traceback
 from typing import TYPE_CHECKING, Callable, Final, TypeVar, cast
 
+from streamlit import config
 from streamlit.errors import (
     MarkdownFormattedException,
     StreamlitAPIWarning,
-    UncaughtAppException,
 )
 from streamlit.logger import get_logger
 from streamlit.proto.Exception_pb2 import Exception as ExceptionProto
@@ -56,9 +56,7 @@ class ExceptionMixin:
         >>> st.exception(e)
 
         """
-        exception_proto = ExceptionProto()
-        marshall(exception_proto, exception)
-        return self.dg._enqueue("exception", exception_proto)
+        return _exception(self.dg, exception)
 
     @property
     def dg(self) -> DeltaGenerator:
@@ -66,19 +64,37 @@ class ExceptionMixin:
         return cast("DeltaGenerator", self)
 
 
-def marshall(exception_proto: ExceptionProto, exception: BaseException) -> None:
+# TODO(lawilby): confirm whether we want to track metrics here with lukasmasuch.
+@gather_metrics("exception")
+def _exception(
+    dg: DeltaGenerator,
+    exception: BaseException,
+    is_uncaught_app_exception: bool = False,
+) -> DeltaGenerator:
+    exception_proto = ExceptionProto()
+    marshall(exception_proto, exception, is_uncaught_app_exception)
+    return dg._enqueue("exception", exception_proto)
+
+
+def marshall(
+    exception_proto: ExceptionProto,
+    exception: BaseException,
+    is_uncaught_app_exception: bool = False,
+) -> None:
     """Marshalls an Exception.proto message.
 
     Parameters
     ----------
     exception_proto : Exception.proto
-        The Exception protobuf to fill out
+        The Exception protobuf to fill out.
 
     exception : BaseException
-        The exception whose data we're extracting
+        The exception whose data we're extracting.
+
+    is_uncaught_app_exception: bool
+        The exception originates from an uncaught error during script execution.
     """
     is_markdown_exception = isinstance(exception, MarkdownFormattedException)
-    is_uncaught_app_exception = isinstance(exception, UncaughtAppException)
 
     # Some exceptions (like UserHashError) have an alternate_name attribute so
     # we can pretend to the user that the exception is called something else.
@@ -131,10 +147,40 @@ Traceback:
         )
 
     if is_uncaught_app_exception:
-        uae = cast(UncaughtAppException, exception)
-        exception_proto.message = _GENERIC_UNCAUGHT_EXCEPTION_TEXT
-        type_str = str(type(uae.exc))
-        exception_proto.type = type_str.replace("<class '", "").replace("'>", "")
+        show_error_details = config.get_option("client.showErrorDetails")
+
+        # Options for show error details config.
+        FULL = "full"
+        STACKTRACE = "stacktrace"
+        TYPE = "type"
+        # Config options can be set from several places including the command-line and
+        # the user's script. Legacy config options (true/false) will have type string when set via
+        # command-line and bool when set via user script (e.g. st.set_option("client.showErrorDetails", False)).
+        TRUE_VARIATIONS = ["true", "True", True]
+        FALSE_VARIATIONS = ["false", "False", False]
+        # "none" is also a valid config setting. We show only a default error message.
+
+        show_message = (
+            show_error_details == FULL or show_error_details in TRUE_VARIATIONS
+        )
+        # False is a legacy config option still in-use in community cloud. It is equivalent
+        # to "stacktrace".
+        show_trace = (
+            show_message
+            or show_error_details == STACKTRACE
+            or show_error_details in FALSE_VARIATIONS
+        )
+        show_type = show_trace or show_error_details == TYPE
+
+        if not show_message:
+            exception_proto.message = _GENERIC_UNCAUGHT_EXCEPTION_TEXT
+        if not show_type:
+            exception_proto.ClearField("type")
+        else:
+            type_str = str(type(exception))
+            exception_proto.type = type_str.replace("<class '", "").replace("'>", "")
+        if not show_trace:
+            exception_proto.ClearField("stack_trace")
 
 
 def _format_syntax_error_message(exception: SyntaxError) -> str:
@@ -195,9 +241,6 @@ def _get_stack_trace_str_list(exception: BaseException) -> list[str]:
         extracted_traceback = exception.tacked_on_stack
     elif hasattr(exception, "__traceback__"):
         extracted_traceback = traceback.extract_tb(exception.__traceback__)
-
-    if isinstance(exception, UncaughtAppException):
-        extracted_traceback = traceback.extract_tb(exception.exc.__traceback__)
 
     # Format the extracted traceback and add it to the protobuf element.
     if extracted_traceback is None:

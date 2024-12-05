@@ -47,6 +47,7 @@ class MetricTest(DeltaGeneratorTestCase):
         self.assertEqual(c.body, "123")
         self.assertEqual(c.color, MetricProto.MetricColor.GRAY)
         self.assertEqual(c.direction, MetricProto.MetricDirection.NONE)
+        self.assertFalse(c.show_border)
 
     @parameterized.expand(
         [
@@ -63,6 +64,15 @@ class MetricTest(DeltaGeneratorTestCase):
         self.assertEqual(c.label, "label_test")
         self.assertEqual(c.body, "123")
         self.assertEqual(c.label_visibility.value, proto_value)
+
+    def test_border(self):
+        """Test that metric can be called with border param."""
+        st.metric("label_test", "123", border=True)
+
+        c = self.get_delta_from_queue().new_element.metric
+        self.assertEqual(c.label, "label_test")
+        self.assertEqual(c.body, "123")
+        self.assertEqual(c.show_border, True)
 
     def test_label_and_value_and_delta_and_delta_color(self):
         """Test that metric can be called with label, value, delta, and delta

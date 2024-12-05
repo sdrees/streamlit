@@ -17,8 +17,22 @@
 import styled from "@emotion/styled"
 
 import { StyledWidgetLabel } from "@streamlit/lib/src/components/widgets/BaseWidget/styled-components"
+import { Metric as MetricProto } from "@streamlit/lib/src/proto"
 import { LabelVisibilityOptions } from "@streamlit/lib/src/util/utils"
 
+export interface StyledMetricContainerProps {
+  showBorder: boolean
+}
+
+export const StyledMetricContainer = styled.div<StyledMetricContainerProps>(
+  ({ theme, showBorder }) => ({
+    ...(showBorder && {
+      border: `${theme.sizes.borderWidth} solid ${theme.colors.borderColor}`,
+      borderRadius: theme.radii.default,
+      padding: `calc(${theme.spacing.lg} - ${theme.sizes.borderWidth})`,
+    }),
+  })
+)
 export interface StyledMetricLabelTextProps {
   visibility?: LabelVisibilityOptions
 }
@@ -61,10 +75,32 @@ export const StyledMetricValueText = styled.div(({ theme }) => ({
   paddingBottom: theme.spacing.twoXS,
 }))
 
-export const StyledMetricDeltaText = styled.div(({ theme }) => ({
-  fontSize: theme.fontSizes.md,
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  fontWeight: theme.fontWeights.normal,
-}))
+export interface StyledMetricDeltaTextProps {
+  metricColor: MetricProto.MetricColor
+}
+
+const getMetricColor = (
+  theme: any,
+  color: MetricProto.MetricColor
+): string => {
+  switch (color) {
+    case MetricProto.MetricColor.RED:
+      return theme.colors.metricNegativeDeltaColor
+    case MetricProto.MetricColor.GREEN:
+      return theme.colors.metricPositiveDeltaColor
+    // this must be grey
+    default:
+      return theme.colors.metricNeutralDeltaColor
+  }
+}
+
+export const StyledMetricDeltaText = styled.div<StyledMetricDeltaTextProps>(
+  ({ theme, metricColor }) => ({
+    color: getMetricColor(theme, metricColor),
+    fontSize: theme.fontSizes.md,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    fontWeight: theme.fontWeights.normal,
+  })
+)

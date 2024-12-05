@@ -54,6 +54,12 @@ def test_columns_always_take_up_space(app: Page, assert_snapshot: ImageCompareFu
     assert_snapshot(column_element, name="st_columns-with_empty_columns")
 
 
+def test_columns_with_border(app: Page, assert_snapshot: ImageCompareFunction):
+    """Test that columns with border are correctly displayed"""
+    column_element = app.get_by_test_id("stHorizontalBlock").nth(2)
+    assert_snapshot(column_element, name="st_columns-with_border")
+
+
 def test_column_gap_small_is_correctly_applied(
     app: Page, assert_snapshot: ImageCompareFunction
 ):

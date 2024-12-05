@@ -328,6 +328,10 @@ class PlotlyMixin:
         To show Plotly charts in Streamlit, call ``st.plotly_chart`` wherever
         you would call Plotly's ``py.plot`` or ``py.iplot``.
 
+        .. Important::
+            You must install ``plotly`` to use this command. Your app's
+            performance may be enhanced by installing ``orjson`` as well.
+
         Parameters
         ----------
         figure_or_data : plotly.graph_objs.Figure, plotly.graph_objs.Data,\

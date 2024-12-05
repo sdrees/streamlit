@@ -66,16 +66,17 @@ function ExceptionMessage({
   // messages, and so we wrap those messages inside our Markdown renderer.
 
   if (messageIsMarkdown) {
-    let markdown = `**${type}**`
-    if (message) {
-      markdown += `: ${message}`
+    let markdown = message ?? ""
+    if (type.length !== 0) {
+      markdown = `**${type}**: ${markdown}`
     }
     return <StreamlitMarkdown source={markdown} allowHTML={false} />
   }
   return (
     <>
       <StyledMessageType>{type}</StyledMessageType>
-      {isNonEmptyString(message) ? `: ${message}` : null}
+      {type.length !== 0 && ": "}
+      {isNonEmptyString(message) ? message : null}
     </>
   )
 }

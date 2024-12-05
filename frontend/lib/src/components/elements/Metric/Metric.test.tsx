@@ -19,6 +19,7 @@ import React from "react"
 import { screen } from "@testing-library/react"
 
 import { render } from "@streamlit/lib/src/test_util"
+import { mockTheme } from "@streamlit/lib/src/mocks/mockTheme"
 import {
   LabelVisibilityMessage as LabelVisibilityMessageProto,
   Metric as MetricProto,
@@ -140,5 +141,21 @@ describe("Metric element", () => {
     render(<Metric {...props} />)
     const tooltip = screen.getByTestId("stTooltipIcon")
     expect(tooltip).toBeInTheDocument()
+  })
+
+  it("renders without border by default", () => {
+    const props = getProps()
+    render(<Metric {...props} />)
+    expect(screen.getByTestId("stMetric")).toHaveStyle("border: none;")
+  })
+
+  it("renders with border if passed", () => {
+    const props = getProps({ showBorder: true })
+    render(<Metric {...props} />)
+
+    const expectedBorder = `${mockTheme.emotion.sizes.borderWidth} solid ${mockTheme.emotion.colors.borderColor}`
+    expect(screen.getByTestId("stMetric")).toHaveStyle(
+      `border: ${expectedBorder}`
+    )
   })
 })

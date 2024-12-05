@@ -384,15 +384,18 @@ class TimeWidgetsMixin:
             .. |st.markdown| replace:: ``st.markdown``
             .. _st.markdown: https://docs.streamlit.io/develop/api-reference/text/st.markdown
 
-        value : datetime.time/datetime.datetime, str, "now" or None
-            The value of this widget when it first renders. Must be one of:
+        value : "now", datetime.time, datetime.datetime, str, or None
+            The value of this widget when it first renders. This can be one of
+            the following:
 
-            - A ``datetime.time`` object.
-            - A ``datetime.datetime``, in which case only the time component will be used.
-            - An ISO-formatted time string ("hh:mm", "hh:mm:ss", or "hh:mm:ss.sss"). If
-              it includes a date, only the time component will be used.
-            - The string "now" (default), to initialize with the current time.
-            - ``None``, will initialize empty and return ``None`` until the user selects a time.
+            - ``"now"`` (default): The widget initializes with the current time.
+            - A ``datetime.time`` or ``datetime.datetime`` object: The widget
+              initializes with the given time, ignoring any date if included.
+            - An ISO-formatted time ("hh:mm", "hh:mm:ss", or "hh:mm:ss.sss") or
+              datetime ("YYYY-MM-DD hh:mm:ss") string: The widget initializes
+              with the given time, ignoring any date if included.
+            - ``None``: The widget initializes with no time and returns
+              ``None`` until the user selects a time.
 
         key : str or int
             An optional string or integer to use as the unique key for the widget.
@@ -610,26 +613,43 @@ class TimeWidgetsMixin:
             .. |st.markdown| replace:: ``st.markdown``
             .. _st.markdown: https://docs.streamlit.io/develop/api-reference/text/st.markdown
 
-        value : datetime.date or datetime.datetime or str or list/tuple of datetime.date or datetime.datetime or str, "today", or None
-            The value of this widget when it first renders. Must be one of:
+        value : "today", datetime.date, datetime.datetime, str, list/tuple of these, or None
+            The value of this widget when it first renders. This can be one of
+            the following:
 
-            - A ``datetime.date`` object.
-            - A ``datetime.datetime``, in which case only the date component will be used.
-            - An ISO-formatted date string ("YYYY-MM-DD"). If it includes time, only the
-              date component will be used ("YYYY-MM-DD hh:mm:ss").
-            - The string "today" (default), to initialize with the current date.
-            - ``None``, to initialize empty and return ``None`` until the user selects a time.
-            - A date interval in the form of a list/tuple with up to 2 of the above.
+            - ``"today"`` (default): The widget initializes with the current date.
+            - A ``datetime.date`` or ``datetime.datetime`` object: The widget
+              initializes with the given date, ignoring any time if included.
+            - An ISO-formatted date ("YYYY-MM-DD") or datetime
+              ("YYYY-MM-DD hh:mm:ss") string: The widget initializes with the
+              given date, ignoring any time if included.
+            - A list or tuple with up to two of the above: The widget will
+              initialize with the given date interval and return a tuple of the
+              selected interval. You can pass an empty list to initialize the
+              widget with an empty interval or a list with one value to
+              initialize only the beginning date of the iterval.
+            - ``None``: The widget initializes with no date and returns
+              ``None`` until the user selects a date.
 
-        min_value : datetime.date or datetime.datetime or str or "today"
-            The minimum selectable date. Support ISO strings. If ``value`` is not
-            ``None``, defaults to ``value - 10 years``. If ``value`` is a date interval
-            ``[start, end]``, defaults to ``start - 10 years``.
+        min_value : "today", datetime.date, datetime.datetime, str, or None
+            The minimum selectable date. This can be any of the date types
+            accepted by ``value``, except list or tuple.
 
-        max_value : datetime.date or datetime.datetime or str or "today"
-            The maximum selectable date. Support ISO strings. If ``value`` is not
-            ``None``, defaults to ``value + 10 years``. If ``value`` is a date interval
-            ``[start, end]``, defaults to ``end + 10 years``.
+            If this is ``None`` (default), the minimum selectable date is ten
+            years before the initial value. If the initial value is an
+            interval, the minimum selectable date is ten years before the start
+            date of the interval. If no initial value is set, the minimum
+            selectable date is ten years before today.
+
+        max_value : "today", datetime.date, datetime.datetime, str, or None
+            The maximum selectable date. This can be any of the date types
+            accepted by ``value``, except list or tuple.
+
+            If this is ``None`` (default), the maximum selectable date is ten
+            years after the initial value. If the initial value is an interval,
+            the maximum selectable date is ten years after the end date of the
+            interval. If no initial value is set, the maximum selectable date
+            is ten years after today.
 
         key : str or int
             An optional string or integer to use as the unique key for the widget.

@@ -139,33 +139,49 @@ class ColumnConfig(TypedDict, total=False):
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     default: str, bool, int, float, or None
-        Specifies the default value in this column when a new row is added by the user.
+        Specifies the default value in this column when a new row is added by
+        the user. This defaults to ``None``.
 
     hidden: bool or None
-        Whether to hide the column. Defaults to False.
+        Whether to hide the column. This defaults to ``False``.
 
     type_config: dict or str or None
         Configure a column type and type specific options.
@@ -223,27 +239,42 @@ def Column(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     Examples
     --------
@@ -310,50 +341,71 @@ def NumberColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     default: int, float, or None
-        Specifies the default value in this column when a new row is added by the user.
+        Specifies the default value in this column when a new row is added by
+        the user. This defaults to ``None``.
 
-    format : str or None
+    format: str or None
         A printf-style format string controlling how numbers are displayed.
-        This does not impact the return value. Valid formatters: %d %e %f %g %i %u.
-        You can also add prefixes and suffixes, e.g. ``"$ %.2f"`` to show a dollar prefix.
+        This does not impact the return value. The following formatters are
+        valid: ``%d``, ``%e``, ``%f``, ``%g``, ``%i``, ``%u``. You can also add
+        prefixes and suffixes, e.g. ``"$ %.2f"`` to show a dollar prefix. If
+        this is ``None`` (default), the numbers are not formatted.
 
         Number formatting from ``column_config`` always takes precedence over
         number formatting from ``pandas.Styler``.
 
-    min_value : int, float, or None
-        The minimum value that can be entered.
-        If None (default), there will be no minimum.
+    min_value: int, float, or None
+        The minimum value that can be entered. If this is ``None`` (default),
+        there will be no minimum.
 
-    max_value : int, float, or None
-        The maximum value that can be entered.
-        If None (default), there will be no maximum.
+    max_value: int, float, or None
+        The maximum value that can be entered. If this is ``None`` (default),
+        there will be no maximum.
 
     step: int, float, or None
-        The stepping interval. Specifies the precision of numbers that can be entered.
-        If None (default), uses 1 for integers and unrestricted precision for floats.
+        The precision of numbers that can be entered. If this ``None``
+        (default), integer columns will have a step of 1 and float columns will
+        have unrestricted precision. In this case, some floats may display like
+        integers. Setting ``step`` for float columns will ensure a consistent
+        number of digits after the decimal even without setting ``format``.
 
     Examples
     --------
@@ -428,38 +480,55 @@ def TextColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     default: str or None
-        Specifies the default value in this column when a new row is added by the user.
+        Specifies the default value in this column when a new row is added by
+        the user. This defaults to ``None``.
 
     max_chars: int or None
-        The maximum number of characters that can be entered. If None (default),
-        there will be no maximum.
+        The maximum number of characters that can be entered. If this is
+        ``None`` (default), there will be no maximum.
 
     validate: str or None
-        A regular expression (JS flavor, e.g. ``"^[a-z]+$"``) that edited values are validated against.
-        If the input is invalid, it will not be submitted.
+        A JS-flavored regular expression (e.g. ``"^[a-z]+$"``) that edited
+        values are validated against. If the user input is invalid, it will not
+        be submitted.
 
     Examples
     --------
@@ -531,51 +600,68 @@ def LinkColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     default: str or None
-        Specifies the default value in this column when a new row is added by the user.
+        Specifies the default value in this column when a new row is added by
+        the user. This defaults to ``None``.
 
     max_chars: int or None
-        The maximum number of characters that can be entered. If None (default),
-        there will be no maximum.
+        The maximum number of characters that can be entered. If this is
+        ``None`` (default), there will be no maximum.
 
     validate: str or None
-        A regular expression (JS flavor, e.g. ``"^https://.+$"``) that edited values are validated against.
-        If the input is invalid, it will not be submitted.
+        A JS-flavored regular expression (e.g. ``"^https://.+$"``) that edited
+        values are validated against. If the user input is invalid, it will not
+        be submitted.
 
     display_text: str or None
-        The text that is displayed in the cell. Can be one of:
+        The text that is displayed in the cell. This can be one of the
+        following:
 
         - ``None`` (default) to display the URL itself.
-
         - A string that is displayed in every cell, e.g. ``"Open link"``.
+        - A JS-flavored regular expression (detected by usage of parentheses)
+          to extract a part of the URL via a capture group. For example, use
+          ``"https://(.*?)\\.example\\.com"`` to extract the display text
+          "foo" from the URL "\\https://foo.example.com".
 
-        - A regular expression (JS flavor, detected by usage of parentheses)
-          to extract a part of the URL via a capture group, e.g. ``"https://(.*?)\\.example\\.com"``
-          to extract the display text "foo" from the URL "\\https://foo.example.com".
-
-        .. Comment: The backslash in front of foo.example.com prevents a hyperlink.
+        .. Comment: The backslash in front of foo.example.com prevents a hyperlink in docs.
 
         For more complex cases, you may use `Pandas Styler's format \
         <https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.format.html>`_
@@ -667,30 +753,46 @@ def CheckboxColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     default: bool or None
-        Specifies the default value in this column when a new row is added by the user.
+        Specifies the default value in this column when a new row is added by
+        the user. This defaults to ``None``.
 
     Examples
     --------
@@ -757,35 +859,52 @@ def SelectboxColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     default: str, int, float, bool, or None
-        Specifies the default value in this column when a new row is added by the user.
+        Specifies the default value in this column when a new row is added by
+        the user. This defaults to ``None``.
 
     options: Iterable of str or None
-        The options that can be selected during editing. If None (default), this will be
-        inferred from the underlying dataframe column if its dtype is "category"
-        (`see Pandas docs on categorical data <https://pandas.pydata.org/docs/user_guide/categorical.html>`_).
+        The options that can be selected during editing. If this is ``None``
+        (default), the options will be inferred from the underlying dataframe
+        column if its dtype is "category". For more information, see `Pandas docs
+        <https://pandas.pydata.org/docs/user_guide/categorical.html>`_).
 
     Examples
     --------
@@ -861,28 +980,35 @@ def BarChartColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     y_min: int, float, or None
-        The minimum value on the y-axis for all cells in the column.
-        If None (default), every cell will use the minimum of its data.
+        The minimum value on the y-axis for all cells in the column. If this is
+        ``None`` (default), every cell will use the minimum of its data.
 
     y_max: int, float, or None
-        The maximum value on the y-axis for all cells in the column. If None (default),
-        every cell will use the maximum of its data.
+        The maximum value on the y-axis for all cells in the column. If this is
+        ``None`` (default), every cell will use the maximum of its data.
 
     Examples
     --------
@@ -948,28 +1074,35 @@ def LineChartColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     y_min: int, float, or None
-        The minimum value on the y-axis for all cells in the column.
-        If None (default), every cell will use the minimum of its data.
+        The minimum value on the y-axis for all cells in the column. If this is
+        ``None`` (default), every cell will use the minimum of its data.
 
     y_max: int, float, or None
-        The maximum value on the y-axis for all cells in the column. If None (default),
-        every cell will use the maximum of its data.
+        The maximum value on the y-axis for all cells in the column. If this is
+        ``None`` (default), every cell will use the maximum of its data.
 
     Examples
     --------
@@ -1036,28 +1169,35 @@ def AreaChartColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     y_min: int, float, or None
-        The minimum value on the y-axis for all cells in the column.
-        If None (default), every cell will use the minimum of its data.
+        The minimum value on the y-axis for all cells in the column. If this is
+        ``None`` (default), every cell will use the minimum of its data.
 
     y_max: int, float, or None
-        The maximum value on the y-axis for all cells in the column. If None (default),
-        every cell will use the maximum of its data.
+        The maximum value on the y-axis for all cells in the column. If this is
+        ``None`` (default), every cell will use the maximum of its data.
 
     Examples
     --------
@@ -1130,20 +1270,27 @@ def ImageColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     Examples
     --------
@@ -1203,20 +1350,27 @@ def ListColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     Examples
     --------
@@ -1287,53 +1441,71 @@ def DatetimeColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     default: datetime.datetime or None
-        Specifies the default value in this column when a new row is added by the user.
+        Specifies the default value in this column when a new row is added by
+        the user. This defaults to ``None``.
 
     format: str or None
         A momentJS format string controlling how datetimes are displayed. See
-        `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_ for available
-        formats. If None (default), uses ``YYYY-MM-DD HH:mm:ss``.
+        `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_ for
+        available formats. If this is ``None`` (default), the format is
+        ``YYYY-MM-DD HH:mm:ss``.
 
         Number formatting from ``column_config`` always takes precedence over
         number formatting from ``pandas.Styler``.
 
     min_value: datetime.datetime or None
-        The minimum datetime that can be entered.
-        If None (default), there will be no minimum.
+        The minimum datetime that can be entered. If this is ``None``
+        (default), there will be no minimum.
 
     max_value: datetime.datetime or None
-        The maximum datetime that can be entered.
-        If None (default), there will be no maximum.
+        The maximum datetime that can be entered. If this is ``None``
+        (default), there will be no maximum.
 
     step: int, float, datetime.timedelta, or None
-        The stepping interval in seconds. If None (default), the step will be 1 second.
+        The stepping interval in seconds. If this is ``None`` (default), the
+        step will be 1 second.
 
     timezone: str or None
-        The timezone of this column. If None (default),
-        the timezone is inferred from the underlying data.
+        The timezone of this column. If this is ``None`` (default), the
+        timezone is inferred from the underlying data.
 
     Examples
     --------
@@ -1416,49 +1588,67 @@ def TimeColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     default: datetime.time or None
-        Specifies the default value in this column when a new row is added by the user.
+        Specifies the default value in this column when a new row is added by
+        the user. This defaults to ``None``.
 
     format: str or None
         A momentJS format string controlling how times are displayed. See
-        `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_ for available
-        formats. If None (default), uses ``HH:mm:ss``.
+        `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_ for
+        available formats. If this is ``None`` (default), the format is
+        ``HH:mm:ss``.
 
         Number formatting from ``column_config`` always takes precedence over
         number formatting from ``pandas.Styler``.
 
     min_value: datetime.time or None
-        The minimum time that can be entered.
-        If None (default), there will be no minimum.
+        The minimum time that can be entered. If this is ``None`` (default),
+        there will be no minimum.
 
     max_value: datetime.time or None
-        The maximum time that can be entered.
-        If None (default), there will be no maximum.
+        The maximum time that can be entered. If this is ``None`` (default),
+        there will be no maximum.
 
     step: int, float, datetime.timedelta, or None
-        The stepping interval in seconds. If None (default), the step will be 1 second.
+        The stepping interval in seconds. If this is ``None`` (default), the
+        step will be 1 second.
 
     Examples
     --------
@@ -1540,49 +1730,67 @@ def DateColumn(
     ----------
 
     label: str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
     width: "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
     help: str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
 
     disabled: bool or None
-        Whether editing should be disabled for this column. Defaults to False.
+        Whether editing should be disabled for this column. If this is ``None``
+        (default), Streamlit will decide: indices are disabled and data columns
+        are not.
+
+        If a column has mixed types, it may become uneditable regardless of
+        ``disabled``.
 
     required: bool or None
-        Whether edited cells in the column need to have a value. If True, an edited cell
-        can only be submitted if it has a value other than None. Defaults to False.
+        Whether edited cells in the column need to have a value. If this is
+        ``False`` (default), the user can submit empty values for this column.
+        If this is ``True``, an edited cell in this column can only be
+        submitted if its value is not ``None``, and a new row will only be
+        submitted after the user fills in this column.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
     default: datetime.date or None
-        Specifies the default value in this column when a new row is added by the user.
+        Specifies the default value in this column when a new row is added by
+        the user. This defaults to ``None``.
 
     format: str or None
         A momentJS format string controlling how times are displayed. See
-        `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_ for available
-        formats. If None (default), uses ``YYYY-MM-DD``.
+        `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_ for
+        available formats. If this is ``None`` (default), the format is
+        ``YYYY-MM-DD``.
 
         Number formatting from ``column_config`` always takes precedence over
         number formatting from ``pandas.Styler``.
 
     min_value: datetime.date or None
-        The minimum date that can be entered.
-        If None (default), there will be no minimum.
+        The minimum date that can be entered. If this is ``None`` (default),
+        there will be no minimum.
 
     max_value: datetime.date or None
-        The maximum date that can be entered.
-        If None (default), there will be no maximum.
+        The maximum date that can be entered. If this is ``None`` (default),
+        there will be no maximum.
 
     step: int or None
-        The stepping interval in days. If None (default), the step will be 1 day.
+        The stepping interval in days. If this is ``None`` (default), the step
+        will be 1 day.
 
     Examples
     --------
@@ -1658,34 +1866,43 @@ def ProgressColumn(
     Parameters
     ----------
 
-    label : str or None
-        The label shown at the top of the column. If None (default),
-        the column name is used.
+    label: str or None
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
 
-    width : "small", "medium", "large", or None
-        The display width of the column. Can be one of "small", "medium", or "large".
-        If None (default), the column will be sized to fit the cell contents.
+    width: "small", "medium", "large", or None
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
 
-    help : str or None
-        An optional tooltip that gets displayed when hovering over the column label.
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
 
-    format : str or None
+    help: str or None
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
+
+    format: str or None
         A printf-style format string controlling how numbers are displayed.
-        Valid formatters: %d %e %f %g %i %u. You can also add prefixes and suffixes,
-        e.g. ``"$ %.2f"`` to show a dollar prefix.
+        This does not impact the return value. The following formatters are
+        valid: ``%d``, ``%e``, ``%f``, ``%g``, ``%i``, ``%u``. You can also add
+        prefixes and suffixes, e.g. ``"$ %.2f"`` to show a dollar prefix. If
+        this is ``None`` (default), the numbers are not formatted.
 
     pinned: bool or None
-        Whether the column is pinned. A pinned column will stay visible on the left side
-        no matter where the user scrolls. Defaults to False for data columns and True
-        for indices.
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
 
-    min_value : int, float, or None
-        The minimum value of the progress bar.
-        If None (default), will be 0.
+    min_value: int, float, or None
+        The minimum value of the progress bar. If this is ``None`` (default),
+        the minimum will be 0.
 
-    max_value : int, float, or None
-        The minimum value of the progress bar. If None (default), will be 100 for
-        integer values and 1 for float values.
+    max_value: int, float, or None
+        The maximum value of the progress bar. If this is ``None`` (default),
+        the maximum will be 100 for integer values and 1.0 for float values.
 
     Examples
     --------

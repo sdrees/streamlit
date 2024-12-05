@@ -57,6 +57,7 @@ class MetricMixin:
         delta_color: DeltaColor = "normal",
         help: str | None = None,
         label_visibility: LabelVisibility = "visible",
+        border: bool = False,
     ) -> DeltaGenerator:
         r"""Display a metric in big bold font, with an optional indicator of how the metric changed.
 
@@ -112,8 +113,16 @@ class MetricMixin:
             label, which can help keep the widget alligned with other widgets.
             If this is ``"collapsed"``, Streamlit displays no label or spacer.
 
-        Example
-        -------
+        border : bool
+            Whether to show a border around the metric container. If this is
+            ``False`` (default), no border is shown. If this is ``True``, a
+            border is shown.
+
+        Examples
+        --------
+
+        **Example 1: Show a metric**
+
         >>> import streamlit as st
         >>>
         >>> st.metric(label="Temperature", value="70 °F", delta="1.2 °F")
@@ -122,7 +131,9 @@ class MetricMixin:
             https://doc-metric-example1.streamlit.app/
             height: 210px
 
-        ``st.metric`` looks especially nice in combination with ``st.columns``:
+        **Example 2: Create a row of metrics**
+
+        ``st.metric`` looks especially nice in combination with ``st.columns``.
 
         >>> import streamlit as st
         >>>
@@ -135,7 +146,9 @@ class MetricMixin:
             https://doc-metric-example2.streamlit.app/
             height: 210px
 
-        The delta indicator color can also be inverted or turned off:
+        **Example 3: Modify the delta indicator**
+
+        The delta indicator color can also be inverted or turned off.
 
         >>> import streamlit as st
         >>>
@@ -149,6 +162,25 @@ class MetricMixin:
             https://doc-metric-example3.streamlit.app/
             height: 320px
 
+        **Example 4: Create a grid of metric cards**
+
+        Add borders to your metrics to create a dashboard look.
+
+        >>> import streamlit as st
+        >>>
+        >>> a, b = st.columns(2)
+        >>> c, d = st.columns(2)
+        >>>
+        >>> a.metric("Temperature", "30°F", "-9°F", border=True)
+        >>> b.metric("Wind", "4 mph", "2 mph", border=True)
+        >>>
+        >>> c.metric("Humidity", "77%", "5%", border=True)
+        >>> d.metric("Pressure", "30.34 inHg", "-2 inHg", border=True)
+
+        .. output::
+            https://doc-metric-example4.streamlit.app/
+            height: 350px
+
         """
         maybe_raise_label_warnings(label, label_visibility)
 
@@ -156,6 +188,7 @@ class MetricMixin:
         metric_proto.body = _parse_value(value)
         metric_proto.label = _parse_label(label)
         metric_proto.delta = _parse_delta(delta)
+        metric_proto.show_border = border
         if help is not None:
             metric_proto.help = dedent(help)
 

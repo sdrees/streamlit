@@ -31,7 +31,7 @@ from streamlit.elements.exception import (
     _format_syntax_error_message,
     _split_list,
 )
-from streamlit.errors import StreamlitAPIException, UncaughtAppException
+from streamlit.errors import StreamlitAPIException
 from streamlit.proto.Exception_pb2 import Exception as ExceptionProto
 from tests import testutil
 from tests.delta_generator_test_case import DeltaGeneratorTestCase
@@ -53,20 +53,33 @@ SyntaxError: invalid syntax
 """
         self.assertEqual(expected.strip(), _format_syntax_error_message(err))
 
-    def test_markdown_flag(self):
+    @parameterized.expand([(True,), (False,)])
+    def test_markdown_flag(self, is_uncaught_app_exception):
         """Test that ExceptionProtos for StreamlitAPIExceptions (and
         subclasses) have the "message_is_markdown" flag set.
         """
         proto = ExceptionProto()
-        exception.marshall(proto, RuntimeError("oh no!"))
+        exception.marshall(
+            proto,
+            RuntimeError("oh no!"),
+            is_uncaught_app_exception=is_uncaught_app_exception,
+        )
         self.assertFalse(proto.message_is_markdown)
 
         proto = ExceptionProto()
-        exception.marshall(proto, StreamlitAPIException("oh no!"))
+        exception.marshall(
+            proto,
+            StreamlitAPIException("oh no!"),
+            is_uncaught_app_exception=is_uncaught_app_exception,
+        )
         self.assertTrue(proto.message_is_markdown)
 
         proto = ExceptionProto()
-        exception.marshall(proto, errors.DuplicateWidgetID("oh no!"))
+        exception.marshall(
+            proto,
+            errors.DuplicateWidgetID("oh no!"),
+            is_uncaught_app_exception=is_uncaught_app_exception,
+        )
         self.assertTrue(proto.message_is_markdown)
 
     @parameterized.expand(
@@ -101,7 +114,7 @@ SyntaxError: invalid syntax
 
         # Marshall it.
         proto = ExceptionProto()
-        exception.marshall(proto, cast(Exception, err))
+        exception.marshall(proto, cast(Exception, err), is_uncaught_app_exception=True)
 
         user_module_path = os.path.join(os.path.realpath(user_module_path), "")
         self.assertIn(user_module_path, proto.stack_trace[0], "Stack not stripped")
@@ -140,7 +153,7 @@ SyntaxError: invalid syntax
 
         # Marshall it.
         proto = ExceptionProto()
-        exception.marshall(proto, cast(Exception, err))
+        exception.marshall(proto, cast(Exception, err), is_uncaught_app_exception=False)
 
         user_module_path = os.path.join(os.path.realpath(user_module_path), "")
         self.assertFalse(any(user_module_path in t for t in proto.stack_trace))
@@ -150,24 +163,98 @@ SyntaxError: invalid syntax
             f"Stack does not have length {original_stack_len}: {proto.stack_trace}",
         )
 
-    def test_uncaught_app_exception(self):
-        err = None
-        try:
-            st.format("http://not_an_image.png", width=-1)
-        except Exception as e:
-            err = UncaughtAppException(e)
-        self.assertIsNotNone(err)
+    @parameterized.expand([(True,), ("true",), ("True",), ("full",)])
+    def test_uncaught_app_exception_show_everything(
+        self, show_error_details_config_value
+    ):
+        with testutil.patch_config_options(
+            {"client.showErrorDetails": show_error_details_config_value}
+        ):
+            err = None
+            try:
+                st.format("http://not_an_image.png", width=-1)
+            except Exception as e:
+                err = e
+            self.assertIsNotNone(err)
 
-        # Marshall it.
-        proto = ExceptionProto()
-        exception.marshall(proto, err)
+            # Marshall it.
+            proto = ExceptionProto()
+            exception.marshall(proto, err, is_uncaught_app_exception=True)
 
-        for line in proto.stack_trace:
-            # assert message that could contain secret information in the stack trace
-            assert "module 'streamlit' has no attribute 'format'" not in line
+            assert proto.message == "module 'streamlit' has no attribute 'format'"
+            assert len(proto.stack_trace) > 0
+            assert proto.type == "AttributeError"
 
-        assert proto.message == _GENERIC_UNCAUGHT_EXCEPTION_TEXT
-        assert proto.type == "AttributeError"
+    @parameterized.expand([(False,), ("false",), ("False",), ("stacktrace",)])
+    def test_uncaught_app_exception_hide_message(self, show_error_details_config_value):
+        with testutil.patch_config_options(
+            {"client.showErrorDetails": show_error_details_config_value}
+        ):
+            err = None
+            try:
+                st.format("http://not_an_image.png", width=-1)
+            except Exception as e:
+                err = e
+            self.assertIsNotNone(err)
+
+            # Marshall it.
+            proto = ExceptionProto()
+            exception.marshall(proto, err, is_uncaught_app_exception=True)
+
+            assert proto.message == _GENERIC_UNCAUGHT_EXCEPTION_TEXT
+            assert len(proto.stack_trace) > 0
+            assert proto.type == "AttributeError"
+
+    def test_uncaught_app_exception_show_type_and_stacktrace_only(self):
+        with testutil.patch_config_options({"client.showErrorDetails": "stacktrace"}):
+            err = None
+            try:
+                st.format("http://not_an_image.png", width=-1)
+            except Exception as e:
+                err = e
+            self.assertIsNotNone(err)
+
+            # Marshall it.
+            proto = ExceptionProto()
+            exception.marshall(proto, err, is_uncaught_app_exception=True)
+
+            assert proto.message == _GENERIC_UNCAUGHT_EXCEPTION_TEXT
+            assert len(proto.stack_trace) > 0
+            assert proto.type == "AttributeError"
+
+    def test_uncaught_app_exception_show_only_type(self):
+        with testutil.patch_config_options({"client.showErrorDetails": "type"}):
+            err = None
+            try:
+                st.format("http://not_an_image.png", width=-1)
+            except Exception as e:
+                err = e
+            self.assertIsNotNone(err)
+
+            # Marshall it.
+            proto = ExceptionProto()
+            exception.marshall(proto, err, is_uncaught_app_exception=True)
+
+            assert proto.message == _GENERIC_UNCAUGHT_EXCEPTION_TEXT
+            assert len(proto.stack_trace) == 0
+            assert proto.type == "AttributeError"
+
+    def test_uncaught_app_exception_hide_everything(self):
+        with testutil.patch_config_options({"client.showErrorDetails": "none"}):
+            err = None
+            try:
+                st.format("http://not_an_image.png", width=-1)
+            except Exception as e:
+                err = e
+            self.assertIsNotNone(err)
+
+            # Marshall it.
+            proto = ExceptionProto()
+            exception.marshall(proto, err, is_uncaught_app_exception=True)
+
+            assert proto.message == _GENERIC_UNCAUGHT_EXCEPTION_TEXT
+            assert len(proto.stack_trace) == 0
+            assert proto.type == ""
 
 
 class StExceptionAPITest(DeltaGeneratorTestCase):

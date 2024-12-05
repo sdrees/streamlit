@@ -32,6 +32,13 @@ c3.write(LOREM_IPSUM)
 c1, c2, c3 = st.columns(3)
 c3.write(LOREM_IPSUM)
 
+col1, col2 = st.columns(2, border=True)
+with col1:
+    st.metric("Temperature", "72°F", "2%")
+with col2:
+    st.metric("Pressure", "30.2 in", "-4%")
+    st.slider("Slider", 0, 100, 50)
+
 with st.expander("Variable-width columns (relative numbers)", expanded=True):
     for c in st.columns([0.6, 0.3, 0.1]):
         c.image(BLACK_IMG)

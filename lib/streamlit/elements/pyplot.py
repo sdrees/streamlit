@@ -41,6 +41,9 @@ class PyplotMixin:
     ) -> DeltaGenerator:
         """Display a matplotlib.pyplot figure.
 
+        .. Important::
+            You must install ``matplotlib`` to use this command.
+
         Parameters
         ----------
         fig : Matplotlib Figure

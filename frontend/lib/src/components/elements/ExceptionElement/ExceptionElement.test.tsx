@@ -56,6 +56,17 @@ describe("ExceptionElement Element", () => {
     })
   })
 
+  it("should render only the message when type and stack are empty", () => {
+    render(<ExceptionElement {...getProps({ type: "", stackTrace: [] })} />)
+
+    expect(screen.queryByText("RuntimeError")).not.toBeInTheDocument()
+    expect(screen.queryByText("Traceback:")).not.toBeInTheDocument()
+
+    expect(
+      screen.getByText("This is an exception of type RuntimeError")
+    ).toBeInTheDocument()
+  })
+
   it("should render markdown when it has messageIsMarkdown", () => {
     render(<ExceptionElement {...getProps({ messageIsMarkdown: true })} />)
 

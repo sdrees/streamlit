@@ -55,6 +55,11 @@ b
 """
         self._testCode(CODE_SIMPLE_STATEMENTS, 2)
 
+    def test_empty_ast(self):
+        """Test empty AST"""
+        CODE_EMPTY_AST = ""
+        self._testCode(CODE_EMPTY_AST, 0)
+
     def test_if_statement(self):
         """Test if statements"""
         CODE_IF_STATEMENT = """

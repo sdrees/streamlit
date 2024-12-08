@@ -67,9 +67,6 @@ export const StyledElementContainer = styled.div<StyledElementContainerProps>(
     position: "relative",
 
     "@media print": {
-      "@-moz-document url-prefix()": {
-        display: "block",
-      },
       overflow: "visible",
     },
 

@@ -241,6 +241,9 @@ def _does_file_end_in_semicolon(tree, code: str) -> bool:
     # Avoid spending time with this operation if magic.displayLastExprIfNoSemicolon is
     # not set.
     if config.get_option("magic.displayLastExprIfNoSemicolon"):
+        if len(tree.body) == 0:
+            return False
+
         last_line_num = getattr(tree.body[-1], "end_lineno", None)
 
         if last_line_num is not None:

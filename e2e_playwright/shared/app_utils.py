@@ -362,6 +362,24 @@ def click_toggle(
     click_checkbox(page, label)
 
 
+def click_radio_button(page: Page, label: str | Pattern[str]) -> None:
+    """Click a radio button with the given label
+    and wait for the app to run.
+
+    Parameters
+    ----------
+
+    page : Page
+        The page to click the radio button on.
+
+    label : str or Pattern[str]
+        The label of the radio button to click.
+    """
+    radio_button = get_radio_button(page, label)
+    radio_button.click()
+    wait_for_app_run(page)
+
+
 def click_button(
     page: Page,
     label: str | Pattern[str],

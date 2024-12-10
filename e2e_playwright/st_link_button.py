@@ -14,11 +14,11 @@
 
 import streamlit as st
 
-st.link_button("the label", url="https://streamlit.io")
+st.link_button("Default Link", url="https://streamlit.io")
 
-st.link_button("disabled", url="https://streamlit.io", disabled=True)
+st.link_button("Disabled Link", url="https://streamlit.io", disabled=True)
 
-st.link_button("primary", url="https://streamlit.io", type="primary")
+st.link_button("Primary Link", url="https://streamlit.io", type="primary")
 
 st.link_button(
     "primary disabled",
@@ -57,8 +57,15 @@ st.link_button(
 st.link_button("Tertiary link button", url="https://streamlit.io", type="tertiary")
 
 st.link_button(
-    "Disabled tertiary link button",
+    "Disabled tertiary link",
     url="https://streamlit.io",
     type="tertiary",
     disabled=True,
+)
+
+st.link_button(
+    "Tertiary link - container width",
+    url="https://streamlit.io",
+    type="tertiary",
+    use_container_width=True,
 )

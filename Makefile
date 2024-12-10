@@ -27,6 +27,13 @@ CONSTRAINTS_URL ?= https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${CONS
 # Black magic to get module directories
 PYTHON_MODULES := $(foreach initpy, $(foreach dir, $(wildcard lib/*), $(wildcard $(dir)/__init__.py)), $(realpath $(dir $(initpy))))
 
+# Check if Python is installed and can be executed, otherwise show an error message in red (but continue)
+ifeq ($(PYTHON_VERSION),)
+error_message="Error: Python version is not detected. Please ensure Python is installed and accessible in your PATH."
+error_message_red_colored=$(shell echo -e "\033[0;31m ${error_message} \033[0m")
+$(warning ${error_message_red_colored})
+endif
+
 .PHONY: help
 help:
 	@# Magic line used to create self-documenting makefiles.

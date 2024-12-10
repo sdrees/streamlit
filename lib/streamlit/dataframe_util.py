@@ -82,6 +82,7 @@ _POLARS_DATAFRAME: Final = "polars.dataframe.frame.DataFrame"
 _POLARS_LAZYFRAME: Final = "polars.lazyframe.frame.LazyFrame"
 _POLARS_SERIES: Final = "polars.series.series.Series"
 _PYSPARK_DF_TYPE_STR: Final = "pyspark.sql.dataframe.DataFrame"
+_PYSPARK_CONNECT_DF_TYPE_STR: Final = "pyspark.sql.connect.dataframe.DataFrame"
 _RAY_DATASET: Final = "ray.data.dataset.Dataset"
 _RAY_MATERIALIZED_DATASET: Final = "ray.data.dataset.MaterializedDataset"
 _SNOWPANDAS_DF_TYPE_STR: Final = "snowflake.snowpark.modin.pandas.dataframe.DataFrame"
@@ -370,8 +371,10 @@ def is_snowpark_row_list(obj: object) -> bool:
 
 
 def is_pyspark_data_object(obj: object) -> bool:
-    """True if obj is of type pyspark.sql.dataframe.DataFrame"""
-    return is_type(obj, _PYSPARK_DF_TYPE_STR) and has_callable_attr(obj, "toPandas")
+    """True if obj is a PySpark or PySpark Connect dataframe"""
+    return (
+        is_type(obj, _PYSPARK_DF_TYPE_STR) or is_type(obj, _PYSPARK_CONNECT_DF_TYPE_STR)
+    ) and has_callable_attr(obj, "toPandas")
 
 
 def is_dask_object(obj: object) -> bool:

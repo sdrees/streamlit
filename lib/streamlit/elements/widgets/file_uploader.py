@@ -21,6 +21,7 @@ from typing import TYPE_CHECKING, List, Literal, Sequence, Union, cast, overload
 from typing_extensions import TypeAlias
 
 from streamlit import config
+from streamlit.elements.lib.file_uploader_utils import normalize_upload_file_type
 from streamlit.elements.lib.form_utils import current_form_id
 from streamlit.elements.lib.policies import (
     check_widget_policies,
@@ -54,15 +55,6 @@ SomeUploadedFiles: TypeAlias = Union[
     DeletedFile,
     List[Union[UploadedFile, DeletedFile]],
     None,
-]
-
-
-TYPE_PAIRS = [
-    (".jpg", ".jpeg"),
-    (".mpg", ".mpeg"),
-    (".mp4", ".mpeg4"),
-    (".tif", ".tiff"),
-    (".htm", ".html"),
 ]
 
 
@@ -417,23 +409,7 @@ class FileUploaderMixin:
         )
 
         if type:
-            if isinstance(type, str):
-                type = [type]
-
-            # May need a regex or a library to validate file types are valid
-            # extensions.
-            type = [
-                file_type if file_type[0] == "." else f".{file_type}"
-                for file_type in type
-            ]
-
-            type = [t.lower() for t in type]
-
-            for x, y in TYPE_PAIRS:
-                if x in type and y not in type:
-                    type.append(y)
-                if y in type and x not in type:
-                    type.append(x)
+            type = normalize_upload_file_type(type)
 
         file_uploader_proto = FileUploaderProto()
         file_uploader_proto.id = element_id

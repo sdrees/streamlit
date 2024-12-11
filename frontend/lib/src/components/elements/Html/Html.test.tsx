@@ -82,4 +82,35 @@ describe("HTML element", () => {
     render(<Html {...props} />)
     expect(screen.getByTestId("stHtml")).toHaveTextContent("")
   })
+
+  describe("sanitizes anchor tags", () => {
+    it("does not add target when not present", () => {
+      const props = getProps({
+        body: '<a href="https://streamlit.io">Click Me</a>',
+      })
+      render(<Html {...props} />)
+      const anchorElement = screen.getByRole("link", { name: "Click Me" })
+      expect(anchorElement).not.toHaveAttribute("target")
+    })
+
+    it("preserves target='_blank' and adds rel attributes", () => {
+      const props = getProps({
+        body: '<a href="https://streamlit.io" target="_blank">Click Me</a>',
+      })
+      render(<Html {...props} />)
+      const anchorElement = screen.getByRole("link", { name: "Click Me" })
+      expect(anchorElement).toHaveAttribute("target", "_blank")
+      expect(anchorElement).toHaveAttribute("rel", "noopener noreferrer")
+    })
+
+    it("removes non-_blank target attributes", () => {
+      const props = getProps({
+        body: '<a href="https://streamlit.io" target="_self">Click Me</a>',
+      })
+      render(<Html {...props} />)
+      const anchorElement = screen.getByRole("link", { name: "Click Me" })
+      expect(anchorElement).not.toHaveAttribute("target")
+      expect(anchorElement).not.toHaveAttribute("rel")
+    })
+  })
 })

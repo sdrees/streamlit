@@ -106,14 +106,12 @@ Usage:
   }
 
   function setAuthToken() {
-    // We handle auth token and jwt header name/value in child iframe,
+    // We handle auth token in child iframe,
     // only when `useExternalAuthToken` is set to True in
     // "_stcore/host-config" endpoint. Otherwise, we ignore this message.
     sendMessage({
       type: "SET_AUTH_TOKEN",
       authToken: "AUTH_TOKEN",
-      jwtHeaderName: "X-JWT-HEADER-NAME",
-      jwtHeaderValue: "X-JWT-HEADER-VALUE",
     })
   }
 

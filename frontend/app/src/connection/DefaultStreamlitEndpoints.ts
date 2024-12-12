@@ -22,7 +22,6 @@ import {
   FileUploadClientConfig,
   getCookie,
   IAppPage,
-  JWTHeader,
   makePath,
   notNullOrUndefined,
   StreamlitEndpoints,
@@ -46,8 +45,6 @@ export class DefaultStreamlitEndpoints implements StreamlitEndpoints {
 
   private cachedServerUri?: BaseUriParts
 
-  private jwtHeader?: JWTHeader
-
   private fileUploadClientConfig?: FileUploadClientConfig
 
   public constructor(props: Props) {
@@ -60,10 +57,6 @@ export class DefaultStreamlitEndpoints implements StreamlitEndpoints {
       this.requireServerUri(),
       `${COMPONENT_ENDPOINT_BASE}/${componentName}/${path}`
     )
-  }
-
-  public setJWTHeader(jwtHeader: JWTHeader): void {
-    this.jwtHeader = jwtHeader
   }
 
   public setFileUploadClientConfig({
@@ -154,9 +147,6 @@ export class DefaultStreamlitEndpoints implements StreamlitEndpoints {
 
   private getAdditionalHeaders(): Record<string, string> {
     let headers: Record<string, string> = {}
-    if (this.jwtHeader !== undefined) {
-      headers[this.jwtHeader.jwtHeaderName] = this.jwtHeader.jwtHeaderValue
-    }
 
     if (this.fileUploadClientConfig) {
       headers = {

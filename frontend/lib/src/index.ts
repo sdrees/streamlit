@@ -80,7 +80,6 @@ export { ScriptRunState } from "./ScriptRunState"
 export { SessionInfo } from "./SessionInfo"
 export type {
   FileUploadClientConfig,
-  JWTHeader,
   StreamlitEndpoints,
 } from "./StreamlitEndpoints"
 export {

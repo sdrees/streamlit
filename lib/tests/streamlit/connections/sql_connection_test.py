@@ -180,37 +180,6 @@ class SQLConnectionTest(unittest.TestCase):
         assert patched_read_sql.call_count == 2
 
     @patch("streamlit.connections.sql_connection.SQLConnection._connect", MagicMock())
-    def test_repr_html_(self):
-        conn = SQLConnection("my_sql_connection")
-        with conn.session as s:
-            s.bind.dialect.name = "postgres"
-        repr_ = conn._repr_html_()
-
-        assert (
-            "st.connection my_sql_connection built from `streamlit.connections.sql_connection.SQLConnection`"
-            in repr_
-        )
-        assert "Dialect: `postgres`" in repr_
-
-    @patch("streamlit.connections.sql_connection.SQLConnection._connect", MagicMock())
-    @patch(
-        "streamlit.connections.sql_connection.SQLConnection._secrets",
-        PropertyMock(return_value=AttrDict({"url": "some_sql_conn_string"})),
-    )
-    def test_repr_html_with_secrets(self):
-        conn = SQLConnection("my_sql_connection")
-        with conn.session as s:
-            s.bind.dialect.name = "postgres"
-        repr_ = conn._repr_html_()
-
-        assert (
-            "st.connection my_sql_connection built from `streamlit.connections.sql_connection.SQLConnection`"
-            in repr_
-        )
-        assert "Dialect: `postgres`" in repr_
-        assert "Configured from `[connections.my_sql_connection]`" in repr_
-
-    @patch("streamlit.connections.sql_connection.SQLConnection._connect", MagicMock())
     @patch("pandas.read_sql")
     def test_retry_behavior(self, patched_read_sql):
         from sqlalchemy.exc import DatabaseError, InternalError, OperationalError

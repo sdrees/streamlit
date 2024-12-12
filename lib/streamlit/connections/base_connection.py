@@ -85,34 +85,6 @@ class BaseConnection(ABC, Generic[RawConnectionT]):
                 )
             raise e
 
-    def _repr_html_(self) -> str:
-        """Return a human-friendly markdown string describing this connection.
-
-        This is the string that will be written to the app if a user calls
-        ``st.write(this_connection)``. Subclasses of BaseConnection can freely overwrite
-        this method if desired.
-
-        Returns
-        -------
-        str
-        """
-        module_name = getattr(self, "__module__", None)
-        class_name = type(self).__name__
-
-        cfg = (
-            f"- Configured from `[connections.{self._connection_name}]`"
-            if len(self._secrets)
-            else ""
-        )
-
-        return f"""
----
-**st.connection {self._connection_name} built from `{module_name}.{class_name}`**
-{cfg}
-- Learn more using `st.help()`
----
-"""
-
     # Methods with default implementations that we don't expect subclasses to want or
     # need to overwrite.
     def _on_secrets_changed(self, _) -> None:

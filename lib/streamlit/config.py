@@ -646,10 +646,6 @@ def _server_headless() -> bool:
         # We're running in Linux and DISPLAY is unset
         return True
 
-    if os.getenv("IS_RUNNING_IN_STREAMLIT_EDITOR_PLUGIN") is not None:
-        # We're running within the Streamlit Atom plugin
-        return True
-
     return False
 
 

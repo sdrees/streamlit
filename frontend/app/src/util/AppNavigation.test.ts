@@ -116,7 +116,6 @@ describe("AppNavigation", () => {
       themeChanged: () => {},
       pageChanged: () => {},
       isOwnerChanged: () => {},
-      jwtHeaderChanged: () => {},
       hostMenuItemsChanged: () => {},
       hostToolbarItemsChanged: () => {},
       hostHideSidebarNavChanged: () => {},

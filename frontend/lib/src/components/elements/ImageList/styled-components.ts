@@ -26,13 +26,17 @@ export const StyledImageList = styled.div(({ theme }) => ({
   width: "fit-content",
 }))
 
-export const StyledImageContainer = styled.div({
+export const StyledImageContainer = styled.div(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "stretch",
   width: "auto",
   flexGrow: 0,
-})
+
+  ">img": {
+    borderRadius: theme.radii.default,
+  },
+}))
 
 export const StyledCaption = styled.div(({ theme }) => ({
   fontFamily: theme.genericFonts.bodyFont,

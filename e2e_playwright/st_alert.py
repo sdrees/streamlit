@@ -95,5 +95,5 @@ This is a big error message.
 
 st.success(
     "Success message to test material icon from latest material symbols font",
-    icon=":material/table_convert:",
+    icon=":material/graph_2:",
 )

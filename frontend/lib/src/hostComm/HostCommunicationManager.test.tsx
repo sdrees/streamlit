@@ -57,7 +57,6 @@ describe("HostCommunicationManager messaging", () => {
       sendAppHeartbeat: vi.fn(),
       setInputsDisabled: vi.fn(),
       isOwnerChanged: vi.fn(),
-      jwtHeaderChanged: vi.fn(),
       fileUploadClientConfigChanged: vi.fn(),
       hostMenuItemsChanged: vi.fn(),
       hostToolbarItemsChanged: vi.fn(),
@@ -480,24 +479,6 @@ describe("HostCommunicationManager messaging", () => {
     ).toHaveBeenCalledWith("Light", undefined)
   })
 
-  it("can process a received SET_AUTH_TOKEN message with JWT pair", () => {
-    const message = new MessageEvent("message", {
-      data: {
-        stCommVersion: HOST_COMM_VERSION,
-        type: "SET_AUTH_TOKEN",
-        jwtHeaderName: "X-JWT-HEADER-NAME",
-        jwtHeaderValue: "X-JWT-HEADER-VALUE",
-      },
-      origin: "https://devel.streamlit.test",
-    })
-    dispatchEvent("message", message)
-
-    expect(
-      // @ts-expect-error - props are private
-      hostCommunicationMgr.props.jwtHeaderChanged
-    ).toHaveBeenCalledWith(message.data)
-  })
-
   it("can process a received SET_FILE_UPLOAD_CLIENT_CONFIG message", () => {
     const message = new MessageEvent("message", {
       data: {
@@ -574,7 +555,6 @@ describe("Test different origins", () => {
       clearCache: vi.fn(),
       sendAppHeartbeat: vi.fn(),
       setInputsDisabled: vi.fn(),
-      jwtHeaderChanged: vi.fn(),
       fileUploadClientConfigChanged: vi.fn(),
       isOwnerChanged: vi.fn(),
       hostMenuItemsChanged: vi.fn(),
@@ -674,7 +654,6 @@ describe("HostCommunicationManager external auth token handling", () => {
       clearCache: vi.fn(),
       sendAppHeartbeat: vi.fn(),
       setInputsDisabled: vi.fn(),
-      jwtHeaderChanged: vi.fn(),
       fileUploadClientConfigChanged: vi.fn(),
       isOwnerChanged: vi.fn(),
       hostMenuItemsChanged: vi.fn(),

@@ -15,8 +15,6 @@
 import time
 from pathlib import Path
 
-import requests
-
 import streamlit as st
 
 # Construct test assets path relative to this script file to
@@ -28,8 +26,6 @@ MP4_VIDEO_PATH = TEST_ASSETS_DIR / "sintel-short.mp4"
 VTT_EN_PATH = TEST_ASSETS_DIR / "sintel-en.vtt"
 VTT_DE_PATH = TEST_ASSETS_DIR / "sintel-de.vtt"
 
-url_video = "url video"
-url_video_with_start_time = "url video with start time"
 mp4_video = "mp4 video"
 mp4_video_with_subtitles = "mp4 video with subtitles"
 webm_video_with_subtitles = "webm video with subtitles"
@@ -44,8 +40,6 @@ video_to_show = st.radio(
     "Choose a video to show",
     [
         "None",
-        url_video,
-        url_video_with_start_time,
         mp4_video,
         mp4_video_with_subtitles,
         webm_video_with_subtitles,
@@ -58,16 +52,6 @@ video_to_show = st.radio(
     ],
     index=0,
 )
-
-url = "https://www.w3schools.com/html/mov_bbb.mp4"
-if video_to_show == url_video:
-    file = requests.get(url).content
-    st.video(file)
-
-if video_to_show == url_video_with_start_time:
-    # Test start time with video
-    timestamp = st.number_input("Start Time (in seconds)", min_value=0, value=6)
-    st.video(url, start_time=int(timestamp))
 
 if video_to_show == mp4_video:
     # Test local file with video

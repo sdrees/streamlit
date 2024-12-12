@@ -39,7 +39,6 @@ from streamlit.runtime.metrics_util import gather_metrics
 from streamlit.string_util import (
     is_mem_address_str,
     max_char_sequence,
-    probably_contains_html_tags,
 )
 
 if TYPE_CHECKING:
@@ -514,13 +513,8 @@ class WriteMixin:
                 # We cast arg to type here to appease mypy, due to bug in mypy:
                 # https://github.com/python/mypy/issues/12933
                 self.dg.help(cast(type, arg))
-            elif (
-                type_util.has_callable_attr(arg, "_repr_html_")
-                and (repr_html := arg._repr_html_())
-                and (unsafe_allow_html or not probably_contains_html_tags(repr_html))
-            ):
-                # We either explicitly allow HTML or infer it's not HTML
-                self.dg.markdown(repr_html, unsafe_allow_html=unsafe_allow_html)
+            elif unsafe_allow_html and type_util.has_callable_attr(arg, "_repr_html_"):
+                self.dg.html(arg._repr_html_())
             elif type_util.has_callable_attr(
                 arg, "to_pandas"
             ) or type_util.has_callable_attr(arg, "__dataframe__"):

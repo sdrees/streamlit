@@ -362,6 +362,12 @@ playwright-custom-components:
 update-snapshots:
 	python ./scripts/update_e2e_snapshots.py
 
+.PHONY: update-material-icons
+# Update material icon names and font file based on latest google material symbol rounded font version.
+update-material-icons:
+	python ./scripts/update_material_icon_font_and_names.py
+
+
 .PHONY: loc
 # Count the number of lines of code in the project.
 loc:

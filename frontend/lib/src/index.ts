@@ -49,6 +49,7 @@ export {
   ModalFooter,
   ModalHeader,
 } from "./components/shared/Modal"
+export { CircularBuffer, Profiler } from "./components/shared/Profiler"
 export { default as StreamlitMarkdown } from "./components/shared/StreamlitMarkdown"
 export { Placement, default as Tooltip } from "./components/shared/Tooltip"
 export { WindowDimensionsProvider } from "./components/shared/WindowDimensions/Provider"
@@ -148,3 +149,9 @@ export {
 } from "./util/utils"
 export { WidgetStateManager, createFormsData } from "./WidgetStateManager"
 export type { FormsData } from "./WidgetStateManager"
+export {
+  mark,
+  measure,
+  type StPerformanceMetric,
+  type StPerformanceMark,
+} from "./util/performance"

@@ -41,7 +41,7 @@ jobs:
 
       - name: Build Package
         timeout-minutes: 120
-        run: BUILD_AS_FAST_AS_POSSIBLE=1 make package
+        run: make package
 
       - name: Return path to Streamlit wheel
         id: streamlit_wheel

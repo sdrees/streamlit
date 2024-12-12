@@ -47,8 +47,8 @@ jobs:
           python-version: "${{ env.PYTHON_MAX_VERSION }}"
       - name: Setup virtual env
         uses: ./.github/actions/make_init
-      - name: Run make frontend-fast
-        run: make frontend-fast
+      - name: Run make frontend
+        run: make frontend
       - name: Run Performance Lighthouse
         run: make performance-lighthouse
       - name: Set MY_DATE_TIME env var

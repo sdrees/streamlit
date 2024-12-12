@@ -67,8 +67,8 @@ jobs:
         name: Install playwright
         run: python -m playwright install --with-deps
       - if: steps.check_changed_files.outputs.run_tests == 'true'
-        name: Run make frontend-fast
-        run: make frontend-fast
+        name: Run make frontend
+        run: make frontend
       - if: steps.check_changed_files.outputs.run_tests == 'true'
         name: Run changed playwright tests
         run: |
@@ -81,6 +81,13 @@ jobs:
         with:
           name: playwright_test_results
           path: e2e_playwright/test-results
+      - name: Upload performance results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright_performance_results
+          path: e2e_playwright/performance-results
+
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:

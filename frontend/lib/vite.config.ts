@@ -20,6 +20,10 @@ import viteTsconfigPaths from "vite-tsconfig-paths"
 
 import path from "path"
 
+// We do not explicitly set the DEV_BUILD in any of our processes
+// This is a convenience for developers for debugging purposes
+const DEV_BUILD = process.env.DEV_BUILD || false
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "./",
@@ -32,7 +36,7 @@ export default defineConfig({
   ],
   build: {
     outDir: "dist",
-    sourcemap: true,
+    sourcemap: DEV_BUILD,
     rollupOptions: {
       input: "src/index.ts",
     },

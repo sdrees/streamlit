@@ -149,28 +149,25 @@ Traceback:
     if is_uncaught_app_exception:
         show_error_details = config.get_option("client.showErrorDetails")
 
-        # Options for show error details config.
-        FULL = "full"
-        STACKTRACE = "stacktrace"
-        TYPE = "type"
-        # Config options can be set from several places including the command-line and
-        # the user's script. Legacy config options (true/false) will have type string when set via
-        # command-line and bool when set via user script (e.g. st.set_option("client.showErrorDetails", False)).
-        TRUE_VARIATIONS = ["true", "True", True]
-        FALSE_VARIATIONS = ["false", "False", False]
-        # "none" is also a valid config setting. We show only a default error message.
-
         show_message = (
-            show_error_details == FULL or show_error_details in TRUE_VARIATIONS
+            show_error_details == config.ShowErrorDetailsConfigOptions.FULL
+            or config.ShowErrorDetailsConfigOptions.is_true_variation(
+                show_error_details
+            )
         )
         # False is a legacy config option still in-use in community cloud. It is equivalent
         # to "stacktrace".
         show_trace = (
             show_message
-            or show_error_details == STACKTRACE
-            or show_error_details in FALSE_VARIATIONS
+            or show_error_details == config.ShowErrorDetailsConfigOptions.STACKTRACE
+            or config.ShowErrorDetailsConfigOptions.is_false_variation(
+                show_error_details
+            )
         )
-        show_type = show_trace or show_error_details == TYPE
+        show_type = (
+            show_trace
+            or show_error_details == config.ShowErrorDetailsConfigOptions.TYPE
+        )
 
         if not show_message:
             exception_proto.message = _GENERIC_UNCAUGHT_EXCEPTION_TEXT

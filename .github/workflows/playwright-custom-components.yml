@@ -43,8 +43,8 @@ jobs:
         uses: ./.github/actions/make_init
       - name: Install playwright
         run: python -m playwright install --with-deps
-      - name: Run make frontend-fast
-        run: make frontend-fast
+      - name: Run make frontend
+        run: make frontend
       - name: Run make playwright-custom-components
         run: make playwright-custom-components
       - name: Upload failed test results

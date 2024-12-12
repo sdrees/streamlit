@@ -49,7 +49,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install rsync
-          BUILD_AS_FAST_AS_POSSIBLE=1 make package
+          make package
       - name: Store Whl File
         uses: actions/upload-artifact@v4
         with:

@@ -59,6 +59,7 @@ IGNORE_PATTERN = re.compile(
     r"|\.isort\.cfg$"
     r"|\.credentials/\.gitignore$"
     r"|^frontend/app/performance/lighthouse/\.gitignore$"
+    r"|^e2e_playwright/\.gitignore$"
     # Excluding test files, because adding headers may cause tests to fail.
     r"|/(fixtures|__snapshots__|test_data|data|test)/"
     # Exclude vendored files.

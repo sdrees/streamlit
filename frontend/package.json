@@ -9,8 +9,8 @@
   "scripts": {
     "postinstall": "patch-package",
     "start": "yarn workspace @streamlit/app start",
-    "build": "yarn workspace @streamlit/lib build && yarn workspace @streamlit/app build",
-    "buildFast": "yarn workspace @streamlit/app buildFast",
+    "build": "yarn workspace @streamlit/app build",
+    "buildWithProfiler": "yarn workspace @streamlit/app buildWithProfiler",
     "buildLib": "yarn workspace @streamlit/lib build",
     "buildLibProd": "yarn workspace @streamlit/lib build:prod",
     "buildApp": "yarn workspace @streamlit/app build",

@@ -49,8 +49,20 @@ from playwright.sync_api import (
 )
 from pytest import FixtureRequest
 
+from e2e_playwright.shared.performance import (
+    is_supported_browser,
+    measure_performance,
+    start_capture_traces,
+)
+
 if TYPE_CHECKING:
     from types import ModuleType
+
+
+def pytest_configure(config: pytest.Config):
+    config.addinivalue_line(
+        "markers", "no_perf: mark test to not use performance profiling"
+    )
 
 
 def reorder_early_fixtures(metafunc: pytest.Metafunc):
@@ -200,6 +212,9 @@ def wait_for_app_server_to_start(port: int, timeout: int = 5) -> bool:
     return True
 
 
+# region Fixtures
+
+
 @pytest.fixture(scope="module")
 def app_port(worker_id: str) -> int:
     """Fixture that returns an available port on localhost."""
@@ -253,6 +268,7 @@ def app_server(
 def app(page: Page, app_port: int) -> Page:
     """Fixture that opens the app."""
     page.goto(f"http://localhost:{app_port}/")
+    start_capture_traces(page)
     wait_for_app_loaded(page)
     return page
 
@@ -474,6 +490,7 @@ def app_theme(request) -> str:
 def themed_app(page: Page, app_port: int, app_theme: str) -> Page:
     """Fixture that opens the app with the given theme."""
     page.goto(f"http://localhost:{app_port}/?embed_options={app_theme}")
+    start_capture_traces(page)
     wait_for_app_loaded(page)
     return page
 
@@ -714,7 +731,20 @@ def assert_snapshot(
         )
 
 
-# Public utility methods:
+@pytest.fixture(scope="function", autouse=True)
+def playwright_profiling(request, page: Page):
+    if request.node.get_closest_marker("no_perf") or not is_supported_browser(page):
+        yield
+        return
+
+    with measure_performance(page, test_name=request.node.name):
+        yield
+
+
+# endregion
+
+
+# region Public utility methods
 
 
 def wait_for_app_run(
@@ -831,3 +861,6 @@ def wait_until(page: Page, fn: Callable, timeout: int = 5000, interval: int = 10
             if timed_out():
                 raise TimeoutError(timeout_msg)
         page.wait_for_timeout(interval)
+
+
+# endregion

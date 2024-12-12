@@ -21,6 +21,7 @@ import os
 import secrets
 import threading
 from collections import OrderedDict
+from enum import Enum
 from typing import Any, Callable
 
 from blinker import Signal
@@ -62,6 +63,27 @@ _DEFINED_BY_FLAG = "command-line argument or environment variable"
 
 # Indicates that a config option was defined in an environment variable
 _DEFINED_BY_ENV_VAR = "environment variable"
+
+
+class ShowErrorDetailsConfigOptions(str, Enum):
+    """Valid options for the "client.showErrorDetails" config."""
+
+    FULL = "full"
+    STACKTRACE = "stacktrace"
+    TYPE = "type"
+    NONE = "none"
+
+    @staticmethod
+    def is_true_variation(val: str | bool):
+        return val in ["true", "True", True]
+
+    @staticmethod
+    def is_false_variation(val: str | bool):
+        return val in ["false", "False", False]
+
+        # Config options can be set from several places including the command-line and
+        # the user's script. Legacy config options (true/false) will have type string when set via
+        # command-line and bool when set via user script (e.g. st.set_option("client.showErrorDetails", False)).
 
 
 def set_option(key: str, value: Any, where_defined: str = _USER_DEFINED) -> None:
@@ -481,7 +503,7 @@ _create_option(
         - False        : This is deprecated. Streamlit displays "stacktrace"
                          error details.
     """,
-    default_val="full",
+    default_val=ShowErrorDetailsConfigOptions.FULL,
     type_=str,
     scriptable=True,
 )

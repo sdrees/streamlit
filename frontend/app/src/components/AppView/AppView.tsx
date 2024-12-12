@@ -26,6 +26,7 @@ import {
   IGuestToHostMessage,
   LibContext,
   Logo,
+  Profiler,
   ScriptRunState,
   SessionInfo,
   StreamlitEndpoints,
@@ -239,22 +240,24 @@ function AppView(props: AppViewProps): ReactElement {
       data-layout={layout}
     >
       {showSidebar && (
-        <ThemedSidebar
-          endpoints={endpoints}
-          initialSidebarState={initialSidebarState}
-          appLogo={appLogo}
-          appPages={appPages}
-          navSections={navSections}
-          hasElements={hasSidebarElements}
-          onPageChange={onPageChange}
-          currentPageScriptHash={currentPageScriptHash}
-          hideSidebarNav={hideSidebarNav}
-          expandSidebarNav={expandSidebarNav}
-        >
-          <StyledSidebarBlockContainer>
-            {renderBlock(elements.sidebar)}
-          </StyledSidebarBlockContainer>
-        </ThemedSidebar>
+        <Profiler id="Sidebar">
+          <ThemedSidebar
+            endpoints={endpoints}
+            initialSidebarState={initialSidebarState}
+            appLogo={appLogo}
+            appPages={appPages}
+            navSections={navSections}
+            hasElements={hasSidebarElements}
+            onPageChange={onPageChange}
+            currentPageScriptHash={currentPageScriptHash}
+            hideSidebarNav={hideSidebarNav}
+            expandSidebarNav={expandSidebarNav}
+          >
+            <StyledSidebarBlockContainer>
+              {renderBlock(elements.sidebar)}
+            </StyledSidebarBlockContainer>
+          </ThemedSidebar>
+        </Profiler>
       )}
       {!showSidebar && appLogo && (
         <StyledSidebarOpenContainer
@@ -271,18 +274,20 @@ function AppView(props: AppViewProps): ReactElement {
         className="stMain"
         data-testid="stMain"
       >
-        <StyledAppViewBlockContainer
-          className="stMainBlockContainer block-container"
-          data-testid="stMainBlockContainer"
-          isWideMode={wideMode}
-          showPadding={showPadding}
-          addPaddingForHeader={showToolbar || showColoredLine}
-          hasBottom={hasBottomElements}
-          isEmbedded={embedded}
-          hasSidebar={showSidebar}
-        >
-          {renderBlock(elements.main)}
-        </StyledAppViewBlockContainer>
+        <Profiler id="Main">
+          <StyledAppViewBlockContainer
+            className="stMainBlockContainer block-container"
+            data-testid="stMainBlockContainer"
+            isWideMode={wideMode}
+            showPadding={showPadding}
+            addPaddingForHeader={showToolbar || showColoredLine}
+            hasBottom={hasBottomElements}
+            isEmbedded={embedded}
+            hasSidebar={showSidebar}
+          >
+            {renderBlock(elements.main)}
+          </StyledAppViewBlockContainer>
+        </Profiler>
         {/* Anchor indicates to the iframe resizer that this is the lowest
         possible point to determine height. But we don't add an anchor if there is
         a bottom container in the app, since those two aspects don't work
@@ -294,7 +299,7 @@ function AppView(props: AppViewProps): ReactElement {
           />
         )}
         {hasBottomElements && (
-          <>
+          <Profiler id="Bottom">
             {/* We add spacing here to make sure that the sticky bottom is
            always pinned the bottom. Using sticky layout here instead of
            absolut / fixed is a trick to automatically account for the bottom
@@ -315,15 +320,20 @@ function AppView(props: AppViewProps): ReactElement {
                 </StyledBottomBlockContainer>
               </StyledInnerBottomContainer>
             </StyledStickyBottomContainer>
-          </>
+          </Profiler>
         )}
       </Component>
       {hasEventElements && (
-        <EventContainer scriptRunId={elements.event.scriptRunId}>
-          <StyledEventBlockContainer className="stEvent" data-testid="stEvent">
-            {renderBlock(elements.event)}
-          </StyledEventBlockContainer>
-        </EventContainer>
+        <Profiler id="Event">
+          <EventContainer scriptRunId={elements.event.scriptRunId}>
+            <StyledEventBlockContainer
+              className="stEvent"
+              data-testid="stEvent"
+            >
+              {renderBlock(elements.event)}
+            </StyledEventBlockContainer>
+          </EventContainer>
+        </Profiler>
       )}
     </StyledAppViewContainer>
   )

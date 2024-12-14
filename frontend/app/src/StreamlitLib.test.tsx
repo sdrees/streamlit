@@ -200,7 +200,6 @@ class StreamlitLibExample extends PureComponent<Props, State> {
       <VerticalBlock
         node={blockNode}
         endpoints={this.endpoints}
-        sessionInfo={this.sessionInfo}
         scriptRunId={this.state.scriptRunId}
         scriptRunState={this.state.scriptRunState}
         widgetMgr={this.widgetMgr}

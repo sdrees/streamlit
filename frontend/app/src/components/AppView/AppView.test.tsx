@@ -82,7 +82,6 @@ function getProps(props: Partial<AppViewProps> = {}): AppViewProps {
     endpoints: mockEndpointProp,
     elements: AppRoot.empty(FAKE_SCRIPT_HASH, true),
     sendMessageToHost: vi.fn(),
-    sessionInfo,
     scriptRunId: "script run 123",
     scriptRunState: ScriptRunState.NOT_RUNNING,
     widgetMgr: new WidgetStateManager({

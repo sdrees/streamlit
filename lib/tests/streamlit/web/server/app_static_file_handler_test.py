@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+import mimetypes
 import os
 import sys
 import tempfile
@@ -25,6 +26,7 @@ import tornado.testing
 import tornado.web
 import tornado.websocket
 
+from streamlit.web.server import Server
 from streamlit.web.server.app_static_file_handler import (
     MAX_APP_STATIC_FILE_SIZE,
     AppStaticFileHandler,
@@ -41,6 +43,9 @@ class AppStaticFileHandlerTest(tornado.testing.AsyncHTTPTestCase):
         self._tmpfile = tempfile.NamedTemporaryFile(dir=self._tmpdir.name, delete=False)
         self._tmp_js_file = tempfile.NamedTemporaryFile(
             dir=self._tmpdir.name, suffix="script.js", delete=False
+        )
+        self._tmp_webp_file = tempfile.NamedTemporaryFile(
+            dir=self._tmpdir.name, suffix="file.webp", delete=False
         )
         self._tmp_png_image_file = tempfile.NamedTemporaryFile(
             dir=self._tmpdir.name, suffix="image.png", delete=False
@@ -68,6 +73,7 @@ class AppStaticFileHandlerTest(tornado.testing.AsyncHTTPTestCase):
 
         self._filename = os.path.basename(self._tmpfile.name)
         self._js_filename = os.path.basename(self._tmp_js_file.name)
+        self._webp_filename = os.path.basename(self._tmp_webp_file.name)
         self._png_image_filename = os.path.basename(self._tmp_png_image_file.name)
         self._pdf_document_filename = os.path.basename(self._tmp_pdf_document_file.name)
         self._webp_image_filename = os.path.basename(self._tmp_webp_image_file.name)
@@ -195,3 +201,15 @@ class AppStaticFileHandlerTest(tornado.testing.AsyncHTTPTestCase):
                 r.body == b"<html><title>403: Forbidden</title>"
                 b"<body>403: Forbidden</body></html>"
             )
+
+    def test_mimetype_is_overridden_by_server(self):
+        """Test content type of webps are set correctly"""
+        mimetypes.add_type("custom/webp", ".webp")
+
+        r = self.fetch(f"/app/static/{self._webp_filename}")
+        assert r.headers["Content-Type"] == "custom/webp"
+
+        Server.initialize_mimetypes()
+
+        r = self.fetch(f"/app/static/{self._webp_filename}")
+        assert r.headers["Content-Type"] == "image/webp"

@@ -75,7 +75,6 @@ function getProps(
   return {
     endpoints: endpoints,
     scriptRunState: ScriptRunState.RUNNING,
-    sessionInfo: sessionInfo,
     widgetMgr: new WidgetStateManager({
       sendRerunBackMsg: vi.fn(),
       formsDataChanged: vi.fn(),

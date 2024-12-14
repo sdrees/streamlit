@@ -14,7 +14,6 @@
 
 from __future__ import annotations
 
-import mimetypes
 import os
 from pathlib import Path
 from typing import Final
@@ -37,7 +36,6 @@ SAFE_APP_STATIC_FILE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".pdf", ".gif", ".we
 class AppStaticFileHandler(tornado.web.StaticFileHandler):
     def initialize(self, path: str, default_filename: str | None = None) -> None:
         super().initialize(path, default_filename)
-        mimetypes.add_type("image/webp", ".webp")
 
     def validate_absolute_path(self, root: str, absolute_path: str) -> str | None:
         full_path = os.path.abspath(absolute_path)

@@ -1,6 +1,6 @@
 {
   "name": "@streamlit/lib",
-  "version": "1.41.0",
+  "version": "1.41.1",
   "private": true,
   "license": "Apache-2.0",
   "main": "dist/index.js",
@@ -52,7 +52,7 @@
     "@vitejs/plugin-react-swc": "^3.6.0",
     "@wavesurfer/react": "^1.0.7",
     "apache-arrow": "^18.0.0",
-    "axios": "^1.7.8",
+    "axios": "^1.7.9",
     "baseui": "12.2.0",
     "camelcase": "^7.0.1",
     "classnames": "^2.3.2",
@@ -83,7 +83,7 @@
     "plotly.js": "^2.34.0",
     "protobufjs": "^7.2.5",
     "query-string": "^8.1.0",
-    "re-resizable": "^6.9.9",
+    "re-resizable": "^6.10.1",
     "react-color": "^2.18.1",
     "react-debounce-render": "^8.0.2",
     "react-device-detect": "^2.2.2",
@@ -116,7 +116,7 @@
     "vite": "^5.3.5",
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^4.3.1",
-    "wavesurfer.js": "^7.8.2",
+    "wavesurfer.js": "^7.8.10",
     "xxhashjs": "^0.2.2"
   },
   "peerDependencies": {

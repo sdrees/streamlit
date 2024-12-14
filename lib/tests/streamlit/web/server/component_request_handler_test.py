@@ -27,7 +27,7 @@ from streamlit.runtime import Runtime, RuntimeConfig
 from streamlit.runtime.memory_media_file_storage import MemoryMediaFileStorage
 from streamlit.runtime.memory_uploaded_file_manager import MemoryUploadedFileManager
 from streamlit.runtime.scriptrunner import add_script_run_ctx
-from streamlit.web.server import ComponentRequestHandler
+from streamlit.web.server import ComponentRequestHandler, Server
 from tests.testutil import create_mock_script_run_ctx
 
 URL = "http://not.a.real.url:3001"
@@ -199,7 +199,7 @@ class ComponentRequestHandlerTest(tornado.testing.AsyncHTTPTestCase):
             response.body,
         )
 
-    def test_mimetype_is_overridden_by_component_request_handler(self):
+    def test_mimetype_is_overridden_by_server(self):
         """Test get_content_type function."""
         mimetypes.add_type("custom/html", ".html")
         mimetypes.add_type("custom/js", ".js")
@@ -209,11 +209,8 @@ class ComponentRequestHandlerTest(tornado.testing.AsyncHTTPTestCase):
         assert ComponentRequestHandler.get_content_type("test.js") == "custom/js"
         assert ComponentRequestHandler.get_content_type("test.css") == "custom/css"
 
-        # make a request so that our ComponentRequestHandler.initialize function is
-        # called by tornado
-        self._request_component(
-            "tests.streamlit.web.server.component_request_handler_test.test"
-        )
+        # Have the server reinitialize the mimetypes
+        Server.initialize_mimetypes()
 
         assert ComponentRequestHandler.get_content_type("test.html") == "text/html"
         assert (

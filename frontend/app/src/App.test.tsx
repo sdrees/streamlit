@@ -71,7 +71,8 @@ import {
   openMenu,
 } from "@streamlit/app/src/components/MainMenu/mainMenuTestHelpers"
 
-import { App, Props, showDevelopmentOptions } from "./App"
+import { showDevelopmentOptions } from "./showDevelopmentOptions"
+import { App, Props } from "./App"
 
 vi.mock("@streamlit/lib/src/baseconsts", async () => {
   return {

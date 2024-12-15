@@ -283,6 +283,29 @@ export class WidgetStateManager {
     }
   }
 
+  /* Sometimes users change an input field and directly click on a button - which uses the trigger value -
+   * to trigger a rerun. We wrap the code that sends the trigger update in `setTimeout` so that trigger-based
+   * updates will be added to the end of JavaScript's event loop. Callbacks for other elements, for example
+   * for an onBlur event of an input field, that are already in the event loop will then be deterministically
+   * executed before the trigger-based code.
+   *
+   * Returns a promise that is resolved as soon as the timeout was triggered, mainly to make this easier to test.
+   * in our unit tests.
+   */
+  private setTriggerValueAtEndOfEventLoop(
+    widget: WidgetInfo,
+    source: Source,
+    fragmentId: string | undefined
+  ): Promise<void> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.onWidgetValueChanged(widget.formId, source, fragmentId)
+        this.deleteWidgetState(widget.id)
+        resolve()
+      }, 0)
+    })
+  }
+
   /**
    * Sets the string trigger value for the given widget ID to a string value,
    * sends a rerunScript message to the server, and then immediately unsets the
@@ -293,11 +316,10 @@ export class WidgetStateManager {
     value: string,
     source: Source,
     fragmentId: string | undefined
-  ): void {
+  ): Promise<void> {
     this.createWidgetState(widget, source).stringTriggerValue =
       new StringTriggerValue({ data: value })
-    this.onWidgetValueChanged(widget.formId, source, fragmentId)
-    this.deleteWidgetState(widget.id)
+    return this.setTriggerValueAtEndOfEventLoop(widget, source, fragmentId)
   }
 
   /**
@@ -308,10 +330,9 @@ export class WidgetStateManager {
     widget: WidgetInfo,
     source: Source,
     fragmentId: string | undefined
-  ): void {
+  ): Promise<void> {
     this.createWidgetState(widget, source).triggerValue = true
-    this.onWidgetValueChanged(widget.formId, source, fragmentId)
-    this.deleteWidgetState(widget.id)
+    return this.setTriggerValueAtEndOfEventLoop(widget, source, fragmentId)
   }
 
   public getBoolValue(widget: WidgetInfo): boolean | undefined {

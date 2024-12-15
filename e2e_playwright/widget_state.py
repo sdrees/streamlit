@@ -34,3 +34,14 @@ if st.checkbox("Display widgets"):
 
     if st.checkbox("Show goodbye", key="c3"):
         st.write("goodbye")
+
+st.header("Test for input change & button click in one motion")
+# Test for https://github.com/streamlit/streamlit/issues/10007
+
+
+def btn_callback():
+    st.write("Input: " + st.session_state["key1"])
+
+
+st.text_area("Type something into the text area", key="key1")
+st.button("Submit text_area", on_click=btn_callback)

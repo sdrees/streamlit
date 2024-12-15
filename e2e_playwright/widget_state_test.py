@@ -14,7 +14,11 @@
 
 from playwright.sync_api import Page, expect
 
-from e2e_playwright.shared.app_utils import click_checkbox, expect_markdown
+from e2e_playwright.shared.app_utils import (
+    click_button,
+    click_checkbox,
+    expect_markdown,
+)
 
 
 def test_clicking_a_lot_still_keeps_state(app: Page):
@@ -70,3 +74,19 @@ def test_doesnt_save_widget_state_on_redisplay_with_keyed_widget(app: Page):
     # Should not show goodbye again -> the widget state was not saved
     markdown_el = app.get_by_test_id("stMarkdown").filter(has_text="goodbye")
     expect(markdown_el).not_to_be_attached()
+
+
+def test_click_button_after_input_change_without_losing_focus_first(app: Page):
+    """Test that the input value is correctly updated when clicking a button
+    right after changing the input value without losing focus first.
+
+    Related to: https://github.com/streamlit/streamlit/issues/10007"""
+
+    text_area = app.get_by_test_id("stTextArea")
+    text_area_field = text_area.locator("textarea").first
+    new_text = "new text_area value"
+    text_area_field.fill(new_text)
+
+    click_button(app, "Submit text_area")
+
+    expect_markdown(app, f"Input: {new_text}")

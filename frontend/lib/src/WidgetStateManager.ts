@@ -285,9 +285,9 @@ export class WidgetStateManager {
 
   /* Sometimes users change an input field and directly click on a button - which uses the trigger value -
    * to trigger a rerun. We wrap the code that sends the trigger update in `setTimeout` so that trigger-based
-   * updates will be added to the end of JavaScript's event loop. Callbacks for other elements, for example
-   * for an onBlur event of an input field, that are already in the event loop will then be deterministically
-   * executed before the trigger-based code.
+   * updates will be executed at the end of JavaScript's event loop. Callbacks for other elements, for example,
+   * the onBlur event of an input field, will be deterministically executed first in the event loop since they
+   * were encountered first in the sequential execution and will be executed FIFO from the task queue.
    *
    * Returns a promise that is resolved as soon as the timeout was triggered, mainly to make this easier to test.
    * in our unit tests.

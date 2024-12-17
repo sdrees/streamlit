@@ -488,8 +488,13 @@ export const StyledBorderlessIconButton = styled(
       color: theme.colors.text,
     },
     "&:disabled, &:disabled:hover, &:disabled:active": {
-      color: theme.colors.fadedText20,
+      color: theme.colors.fadedText10,
       cursor: "not-allowed",
+
+      // For image content
+      img: {
+        opacity: 0.4,
+      },
     },
   }
 })
@@ -499,6 +504,9 @@ export const StyledBorderlessIconButtonActive = styled(
 )<RequiredBaseButtonProps>(({ theme }) => {
   return {
     color: theme.colors.bodyText,
+    "&:disabled, &:disabled:hover, &:disabled:active": {
+      color: theme.colors.fadedText40,
+    },
   }
 })
 

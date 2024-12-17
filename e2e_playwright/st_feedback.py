@@ -16,18 +16,34 @@ import time
 
 import streamlit as st
 
-st.feedback()
-st.feedback(
-    "faces",
-    key="faces_feedback",
-    on_change=lambda: st.write(f"Faces sentiment: {st.session_state.faces_feedback}"),
-)
-sentiment = st.feedback("stars")
-st.write(f"Star sentiment: {sentiment}")
+with st.container(key="thumbs_container"):
+    st.feedback()
+    st.session_state.thumbs_feedback_disabled = 1
+    st.feedback(key="thumbs_feedback_disabled", disabled=True)
 
 
-sentiment = st.feedback("stars", disabled=True, key="disabled_feedback")
-st.write("feedback-disabled:", str(sentiment))
+with st.container(key="faces_container"):
+    st.feedback(
+        "faces",
+        key="faces_feedback",
+        on_change=lambda: st.write(
+            f"Faces sentiment: {st.session_state.faces_feedback_disabled}"
+        ),
+    )
+    st.session_state.faces_feedback_disabled = 3
+    st.feedback(
+        "faces",
+        key="faces_feedback_disabled",
+        disabled=True,
+    )
+
+with st.container(key="stars_container"):
+    sentiment = st.feedback("stars")
+    st.write(f"Star sentiment: {sentiment}")
+    st.session_state.star_feedback_disabled = 3
+    sentiment = st.feedback("stars", disabled=True, key="star_feedback_disabled")
+    st.write("feedback-disabled:", str(sentiment))
+
 
 with st.form(key="my_form", clear_on_submit=True):
     sentiment = st.feedback()

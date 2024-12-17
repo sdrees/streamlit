@@ -81,7 +81,8 @@ st.data_editor(
 
 st.header("Text column:")
 st.caption(
-    "Editing the first column should only allow 5 characters. The second column should only allow numerical characters."
+    "Editing the first column should only allow 5 characters. The second column should"
+    " only allow numerical characters."
 )
 st.data_editor(
     pd.DataFrame(
@@ -108,7 +109,8 @@ st.data_editor(
 
 st.header("Number column:")
 st.caption(
-    "Editing the first column should only allow to submit numbers between 0 and 5. And only a maximum of 2 decimals."
+    "Editing the first column should only allow to submit numbers between 0 and 5. "
+    "And only a maximum of 2 decimals."
 )
 st.data_editor(
     pd.DataFrame(
@@ -181,7 +183,8 @@ st.data_editor(
 
 st.header("Link column:")
 st.caption(
-    "Editing the first column should only submitting values starting with http and a maximum of 50 characters."
+    "Editing the first column should only submitting values starting with http and a "
+    "maximum of 50 characters."
 )
 st.data_editor(
     pd.DataFrame(
@@ -223,7 +226,8 @@ st.data_editor(
 
 st.header("Datetime column:")
 st.caption(
-    "Editing the first column should only allow datetime values between 2021-01-01 and 2022-01-01."
+    "Editing the first column should only allow datetime values between 2021-01-01 and "
+    "2022-01-01."
 )
 st.data_editor(
     pd.DataFrame(
@@ -254,7 +258,8 @@ st.data_editor(
 
 st.header("Date column:")
 st.caption(
-    "Editing the first column should only allow picking every second day and between 2021-01-01 and 2022-01-01."
+    "Editing the first column should only allow picking every second day and between "
+    "2021-01-01 and 2022-01-01."
 )
 st.data_editor(
     pd.DataFrame(
@@ -284,7 +289,8 @@ st.data_editor(
 
 st.header("Time column:")
 st.caption(
-    "Editing the first column should only allow datetime values between 01:02 and 01:03."
+    "Editing the first column should only allow datetime values "
+    "between 01:02 and 01:03."
 )
 st.data_editor(
     pd.DataFrame(

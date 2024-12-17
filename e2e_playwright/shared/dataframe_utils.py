@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from typing import Final, Literal
 
-from playwright.sync_api import Locator, expect
+from playwright.sync_api import Locator, Page, Position, expect
 
 # Determined by measuring a screenshot
 ROW_MARKER_COLUMN_WIDTH_PX: Final = 30
@@ -38,7 +38,7 @@ def calc_middle_cell_position(
     col_pos: int,
     column_width: Literal["small", "medium", "large"] = "small",
     has_row_marker_col: bool = False,
-) -> tuple[int, int]:
+) -> tuple[float, float]:
     """Calculate the middle position of a cell in the dataframe.
 
     Parameters
@@ -48,15 +48,17 @@ def calc_middle_cell_position(
         The row number to use for the calculation. Starts at 0 with the header row.
 
     col_pos : int
-        The column number to use for the calculation. Starts with 0 with the first column.
-        If has_row_marker_col is True, the first column is the row marker column.
+        The column number to use for the calculation. Starts with 0 with the first
+        column. If has_row_marker_col is True, the first column is the row marker
+        column.
 
     column_width : "small" | "medium" | "large"
         The shared width setting of all columns. Can be "small", "medium" or "large".
         This needs to be enforced in the dataframe via column config.
 
     has_row_marker_col : bool
-        Whether the dataframe has a row marker column (used when row selections are activated).
+        Whether the dataframe has a row marker column (used when row selections are
+        activated).
 
 
     Returns
@@ -113,7 +115,8 @@ def click_on_cell(
         This needs to be enforced in the dataframe via column config.
 
     has_row_marker_col : bool
-        Whether the dataframe has a row marker column (used when row selections are activated).
+        Whether the dataframe has a row marker column (used when row selections are
+        activated).
 
     double_click : bool
         Whether to double click on the cell.
@@ -121,7 +124,7 @@ def click_on_cell(
     column_middle_width_px, row_middle_height_px = calc_middle_cell_position(
         row_pos, col_pos, column_width, has_row_marker_col
     )
-    position = {"x": column_middle_width_px, "y": row_middle_height_px}
+    position: Position = {"x": column_middle_width_px, "y": row_middle_height_px}
 
     if double_click:
         dataframe_element.dblclick(position=position)
@@ -177,7 +180,8 @@ def sort_column(
         This needs to be enforced in the dataframe via column config.
 
     has_row_marker_col : bool
-        Whether the dataframe has a row marker column (used when row selections are activated).
+        Whether the dataframe has a row marker column (used when row selections are
+        activated).
     """
     click_on_cell(
         dataframe_element,
@@ -213,7 +217,8 @@ def select_column(
         This needs to be enforced in the dataframe via column config.
 
     has_row_marker_col : bool
-        Whether the dataframe has a row marker column (used when row selections are activated).
+        Whether the dataframe has a row marker column (used when row selections are
+        activated).
     """
     click_on_cell(
         dataframe_element,
@@ -224,7 +229,7 @@ def select_column(
     )
 
 
-def get_open_cell_overlay(app: Locator) -> Locator:
+def get_open_cell_overlay(page: Page | Locator) -> Locator:
     """Get the currently open cell overlay / editor.
 
     Parameters
@@ -241,7 +246,7 @@ def get_open_cell_overlay(app: Locator) -> Locator:
     # This is currently the best way to get the cell overlay
     # We should eventually add a stable test ID to the cell overlay
     # within glide-data-grid to better target it.
-    cell_overlay = app.get_by_test_id("portal").locator(".gdg-clip-region")
+    cell_overlay = page.get_by_test_id("portal").locator(".gdg-clip-region")
     expect(cell_overlay).to_be_visible()
     return cell_overlay
 

@@ -22,8 +22,8 @@ def test_data_editor_supports_various_configurations(
     app: Page, assert_snapshot: ImageCompareFunction
 ):
     """Screenshot test that st.data_editor supports various configuration options."""
-    # The dataframe config test is already testing with themed apps, so using the default theme
-    # only is fine here.
+    # The dataframe config test is already testing with themed apps, so using the
+    # default theme only is fine here.
     elements = app.get_by_test_id("stDataFrame")
     expect(elements).to_have_count(22)
 

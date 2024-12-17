@@ -320,7 +320,8 @@ def test_in_form_selection_and_session_state(app: Page):
         exact_match=True,
     )
 
-    # submit the form. The selection uses a debounce of 200ms; if we click too early, the state is not updated correctly and we submit the old, unselected values
+    # submit the form. The selection uses a debounce of 200ms; if we click too early,
+    # the state is not updated correctly and we submit the old, unselected values
     app.wait_for_timeout(210)
     click_form_button(app, "Submit")
 
@@ -406,7 +407,8 @@ def test_multi_row_and_multi_column_selection_in_fragment(app: Page):
         exact_match=True,
     )
 
-    # Check that the main script has run once (the initial run), but not after the selection:
+    # Check that the main script has run once (the initial run), but not after the
+    # selection:
     expect(app.get_by_text("Runs: 1")).to_be_visible()
 
 

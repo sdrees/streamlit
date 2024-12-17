@@ -501,7 +501,10 @@ st.dataframe(
             "B",
             "this is another very very column long header name",
             "C",
-            "this is another very very very very very very very very very very very very very very very long header name",
+            (
+                "this is another very very very very very very very very very very very"
+                " very very very very long header name"
+            ),
             "D",
             "E",
             "F",

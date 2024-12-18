@@ -16,8 +16,8 @@
 
 import React from "react"
 
-import { fireEvent, screen } from "@testing-library/react"
-import { act } from "react-dom/test-utils"
+import { act, screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
@@ -153,7 +153,8 @@ describe("TimeInput widget", () => {
     expect(inputNode).toBeInTheDocument()
   })
 
-  it("sets the widget value on change", () => {
+  it("sets the widget value on change", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     vi.spyOn(props.widgetMgr, "setStringValue")
 
@@ -164,17 +165,11 @@ describe("TimeInput widget", () => {
     // Change the widget value
     if (timeDisplay) {
       // Select the time input dropdown
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.click(timeDisplay)
+      await user.click(timeDisplay)
       // Arrow up from 12:45 to 12:30 (since step in 15 min intervals)
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.keyDown(timeDisplay, { key: "ArrowUp", code: 38 })
+      await user.keyboard("{ArrowUp}")
       // Hit enter to select the new time
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.keyDown(timeDisplay, { key: "Enter", code: 13 })
+      await user.keyboard("{Enter}")
     }
 
     expect(props.widgetMgr.setStringValue).toHaveBeenLastCalledWith(
@@ -188,7 +183,8 @@ describe("TimeInput widget", () => {
     expect(timeDisplay).toHaveTextContent("12:30")
   })
 
-  it("resets its value when form is cleared", () => {
+  it("resets its value when form is cleared", async () => {
+    const user = userEvent.setup()
     // Create a widget in a clearOnSubmit form
     const props = getProps({ formId: "form" })
     props.widgetMgr.setFormSubmitBehaviors("form", true)
@@ -202,20 +198,11 @@ describe("TimeInput widget", () => {
     // Change the widget value
     if (timeDisplay) {
       // Select the time input dropdown
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.click(timeDisplay)
+      await user.click(timeDisplay)
       // Arrow down twice from 12:45 to 13:15 (since step in 15 min intervals)
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.keyDown(timeDisplay, { key: "ArrowDown", code: 40 })
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.keyDown(timeDisplay, { key: "ArrowDown", code: 40 })
+      await user.keyboard("{ArrowDown}{ArrowDown}")
       // Hit enter to select the new time
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.keyDown(timeDisplay, { key: "Enter", code: 13 })
+      await user.keyboard("{Enter}")
     }
 
     expect(props.widgetMgr.setStringValue).toHaveBeenLastCalledWith(

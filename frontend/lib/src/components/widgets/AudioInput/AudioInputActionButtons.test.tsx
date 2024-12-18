@@ -16,7 +16,8 @@
 
 import React from "react"
 
-import { fireEvent, screen } from "@testing-library/react"
+import { screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 
@@ -44,7 +45,8 @@ describe("AudioInputActionButton", () => {
     expect(screen.getByTestId("stAudioInputActionButton")).toBeInTheDocument()
   })
 
-  it("should start recording when recording button is pressed", () => {
+  it("should start recording when recording button is pressed", async () => {
+    const user = userEvent.setup()
     const startRecording = vi.fn()
     render(
       <AudioInputActionButtons
@@ -54,13 +56,12 @@ describe("AudioInputActionButton", () => {
     )
 
     expect(screen.getByLabelText("Record")).toBeInTheDocument()
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(screen.getByLabelText("Record"))
+    await user.click(screen.getByLabelText("Record"))
     expect(startRecording).toHaveBeenCalled()
   })
 
-  it("should stop recording when recording button is pressed", () => {
+  it("should stop recording when recording button is pressed", async () => {
+    const user = userEvent.setup()
     const stopRecording = vi.fn()
     render(
       <AudioInputActionButtons
@@ -71,13 +72,12 @@ describe("AudioInputActionButton", () => {
     )
 
     expect(screen.getByLabelText("Stop recording")).toBeInTheDocument()
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(screen.getByLabelText("Stop recording"))
+    await user.click(screen.getByLabelText("Stop recording"))
     expect(stopRecording).toHaveBeenCalled()
   })
 
-  it("should play when play button is pressed", () => {
+  it("should play when play button is pressed", async () => {
+    const user = userEvent.setup()
     const onClickPlayPause = vi.fn()
     render(
       <AudioInputActionButtons
@@ -89,13 +89,12 @@ describe("AudioInputActionButton", () => {
 
     expect(screen.getByLabelText("Record")).toBeInTheDocument()
     expect(screen.getByLabelText("Play")).toBeInTheDocument()
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(screen.getByLabelText("Play"))
+    await user.click(screen.getByLabelText("Play"))
     expect(onClickPlayPause).toHaveBeenCalled()
   })
 
-  it("should pause when pause button is pressed", () => {
+  it("should pause when pause button is pressed", async () => {
+    const user = userEvent.setup()
     const onClickPlayPause = vi.fn()
     render(
       <AudioInputActionButtons
@@ -108,14 +107,13 @@ describe("AudioInputActionButton", () => {
 
     expect(screen.getByLabelText("Record")).toBeInTheDocument()
     expect(screen.getByLabelText("Pause")).toBeInTheDocument()
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(screen.getByLabelText("Pause"))
+    await user.click(screen.getByLabelText("Pause"))
     expect(onClickPlayPause).toHaveBeenCalled()
   })
 
   describe("when disabled", () => {
-    it("should not start recording when recording button is pressed", () => {
+    it("should not start recording when recording button is pressed", async () => {
+      const user = userEvent.setup()
       const startRecording = vi.fn()
       render(
         <AudioInputActionButtons
@@ -126,9 +124,7 @@ describe("AudioInputActionButton", () => {
       )
 
       expect(screen.getByLabelText("Record")).toBeInTheDocument()
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.click(screen.getByLabelText("Record"))
+      await user.click(screen.getByLabelText("Record"))
       expect(startRecording).not.toHaveBeenCalled()
     })
   })

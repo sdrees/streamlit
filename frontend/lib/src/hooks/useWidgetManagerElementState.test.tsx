@@ -17,7 +17,8 @@
 import React, { FC } from "react"
 
 import { act, renderHook } from "@testing-library/react-hooks"
-import { fireEvent, render, screen } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
 import { Form } from "@streamlit/lib/src/components/widgets/Form"
@@ -79,6 +80,7 @@ describe("useWidgetManagerElementState hook", () => {
   })
 
   it("should properly clear state on form clear", async () => {
+    const user = userEvent.setup()
     const formId = "formId"
     const stateKey = "stateKey"
     const defaultValue = "initial"
@@ -133,9 +135,8 @@ describe("useWidgetManagerElementState hook", () => {
     expect(widgetMgr.getElementState(elementId, stateKey)).toBe(defaultValue)
 
     // change the input value
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(inputElement, { target: { value: newValue } })
+    await user.clear(inputElement)
+    await user.type(inputElement, newValue)
 
     // verify new value is set
     expect(inputElement.value).toBe(newValue)

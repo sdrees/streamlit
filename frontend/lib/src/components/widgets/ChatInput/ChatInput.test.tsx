@@ -17,6 +17,7 @@
 import React from "react"
 
 import { fireEvent, screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 import { ChatInput as ChatInputProto } from "@streamlit/lib/src/proto"
@@ -81,45 +82,36 @@ describe("ChatInput widget", () => {
     expect(chatInput).toHaveTextContent(props.element.default)
   })
 
-  it("sets the value when values are typed in", () => {
+  it("sets the value when values are typed in", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "Sample text" } })
+    await user.type(chatInput, "Sample text")
     expect(chatInput).toHaveTextContent("Sample text")
   })
 
-  it("does not increase text value when maxChars is set", () => {
+  it("does not increase text value when maxChars is set", async () => {
+    const user = userEvent.setup()
     const props = getProps({ maxChars: 10 })
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "1234567890" } })
+    await user.type(chatInput, "1234567890")
     expect(chatInput).toHaveTextContent("1234567890")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "12345678901" } })
+    await user.type(chatInput, "1")
     expect(chatInput).toHaveTextContent("1234567890")
   })
 
-  it("sends and resets the value on enter", () => {
+  it("sends and resets the value on enter", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     const spy = vi.spyOn(props.widgetMgr, "setStringTriggerValue")
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "1234567890" } })
-    expect(chatInput).toHaveTextContent("1234567890")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.keyDown(chatInput, { key: "Enter" })
+    await user.type(chatInput, "1234567890{enter}")
     expect(spy).toHaveBeenCalledWith(
       props.element,
       "1234567890",
@@ -131,49 +123,36 @@ describe("ChatInput widget", () => {
     expect(chatInput).toHaveTextContent("")
   })
 
-  it("ensures chat input has focus on submit by keyboard", () => {
+  it("ensures chat input has focus on submit by keyboard", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "1234567890" } })
-    expect(chatInput).toHaveTextContent("1234567890")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.keyDown(chatInput, { key: "Enter" })
+    await user.type(chatInput, "1234567890{enter}")
     expect(chatInput).toHaveFocus()
   })
 
-  it("ensures chat input has focus on submit by button click", () => {
+  it("ensures chat input has focus on submit by button click", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
     const chatButton = screen.getByTestId("stChatInputSubmitButton")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "1234567890" } })
-    expect(chatInput).toHaveTextContent("1234567890")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(chatButton)
+    await user.type(chatInput, "1234567890")
+    await user.click(chatButton)
     expect(chatInput).toHaveFocus()
   })
 
-  it("can set fragmentId when sending value", () => {
+  it("can set fragmentId when sending value", async () => {
+    const user = userEvent.setup()
     const props = getProps(undefined, { fragmentId: "myFragmentId" })
     const spy = vi.spyOn(props.widgetMgr, "setStringTriggerValue")
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "1234567890" } })
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.keyDown(chatInput, { key: "Enter" })
+    await user.type(chatInput, "1234567890{enter}")
     expect(spy).toHaveBeenCalledWith(
       props.element,
       "1234567890",
@@ -184,22 +163,22 @@ describe("ChatInput widget", () => {
     )
   })
 
-  it("will not send an empty value on enter if empty", () => {
+  it("will not send an empty value on enter if empty", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     const spy = vi.spyOn(props.widgetMgr, "setStringTriggerValue")
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.keyDown(chatInput, { key: "Enter" })
+    await user.type(chatInput, "{enter}")
     expect(spy).not.toHaveBeenCalledWith(props.element, "", {
       fromUi: true,
     })
     expect(chatInput).toHaveTextContent("")
   })
 
-  it("will not show instructions when the text has changed", () => {
+  it("will not show instructions when the text has changed", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     render(<ChatInput {...props} />)
 
@@ -207,40 +186,32 @@ describe("ChatInput widget", () => {
     const instructions = screen.getByTestId("InputInstructions")
     expect(instructions).toHaveTextContent("")
 
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "1234567890" } })
+    await user.type(chatInput, "1234567890")
     expect(instructions).toHaveTextContent("")
   })
 
-  it("does not send/clear on shift + enter", () => {
+  it("does not send/clear on shift + enter", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     const spy = vi.spyOn(props.widgetMgr, "setStringTriggerValue")
     render(<ChatInput {...props} />)
     const chatInput = screen.getByTestId("stChatInputTextArea")
 
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "1234567890" } })
+    await user.type(chatInput, "1234567890")
     expect(chatInput).toHaveTextContent("1234567890")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.keyDown(chatInput, { key: "Enter", shiftKey: true })
-    // We cannot test the value to be changed cause that is essentially a
-    // change event.
+    await user.type(chatInput, "{shift>}{enter}{/shift}")
     expect(chatInput).not.toHaveTextContent("")
     expect(spy).not.toHaveBeenCalled()
   })
 
-  it("does not send/clear on ctrl + enter", () => {
+  it("does not send/clear on ctrl + enter", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     const spy = vi.spyOn(props.widgetMgr, "setStringTriggerValue")
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "1234567890" } })
+    await user.type(chatInput, "1234567890")
     expect(chatInput).toHaveTextContent("1234567890")
     // TODO: Utilize user-event instead of fireEvent
     // eslint-disable-next-line testing-library/prefer-user-event
@@ -251,21 +222,16 @@ describe("ChatInput widget", () => {
     expect(spy).not.toHaveBeenCalled()
   })
 
-  it("does not send/clear on meta + enter", () => {
+  it("does not send/clear on meta + enter", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     const spy = vi.spyOn(props.widgetMgr, "setStringTriggerValue")
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "1234567890" } })
+    await user.type(chatInput, "1234567890")
     expect(chatInput).toHaveTextContent("1234567890")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.keyDown(chatInput, { key: "Enter", metaKey: true })
-    // We cannot test the value to be changed cause that is essentially a
-    // change event.
+    await user.type(chatInput, "{meta>}{enter}{/meta}")
     expect(chatInput).not.toHaveTextContent("")
     expect(spy).not.toHaveBeenCalled()
   })
@@ -316,21 +282,19 @@ describe("ChatInput widget", () => {
     expect(button).toBeDisabled()
   })
 
-  it("enables the send button when text is set, disables it when removed", () => {
+  it("enables the send button when text is set, disables it when removed", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "Sample text" } })
+    await user.type(chatInput, "Sample text")
 
     const button = screen.getByRole("button")
     expect(button).not.toBeDisabled()
 
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(chatInput, { target: { value: "" } })
+    await user.clear(chatInput)
+    // await user.type(chatInput, "")
     expect(button).toBeDisabled()
   })
 })

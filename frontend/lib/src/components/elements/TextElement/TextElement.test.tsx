@@ -16,7 +16,8 @@
 
 import React from "react"
 
-import { fireEvent, screen } from "@testing-library/react"
+import { screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 import { Text as TextProto } from "@streamlit/lib/src/proto"
@@ -47,9 +48,7 @@ describe("TextElement element", () => {
     render(<TextElement {...props} />)
     const tooltip = screen.getByTestId("stTooltipHoverTarget")
     expect(tooltip).toBeInTheDocument()
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.mouseOver(tooltip)
+    await userEvent.hover(tooltip)
 
     const helpText = await screen.findAllByText("help text")
     expect(helpText[0].textContent).toBe("help text")

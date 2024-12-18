@@ -17,6 +17,7 @@
 import React from "react"
 
 import { act, fireEvent, screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 import { ColorPicker as ColorPickerProto } from "@streamlit/lib/src/proto"
@@ -80,21 +81,21 @@ describe("ColorPicker widget", () => {
     )
   })
 
-  it("renders a default color in the preview and the color picker", () => {
+  it("renders a default color in the preview and the color picker", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     render(<ColorPicker {...props} />)
 
     const colorBlock = screen.getByTestId("stColorPickerBlock")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(colorBlock)
+    await user.click(colorBlock)
     expect(colorBlock).toHaveStyle("background-color: #000000")
 
     const colorInput = screen.getByRole("textbox")
     expect(colorInput).toHaveValue("#000000")
   })
 
-  it("updates its widget value when it's changed", () => {
+  it("updates its widget value when it's changed", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     vi.spyOn(props.widgetMgr, "setStringValue")
 
@@ -102,9 +103,7 @@ describe("ColorPicker widget", () => {
 
     const newColor = "#e91e63"
     const colorBlock = screen.getByTestId("stColorPickerBlock")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(colorBlock)
+    await user.click(colorBlock)
 
     // Our widget should be updated.
     const colorInput = screen.getByRole("textbox")
@@ -112,9 +111,7 @@ describe("ColorPicker widget", () => {
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(colorInput, { target: { value: newColor } })
     // Close out of the popover
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(colorBlock)
+    await user.click(colorBlock)
 
     // And the WidgetMgr should also be updated.
     expect(props.widgetMgr.setStringValue).toHaveBeenLastCalledWith(
@@ -125,8 +122,9 @@ describe("ColorPicker widget", () => {
     )
   })
 
-  it("resets its value when form is cleared", () => {
+  it("resets its value when form is cleared", async () => {
     // Create a widget in a clearOnSubmit form
+    const user = userEvent.setup()
     const props = getProps({ formId: "form" })
     vi.spyOn(props.widgetMgr, "setStringValue")
     props.widgetMgr.setFormSubmitBehaviors("form", true)
@@ -136,19 +134,14 @@ describe("ColorPicker widget", () => {
     // Choose a new color
     const newColor = "#e91e63"
     const colorBlock = screen.getByTestId("stColorPickerBlock")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(colorBlock)
+    await user.click(colorBlock)
 
-    // Update the color
     const colorInput = screen.getByRole("textbox")
     // TODO: Utilize user-event instead of fireEvent
     // eslint-disable-next-line testing-library/prefer-user-event
     fireEvent.change(colorInput, { target: { value: newColor } })
     // Close out of the popover
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(colorBlock)
+    await user.click(colorBlock)
 
     expect(colorInput).toHaveValue(newColor)
     expect(colorBlock).toHaveStyle(`background-color: ${newColor}`)

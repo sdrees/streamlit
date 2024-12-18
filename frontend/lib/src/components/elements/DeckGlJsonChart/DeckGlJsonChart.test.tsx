@@ -282,6 +282,7 @@ describe("#useDeckGl", () => {
     })
 
     it("should call JSON5.parse when isFullScreen changes", async () => {
+      const user = userEvent.setup()
       const MyComponent: FC<UseDeckGlProps> = props => {
         useDeckGl(props)
         const { expand } = useRequiredContext(ElementFullscreenContext)
@@ -293,7 +294,7 @@ describe("#useDeckGl", () => {
 
       expect(JSON5.parse).toHaveBeenCalledTimes(1)
 
-      await userEvent.click(screen.getByText("Expand"))
+      await user.click(screen.getByText("Expand"))
 
       expect(JSON5.parse).toHaveBeenCalledTimes(2)
     })

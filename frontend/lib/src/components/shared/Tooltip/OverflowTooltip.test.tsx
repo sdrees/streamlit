@@ -16,7 +16,8 @@
 
 import React from "react"
 
-import { fireEvent, render, screen } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { mockTheme } from "@streamlit/lib/src/mocks/mockTheme"
 import ThemeProvider from "@streamlit/lib/src/components/core/ThemeProvider"
@@ -29,7 +30,8 @@ describe("Tooltip component", () => {
     vi.restoreAllMocks()
   })
 
-  it("should render when it fits onscreen", () => {
+  it("should render when it fits onscreen", async () => {
+    const user = userEvent.setup()
     const useRefSpy = vi.spyOn(React, "useRef").mockReturnValue({
       current: {
         // Pretend the body is greater than its onscreen area.
@@ -56,9 +58,7 @@ describe("Tooltip component", () => {
     )
 
     const tooltip = screen.getByTestId("stTooltipHoverTarget")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.mouseOver(tooltip)
+    await user.hover(tooltip)
 
     expect(screen.queryByText("the content")).not.toBeInTheDocument()
 
@@ -66,6 +66,7 @@ describe("Tooltip component", () => {
   })
 
   it("should render when ellipsized", async () => {
+    const user = userEvent.setup()
     const useRefSpy = vi.spyOn(React, "useRef").mockReturnValue({
       current: {
         // Pretend the body is smaller than its onscreen area.
@@ -92,9 +93,7 @@ describe("Tooltip component", () => {
     )
 
     const tooltip = screen.getByTestId("stTooltipHoverTarget")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.mouseOver(tooltip)
+    await user.hover(tooltip)
 
     const tooltipContent = await screen.findByText("the content")
     expect(tooltipContent).toBeInTheDocument()

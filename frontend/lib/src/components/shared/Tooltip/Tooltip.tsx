@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, ReactNode } from "react"
+import React, { ReactElement, ReactNode, useRef } from "react"
 
 import { useTheme } from "@emotion/react"
 import { ACCESSIBILITY_TYPE, PLACEMENT, StatefulTooltip } from "baseui/tooltip"
@@ -62,13 +62,52 @@ function Tooltip({
   const theme: EmotionTheme = useTheme()
   const { colors, fontSizes, radii, fontWeights } = theme
 
+  const tooltipRef = useRef<HTMLDivElement>(null)
+
   return (
     <StatefulTooltip
+      onOpen={() => {
+        const parentElement = tooltipRef.current?.parentElement
+        if (!parentElement) {
+          return
+        }
+        // if the tooltip is offscreen to the left, move it to the right by the same amount of pixels
+        // use a timeout to that parentElement.getBoundingClientRect returns the correct value; otherwise
+        // I have observed it to be "0".
+        setTimeout(() => {
+          const boundingClientRect = parentElement.getBoundingClientRect()
+          const xCoordinate = boundingClientRect.x
+
+          const overflowRight =
+            xCoordinate + boundingClientRect.width - window.innerWidth
+
+          // this is the out-of-tree Basweb DOM structure. For the right overflow,
+          // this is the element that has the transform-style property set that needs
+          // to be modified.
+          const parentsParentElement = parentElement.parentElement
+
+          if (overflowRight > 0 && parentsParentElement) {
+            // Baseweb uses a transform to position the tooltip, so we need to adjust the transform instead
+            // of the left / right property, otherwise it looks weird when the tooltip overflows the right side
+            const transformStyleMatrix = new DOMMatrix(
+              window.getComputedStyle(parentsParentElement)?.transform
+            )
+            parentsParentElement.style.transform = `translate3d(${
+              transformStyleMatrix.e - overflowRight
+            }px, ${transformStyleMatrix.f}px, 0px)`
+          }
+
+          if (xCoordinate < 0) {
+            parentElement.style.left = `${-xCoordinate}px`
+          }
+        }, 0)
+      }}
       content={
         content ? (
           <StyledTooltipContentWrapper
             className="stTooltipContent"
             data-testid="stTooltipContent"
+            ref={tooltipRef}
           >
             {content}
           </StyledTooltipContentWrapper>

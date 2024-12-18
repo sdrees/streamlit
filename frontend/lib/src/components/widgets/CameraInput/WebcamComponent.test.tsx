@@ -16,7 +16,8 @@
 
 import React from "react"
 
-import { fireEvent, screen, within } from "@testing-library/react"
+import { screen, within } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 
@@ -113,7 +114,8 @@ describe("Test Webcam Component", () => {
     expect(screen.getByTestId("stCameraInputSwitchButton")).toBeInTheDocument()
   })
 
-  it("changes `facingMode` when SwitchFacingMode button clicked", () => {
+  it("changes `facingMode` when SwitchFacingMode button clicked", async () => {
+    const user = userEvent.setup()
     const props = getProps({ testOverride: WebcamPermission.SUCCESS })
     render(<WebcamComponent {...props} />)
 
@@ -123,23 +125,20 @@ describe("Test Webcam Component", () => {
       screen.getByTestId("stCameraInputSwitchButton")
     ).getByRole("button")
 
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(switchButton)
+    await user.click(switchButton)
 
     expect(props.setFacingMode).toHaveBeenCalledTimes(1)
   })
 
   it("test handle capture function", async () => {
+    const user = userEvent.setup()
     const props = getProps({ testOverride: WebcamPermission.SUCCESS })
     render(<WebcamComponent {...props} />)
     expect(
       screen.getByTestId("stCameraInputWebcamComponent")
     ).toBeInTheDocument()
 
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(screen.getByRole("button", { name: "Take Photo" }))
+    await user.click(screen.getByRole("button", { name: "Take Photo" }))
 
     expect(props.handleCapture).toHaveBeenCalled()
   })

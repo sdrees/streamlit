@@ -16,7 +16,8 @@
 
 import React from "react"
 
-import { fireEvent, screen } from "@testing-library/react"
+import { screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 import { Markdown as MarkdownProto } from "@streamlit/lib/src/proto"
@@ -50,13 +51,12 @@ describe("Markdown element", () => {
 
 describe("Markdown element with help", () => {
   it("renders markdown with help tooltip as expected", async () => {
+    const user = userEvent.setup()
     const props = getProps({ help: "help text" })
     render(<Markdown {...props} />)
     const tooltip = screen.getByTestId("stTooltipHoverTarget")
     expect(tooltip).toBeInTheDocument()
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.mouseOver(tooltip)
+    await user.hover(tooltip)
 
     const helpText = await screen.findByText("help text")
     expect(helpText).toBeInTheDocument()

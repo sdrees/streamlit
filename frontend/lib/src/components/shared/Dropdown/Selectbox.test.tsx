@@ -17,6 +17,7 @@
 import React from "react"
 
 import { fireEvent, screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 import { LabelVisibilityOptions } from "@streamlit/lib/src/util/utils"
@@ -108,12 +109,11 @@ describe("Selectbox widget", () => {
     expect(screen.getByRole("combobox")).toBeDisabled()
   })
 
-  it("renders options", () => {
+  it("renders options", async () => {
+    const user = userEvent.setup()
     render(<Selectbox {...props} />)
     const selectbox = screen.getByRole("combobox")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(selectbox)
+    await user.click(selectbox)
     const options = screen.getAllByRole("option")
 
     expect(options).toHaveLength(props.options.length)
@@ -130,13 +130,12 @@ describe("Selectbox widget", () => {
     expect(screen.getByRole("combobox")).toBeDisabled()
   })
 
-  it("is able to select an option", () => {
+  it("is able to select an option", async () => {
+    const user = userEvent.setup()
     render(<Selectbox {...props} />)
     const selectbox = screen.getByRole("combobox")
     // Open the dropdown
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(selectbox)
+    await user.click(selectbox)
     const options = screen.getAllByRole("option")
     // TODO: Utilize user-event instead of fireEvent
     // eslint-disable-next-line testing-library/prefer-user-event
@@ -146,29 +145,26 @@ describe("Selectbox widget", () => {
     expect(screen.getByText(props.options[1])).toBeInTheDocument()
   })
 
-  it("doesn't filter options based on index", () => {
+  it("doesn't filter options based on index", async () => {
+    const user = userEvent.setup()
     render(<Selectbox {...props} />)
 
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(screen.getByRole("combobox"), { target: { value: "1" } })
+    await user.type(screen.getByRole("combobox"), "1")
     expect(screen.getByText("No results")).toBeInTheDocument()
   })
 
-  it("filters options based on label with case insensitive", () => {
+  it("filters options based on label with case insensitive", async () => {
+    const user = userEvent.setup()
     render(<Selectbox {...props} />)
     const selectbox = screen.getByRole("combobox")
 
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(selectbox, { target: { value: "b" } })
+    await user.type(selectbox, "b")
     let options = screen.getAllByRole("option")
     expect(options).toHaveLength(1)
     expect(options[0]).toHaveTextContent("b")
 
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(selectbox, { target: { value: "B" } })
+    await user.clear(selectbox)
+    await user.type(selectbox, "B")
     options = screen.getAllByRole("option")
     expect(options).toHaveLength(1)
     expect(options[0]).toHaveTextContent("b")

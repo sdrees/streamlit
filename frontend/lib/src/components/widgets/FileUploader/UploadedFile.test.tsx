@@ -17,7 +17,8 @@
 import React from "react"
 
 import { CancelTokenSource } from "axios"
-import { fireEvent, screen } from "@testing-library/react"
+import { screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 
@@ -62,7 +63,8 @@ describe("FileStatus widget", () => {
 })
 
 describe("UploadedFile widget", () => {
-  it("renders without crashing", () => {
+  it("renders without crashing", async () => {
+    const user = userEvent.setup()
     const props = getProps({
       type: "uploaded",
       fileId: "fileId",
@@ -71,9 +73,7 @@ describe("UploadedFile widget", () => {
     render(<UploadedFile {...props} />)
     expect(screen.getByTestId("stFileUploaderFile")).toBeInTheDocument()
     const deleteBtn = screen.getByRole("button")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(deleteBtn)
+    await user.click(deleteBtn)
     expect(props.onDelete).toHaveBeenCalledWith(1)
   })
 })

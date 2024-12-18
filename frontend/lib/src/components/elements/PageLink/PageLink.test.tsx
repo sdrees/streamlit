@@ -16,7 +16,8 @@
 
 import React from "react"
 
-import { fireEvent, screen } from "@testing-library/react"
+import { screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { customRenderLibContext, render } from "@streamlit/lib/src/test_util"
 import IsSidebarContext from "@streamlit/lib/src/components/core/IsSidebarContext"
@@ -120,7 +121,8 @@ describe("PageLink", () => {
     expect(pageNavLink).toHaveStyle("width: fit-content")
   })
 
-  it("triggers onPageChange with pageScriptHash when clicked", () => {
+  it("triggers onPageChange with pageScriptHash when clicked", async () => {
+    const user = userEvent.setup()
     const props = getProps()
 
     customRenderLibContext(<PageLink {...props} />, {
@@ -128,13 +130,12 @@ describe("PageLink", () => {
     })
 
     const pageNavLink = screen.getByTestId("stPageLink-NavLink")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(pageNavLink)
+    await user.click(pageNavLink)
     expect(mockOnPageChange).toHaveBeenCalledWith("main_page_hash")
   })
 
-  it("does not trigger onPageChange when disabled", () => {
+  it("does not trigger onPageChange when disabled", async () => {
+    const user = userEvent.setup()
     const props = getProps({}, { disabled: true })
 
     customRenderLibContext(<PageLink {...props} />, {
@@ -142,13 +143,12 @@ describe("PageLink", () => {
     })
 
     const pageNavLink = screen.getByTestId("stPageLink-NavLink")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(pageNavLink)
+    await user.click(pageNavLink)
     expect(mockOnPageChange).not.toHaveBeenCalled()
   })
 
-  it("does not trigger onPageChange for external links", () => {
+  it("does not trigger onPageChange for external links", async () => {
+    const user = userEvent.setup()
     const props = getProps({ page: "http://example.com", external: true })
 
     customRenderLibContext(<PageLink {...props} />, {
@@ -156,9 +156,7 @@ describe("PageLink", () => {
     })
 
     const pageNavLink = screen.getByTestId("stPageLink-NavLink")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(pageNavLink)
+    await user.click(pageNavLink)
     expect(mockOnPageChange).not.toHaveBeenCalled()
   })
 })

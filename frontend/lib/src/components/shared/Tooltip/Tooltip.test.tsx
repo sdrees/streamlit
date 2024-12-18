@@ -16,8 +16,9 @@
 
 import React from "react"
 
-import { fireEvent, screen } from "@testing-library/react"
+import { screen } from "@testing-library/react"
 import { BaseProvider, LightTheme } from "baseui"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 
@@ -43,15 +44,14 @@ const renderTooltip = (props: Partial<TooltipProps> = {}): any => {
 
 describe("Tooltip element", () => {
   it("renders a Tooltip", async () => {
+    const user = userEvent.setup()
     renderTooltip()
 
     const tooltipTarget = screen.getByTestId("stTooltipHoverTarget")
     expect(tooltipTarget).toBeInTheDocument()
 
     // Hover to see tooltip content
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.mouseOver(tooltipTarget)
+    await user.hover(tooltipTarget)
 
     const tooltipContent = await screen.findByTestId("stTooltipContent")
     expect(tooltipContent).toHaveTextContent("Tooltip content text.")
@@ -65,6 +65,7 @@ describe("Tooltip element", () => {
   })
 
   it("sets the same content", async () => {
+    const user = userEvent.setup()
     const content = <span>Help Text</span>
     renderTooltip({ content })
 
@@ -72,9 +73,7 @@ describe("Tooltip element", () => {
     expect(tooltipTarget).toBeInTheDocument()
 
     // Hover to see tooltip content
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.mouseOver(tooltipTarget)
+    await user.hover(tooltipTarget)
 
     const tooltipContent = await screen.findByTestId("stTooltipContent")
     expect(tooltipContent).toHaveTextContent("Help Text")

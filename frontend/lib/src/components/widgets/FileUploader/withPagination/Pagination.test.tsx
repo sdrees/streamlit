@@ -16,7 +16,8 @@
 
 import React from "react"
 
-import { fireEvent, screen } from "@testing-library/react"
+import { screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 
@@ -49,25 +50,23 @@ describe("Pagination widget", () => {
     expect(screen.getByText("Showing page 1 of 10")).toBeInTheDocument()
   })
 
-  it("should be able to go to previous page", () => {
+  it("should be able to go to previous page", async () => {
+    const user = userEvent.setup()
     render(<Pagination {...props} />)
     const prevPaginationButton = screen.getAllByTestId(
       "stBaseButton-minimal"
     )[0]
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(prevPaginationButton)
+    await user.click(prevPaginationButton)
     expect(props.onPrevious).toHaveBeenCalledTimes(1)
   })
 
-  it("should be able to go to next page", () => {
+  it("should be able to go to next page", async () => {
+    const user = userEvent.setup()
     render(<Pagination {...props} />)
     const nextPaginationButton = screen.getAllByTestId(
       "stBaseButton-minimal"
     )[1]
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(nextPaginationButton)
+    await user.click(nextPaginationButton)
     expect(props.onNext).toHaveBeenCalledTimes(1)
   })
 })

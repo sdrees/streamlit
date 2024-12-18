@@ -234,7 +234,7 @@ function useColumnLoader(
 
   // Converts the columns from Arrow into columns compatible with glide-data-grid
   const columns: BaseColumn[] = React.useMemo(() => {
-    let configuredColumns = getAllColumnsFromArrow(data)
+    const visibleColumns = getAllColumnsFromArrow(data)
       .map(column => {
         // Apply column configurations
         let updatedColumn = {
@@ -286,39 +286,54 @@ function useColumnLoader(
         return !column.isHidden
       })
 
-    const orderedColumns: BaseColumn[] = []
-
-    // Add all pinned columns to the beginning of the list:
+    const pinnedColumns: BaseColumn[] = []
     const unpinnedColumns: BaseColumn[] = []
-    configuredColumns.forEach(column => {
-      if (column.isPinned) {
-        orderedColumns.push(column)
-      } else {
-        unpinnedColumns.push(column)
-      }
-    })
 
     if (element.columnOrder?.length) {
-      // Reorder non-pinned columns based on the configured column order:
+      // Special case: index columns not part of the column order
+      // are shown as the first columns in the table
+      visibleColumns.forEach(column => {
+        if (
+          column.isIndex &&
+          !element.columnOrder.includes(column.name) &&
+          // Don't add the index column if it is explicitly not pinned
+          column.isPinned !== false
+        ) {
+          pinnedColumns.push(column)
+        }
+      })
+
+      // Reorder columns based on the configured column order:
       element.columnOrder.forEach(columnName => {
-        const column = configuredColumns.find(
+        const column = visibleColumns.find(
           column => column.name === columnName
         )
-        if (column && !column.isPinned) {
-          orderedColumns.push(column)
+        if (column) {
+          if (column.isPinned) {
+            pinnedColumns.push(column)
+          } else {
+            unpinnedColumns.push(column)
+          }
         }
       })
     } else {
-      // Add all unpinned columns to the end of the list:
-      orderedColumns.push(...unpinnedColumns)
+      // If no column order is configured, we just need to split
+      // the columns into pinned and unpinned:
+      visibleColumns.forEach(column => {
+        if (column.isPinned) {
+          pinnedColumns.push(column)
+        } else {
+          unpinnedColumns.push(column)
+        }
+      })
     }
 
-    configuredColumns = orderedColumns
+    const orderedColumns = [...pinnedColumns, ...unpinnedColumns]
 
     // If all columns got filtered out, we add an empty index column
     // to prevent errors from glide-data-grid.
-    return configuredColumns.length > 0
-      ? configuredColumns
+    return orderedColumns.length > 0
+      ? orderedColumns
       : [ObjectColumn(getEmptyIndexColumn())]
   }, [
     data,

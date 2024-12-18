@@ -17,6 +17,7 @@
 import React from "react"
 
 import { fireEvent, screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 import { LabelVisibilityOptions } from "@streamlit/lib/src/util/utils"
@@ -78,14 +79,13 @@ describe("ColorPicker widget", () => {
     expect(colorPicker).toHaveStyle(`width: ${props.width}px`)
   })
 
-  it("should render a default color in the preview and the color picker", () => {
+  it("should render a default color in the preview and the color picker", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     render(<BaseColorPicker {...props} />)
 
     const colorBlock = screen.getByTestId("stColorPickerBlock")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(colorBlock)
+    await user.click(colorBlock)
 
     expect(colorBlock).toHaveStyle("background-color: #000000")
 
@@ -93,14 +93,13 @@ describe("ColorPicker widget", () => {
     expect(colorInput).toHaveValue("#000000")
   })
 
-  it("supports hex shorthand", () => {
+  it("supports hex shorthand", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     render(<BaseColorPicker {...props} />)
 
     const colorBlock = screen.getByTestId("stColorPickerBlock")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(colorBlock)
+    await user.click(colorBlock)
 
     const colorInput = screen.getByRole("textbox")
     // TODO: Utilize user-event instead of fireEvent
@@ -111,20 +110,18 @@ describe("ColorPicker widget", () => {
     expect(colorBlock).toHaveStyle("background-color: #333333")
   })
 
-  it("should update the widget value when it's changed", () => {
+  it("should update the widget value when it's changed", async () => {
+    const user = userEvent.setup()
     const props = getProps()
     render(<BaseColorPicker {...props} />)
 
     const newColor = "#E91E63"
     const colorBlock = screen.getByTestId("stColorPickerBlock")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(colorBlock)
+    await user.click(colorBlock)
 
     const colorInput = screen.getByRole("textbox")
-    // TODO: Utilize user-event instead of fireEvent
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(colorInput, { target: { value: newColor } })
+    await user.clear(colorInput)
+    await user.type(colorInput, newColor)
 
     expect(colorInput).toHaveValue(newColor)
     expect(colorBlock).toHaveStyle(`background-color: ${newColor}`)

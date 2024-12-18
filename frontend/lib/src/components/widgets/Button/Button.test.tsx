@@ -16,7 +16,8 @@
 
 import React from "react"
 
-import { fireEvent, screen } from "@testing-library/react"
+import { screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
@@ -75,14 +76,13 @@ describe("Button widget", () => {
   })
 
   describe("BaseButton props should work", () => {
-    it("onClick prop", () => {
+    it("onClick prop", async () => {
+      const user = userEvent.setup()
       const props = getProps()
       render(<Button {...props} />)
 
       const buttonWidget = screen.getByRole("button")
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.click(buttonWidget)
+      await user.click(buttonWidget)
 
       expect(props.widgetMgr.setTriggerValue).toHaveBeenCalledWith(
         props.element,
@@ -91,16 +91,15 @@ describe("Button widget", () => {
       )
     })
 
-    it("passes fragmentId to onClick prop", () => {
+    it("passes fragmentId to onClick prop", async () => {
+      const user = userEvent.setup()
       const props = getProps(undefined, {
         fragmentId: "myFragmentId",
       })
       render(<Button {...props} />)
 
       const buttonWidget = screen.getByRole("button")
-      // TODO: Utilize user-event instead of fireEvent
-      // eslint-disable-next-line testing-library/prefer-user-event
-      fireEvent.click(buttonWidget)
+      await user.click(buttonWidget)
 
       expect(props.widgetMgr.setTriggerValue).toHaveBeenCalledWith(
         props.element,

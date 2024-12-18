@@ -425,4 +425,35 @@ describe("useColumnLoader hook", () => {
       expect(column.icon).toBe(undefined)
     }
   })
+
+  it("uses column order to order pinned columns", () => {
+    const element = ArrowProto.create({
+      data: UNICODE,
+      columnOrder: ["c2", "c1"],
+      columns: JSON.stringify({
+        c1: {
+          pinned: true,
+        },
+        c2: {
+          pinned: true,
+        },
+      }),
+    })
+
+    const data = new Quiver(element)
+
+    const { result } = renderHook(() => {
+      return useColumnLoader(element, data, false)
+    })
+
+    // Range index:
+    expect(result.current.columns[0].name).toBe("")
+    expect(result.current.columns[0].isIndex).toBe(true)
+
+    // Pinned columns:
+    expect(result.current.columns[1].name).toBe("c2")
+    expect(result.current.columns[1].isPinned).toBe(true)
+    expect(result.current.columns[2].name).toBe("c1")
+    expect(result.current.columns[2].isPinned).toBe(true)
+  })
 })

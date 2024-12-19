@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { GridCellKind, TextCell } from "@glideapps/glide-data-grid"
+import { GridCellKind } from "@glideapps/glide-data-grid"
 import { RangeCellType } from "@glideapps/glide-data-grid-cells"
 
 import ProgressColumn, { ProgressColumnParams } from "./ProgressColumn"
-import { BaseColumnProps, isErrorCell } from "./utils"
+import { BaseColumnProps, ErrorCell, isErrorCell } from "./utils"
 
 const PROGRESS_COLUMN_TEMPLATE = {
   id: "1",
@@ -164,8 +164,9 @@ describe("ProgressColumn", () => {
     const mockColumn = getProgressColumn()
     const unsafeCell = mockColumn.getCell("1234567898765432123")
     expect(isErrorCell(unsafeCell)).toEqual(true)
-    expect((unsafeCell as TextCell)?.data).toEqual(
-      "⚠️ 1234567898765432123\n\nThe value is larger than the maximum supported integer values in number columns (2^53).\n"
+    expect((unsafeCell as ErrorCell)?.data).toEqual("1234567898765432123")
+    expect((unsafeCell as ErrorCell)?.errorDetails).toEqual(
+      "The value is larger than the maximum supported integer values in number columns (2^53)."
     )
   })
 

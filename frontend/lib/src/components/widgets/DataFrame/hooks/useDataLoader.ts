@@ -51,15 +51,15 @@ function useDataLoader(
     ([col, row]: readonly [number, number]): GridCell => {
       if (col > columns.length - 1) {
         return getErrorCell(
-          "Column index out of bounds.",
-          "This should never happen. Please report this bug."
+          "Column index out of bounds",
+          "This error should never happen. Please report this bug."
         )
       }
 
       if (row > numRows - 1) {
         return getErrorCell(
-          "Row index out of bounds.",
-          "This should never happen. Please report this bug."
+          "Row index out of bounds",
+          "This error should never happen. Please report this bug."
         )
       }
       const column = columns[col]
@@ -79,8 +79,8 @@ function useDataLoader(
           // This is not expected to happen. All cells to added rows should
           // be defined. If not, we return a specific error cell.
           return getErrorCell(
-            "Error during cell creation.",
-            "This should never happen. Please report this bug. " +
+            "Error during cell creation",
+            "This error should never happen. Please report this bug. " +
               `No cell found for an added row: col=${originalCol}; row=${originalRow}`
           )
         }
@@ -96,8 +96,8 @@ function useDataLoader(
         return getCellFromArrow(column, arrowCell, data.cssStyles)
       } catch (error) {
         return getErrorCell(
-          "Error during cell creation.",
-          `This should never happen. Please report this bug. \nError: ${error}`
+          "Error during cell creation",
+          `This error should never happen. Please report this bug. \nError: ${error}`
         )
       }
     },

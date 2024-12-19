@@ -15,7 +15,7 @@
  */
 /* eslint-disable  @typescript-eslint/no-non-null-assertion */
 
-import { GridCellKind, NumberCell, TextCell } from "@glideapps/glide-data-grid"
+import { GridCellKind, NumberCell } from "@glideapps/glide-data-grid"
 
 import {
   Type as ArrowType,
@@ -23,7 +23,7 @@ import {
 } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 
 import NumberColumn, { NumberColumnParams } from "./NumberColumn"
-import { BaseColumnProps, isErrorCell } from "./utils"
+import { BaseColumnProps, ErrorCell, isErrorCell } from "./utils"
 
 const MOCK_FLOAT_ARROW_TYPE: ArrowType = {
   pandas_type: "float64",
@@ -236,8 +236,9 @@ describe("NumberColumn", () => {
     const mockColumn = getNumberColumn(MOCK_INT_ARROW_TYPE)
     const unsafeCell = mockColumn.getCell("1234567898765432123")
     expect(isErrorCell(unsafeCell)).toEqual(true)
-    expect((unsafeCell as TextCell)?.data).toEqual(
-      "⚠️ 1234567898765432123\n\nThe value is larger than the maximum supported integer values in number columns (2^53).\n"
+    expect((unsafeCell as ErrorCell)?.data).toEqual("1234567898765432123")
+    expect((unsafeCell as ErrorCell)?.errorDetails).toEqual(
+      "The value is larger than the maximum supported integer values in number columns (2^53)."
     )
   })
 

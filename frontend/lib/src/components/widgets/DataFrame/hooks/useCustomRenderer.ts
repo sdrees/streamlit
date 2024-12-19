@@ -34,6 +34,7 @@ import {
 import {
   BaseColumn,
   CustomCells,
+  isErrorCell,
   isMissingValueCell,
 } from "@streamlit/lib/src/components/widgets/DataFrame/columns"
 
@@ -42,9 +43,9 @@ const NULL_VALUE_TOKEN = "None"
 
 /**
  * Draw a red indicator in the top right corner of the cell
- * to indicate that the cell is required.
+ * to indicate an issue with the cell (e.g. required or error).
  */
-export function drawRequiredIndicator(
+export function drawAttentionIndicator(
   ctx: CanvasRenderingContext2D,
   rect: Rectangle,
   theme: GlideTheme
@@ -119,7 +120,10 @@ function useCustomRenderer(columns: BaseColumn[]): CustomRendererReturn {
     (args, draw) => {
       const { cell, theme, ctx, rect } = args
       const colPos = args.col
-      if (isMissingValueCell(cell) && colPos < columns.length) {
+      if (isErrorCell(cell)) {
+        // If the cell is an error cell, we draw a red indicator in the top right corner of the cell.
+        drawAttentionIndicator(ctx, rect, theme)
+      } else if (isMissingValueCell(cell) && colPos < columns.length) {
         const column = columns[colPos]
 
         // We explicitly ignore some cell types here (e.g. checkbox, progress...) since
@@ -136,9 +140,9 @@ function useCustomRenderer(columns: BaseColumn[]): CustomRendererReturn {
         }
 
         if (column.isRequired && column.isEditable) {
-          // If the cell value is missing, and it is configured as required & editable,
+          // If the column is configured as required & editable,
           // we draw a red indicator in the top right corner of the cell.
-          drawRequiredIndicator(ctx, rect, theme)
+          drawAttentionIndicator(ctx, rect, theme)
         }
         return
       }

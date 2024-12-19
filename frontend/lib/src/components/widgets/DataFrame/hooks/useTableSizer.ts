@@ -156,36 +156,29 @@ function useTableSizer(
     // This prevents weird table resizing behavior if the container width
     // changes and the table uses the full container width.
     if (element.useContainerWidth && resizableSize.width === "100%") {
-      setResizableSize({
+      setResizableSize(prev => ({
+        ...prev,
         width: availableWidth,
-        height: resizableSize.height,
-      })
+      }))
     }
   }, [availableWidth])
 
-  // Reset the height if the number of rows changes (e.g. via add_rows):
-  React.useLayoutEffect(() => {
-    setResizableSize({
-      width: resizableSize.width,
-      height: initialHeight,
-    })
-  }, [numRows])
-
   // Reset the width if the element width parameter was changed:
   React.useLayoutEffect(() => {
-    setResizableSize({
+    setResizableSize(prev => ({
+      ...prev,
       width: initialWidth || "100%",
-      height: resizableSize.height,
-    })
+    }))
   }, [initialWidth])
 
-  // Reset the height if the element height parameter was changed:
+  // Reset the height if the element height parameter was changed or
+  // if the number of rows changes (e.g. via add_rows):
   React.useLayoutEffect(() => {
-    setResizableSize({
-      width: resizableSize.width,
+    setResizableSize(prev => ({
+      ...prev,
       height: initialHeight,
-    })
-  }, [initialHeight])
+    }))
+  }, [initialHeight, numRows])
 
   // Change sizing if the fullscreen mode is activated or deactivated:
   React.useLayoutEffect(() => {

@@ -64,9 +64,11 @@ describe("getErrorCell", () => {
     expect(errorCell.kind).toEqual(GridCellKind.Text)
     expect(errorCell.readonly).toEqual(true)
     expect(errorCell.allowOverlay).toEqual(true)
-    expect(errorCell.displayData).toEqual("⚠️ Foo Error")
-    expect(errorCell.data).toEqual("⚠️ Foo Error\n\nLorem Ipsum Dolor\n")
+    expect(errorCell.displayData).toEqual("Foo Error")
+    expect(errorCell.data).toEqual("Foo Error")
+    expect(errorCell.errorDetails).toEqual("Lorem Ipsum Dolor")
     expect(errorCell.isError).toEqual(true)
+    expect(errorCell.style).toEqual("faded")
   })
 })
 

@@ -22,12 +22,13 @@ import {
   GridMouseEventArgs,
 } from "@glideapps/glide-data-grid"
 
-import { notNullOrUndefined } from "@streamlit/lib/src/util/utils"
 import {
   BaseColumn,
   hasTooltip,
+  isErrorCell,
   isMissingValueCell,
 } from "@streamlit/lib/src/components/widgets/DataFrame/columns"
+import { notNullOrUndefined } from "@streamlit/lib/src/util/utils"
 
 // Debounce time for triggering the tooltip on hover.
 export const DEBOUNCE_TIME_MS = 600
@@ -88,7 +89,11 @@ function useTooltips(
           // TODO(lukasmasuch): Ignore the last row if num_rows=dynamic (trailing row).
 
           const cell = getCellContent([colIdx, rowIdx])
-          if (
+
+          if (isErrorCell(cell)) {
+            // If the cell is an error cell, we don't need to check for required or missing values.
+            tooltipContent = cell.errorDetails
+          } else if (
             column.isRequired &&
             column.isEditable &&
             isMissingValueCell(cell)

@@ -49,6 +49,7 @@ from playwright.sync_api import (
 )
 from pytest import FixtureRequest
 
+from e2e_playwright.shared.git_utils import get_git_root
 from e2e_playwright.shared.performance import (
     is_supported_browser,
     measure_performance,
@@ -570,7 +571,9 @@ def output_folder(pytestconfig: Any) -> Path:
     - snapshot-updates: This directory contains all the snapshots that got updated in
     the current run based on folder structure used in the main snapshots folder.
     """
-    return Path(pytestconfig.getoption("--output")).resolve()
+    return Path(
+        get_git_root() / "e2e_playwright" / pytestconfig.getoption("--output")
+    ).resolve()
 
 
 @pytest.fixture(scope="function")
@@ -578,12 +581,14 @@ def assert_snapshot(
     request: FixtureRequest, output_folder: Path
 ) -> Generator[ImageCompareFunction, None, None]:
     """Fixture that compares a screenshot with screenshot from a past run."""
-    root_path = Path(os.getcwd()).resolve()
+    root_path = get_git_root()
     platform = str(sys.platform)
     module_name = request.module.__name__.split(".")[-1]
     test_function_name = request.node.originalname
 
-    snapshot_dir: Path = root_path / "__snapshots__" / platform / module_name
+    snapshot_dir: Path = (
+        root_path / "e2e_playwright" / "__snapshots__" / platform / module_name
+    )
 
     module_snapshot_failures_dir: Path = (
         output_folder / "snapshot-tests-failures" / platform / module_name

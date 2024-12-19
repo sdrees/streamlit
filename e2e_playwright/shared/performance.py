@@ -20,6 +20,8 @@ import os
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
+from e2e_playwright.shared.git_utils import get_git_root
+
 if TYPE_CHECKING:
     from playwright.sync_api import Page
 
@@ -121,12 +123,18 @@ def measure_performance(
         captured_traces = captured_traces_result.get("value", "{}")
         parsed_captured_traces = json.loads(captured_traces)
 
+        performance_results_dir = os.path.join(
+            get_git_root(), "e2e_playwright", "performance-results"
+        )
+
         # Ensure the directory exists
-        os.makedirs("./performance-results", exist_ok=True)
+        os.makedirs(performance_results_dir, exist_ok=True)
 
         timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
-        with open(f"./performance-results/{timestamp}_{test_name}.json", "w") as f:
+        with open(
+            os.path.join(performance_results_dir, f"{timestamp}_{test_name}.json"), "w"
+        ) as f:
             json.dump(
                 {
                     "metrics": metrics_response["metrics"],

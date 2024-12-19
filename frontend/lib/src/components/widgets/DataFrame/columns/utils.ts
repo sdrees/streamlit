@@ -120,29 +120,31 @@ const BOOLEAN_FALSE_VALUES = ["false", "f", "no", "n", "off", "0"]
 /**
  * Interface used for indicating if a cell contains an error.
  */
-interface ErrorCell extends TextCell {
+export interface ErrorCell extends TextCell {
   readonly isError: true
+  readonly errorDetails: string
 }
 
 /**
  * Returns a cell with an error message.
  *
- * @param errorMsg: A short error message to use as display value.
+ * @param errorMsg: A short error message or the wrong value to use as display value.
  * @param errorDetails: The full error message to show when the user
- *                     clicks on a cell.
+ *                     hovers on a cell.
  *
  * @return a read-only GridCell object that can be used by glide-data-grid.
  */
 export function getErrorCell(errorMsg: string, errorDetails = ""): ErrorCell {
-  errorMsg = `⚠️ ${errorMsg}`
   return {
     kind: GridCellKind.Text,
     readonly: true,
     allowOverlay: true,
-    data: errorMsg + (errorDetails ? `\n\n${errorDetails}\n` : ""),
+    data: errorMsg,
     displayData: errorMsg,
+    errorDetails: errorDetails,
     isError: true,
-  } as ErrorCell
+    style: "faded",
+  }
 }
 
 /**

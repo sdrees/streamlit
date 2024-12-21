@@ -22,10 +22,9 @@ import { userEvent } from "@testing-library/user-event"
 import { render } from "@streamlit/lib/src/test_util"
 import { LabelVisibilityOptions } from "@streamlit/lib/src/util/utils"
 import * as Utils from "@streamlit/lib/src/theme/utils"
-import { mockTheme } from "@streamlit/lib/src/mocks/mockTheme"
 import { mockConvertRemToPx } from "@streamlit/lib/src/mocks/mocks"
 
-import { fuzzyFilterSelectOptions, Props, Selectbox } from "./Selectbox"
+import Selectbox, { fuzzyFilterSelectOptions, Props } from "./Selectbox"
 
 vi.mock("@streamlit/lib/src/WidgetStateManager")
 
@@ -36,7 +35,6 @@ const getProps = (props: Partial<Props> = {}): Props => ({
   width: 0,
   disabled: false,
   onChange: vi.fn(),
-  theme: mockTheme.emotion,
   placeholder: "Select...",
   ...props,
 })
@@ -139,10 +137,10 @@ describe("Selectbox widget", () => {
     const options = screen.getAllByRole("option")
     // TODO: Utilize user-event instead of fireEvent
     // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.click(options[1])
+    fireEvent.click(options[2])
 
-    expect(props.onChange).toHaveBeenCalledWith(1)
-    expect(screen.getByText(props.options[1])).toBeInTheDocument()
+    expect(props.onChange).toHaveBeenCalledWith(2)
+    expect(screen.getByText(props.options[2])).toBeInTheDocument()
   })
 
   it("doesn't filter options based on index", async () => {

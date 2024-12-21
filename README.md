@@ -118,6 +118,7 @@ Deploy, manage and share your apps for free using our [Community Cloud](https://
 <img src="https://user-images.githubusercontent.com/7164864/214965336-64500db3-0d79-4a20-8052-2dda883902d2.gif" width="400"></img>
 
 ## Resources
+
 - Explore our [docs](https://docs.streamlit.io) to learn how Streamlit works.
 - Ask questions and get help in our [community forum](https://discuss.streamlit.io).
 - Read our [blog](https://blog.streamlit.io) for tips from developers and creators.
@@ -128,14 +129,11 @@ Deploy, manage and share your apps for free using our [Community Cloud](https://
 ```
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/streamlit/roadmap)
 
-## Contribute 
+## Contribute
+
 🎉 Thanks for your interest in helping improve Streamlit! 🎉
 
 Before contributing, please read our guidelines here: https://github.com/streamlit/streamlit/wiki/Contributing
-
-As with most projects, prior to starting to code on a bug fix or feature request, please post in the respective Github issue saying you want to volunteer and then wait for a positive response. Ff there is no issue for it yet, create one first.
-
-This helps make sure (1) two people aren't working on the same thing, (2) this is something Streamlit's maintainers believe should be implemented/fixed, (3) any API, UI, or deeper architectural changes that need to be implemented have been fully thought through by the community together with Streamlit's maintainers.
 
 ## License
 

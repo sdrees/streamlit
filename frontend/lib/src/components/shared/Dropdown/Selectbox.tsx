@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import React from "react"
+import React, { memo, useCallback, useEffect, useState } from "react"
 
 import { isMobile } from "react-device-detect"
 import { ChevronDown } from "baseui/icon"
 import { OnChangeParams, Option, Select as UISelect } from "baseui/select"
-import { withTheme } from "@emotion/react"
+import { useTheme } from "@emotion/react"
 import { hasMatch, score } from "fzy.js"
 import sortBy from "lodash/sortBy"
 
@@ -49,17 +49,6 @@ export interface Props {
   help?: string
   placeholder?: string
   clearable?: boolean
-  theme: EmotionTheme
-}
-
-interface State {
-  // Used to work around the forced rerender when the input is empty
-  isEmpty: boolean
-  /**
-   * The value specified by the user via the UI. If the user didn't touch this
-   * widget's UI, the default value is used.
-   */
-  value: number | null
 }
 
 interface SelectOption {
@@ -88,222 +77,191 @@ export function fuzzyFilterSelectOptions(
   ).reverse()
 }
 
-export class Selectbox extends React.PureComponent<Props, State> {
-  public state: State = {
-    isEmpty: false,
-    value: this.props.value,
+const Selectbox: React.FC<Props> = ({
+  disabled,
+  width,
+  value: propValue,
+  onChange,
+  options: propOptions,
+  label,
+  labelVisibility,
+  help,
+  placeholder,
+  clearable,
+}) => {
+  const theme: EmotionTheme = useTheme()
+  const [value, setValue] = useState<number | null>(propValue)
+
+  // Update the value whenever the value provided by the props changes
+  // TODO: Find a better way to handle this to prevent unneeded re-renders
+  useEffect(() => {
+    setValue(propValue)
+  }, [propValue])
+
+  const handleChange = useCallback(
+    (params: OnChangeParams): void => {
+      if (params.value.length === 0) {
+        setValue(null)
+        onChange(null)
+        return
+      }
+
+      const [selected] = params.value
+      const newValue = parseInt(selected.value, 10)
+      setValue(newValue)
+      onChange(newValue)
+    },
+    [onChange]
+  )
+
+  const filterOptions = useCallback(
+    (options: readonly Option[], filterValue: string): readonly Option[] =>
+      fuzzyFilterSelectOptions(options as SelectOption[], filterValue),
+    []
+  )
+
+  let selectDisabled = disabled
+  let options = propOptions
+
+  let selectValue: Option[] = []
+
+  if (!isNullOrUndefined(value)) {
+    selectValue = [
+      {
+        label: options.length > 0 ? options[value] : NO_OPTIONS_MSG,
+        value: value.toString(),
+      },
+    ]
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>): void {
-    if (
-      prevProps.value !== this.props.value &&
-      this.state.value !== this.props.value
-    ) {
-      this.setState((_, prevProps) => {
-        return { value: prevProps.value }
-      })
-    }
+  if (options.length === 0) {
+    options = [NO_OPTIONS_MSG]
+    selectDisabled = true
   }
 
-  private onChange = (params: OnChangeParams): void => {
-    if (params.value.length === 0) {
-      this.setState({ value: null }, () => this.props.onChange(null))
-      return
-    }
-
-    const [selected] = params.value
-
-    this.setState({ value: parseInt(selected.value, 10) }, () =>
-      this.props.onChange(this.state.value)
-    )
-  }
-
-  /**
-   * Both onInputChange and onClose handle the situation where
-   * the user has hit backspace enough times that there's nothing
-   * left in the input, but we don't want the value for the input
-   * to then be invalid once they've clicked away
-   */
-  private onInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const currentInput = event.target.value
-
-    this.setState({
-      isEmpty: !currentInput,
+  const selectOptions: SelectOption[] = options.map(
+    (option: string, index: number) => ({
+      label: option,
+      value: index.toString(),
     })
-  }
+  )
 
-  private onClose = (): void => {
-    this.setState({
-      isEmpty: false,
-    })
-  }
+  // Check if we have more than 10 options in the selectbox.
+  // If that's true, we show the keyboard on mobile. If not, we hide it.
+  const showKeyboardOnMobile = options.length > 10
 
-  private filterOptions = (
-    options: readonly Option[],
-    filterValue: string
-  ): readonly Option[] =>
-    fuzzyFilterSelectOptions(options as SelectOption[], filterValue)
-
-  public render(): React.ReactNode {
-    const style = { width: this.props.width }
-    const { label, labelVisibility, help, placeholder, theme, clearable } =
-      this.props
-    let { disabled, options } = this.props
-
-    let value: Option[] = []
-
-    if (!isNullOrUndefined(this.state.value) && !this.state.isEmpty) {
-      value = [
-        {
-          label:
-            options.length > 0 ? options[this.state.value] : NO_OPTIONS_MSG,
-          value: this.state.value.toString(),
-        },
-      ]
-    }
-
-    if (options.length === 0) {
-      options = [NO_OPTIONS_MSG]
-      disabled = true
-    }
-
-    const selectOptions: SelectOption[] = options.map(
-      (option: string, index: number) => ({
-        label: option,
-        value: index.toString(),
-      })
-    )
-
-    // Check if we have more than 10 options in the selectbox.
-    // If that's true, we show the keyboard on mobile. If not, we hide it.
-    const showKeyboardOnMobile = options.length > 10
-
-    return (
-      <div className="stSelectbox" data-testid="stSelectbox" style={style}>
-        <WidgetLabel
-          label={label}
-          labelVisibility={labelVisibility}
-          disabled={disabled}
-        >
-          {help && (
-            <StyledWidgetLabelHelp>
-              <TooltipIcon content={help} placement={Placement.TOP_RIGHT} />
-            </StyledWidgetLabelHelp>
-          )}
-        </WidgetLabel>
-        <UISelect
-          disabled={disabled}
-          labelKey="label"
-          aria-label={label || ""}
-          onChange={this.onChange}
-          onInputChange={this.onInputChange}
-          onClose={this.onClose}
-          options={selectOptions}
-          filterOptions={this.filterOptions}
-          clearable={clearable || false}
-          escapeClearsValue={clearable || false}
-          value={value}
-          valueKey="value"
-          placeholder={placeholder}
-          overrides={{
-            Root: {
-              style: () => ({
-                lineHeight: theme.lineHeights.inputWidget,
-              }),
-            },
-            Dropdown: { component: VirtualDropdown },
-            ClearIcon: {
-              props: {
-                overrides: {
-                  Svg: {
-                    style: {
-                      color: theme.colors.darkGray,
-                      // setting this width and height makes the clear-icon align with dropdown arrows of other input fields
-                      padding: theme.spacing.threeXS,
-                      height: theme.sizes.clearIconSize,
-                      width: theme.sizes.clearIconSize,
-                      ":hover": {
-                        fill: theme.colors.bodyText,
-                      },
+  return (
+    <div className="stSelectbox" data-testid="stSelectbox" style={{ width }}>
+      <WidgetLabel
+        label={label}
+        labelVisibility={labelVisibility}
+        disabled={selectDisabled}
+      >
+        {help && (
+          <StyledWidgetLabelHelp>
+            <TooltipIcon content={help} placement={Placement.TOP_RIGHT} />
+          </StyledWidgetLabelHelp>
+        )}
+      </WidgetLabel>
+      <UISelect
+        disabled={selectDisabled}
+        labelKey="label"
+        aria-label={label || ""}
+        onChange={handleChange}
+        options={selectOptions}
+        filterOptions={filterOptions}
+        clearable={clearable || false}
+        escapeClearsValue={clearable || false}
+        value={selectValue}
+        valueKey="value"
+        placeholder={placeholder}
+        overrides={{
+          Root: {
+            style: () => ({
+              lineHeight: theme.lineHeights.inputWidget,
+            }),
+          },
+          Dropdown: { component: VirtualDropdown },
+          ClearIcon: {
+            props: {
+              overrides: {
+                Svg: {
+                  style: {
+                    color: theme.colors.darkGray,
+                    // Setting this width and height makes the clear-icon align with dropdown arrows
+                    padding: theme.spacing.threeXS,
+                    height: theme.sizes.clearIconSize,
+                    width: theme.sizes.clearIconSize,
+                    ":hover": {
+                      fill: theme.colors.bodyText,
                     },
                   },
                 },
               },
             },
-            ControlContainer: {
-              style: () => ({
-                height: theme.sizes.minElementHeight,
-                // Baseweb requires long-hand props, short-hand leads to weird bugs & warnings.
-                borderLeftWidth: theme.sizes.borderWidth,
-                borderRightWidth: theme.sizes.borderWidth,
-                borderTopWidth: theme.sizes.borderWidth,
-                borderBottomWidth: theme.sizes.borderWidth,
-              }),
+          },
+          ControlContainer: {
+            style: () => ({
+              height: theme.sizes.minElementHeight,
+              // Baseweb requires long-hand props, short-hand leads to weird bugs & warnings.
+              borderLeftWidth: theme.sizes.borderWidth,
+              borderRightWidth: theme.sizes.borderWidth,
+              borderTopWidth: theme.sizes.borderWidth,
+              borderBottomWidth: theme.sizes.borderWidth,
+            }),
+          },
+          IconsContainer: {
+            style: () => ({
+              paddingRight: theme.spacing.sm,
+            }),
+          },
+          ValueContainer: {
+            style: () => ({
+              // Baseweb requires long-hand props, short-hand leads to weird bugs & warnings.
+              paddingRight: theme.spacing.sm,
+              paddingLeft: theme.spacing.sm,
+              paddingBottom: theme.spacing.sm,
+              paddingTop: theme.spacing.sm,
+            }),
+          },
+          Input: {
+            props: {
+              // Change the 'readonly' prop to hide the mobile keyboard if options < 10
+              readOnly: isMobile && !showKeyboardOnMobile ? "readonly" : null,
             },
-
-            IconsContainer: {
-              style: () => ({
-                paddingRight: theme.spacing.sm,
-              }),
-            },
-
-            ValueContainer: {
-              style: () => ({
-                // Baseweb requires long-hand props, short-hand leads to weird bugs & warnings.
-                paddingRight: theme.spacing.sm,
-                paddingLeft: theme.spacing.sm,
-                paddingBottom: theme.spacing.sm,
-                paddingTop: theme.spacing.sm,
-              }),
-            },
-
-            Input: {
-              props: {
-                // Change the 'readonly' prop to hide the mobile keyboard if options < 10
-                readOnly:
-                  isMobile && showKeyboardOnMobile === false
-                    ? "readonly"
-                    : null,
-              },
-              style: () => ({
-                lineHeight: theme.lineHeights.inputWidget,
-              }),
-            },
-
-            // Nudge the dropdown menu by 1px so the focus state doesn't get cut off
-            Popover: {
-              props: {
-                overrides: {
-                  Body: {
-                    style: () => ({
-                      marginTop: theme.spacing.px,
-                    }),
-                  },
+            style: () => ({
+              lineHeight: theme.lineHeights.inputWidget,
+            }),
+          },
+          // Nudge the dropdown menu by 1px so the focus state doesn't get cut off
+          Popover: {
+            props: {
+              overrides: {
+                Body: {
+                  style: () => ({
+                    marginTop: theme.spacing.px,
+                  }),
                 },
               },
             },
-
-            SelectArrow: {
-              component: ChevronDown,
-
-              props: {
-                overrides: {
-                  Svg: {
-                    style: () => ({
-                      width: theme.iconSizes.xl,
-                      height: theme.iconSizes.xl,
-                    }),
-                  },
+          },
+          SelectArrow: {
+            component: ChevronDown,
+            props: {
+              overrides: {
+                Svg: {
+                  style: () => ({
+                    width: theme.iconSizes.xl,
+                    height: theme.iconSizes.xl,
+                  }),
                 },
               },
             },
-          }}
-        />
-      </div>
-    )
-  }
+          },
+        }}
+      />
+    </div>
+  )
 }
 
-export default withTheme(Selectbox)
+export default memo(Selectbox)

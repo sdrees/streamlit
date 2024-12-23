@@ -264,7 +264,7 @@ class PydeckMixin:
         self,
         pydeck_obj: Deck | None = None,
         *,
-        use_container_width: bool = False,
+        use_container_width: bool = True,
         width: int | None = None,
         height: int | None = None,
         selection_mode: Literal[
@@ -279,7 +279,7 @@ class PydeckMixin:
         self,
         pydeck_obj: Deck | None = None,
         *,
-        use_container_width: bool = False,
+        use_container_width: bool = True,
         width: int | None = None,
         height: int | None = None,
         selection_mode: SelectionMode = "single-object",
@@ -292,7 +292,7 @@ class PydeckMixin:
         self,
         pydeck_obj: Deck | None = None,
         *,
-        use_container_width: bool = False,
+        use_container_width: bool = True,
         width: int | None = None,
         height: int | None = None,
         selection_mode: SelectionMode = "single-object",
@@ -331,11 +331,11 @@ class PydeckMixin:
             Object specifying the PyDeck chart to draw.
         use_container_width : bool
             Whether to override the figure's native width with the width of
-            the parent container. If ``use_container_width`` is ``False``
-            (default), Streamlit sets the width of the chart to fit its contents
-            according to the plotting library, up to the width of the parent
-            container. If ``use_container_width`` is ``True``, Streamlit sets
-            the width of the figure to match the width of the parent container.
+            the parent container. If ``use_container_width`` is ``True`` (default),
+            Streamlit sets the width of the figure to match the width of the parent
+            container. If ``use_container_width`` is ``False``, Streamlit sets the
+            width of the chart to fit its contents according to the plotting library,
+            up to the width of the parent container.
         width : int or None
             Desired width of the chart expressed in pixels. If ``width`` is
             ``None`` (default), Streamlit sets the width of the chart to fit

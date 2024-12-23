@@ -75,11 +75,11 @@ interactive_spec = {
     "config": {"scale": {"bandPaddingInner": 0.2}},
 }
 
-st.vega_lite_chart(df, spec, use_container_width=True)
-st.vega_lite_chart(df, spec, use_container_width=True)
 st.vega_lite_chart(df, spec)
-st.vega_lite_chart(df, spec_with_width)
-st.vega_lite_chart(interactive_spec, None)
+st.vega_lite_chart(df, spec)
+st.vega_lite_chart(df, spec, use_container_width=False)
+st.vega_lite_chart(df, spec_with_width, use_container_width=False)
+st.vega_lite_chart(interactive_spec, None, use_container_width=False)
 
 # Screenshot comparison
 

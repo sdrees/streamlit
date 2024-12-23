@@ -77,7 +77,7 @@ class PyDeckTest(DeltaGeneratorTestCase):
         self.assertEqual(el.plotly_chart.HasField("url"), False)
         self.assertNotEqual(el.plotly_chart.spec, "")
         self.assertNotEqual(el.plotly_chart.config, "")
-        self.assertEqual(el.plotly_chart.use_container_width, False)
+        self.assertEqual(el.plotly_chart.use_container_width, True)
 
     def test_st_plotly_chart_use_container_width_true(self):
         """Test st.plotly_chart."""

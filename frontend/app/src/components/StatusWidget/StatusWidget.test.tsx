@@ -339,6 +339,9 @@ describe("Running Icon", () => {
   })
 
   it("delays render of running gif", () => {
+    // Set system time so test doesn't fail during New Years
+    vi.setSystemTime(new Date("January 7, 2023 00:00:00"))
+
     render(
       <StatusWidget
         {...getProps({ scriptRunState: ScriptRunState.RUNNING })}

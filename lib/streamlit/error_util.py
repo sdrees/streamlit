@@ -83,17 +83,23 @@ def handle_uncaught_app_exception(ex: BaseException) -> None:
     warning in the frontend instead.
     """
 
+    error_logged = False
+
     if config.get_option("logger.enableRich"):
         try:
             # Print exception via rich
             # Rich is only a soft dependency
             # -> if not installed, we will use the default traceback formatting
             _print_rich_exception(ex)
+            error_logged = True
         except Exception:
             # Rich is not installed or not compatible to our config
             # -> Use normal traceback formatting as fallback
             # Catching all exceptions because we don't want to leave any possibility of breaking here.
-            pass
+            error_logged = False
 
-    _LOGGER.warning("Uncaught app execution", exc_info=ex)
+    if not error_logged:
+        # Only log error to console if not already logged by rich
+        _LOGGER.error("Uncaught app execution", exc_info=ex)
+
     _show_exception(ex)

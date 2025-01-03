@@ -139,7 +139,7 @@ describe("toSafeArray", () => {
       [true, false],
       [true, false],
     ],
-  ])("converts %p to a valid array: %p", (input, expected) => {
+  ])("converts %s to a valid array: %s", (input, expected) => {
     expect(toSafeArray(input)).toEqual(expected)
   })
 })
@@ -165,7 +165,7 @@ describe("toSafeString", () => {
       },
       "[object Object]",
     ],
-  ])("converts %p to a valid string: %p", (input, expected) => {
+  ])("converts %s to a valid string: %s", (input, expected) => {
     expect(toSafeString(input)).toEqual(expected)
   })
 })
@@ -196,7 +196,7 @@ describe("toSafeBoolean", () => {
     [12345, undefined],
     [[1, 2], undefined],
     [0.1, undefined],
-  ])("converts %p to a boolean: %p", (input, expected) => {
+  ])("converts %s to a boolean: %s", (input, expected) => {
     expect(toSafeBoolean(input)).toEqual(expected)
   })
 })
@@ -232,7 +232,7 @@ describe("toSafeNumber", () => {
     [".1312314", 0.1312314],
     [true, 1],
     [false, 0],
-  ])("converts %p to a valid number: %p", (input, expected) => {
+  ])("converts %s to a valid number: %s", (input, expected) => {
     expect(toSafeNumber(input)).toEqual(expected)
   })
 })
@@ -245,8 +245,15 @@ describe("formatNumber", () => {
     [10.1234, "10.1234"],
     // Rounds to 4 decimals
     [10.12346, "10.1235"],
+    [0.00016, "0.0002"],
+    // If number is smaller than 0.0001, shows the next decimal number
+    // to avoid showing 0 for small numbers.
+    [0.000051, "0.00005"],
+    [0.00000123, "0.000001"],
+    [0.00000183, "0.000002"],
+    [0.0000000061, "0.000000006"],
   ])(
-    "formats %p to %p with default options (no trailing zeros)",
+    "formats %s to %s with default options (no trailing zeros)",
     (value, expected) => {
       expect(formatNumber(value)).toEqual(expected)
     }
@@ -264,7 +271,7 @@ describe("formatNumber", () => {
     [0.123, 0, "0"],
     [0.123, 1, "0.1"],
   ])(
-    "formats %p to %p with %p decimals (keeps trailing zeros)",
+    "formats %s to %s with %s decimals (keeps trailing zeros)",
     (value, decimals, expected) => {
       expect(formatNumber(value, undefined, decimals)).toEqual(expected)
     }
@@ -336,7 +343,7 @@ describe("formatNumber", () => {
     // Test prefixing with plus sign:
     [42, "%+d", "+42"],
     [-42, "%+d", "-42"],
-  ])("formats %p with format %p to '%p'", (value, format, expected) => {
+  ])("formats %s with format %s to '%s'", (value, format, expected) => {
     expect(formatNumber(value, format)).toEqual(expected)
   })
 
@@ -353,7 +360,7 @@ describe("formatNumber", () => {
     [25000.25, "$%,.2f"],
     [9876543210, "%,.0f"],
   ])(
-    "cannot format %p using the invalid sprintf format %p",
+    "cannot format %s using the invalid sprintf format %s",
     (input: number, format: string) => {
       expect(() => {
         formatNumber(input, format)
@@ -484,7 +491,7 @@ describe("toSafeDate", () => {
     ["2023-04-25 10:30 AM", new Date("2023-04-25T10:30:00.000Z")],
     // valid Unix timestamp in seconds as a string
     ["1671951600", new Date("2022-12-25T07:00:00.000Z")],
-  ])("converts input %p to the correct date %p", (input, expectedOutput) => {
+  ])("converts input %s to the correct date %s", (input, expectedOutput) => {
     expect(toSafeDate(input)).toEqual(expectedOutput)
   })
 })
@@ -596,7 +603,7 @@ withTimezones(() => {
       ["relative", moment.utc("2022-04-28T12:00:00Z"), "Today at 12:00 PM"],
       ["relative", moment.utc("2022-04-29T12:00:00Z"), "Tomorrow at 12:00 PM"],
     ])(
-      "uses %s format to format %p to %p",
+      "uses %s format to format %s to %s",
       (format: string, momentDate: Moment, expected: string) => {
         expect(formatMoment(momentDate, format)).toBe(expected)
       }
@@ -685,7 +692,7 @@ describe("getLinkDisplayValueFromRegex", () => {
       "fish & chips: £9",
     ],
   ])(
-    "extracts display value from %p with href %p to be %p",
+    "extracts display value from %s with href %s to be %s",
     (regex: RegExp, href: string | null | undefined, expected: string) => {
       expect(getLinkDisplayValueFromRegex(regex, href)).toBe(expected)
     }

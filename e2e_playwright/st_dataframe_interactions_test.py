@@ -20,6 +20,7 @@ from playwright.sync_api import FrameLocator, Locator, Page, Route, expect
 from e2e_playwright.conftest import IframedPage, ImageCompareFunction, wait_for_app_run
 from e2e_playwright.shared.app_utils import expect_prefixed_markdown, get_element_by_key
 from e2e_playwright.shared.dataframe_utils import (
+    calc_middle_cell_position,
     click_on_cell,
     expect_canvas_to_be_visible,
     get_open_cell_overlay,
@@ -466,6 +467,18 @@ def test_text_cell_editing(themed_app: Page, assert_snapshot: ImageCompareFuncti
 def test_custom_css_class_via_key(app: Page):
     """Test that the element can have a custom css class via the key argument."""
     expect(get_element_by_key(app, "data_editor")).to_be_visible()
+
+
+def test_row_hover_highlight(themed_app: Page, assert_snapshot: ImageCompareFunction):
+    """Test that a row gets highlighted when hovering over a cell in the row."""
+    df = themed_app.get_by_test_id("stDataFrame").nth(0)
+    expect_canvas_to_be_visible(df)
+    column_middle_width_px, row_middle_height_px = calc_middle_cell_position(
+        2, 2, "small"
+    )
+    df.hover(position={"x": column_middle_width_px, "y": row_middle_height_px})
+
+    assert_snapshot(df, name="st_dataframe-row_hover_highlight")
 
 
 # TODO(lukasmasuch): Add additional interactive tests:

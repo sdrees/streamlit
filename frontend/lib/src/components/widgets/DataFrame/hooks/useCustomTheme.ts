@@ -17,7 +17,7 @@ import React from "react"
 
 import { useTheme } from "@emotion/react"
 import { Theme as GlideTheme, SpriteMap } from "@glideapps/glide-data-grid"
-import { transparentize } from "color2k"
+import { mix, transparentize } from "color2k"
 
 import { convertRemToPx, EmotionTheme } from "@streamlit/lib/src/theme"
 
@@ -32,6 +32,8 @@ export type CustomGridTheme = {
   defaultTableHeight: number
   // Configure custom SVG icons used in the column header:
   headerIcons: SpriteMap
+  // The background color of the row when it is hovered:
+  bgRowHovered: string
   // Min column width in pixels used for manual and automatic resizing
   minColumnWidth: number
   // Max column width in pixels used for manual resizing
@@ -117,6 +119,7 @@ function useCustomTheme(): Readonly<CustomGridTheme> {
       maxColumnAutoWidth: Math.round(convertRemToPx("31.25rem")),
       defaultRowHeight: Math.round(convertRemToPx("2.1875rem")),
       defaultHeaderHeight: Math.round(convertRemToPx("2.1875rem")),
+      bgRowHovered: mix(theme.colors.bgColor, theme.colors.secondaryBg, 0.3),
       headerIcons,
     }
   }, [theme])

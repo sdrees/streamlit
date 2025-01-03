@@ -427,6 +427,23 @@ export function toSafeNumber(value: any): number | null {
 }
 
 /**
+ * Determines the default mantissa to use for the given number.
+ *
+ * @param value - The number to determine the mantissa for.
+ *
+ * @returns The mantissa to use.
+ */
+function determineDefaultMantissa(value: number): number {
+  if (value === 0 || Math.abs(value) >= 0.0001) {
+    return 4
+  }
+
+  const expStr = value.toExponential()
+  const parts = expStr.split("e")
+  return Math.abs(parseInt(parts[1], 10))
+}
+
+/**
  * Formats the given number to a string based on a provided format or the default format.
  *
  * @param value - The number to format.
@@ -446,15 +463,27 @@ export function formatNumber(
   }
 
   if (isNullOrUndefined(format) || format === "") {
-    if (maxPrecision === 0) {
-      // Numbro is unable to format the number with 0 decimals.
-      value = Math.round(value)
+    // If no format is provided, use the default format
+    if (notNullOrUndefined(maxPrecision)) {
+      // Use the configured precision to influence how the number is formatted
+      if (maxPrecision === 0) {
+        // Numbro is unable to format the number with 0 decimals.
+        value = Math.round(value)
+      }
+
+      return numbro(value).format({
+        thousandSeparated: true,
+        mantissa: maxPrecision,
+        trimMantissa: false,
+      })
     }
-    return numbro(value).format(
-      notNullOrUndefined(maxPrecision)
-        ? `0,0.${"0".repeat(maxPrecision)}`
-        : `0,0.[0000]` // If no precision is given, use 4 decimals and hide trailing zeros
-    )
+
+    // Use a default format if no precision is given
+    return numbro(value).format({
+      thousandSeparated: true,
+      mantissa: determineDefaultMantissa(value),
+      trimMantissa: true,
+    })
   }
 
   if (format === "percent") {

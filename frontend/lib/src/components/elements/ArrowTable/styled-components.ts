@@ -22,17 +22,8 @@ export const StyledTableContainer = styled.div(({ theme }) => ({
   fontSize: theme.fontSizes.md,
   fontFamily: theme.genericFonts.bodyFont,
   lineHeight: theme.lineHeights.small,
-  overflow: ["auto", "overlay"],
-}))
 
-export const StyledTable = styled.table(({ theme }) => ({
-  width: theme.sizes.full,
-  marginBottom: theme.spacing.lg,
-  color: theme.colors.bodyText,
-  // Prevent double borders
-  borderCollapse: "collapse",
   captionSide: "bottom",
-  border: `${theme.sizes.borderWidth} solid ${theme.colors.borderColorLight}`,
   "& caption": {
     fontFamily: theme.genericFonts.bodyFont,
     fontSize: theme.fontSizes.sm,
@@ -41,12 +32,38 @@ export const StyledTable = styled.table(({ theme }) => ({
     color: theme.colors.fadedText60,
     textAlign: "left",
     wordWrap: "break-word",
+    display: "inline-block",
   },
 }))
 
+export const StyledTableBorder = styled.div(({ theme }) => ({
+  // Add the enclosing border on an extra wrapper around the table. This ensures that
+  // when the table scrolls horizontally on small windows, it still shows a border all
+  // around the table and the table doesn't look cut off.
+  border: `${theme.sizes.borderWidth} solid ${theme.colors.borderColorLight}`,
+  borderRadius: theme.radii.default,
+  overflow: ["auto", "overlay"],
+}))
+
+export const StyledTable = styled.table(({ theme }) => ({
+  width: theme.sizes.full,
+  color: theme.colors.bodyText,
+
+  borderSpacing: 0,
+}))
+
 const styleCellFunction = (theme: EmotionTheme): CSSObject => ({
+  // Only have borders on the bottom and right of each cell. And remove the borders
+  // of the last row and column to prevent double borders together with the enclosing
+  // border from `StyledTableBorder`.
   borderBottom: `${theme.sizes.borderWidth} solid ${theme.colors.borderColorLight}`,
+  "tbody tr:last-child &": {
+    borderBottom: "none",
+  },
   borderRight: `${theme.sizes.borderWidth} solid ${theme.colors.borderColorLight}`,
+  "&:last-child": {
+    borderRight: "none",
+  },
   verticalAlign: "middle",
   padding: `${theme.spacing.twoXS} ${theme.spacing.xs}`,
   fontWeight: theme.fontWeights.normal,

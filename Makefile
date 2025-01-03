@@ -363,6 +363,11 @@ playwright-custom-components:
 update-snapshots:
 	python ./scripts/update_e2e_snapshots.py
 
+.PHONY: update-snapshots-changed
+# Update e2e playwright snapshots of changed files based on the latest completed CI run.
+update-snapshots-changed:
+	python ./scripts/update_e2e_snapshots.py --changed
+
 .PHONY: update-material-icons
 # Update material icon names and font file based on latest google material symbol rounded font version.
 update-material-icons:

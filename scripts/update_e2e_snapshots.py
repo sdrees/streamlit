@@ -31,6 +31,7 @@ SNAPSHOT_UPDATE_FOLDER = "snapshot-updates"
 GITHUB_OWNER = "streamlit"
 GITHUB_REPO = "streamlit"
 GITHUB_WORKFLOW_FILE_NAME = "playwright.yml"
+GITHUB_WORKFLOW_FILE_NAME_CHANGED_FILES = "playwright-changed-files.yml"
 PLAYWRIGHT_RESULT_ARTIFACT_NAME = "playwright_test_results"
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 E2E_SNAPSHOTS_DIR = os.path.join(BASE_DIR, "e2e_playwright", "__snapshots__")
@@ -201,6 +202,11 @@ def main() -> None:
         required=False,
         help="GitHub Personal Access Token (only requires the repo/public_repo scope)",
     )
+    parser.add_argument(
+        "--changed",
+        action="store_true",
+        help="Only update snapshots for changed files",
+    )
     args = parser.parse_args()
     token = args.token
 
@@ -233,8 +239,13 @@ def main() -> None:
         print(f"Current head SHA: {commit_sha}")
 
         # Wait for the workflow to complete with status 'failure'
+        workflow_file_name = (
+            GITHUB_WORKFLOW_FILE_NAME_CHANGED_FILES
+            if args.changed
+            else GITHUB_WORKFLOW_FILE_NAME
+        )
         workflow_run = wait_for_workflow_completion(
-            GITHUB_OWNER, GITHUB_REPO, GITHUB_WORKFLOW_FILE_NAME, commit_sha, token
+            GITHUB_OWNER, GITHUB_REPO, workflow_file_name, commit_sha, token
         )
         run_id = workflow_run["id"]
         print(f"Found completed workflow run with ID: {run_id}")

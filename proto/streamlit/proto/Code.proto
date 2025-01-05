@@ -28,4 +28,6 @@ message Code {
 
   bool show_line_numbers = 3;
   bool wrap_lines = 4;
+
+  uint32 height = 5;
 }

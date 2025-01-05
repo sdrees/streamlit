@@ -33,12 +33,14 @@ export interface StreamlitSyntaxHighlighterProps {
   language?: string
   showLineNumbers?: boolean
   wrapLines?: boolean
+  height?: number
 }
 
 export default function StreamlitSyntaxHighlighter({
   language,
   showLineNumbers,
   wrapLines,
+  height,
   children,
 }: Readonly<StreamlitSyntaxHighlighterProps>): ReactElement {
   const renderer = useCallback(
@@ -74,7 +76,7 @@ export default function StreamlitSyntaxHighlighter({
 
   return (
     <StyledCodeBlock className="stCode" data-testid="stCode">
-      <StyledPre>
+      <StyledPre height={height}>
         <SyntaxHighlighter
           language={language}
           PreTag="div"

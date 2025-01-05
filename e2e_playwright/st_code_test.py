@@ -36,7 +36,7 @@ def test_code_blocks_render_correctly(
 ):
     """Test that the code blocks render as expected via screenshot matching."""
     code_blocks = themed_app.get_by_test_id("stCode")
-    expect(code_blocks).to_have_count(15)
+    expect(code_blocks).to_have_count(17)
     # The code blocks might require a bit more time for rendering, so wait until
     # the text is truly visible. Otherwise we might get blank code blocks in the
     # screenshots.
@@ -58,6 +58,10 @@ def test_code_blocks_render_correctly(
     assert_snapshot(code_blocks.nth(12), name="st_code-long-numbers-no_wrap")
     assert_snapshot(code_blocks.nth(13), name="st_code-long-wrap")
     assert_snapshot(code_blocks.nth(14), name="st_code-long-numbers-wrap")
+
+    # Test height prop
+    assert_snapshot(code_blocks.nth(15), name="st_code-height-long-code")
+    assert_snapshot(code_blocks.nth(16), name="st_code-height-short-code")
 
 
 def test_correct_bottom_spacing_for_code_blocks(app: Page):
@@ -102,3 +106,20 @@ def test_line_wrap(app: Page):
     curr_block = code_blocks.nth(14)
     curr_block.scroll_into_view_if_needed()
     expect(curr_block.get_by_text("EOL")).to_be_in_viewport()
+
+
+def test_height_parameter(app: Page):
+    """Test that the height prop works correctly."""
+    code_blocks = app.get_by_test_id("stCode")
+
+    # Test long code with fixed height
+    curr_block = code_blocks.nth(15)
+    curr_block.scroll_into_view_if_needed()
+    expect(curr_block.locator("pre")).to_have_css("height", "200px")
+    # The "EOL" token at the end of the code block should not be visible.
+    expect(curr_block.get_by_text("EOL")).not_to_be_in_viewport()
+
+    # Test short code with fixed height
+    curr_block = code_blocks.nth(16)
+    curr_block.scroll_into_view_if_needed()
+    expect(curr_block.locator("pre")).to_have_css("height", "200px")

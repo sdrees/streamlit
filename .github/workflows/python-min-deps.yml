@@ -27,7 +27,9 @@ env:
 
 jobs:
   py-min-deps-test:
-    runs-on: ubuntu-latest
+    # The min pillow version we support in Streamlit cannot be installed on
+    # Ubuntu 24 -> thats why we use Ubuntu 22.04 here instead.
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false

@@ -296,6 +296,7 @@ const Multiselect: FC<Props> = props => {
                       padding: theme.spacing.threeXS,
                       height: theme.sizes.clearIconSize,
                       width: theme.sizes.clearIconSize,
+                      cursor: "pointer",
                       ":hover": {
                         fill: theme.colors.bodyText,
                       },
@@ -327,6 +328,11 @@ const Multiselect: FC<Props> = props => {
                       // to nicely fit into the input field.
                       height: `calc(${theme.sizes.minElementHeight} - 2 * ${theme.spacing.xs})`,
                       maxWidth: `calc(100% - ${theme.spacing.lg})`,
+                      // Using !important because the alternative would be
+                      // uglier: we'd have to put it under a selector like
+                      // "&[role="button"]:not(:disabled)" in order to win in
+                      // the order of the precendence.
+                      cursor: "default !important",
                     },
                   },
                   Action: {

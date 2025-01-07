@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-export * from "./baseui"
-export * from "./getColors"
-export * from "./globalStyles"
-export * from "./themeConfigs"
-export * from "./types"
-export * from "./utils"
-export * from "./consts"
+export const STALE_TRANSITION_PARAMS = "1s ease-in 0.5s"
+
+export const STALE_STYLES = {
+  opacity: 0.33,
+  transition: `opacity ${STALE_TRANSITION_PARAMS}`,
+}

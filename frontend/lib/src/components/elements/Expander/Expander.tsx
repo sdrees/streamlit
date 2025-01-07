@@ -232,7 +232,12 @@ const Expander: React.FC<React.PropsWithChildren<ExpanderProps>> = ({
   return (
     <StyledExpandableContainer className="stExpander" data-testid="stExpander">
       <StyledDetails isStale={isStale} ref={detailsRef}>
-        <StyledSummary onClick={toggle} empty={empty} ref={summaryRef}>
+        <StyledSummary
+          onClick={toggle}
+          empty={empty}
+          ref={summaryRef}
+          isStale={isStale}
+        >
           <StyledSummaryHeading>
             {element.icon && <ExpanderIcon icon={element.icon} />}
             <StreamlitMarkdown source={label} allowHTML={false} isLabel />

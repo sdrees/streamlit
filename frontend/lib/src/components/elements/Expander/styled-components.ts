@@ -16,6 +16,11 @@
 
 import styled from "@emotion/styled"
 
+import {
+  STALE_STYLES,
+  STALE_TRANSITION_PARAMS,
+} from "@streamlit/lib/src/theme"
+
 export interface StyledExpandableContainerProps {
   empty: boolean
   disabled: boolean
@@ -39,7 +44,7 @@ export const StyledDetails = styled.details<StyledDetailsProps>(
     ...(isStale
       ? {
           borderColor: theme.colors.borderColorLight,
-          transition: "border 1s ease-in 0.5s",
+          transition: `border ${STALE_TRANSITION_PARAMS}`,
         }
       : {}),
   })
@@ -54,10 +59,11 @@ export const StyledSummaryHeading = styled.span(({ theme }) => ({
 
 interface StyledSummaryProps {
   empty: boolean
+  isStale: boolean
 }
 
 export const StyledSummary = styled.summary<StyledSummaryProps>(
-  ({ theme, empty }) => ({
+  ({ theme, empty, isStale }) => ({
     position: "relative",
     display: "flex",
     width: "100%",
@@ -85,6 +91,7 @@ export const StyledSummary = styled.summary<StyledSummaryProps>(
     ...(empty && {
       cursor: "default",
     }),
+    ...(isStale && STALE_STYLES),
   })
 )
 

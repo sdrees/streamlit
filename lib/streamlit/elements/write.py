@@ -452,7 +452,7 @@ class WriteMixin:
             elif type_util.is_graphviz_chart(arg):
                 flush_buffer()
                 self.dg.graphviz_chart(arg)
-            elif type_util.is_sympy_expession(arg):
+            elif type_util.is_sympy_expression(arg):
                 flush_buffer()
                 self.dg.latex(arg)
             elif type_util.is_pillow_image(arg):

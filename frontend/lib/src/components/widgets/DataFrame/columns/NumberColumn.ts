@@ -16,8 +16,11 @@
 
 import { GridCell, GridCellKind, NumberCell } from "@glideapps/glide-data-grid"
 
-import { isIntegerType } from "@streamlit/lib/src/components/widgets/DataFrame/isIntegerType"
-import { getTypeName } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import {
+  getTypeName,
+  isIntegerType,
+  isUnsignedIntegerType,
+} from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import {
   isNullOrUndefined,
   notNullOrUndefined,
@@ -68,9 +71,9 @@ function NumberColumn(props: BaseColumnProps): BaseColumn {
     // Default parameters:
     {
       // Set step to 1 for integer types
-      step: isIntegerType(arrowTypeName) ? 1 : undefined,
+      step: isIntegerType(props.arrowType) ? 1 : undefined,
       // if uint (unsigned int), only positive numbers are allowed
-      min_value: arrowTypeName.startsWith("uint") ? 0 : undefined,
+      min_value: isUnsignedIntegerType(props.arrowType) ? 0 : undefined,
       format,
     } as NumberColumnParams,
     // User parameters:

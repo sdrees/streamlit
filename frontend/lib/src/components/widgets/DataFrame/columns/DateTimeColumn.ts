@@ -18,6 +18,7 @@ import { GridCell, GridCellKind } from "@glideapps/glide-data-grid"
 import { DatePickerType } from "@glideapps/glide-data-grid-cells"
 import moment, { Moment } from "moment-timezone"
 
+import { getTimezone } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import {
   isNullOrUndefined,
   notNullOrUndefined,
@@ -288,7 +289,7 @@ export default function DateTimeColumn(props: BaseColumnProps): BaseColumn {
     defaultFormat = "YYYY-MM-DD HH:mm:ss.SSS"
   }
 
-  const timezone: string | undefined = props.arrowType?.meta?.timezone
+  const timezone = getTimezone(props.arrowType)
   const hasTimezone: boolean =
     notNullOrUndefined(timezone) ||
     // Timezone can also be configure by the user:

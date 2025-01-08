@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { vectorFromArray } from "apache-arrow"
+import { Field, Timestamp, TimeUnit, vectorFromArray } from "apache-arrow"
 
 import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
 import {
-  CATEGORICAL_INTERVAL,
   DECIMAL,
   DICTIONARY,
   INT64,
@@ -31,7 +30,11 @@ import {
   UINT64,
 } from "@streamlit/lib/src/mocks/arrow"
 
-import { format } from "./arrowFormatUtils"
+import {
+  convertTimeToDate,
+  format,
+  formatPeriodFromFreq,
+} from "./arrowFormatUtils"
 
 describe("format", () => {
   test("null", () => {
@@ -101,83 +104,89 @@ describe("format", () => {
 
   test("datetime", () => {
     expect(
-      format(0, {
-        pandas_type: "datetime",
-        numpy_type: "datetime64[ns]",
-      })
+      format(
+        0,
+        {
+          pandas_type: "datetime",
+          numpy_type: "datetime64[ns]",
+        },
+        new Field("test", new Timestamp(TimeUnit.SECOND), true, null)
+      )
     ).toEqual("1970-01-01 00:00:00")
   })
 
   test("datetimetz", () => {
     expect(
-      format(0, {
-        pandas_type: "datetimetz",
-        numpy_type: "datetime64[ns]",
-        meta: { timezone: "Europe/Moscow" },
-      })
+      format(
+        0,
+        {
+          pandas_type: "datetimetz",
+          numpy_type: "datetime64[ns]",
+        },
+        new Field(
+          "test",
+          new Timestamp(TimeUnit.SECOND, "Europe/Moscow"),
+          true,
+          null
+        )
+      )
     ).toEqual("1970-01-01 03:00:00+03:00")
   })
 
   test("datetimetz with offset", () => {
     expect(
-      format(0, {
-        pandas_type: "datetimetz",
-        numpy_type: "datetime64[ns]",
-        meta: { timezone: "+01:00" },
-      })
+      format(
+        0,
+        {
+          pandas_type: "datetimetz",
+          numpy_type: "datetime64[ns]",
+        },
+        new Field("test", new Timestamp(TimeUnit.SECOND, "+01:00"), true, null)
+      )
     ).toEqual("1970-01-01 01:00:00+01:00")
   })
 
   test("interval datetime64[ns]", () => {
     const mockElement = { data: INTERVAL_DATETIME64 }
     const q = new Quiver(mockElement)
-    const { content } = q.getCell(1, 0)
+    const { content, contentType, field } = q.getCell(1, 0)
 
-    expect(
-      format(content, {
-        pandas_type: "object",
-        numpy_type: "interval[datetime64[ns], right]",
-      })
-    ).toEqual("(2017-01-01 00:00:00, 2017-01-02 00:00:00]")
+    expect(format(content, contentType, field)).toEqual(
+      "(2017-01-01 00:00:00, 2017-01-02 00:00:00]"
+    )
   })
 
   test("interval float64", () => {
     const mockElement = { data: INTERVAL_FLOAT64 }
     const q = new Quiver(mockElement)
-    const { content } = q.getCell(1, 0)
+    const { content, contentType, field } = q.getCell(1, 0)
 
-    expect(
-      format(content, {
-        pandas_type: "object",
-        numpy_type: "interval[float64, right]",
-      })
-    ).toEqual("(0.0000, 1.5000]")
+    expect(format(content, contentType, field)).toEqual("(0.0000, 1.5000]")
   })
 
   test("interval int64", () => {
     const mockElement = { data: INTERVAL_INT64 }
     const q = new Quiver(mockElement)
-    const { content } = q.getCell(1, 0)
+    const { content, field } = q.getCell(1, 0)
 
     expect(
-      format(content, {
-        pandas_type: "object",
-        numpy_type: "interval[int64, right]",
-      })
+      format(
+        content,
+        {
+          pandas_type: "object",
+          numpy_type: "interval[int64, right]",
+        },
+        field
+      )
     ).toEqual("(0, 1]")
   })
 
   test("interval uint64", () => {
     const mockElement = { data: INTERVAL_UINT64 }
     const q = new Quiver(mockElement)
-    const { content } = q.getCell(1, 0)
+    const { content, contentType, field } = q.getCell(1, 0)
 
-    expect(
-      format(content, {
-        pandas_type: "object",
-        numpy_type: "interval[uint64, right]",
-      })
-    ).toEqual("(0, 1]")
+    expect(format(content, contentType, field)).toEqual("(0, 1]")
   })
 
   test("decimal", () => {
@@ -235,14 +244,6 @@ describe("format", () => {
     expect(format(content, contentType, field)).toEqual(`{"a":1,"b":2}`)
   })
 
-  test("categorical interval", () => {
-    const mockElement = { data: CATEGORICAL_INTERVAL }
-    const q = new Quiver(mockElement)
-    const { content, contentType, field } = q.getCell(1, 1)
-
-    expect(format(content, contentType, field)).toEqual("(23.535, 256.5]")
-  })
-
   test("period", () => {
     const mockElement = { data: PERIOD }
     const q = new Quiver(mockElement)
@@ -298,20 +299,6 @@ describe("format", () => {
     })
   })
 
-  test("invalid interval type", () => {
-    const mockElement = { data: INTERVAL_INT64 }
-    const INVALID_TYPE = "interval"
-    const q = new Quiver(mockElement)
-    const { content } = q.getCell(1, 0)
-
-    expect(() =>
-      format(content, {
-        pandas_type: "object",
-        numpy_type: INVALID_TYPE,
-      })
-    ).toThrow("Invalid interval type: interval")
-  })
-
   test("list[unicode]", () => {
     expect(
       format(vectorFromArray(["foo", "bar", "baz"]), {
@@ -319,5 +306,66 @@ describe("format", () => {
         numpy_type: "object",
       })
     ).toEqual('["foo","bar","baz"]')
+  })
+})
+
+describe("formatPeriodFromFreq", () => {
+  it.each([
+    // Basic frequencies
+    [1, "Y", "1971"],
+    [1, "M", "1970-02"],
+    [1, "D", "1970-01-02"],
+    [1, "h", "1970-01-01 01:00"],
+    [1, "min", "1970-01-01 00:01"],
+    [1, "s", "1970-01-01 00:00:01"],
+    [1, "ms", "1970-01-01 00:00:00.001"],
+    // Weekly frequencies
+    [1, "W-MON", "1969-12-30/1970-01-05"],
+    [1, "W-TUE", "1969-12-31/1970-01-06"],
+    [1, "W-WED", "1970-01-01/1970-01-07"],
+    [1, "W-THU", "1970-01-02/1970-01-08"],
+    [1, "W-FRI", "1970-01-03/1970-01-09"],
+    [1, "W-SAT", "1970-01-04/1970-01-10"],
+    [1, "W-SUN", "1969-12-29/1970-01-04"],
+    // Invalid frequencies
+    [1, "invalid", "1"],
+  ])("formats %s with frequency %s to %s", (value, freq, expected) => {
+    expect(formatPeriodFromFreq(value, freq as any)).toEqual(expected)
+  })
+
+  test("handles weekly frequency without parameter", () => {
+    expect(() => formatPeriodFromFreq(1, "W")).toThrow(
+      'Frequency "W" requires parameter'
+    )
+  })
+
+  test("handles weekly frequency with invalid parameter", () => {
+    expect(() => formatPeriodFromFreq(1, "W-INVALID")).toThrow(
+      'Invalid value: INVALID. Supported values: ["SUN","MON","TUE","WED","THU","FRI","SAT"]'
+    )
+  })
+})
+
+describe("convertTimestampToDate", () => {
+  test.each([
+    // [timestamp, unit, expected date string]
+    [1000, TimeUnit.SECOND, "1970-01-01T00:16:40.000Z"],
+    [1000, TimeUnit.MILLISECOND, "1970-01-01T00:00:01.000Z"],
+    [1000, TimeUnit.MICROSECOND, "1970-01-01T00:00:00.001Z"],
+    [1000, TimeUnit.NANOSECOND, "1970-01-01T00:00:00.000Z"],
+    // Test with BigInt values
+    [BigInt(1000), TimeUnit.SECOND, "1970-01-01T00:16:40.000Z"],
+    [BigInt(1000), TimeUnit.MILLISECOND, "1970-01-01T00:00:01.000Z"],
+    // Test with undefined field (should default to SECOND)
+    [1000, undefined, "1970-01-01T00:16:40.000Z"],
+    // Test with large timestamps
+    [1647356400, TimeUnit.SECOND, "2022-03-15T15:00:00.000Z"],
+    [1647356400000, TimeUnit.MILLISECOND, "2022-03-15T15:00:00.000Z"],
+  ])("converts time %s with unit %s to %s", (timestamp, unit, expected) => {
+    const result = convertTimeToDate(
+      timestamp,
+      unit ? new Field("test", new Timestamp(unit), true, null) : undefined
+    )
+    expect(result.toISOString()).toBe(expected)
   })
 })

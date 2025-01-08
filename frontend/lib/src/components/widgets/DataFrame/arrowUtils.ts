@@ -27,12 +27,14 @@ import moment from "moment"
 
 import { DataFrameCell, Quiver } from "@streamlit/lib/src/dataframes/Quiver"
 import {
-  convertToSeconds,
+  convertTimeToDate,
   format as formatArrowCell,
 } from "@streamlit/lib/src/dataframes/arrowFormatUtils"
 import {
   Type as ArrowType,
   getTypeName,
+  isBooleanType,
+  isNumericType,
 } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import {
   isNullOrUndefined,
@@ -168,28 +170,10 @@ export function getColumnTypeFromArrow(arrowType: ArrowType): ColumnCreator {
   if (["object", "bytes"].includes(typeName)) {
     return ObjectColumn
   }
-  if (["bool"].includes(typeName)) {
+  if (isBooleanType(arrowType)) {
     return CheckboxColumn
   }
-  if (
-    [
-      "int8",
-      "int16",
-      "int32",
-      "int64",
-      "uint8",
-      "uint16",
-      "uint32",
-      "uint64",
-      "float16",
-      "float32",
-      "float64",
-      "float96",
-      "float128",
-      "range", // The default index in pandas uses a range type.
-      "decimal",
-    ].includes(typeName)
-  ) {
+  if (isNumericType(arrowType)) {
     return NumberColumn
   }
   if (typeName === "categorical") {
@@ -224,7 +208,7 @@ export function getIndexFromArrow(
   }
 
   return {
-    id: `index-${indexPosition}`,
+    id: `_index-${indexPosition}`,
     name: title,
     title,
     isEditable,
@@ -295,7 +279,7 @@ export function getColumnFromArrow(
   }
 
   return {
-    id: `column-${title}-${columnPosition}`,
+    id: `_column-${title}-${columnPosition}`,
     name: title,
     title,
     isEditable: true,
@@ -315,7 +299,7 @@ export function getColumnFromArrow(
  */
 export function getEmptyIndexColumn(): BaseColumnProps {
   return {
-    id: `empty-index`,
+    id: `_empty-index`,
     title: "",
     indexNumber: 0,
     isEditable: false,
@@ -413,12 +397,7 @@ export function getCellFromArrow(
       notNullOrUndefined(arrowCell.field?.type?.unit)
     ) {
       // Time values needs to be adjusted to seconds based on the unit
-      parsedDate = moment
-        .unix(
-          convertToSeconds(arrowCell.content, arrowCell.field?.type?.unit ?? 0)
-        )
-        .utc()
-        .toDate()
+      parsedDate = convertTimeToDate(arrowCell.content, arrowCell.field)
     } else {
       // All other datetime related values are assumed to be in milliseconds
       parsedDate = moment.utc(Number(arrowCell.content)).toDate()

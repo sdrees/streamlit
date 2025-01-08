@@ -84,28 +84,26 @@ export interface WrappedNamedDataset {
 }
 
 export function getInlineData(
-  el: VegaLiteChartElement
+  quiverData: Quiver | null
 ): { [field: string]: any }[] | null {
-  const dataProto = el.data
-
-  if (!dataProto || dataProto.data.numRows === 0) {
+  if (!quiverData || quiverData.data.numRows === 0) {
     return null
   }
 
-  return getDataArray(dataProto)
+  return getDataArray(quiverData)
 }
 
 export function getDataArrays(
-  el: VegaLiteChartElement
+  datasets: WrappedNamedDataset[]
 ): { [dataset: string]: any[] } | null {
-  const datasets = getDataSets(el)
-  if (isNullOrUndefined(datasets)) {
+  const datasetMapping = getDataSets(datasets)
+  if (isNullOrUndefined(datasetMapping)) {
     return null
   }
 
   const datasetArrays: { [dataset: string]: any[] } = {}
 
-  for (const [name, dataset] of Object.entries(datasets)) {
+  for (const [name, dataset] of Object.entries(datasetMapping)) {
     datasetArrays[name] = getDataArray(dataset)
   }
 
@@ -113,45 +111,45 @@ export function getDataArrays(
 }
 
 export function getDataSets(
-  el: VegaLiteChartElement
+  datasets: WrappedNamedDataset[]
 ): { [dataset: string]: Quiver } | null {
-  if (el.datasets?.length === 0) {
+  if (datasets?.length === 0) {
     return null
   }
 
-  const datasets: { [dataset: string]: Quiver } = {}
+  const datasetMapping: { [dataset: string]: Quiver } = {}
 
-  el.datasets.forEach((x: WrappedNamedDataset) => {
+  datasets.forEach((x: WrappedNamedDataset) => {
     if (!x) {
       return
     }
     const name = x.hasName ? x.name : null
-    datasets[name as string] = x.data
+    datasetMapping[name as string] = x.data
   })
 
-  return datasets
+  return datasetMapping
 }
 
 /**
  * Retrieves an array of data from Quiver starting from a specified index.
  * Converts data values to a format compatible with VegaLite visualization.
  *
- * @param {Quiver} dataProto - The Quiver data object to extract data from.
+ * @param {Quiver} quiverData - The Quiver data object to extract data from.
  * @param {number} [startIndex=0] - The starting index for data extraction.
  * @returns {Array.<{ [field: string]: any }>} An array of data objects for visualization.
  */
 export function getDataArray(
-  dataProto: Quiver,
+  quiverData: Quiver,
   startIndex = 0
 ): { [field: string]: any }[] {
-  if (dataProto.isEmpty()) {
+  if (quiverData.isEmpty()) {
     return []
   }
 
   const dataArr = []
-  const { dataRows: rows, dataColumns: cols } = dataProto.dimensions
+  const { dataRows: rows, dataColumns: cols } = quiverData.dimensions
 
-  const indexType = getTypeName(dataProto.types.index[0])
+  const indexType = getTypeName(quiverData.types.index[0])
   const hasSupportedIndex = SUPPORTED_INDEX_TYPES.has(
     indexType as IndexTypeName
   )
@@ -160,15 +158,15 @@ export function getDataArray(
     const row: { [field: string]: any } = {}
 
     if (hasSupportedIndex) {
-      const indexValue = dataProto.getIndexValue(rowIndex, 0)
+      const indexValue = quiverData.getIndexValue(rowIndex, 0)
       // VegaLite can't handle BigInts, so they have to be converted to Numbers first
       row[MagicFields.DATAFRAME_INDEX] =
         typeof indexValue === "bigint" ? Number(indexValue) : indexValue
     }
 
     for (let colIndex = 0; colIndex < cols; colIndex++) {
-      const dataValue = dataProto.getDataValue(rowIndex, colIndex)
-      const dataType = dataProto.types.data[colIndex]
+      const dataValue = quiverData.getDataValue(rowIndex, colIndex)
+      const dataType = quiverData.types.data[colIndex]
       const typeName = getTypeName(dataType)
 
       if (
@@ -180,11 +178,11 @@ export function getDataArray(
         // Vega JS assumes dates in the local timezone, so we need to convert
         // UTC date to be the same date in the local timezone.
         const offset = new Date(dataValue).getTimezoneOffset() * 60 * 1000 // minutes to milliseconds
-        row[dataProto.columns[0][colIndex]] = dataValue.valueOf() + offset
+        row[quiverData.columns[0][colIndex]] = dataValue.valueOf() + offset
       } else if (typeof dataValue === "bigint") {
-        row[dataProto.columns[0][colIndex]] = Number(dataValue)
+        row[quiverData.columns[0][colIndex]] = Number(dataValue)
       } else {
-        row[dataProto.columns[0][colIndex]] = dataValue
+        row[quiverData.columns[0][colIndex]] = dataValue
       }
     }
     dataArr.push(row)

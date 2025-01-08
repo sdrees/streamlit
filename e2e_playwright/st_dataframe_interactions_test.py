@@ -191,19 +191,23 @@ def test_open_search_via_toolbar(
     # Click on search button:
     search_toolbar_button.click()
 
+    expect(themed_app.locator(".gdg-search-bar-inner")).to_be_visible()
+
     # Check that it is visible
     assert_snapshot(dataframe_element, name="st_dataframe-trigger_search_via_toolbar")
 
 
-def test_open_search_via_hotkey(app: Page, assert_snapshot: ImageCompareFunction):
+def test_open_search_via_hotkey(app: Page):
     """Test that the search can be opened via a hotkey."""
     dataframe_element = app.get_by_test_id("stDataFrame").nth(0)
 
-    # Press hotkey to open search:
-    dataframe_element.press("Control+F")
+    # Select a cell to focus the dataframe:
+    click_on_cell(dataframe_element, 2, 3)
 
-    # Check that the search is visible:
-    assert_snapshot(dataframe_element, name="st_dataframe-trigger_search_via_hotkey")
+    # Press hotkey to open search:
+    dataframe_element.press("Control+f")
+
+    expect(app.locator(".gdg-search-bar-inner")).to_be_visible()
 
 
 def test_clicking_on_fullscreen_toolbar_button(
@@ -467,6 +471,46 @@ def test_text_cell_editing(themed_app: Page, assert_snapshot: ImageCompareFuncti
 def test_custom_css_class_via_key(app: Page):
     """Test that the element can have a custom css class via the key argument."""
     expect(get_element_by_key(app, "data_editor")).to_be_visible()
+
+
+def test_column_reorder_via_ui(app: Page, assert_snapshot: ImageCompareFunction):
+    """Test that columns can be reordered via drag and drop on the UI."""
+    dataframe_element = app.get_by_test_id("stDataFrame").nth(0)
+    expect_canvas_to_be_visible(dataframe_element)
+
+    # 1. Move Column A behind Column C:
+
+    # Calculate positions for source (Column A) and target (Column C) headers
+    source_x, source_y = calc_middle_cell_position(0, 1, "small")  # Column A header
+    target_x, target_y = calc_middle_cell_position(0, 3, "small")  # Column C header
+
+    # Perform drag and drop using drag_to
+    dataframe_element.drag_to(
+        dataframe_element,
+        source_position={"x": source_x, "y": source_y},
+        target_position={"x": target_x, "y": target_y},
+    )
+
+    # 2. Move Column D in front of the index column:
+    # This also tests that column D should get pinned since it is moved before a
+    # pinned column (index column). This is visible via the grey text color.
+
+    # Calculate positions for source (Column D) and target (Index column) headers
+    source_x, source_y = calc_middle_cell_position(0, 4, "small")  # Column D header
+    target_x, target_y = calc_middle_cell_position(0, 0, "small")  # Index column header
+
+    # Perform drag and drop using drag_to
+    dataframe_element.drag_to(
+        dataframe_element,
+        source_position={"x": source_x, "y": source_y},
+        target_position={"x": target_x, "y": target_y},
+    )
+
+    # Verify column order changed by taking a screenshot
+    assert_snapshot(
+        dataframe_element,
+        name="st_dataframe-reorder_columns_via_ui",
+    )
 
 
 def test_row_hover_highlight(themed_app: Page, assert_snapshot: ImageCompareFunction):

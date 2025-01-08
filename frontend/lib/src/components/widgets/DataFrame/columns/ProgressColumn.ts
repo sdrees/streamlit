@@ -21,8 +21,7 @@ import {
 } from "@glideapps/glide-data-grid"
 import { RangeCellType } from "@glideapps/glide-data-grid-cells"
 
-import { isIntegerType } from "@streamlit/lib/src/components/widgets/DataFrame/isIntegerType"
-import { getTypeName } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { isIntegerType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import {
   isNullOrUndefined,
   notNullOrUndefined,
@@ -59,8 +58,7 @@ export interface ProgressColumnParams {
  * range. This is rendered via a progress-bar-like visualization.
  */
 function ProgressColumn(props: BaseColumnProps): BaseColumn {
-  const arrowTypeName = getTypeName(props.arrowType)
-  const isInteger = isIntegerType(arrowTypeName)
+  const isInteger = isIntegerType(props.arrowType)
 
   const parameters = mergeColumnParameters(
     // Default parameters:

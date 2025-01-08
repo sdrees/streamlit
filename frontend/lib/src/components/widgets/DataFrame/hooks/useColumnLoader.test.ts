@@ -183,6 +183,148 @@ describe("applyColumnConfig", () => {
     const column1 = applyColumnConfig(MOCK_COLUMNS[0], emptyColumnConfig)
     expect(column1).toBe(MOCK_COLUMNS[0])
   })
+
+  it("applies column config in the correct priority order", () => {
+    const columnConfig: Map<string | number, ColumnConfigProps> = new Map([
+      // All these column keys refer to the same column. They are just different
+      // ways of specifying the same column (index, position, name, ID).
+      // 1. Index config
+      [
+        INDEX_IDENTIFIER,
+        {
+          width: "small",
+          label: "Index Label",
+          alignment: "left",
+        },
+      ],
+      // 2. Position-based config
+      [
+        `${COLUMN_POSITION_PREFIX}0`,
+        {
+          width: "medium",
+          label: "Position Label",
+          alignment: "center",
+        },
+      ],
+      // 3. Name-based config
+      [
+        "",
+        {
+          width: "large",
+          label: "Name Label",
+          alignment: "right",
+        },
+      ],
+      // 4. ID-based config
+      [
+        "index_col",
+        {
+          width: 100,
+          label: "ID Label",
+          alignment: "left",
+        },
+      ],
+    ])
+
+    // Test with the index column from MOCK_COLUMNS
+    const result = applyColumnConfig(MOCK_COLUMNS[0], columnConfig)
+
+    // Config should be merged in order, with later configs overwriting earlier ones
+    expect(result).toEqual({
+      ...MOCK_COLUMNS[0],
+      // Should have the width from ID config (last)
+      width: 100,
+      // Should have the label from ID config (last)
+      title: "ID Label",
+      // Should have the alignment from ID config (last)
+      contentAlignment: "left",
+    })
+  })
+
+  it("allows partial config overrides in priority order", () => {
+    const columnConfig: Map<string | number, ColumnConfigProps> = new Map([
+      // All these column keys refer to the same column. They are just different
+      // ways of specifying the same column (_index, position, ID).
+      [
+        INDEX_IDENTIFIER,
+        {
+          width: "small",
+          label: "Index Label",
+        },
+      ],
+      [
+        `${COLUMN_POSITION_PREFIX}0`,
+        {
+          // Only override the label
+          label: "Position Label",
+        },
+      ],
+      [
+        "index_col",
+        {
+          // Only override the width
+          width: 100,
+        },
+      ],
+    ])
+
+    const result = applyColumnConfig(MOCK_COLUMNS[0], columnConfig)
+
+    expect(result).toEqual({
+      ...MOCK_COLUMNS[0],
+      // Width should come from ID config
+      width: 100,
+      // Label should come from position config
+      title: "Position Label",
+    })
+  })
+
+  it("correctly merges nested type_config options", () => {
+    const columnConfig: Map<string | number, ColumnConfigProps> = new Map([
+      // All these column keys refer to the same column. They are just different
+      // ways of specifying the same column (_index, position, ID).
+      // 1. Index config
+      [
+        INDEX_IDENTIFIER,
+        {
+          type_config: {
+            options: ["a", "b"],
+            min_value: 0,
+          },
+        },
+      ],
+      // 2. Position-based config
+      [
+        `${COLUMN_POSITION_PREFIX}0`,
+        {
+          type_config: {
+            options: ["c", "d", "x"],
+            max_value: 100,
+          },
+        },
+      ],
+      // 3. ID-based config
+      [
+        "index_col",
+        {
+          type_config: {
+            options: ["e", "f"],
+            step: 1,
+          },
+        },
+      ],
+    ])
+
+    const result = applyColumnConfig(MOCK_COLUMNS[0], columnConfig)
+
+    // Should merge all type_config options from different config sources
+    expect(result.columnTypeOptions).toEqual({
+      options: ["e", "f"], // From ID config (last)
+      min_value: 0, // From index config (first)
+      max_value: 100, // From position config
+      step: 1, // From ID config (last)
+    })
+  })
 })
 
 describe("getColumnConfig", () => {
@@ -264,7 +406,7 @@ describe("useColumnLoader hook", () => {
     const data = new Quiver(element)
 
     const { result } = renderHook(() => {
-      return useColumnLoader(element, data, false)
+      return useColumnLoader(element, data, false, element.columnOrder)
     })
 
     const { columns } = result.current
@@ -289,7 +431,7 @@ describe("useColumnLoader hook", () => {
     const data = new Quiver(element)
 
     const { result } = renderHook(() => {
-      return useColumnLoader(element, data, false)
+      return useColumnLoader(element, data, false, element.columnOrder)
     })
 
     const { columns } = result.current
@@ -314,7 +456,7 @@ describe("useColumnLoader hook", () => {
     const data = new Quiver(element)
 
     const { result } = renderHook(() => {
-      return useColumnLoader(element, data, false)
+      return useColumnLoader(element, data, false, element.columnOrder)
     })
 
     const { columns } = result.current
@@ -337,7 +479,7 @@ describe("useColumnLoader hook", () => {
     const data = new Quiver(element)
 
     const { result } = renderHook(() => {
-      return useColumnLoader(element, data, false)
+      return useColumnLoader(element, data, false, element.columnOrder)
     })
 
     for (const column of result.current.columns) {
@@ -355,7 +497,7 @@ describe("useColumnLoader hook", () => {
     const data = new Quiver(element)
 
     const { result } = renderHook(() => {
-      return useColumnLoader(element, data, false)
+      return useColumnLoader(element, data, false, element.columnOrder)
     })
 
     for (const column of result.current.columns) {
@@ -378,7 +520,7 @@ describe("useColumnLoader hook", () => {
     const data = new Quiver(element)
 
     const { result } = renderHook(() => {
-      return useColumnLoader(element, data, false)
+      return useColumnLoader(element, data, false, element.columnOrder)
     })
 
     expect(result.current.columns[1].isRequired).toBe(true)
@@ -400,7 +542,7 @@ describe("useColumnLoader hook", () => {
     const data = new Quiver(element)
 
     const { result } = renderHook(() => {
-      return useColumnLoader(element, data, false)
+      return useColumnLoader(element, data, false, element.columnOrder)
     })
 
     // Test that the column is hidden (not part of columns).
@@ -418,7 +560,7 @@ describe("useColumnLoader hook", () => {
     const data = new Quiver(element)
 
     const { result } = renderHook(() => {
-      return useColumnLoader(element, data, false)
+      return useColumnLoader(element, data, false, element.columnOrder)
     })
 
     for (const column of result.current.columns) {
@@ -443,7 +585,7 @@ describe("useColumnLoader hook", () => {
     const data = new Quiver(element)
 
     const { result } = renderHook(() => {
-      return useColumnLoader(element, data, false)
+      return useColumnLoader(element, data, false, element.columnOrder)
     })
 
     // Range index:

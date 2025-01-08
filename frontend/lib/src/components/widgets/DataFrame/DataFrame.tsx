@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, useMemo } from "react"
+import React, { ReactElement } from "react"
 
 import {
   CompactSelection,
@@ -54,6 +54,8 @@ import { useDebouncedCallback } from "@streamlit/lib/src/hooks/useDebouncedCallb
 import EditingState, { getColumnName } from "./EditingState"
 import {
   useColumnLoader,
+  useColumnPinning,
+  useColumnReordering,
   useColumnSizer,
   useColumnSort,
   useCustomRenderer,
@@ -66,12 +68,7 @@ import {
   useTableSizer,
   useTooltips,
 } from "./hooks"
-import {
-  BaseColumn,
-  getTextCell,
-  ImageCellEditor,
-  toGlideColumn,
-} from "./columns"
+import { getTextCell, ImageCellEditor, toGlideColumn } from "./columns"
 import Tooltip from "./Tooltip"
 import { StyledResizableContainer } from "./styled-components"
 
@@ -214,7 +211,14 @@ function DataFrame({
     setNumRows(editingState.current.getNumRows())
   }, [originalNumRows])
 
-  const { columns: originalColumns } = useColumnLoader(element, data, disabled)
+  const [columnOrder, setColumnOrder] = React.useState(element.columnOrder)
+
+  const { columns: originalColumns, setColumnConfigMapping } = useColumnLoader(
+    element,
+    data,
+    disabled,
+    columnOrder
+  )
 
   /**
    * On the first rendering, try to load initial widget state if
@@ -576,30 +580,22 @@ function DataFrame({
   const isDynamicAndEditable =
     !isEmptyTable && element.editingMode === DYNAMIC && !disabled
 
-  // This is a simple heuristic to prevent the pinned columns
-  // from taking up too much space and prevent horizontal scrolling.
-  // Since its not easy to determine the current width of auto-sized columns,
-  // we just use 2x of the min column width as a fallback.
-  // The combined width of all pinned columns should not exceed 60%
-  // of the container width.
-  const isPinnedColumnsWidthTooLarge = useMemo(() => {
-    return (
-      columns
-        .filter((col: BaseColumn) => col.isPinned)
-        .reduce(
-          (acc, col) => acc + (col.width ?? gridTheme.minColumnWidth * 2),
-          0
-        ) >
-      containerWidth * 0.6
-    )
-  }, [columns, containerWidth, gridTheme.minColumnWidth])
+  const { pinColumn, unpinColumn, freezeColumns } = useColumnPinning(
+    columns,
+    isEmptyTable,
+    containerWidth,
+    gridTheme.minColumnWidth,
+    clearSelection,
+    setColumnConfigMapping
+  )
 
-  // All pinned columns are expected to be moved to the beginning
-  // in useColumnLoader. So we can just count all pinned columns here.
-  const freezeColumns =
-    isEmptyTable || isPinnedColumnsWidthTooLarge
-      ? 0
-      : columns.filter((col: BaseColumn) => col.isPinned).length
+  const { onColumnMoved } = useColumnReordering(
+    columns,
+    freezeColumns,
+    pinColumn,
+    unpinColumn,
+    setColumnOrder
+  )
 
   // Determine if the table requires horizontal or vertical scrolling:
   React.useEffect(() => {
@@ -828,6 +824,11 @@ function DataFrame({
           rangeSelect={isTouchDevice ? "cell" : "rect"}
           columnSelect={"none"}
           rowSelect={"none"}
+          // Enable interactive column reordering:
+          onColumnMoved={
+            // Column selection is not compatible with column reordering.
+            isColumnSelectionActivated ? undefined : onColumnMoved
+          }
           // Enable tooltips and row hovering theme on hover of a cell or column header:
           onItemHovered={(args: GridMouseEventArgs) => {
             handleRowHover?.(args)

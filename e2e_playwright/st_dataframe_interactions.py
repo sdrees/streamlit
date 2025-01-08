@@ -36,7 +36,18 @@ fullscreen_df = pd.DataFrame(
     columns=[f"Column {i}" for i in range(DF_SIZE)],
 )
 
-st.dataframe(random_df)
+# Configure all columns to be use small width to allow reliable interaction testing:
+st.dataframe(
+    random_df,
+    column_config={
+        "_index": st.column_config.Column(width="small"),
+        "Column A": st.column_config.Column(width="small"),
+        "Column B": st.column_config.Column(width="small"),
+        "Column C": st.column_config.Column(width="small"),
+        "Column D": st.column_config.Column(width="small"),
+        "Column E": st.column_config.Column(width="small"),
+    },
+)
 
 
 if st.button("Create some elements to unmount component"):

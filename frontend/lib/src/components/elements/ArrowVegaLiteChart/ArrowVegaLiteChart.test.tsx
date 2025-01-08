@@ -19,19 +19,15 @@ import React from "react"
 import { screen } from "@testing-library/react"
 
 import { render } from "@streamlit/lib/src/test_util"
-import { mockTheme } from "@streamlit/lib/src/mocks/mockTheme"
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
 
-import {
-  ArrowVegaLiteChart,
-  PropsWithFullScreenAndTheme,
-} from "./ArrowVegaLiteChart"
+import ArrowVegaLiteChart, { Props } from "./ArrowVegaLiteChart"
 import { VegaLiteChartElement } from "./arrowUtils"
 
 const getProps = (
   elementProps: Partial<VegaLiteChartElement> = {},
-  props: Partial<PropsWithFullScreenAndTheme> = {}
-): PropsWithFullScreenAndTheme => ({
+  props: Partial<Props> = {}
+): Props => ({
   element: {
     data: null,
     id: "1",
@@ -62,14 +58,11 @@ const getProps = (
     vegaLiteTheme: "streamlit",
     ...elementProps,
   },
-  theme: mockTheme.emotion,
   width: 0,
   widgetMgr: new WidgetStateManager({
     sendRerunBackMsg: vi.fn(),
     formsDataChanged: vi.fn(),
   }),
-  height: 0,
-  isFullScreen: false,
   ...props,
 })
 

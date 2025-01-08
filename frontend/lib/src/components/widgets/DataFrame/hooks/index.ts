@@ -15,6 +15,8 @@
  */
 
 export { default as useColumnLoader } from "./useColumnLoader"
+export { default as useColumnPinning } from "./useColumnPinning"
+export { default as useColumnReordering } from "./useColumnReordering"
 export { default as useColumnSizer } from "./useColumnSizer"
 export { default as useColumnSort } from "./useColumnSort"
 export { default as useCustomRenderer } from "./useCustomRenderer"

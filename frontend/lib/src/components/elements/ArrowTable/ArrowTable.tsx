@@ -20,6 +20,7 @@ import range from "lodash/range"
 
 import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
 import { format as formatArrowCell } from "@streamlit/lib/src/dataframes/arrowFormatUtils"
+import { isNumericType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 
 import {
   StyledEmptyTableCell,
@@ -118,13 +119,8 @@ function generateTableCell(
   const formattedContent =
     displayContent || formatArrowCell(content, contentType, field)
 
-  const { headerColumns } = table.dimensions
-  const cellDataType =
-    table.types.data[columnIndex - headerColumns]?.pandas_type
-  const isNumeric = cellDataType === "int64" || cellDataType === "float64"
-
   const style: React.CSSProperties = {
-    textAlign: isNumeric ? "right" : "left",
+    textAlign: isNumericType(contentType) ? "right" : "left",
   }
 
   switch (type) {

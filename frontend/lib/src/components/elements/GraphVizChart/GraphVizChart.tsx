@@ -95,6 +95,7 @@ function GraphVizChart({
         data-testid="stGraphVizChart"
         id={chartId}
         isFullScreen={isFullScreen}
+        useContainerWidth={element.useContainerWidth}
       />
     </StyledToolbarElementContainer>
   )

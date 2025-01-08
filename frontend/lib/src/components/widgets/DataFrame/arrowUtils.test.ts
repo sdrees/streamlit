@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  Type as ArrowType,
-  getTypeName,
-} from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { Type as ArrowType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import { DataFrameCell, Quiver } from "@streamlit/lib/src/dataframes/Quiver"
 import {
   CATEGORICAL_COLUMN,
@@ -52,7 +49,6 @@ import {
   TextColumn,
   TimeColumn,
 } from "./columns"
-import { isIntegerType } from "./isIntegerType"
 
 const MOCK_TEXT_COLUMN = TextColumn({
   id: "1",
@@ -248,7 +244,7 @@ describe("getIndexFromArrow", () => {
 
     const indexColumn = getIndexFromArrow(data, 0)
     expect(indexColumn).toEqual({
-      id: `index-0`,
+      id: `_index-0`,
       isEditable: true,
       name: "",
       title: "",
@@ -271,7 +267,7 @@ describe("getIndexFromArrow", () => {
 
     const indexColumn1 = getIndexFromArrow(data, 0)
     expect(indexColumn1).toEqual({
-      id: `index-0`,
+      id: `_index-0`,
       isEditable: true,
       name: "number",
       title: "number",
@@ -287,7 +283,7 @@ describe("getIndexFromArrow", () => {
 
     const indexColumn2 = getIndexFromArrow(data, 1)
     expect(indexColumn2).toEqual({
-      id: `index-1`,
+      id: `_index-1`,
       isEditable: true,
       name: "color",
       title: "color",
@@ -312,7 +308,7 @@ describe("getColumnFromArrow", () => {
 
     const column = getColumnFromArrow(data, 0)
     expect(column).toEqual({
-      id: "column-c1-0",
+      id: "_column-c1-0",
       name: "c1",
       title: "c1",
       isEditable: true,
@@ -335,7 +331,7 @@ describe("getColumnFromArrow", () => {
 
     const column = getColumnFromArrow(data, 0)
     expect(column).toEqual({
-      id: "column-red-0",
+      id: "_column-red-0",
       name: "red",
       title: "red",
       isEditable: true,
@@ -359,7 +355,7 @@ describe("getColumnFromArrow", () => {
 
     const column = getColumnFromArrow(data, 0)
     expect(column).toEqual({
-      id: "column-c1-0",
+      id: "_column-c1-0",
       name: "c1",
       title: "c1",
       isEditable: true,
@@ -395,7 +391,7 @@ describe("getAllColumnsFromArrow", () => {
           numpy_type: "object",
           pandas_type: "unicode",
         },
-        id: "index-0",
+        id: "_index-0",
         indexNumber: 0,
         isEditable: true,
         isHidden: false,
@@ -411,7 +407,7 @@ describe("getAllColumnsFromArrow", () => {
           pandas_type: "unicode",
         },
         columnTypeOptions: undefined,
-        id: "column-c1-0",
+        id: "_column-c1-0",
         indexNumber: 1,
         isEditable: true,
         isHidden: false,
@@ -427,7 +423,7 @@ describe("getAllColumnsFromArrow", () => {
           pandas_type: "unicode",
         },
         columnTypeOptions: undefined,
-        id: "column-c2-1",
+        id: "_column-c2-1",
         indexNumber: 2,
         isEditable: true,
         isHidden: false,
@@ -454,7 +450,7 @@ describe("getAllColumnsFromArrow", () => {
           numpy_type: "object",
           pandas_type: "empty",
         },
-        id: "index-0",
+        id: "_index-0",
         indexNumber: 0,
         isEditable: true,
         isHidden: false,
@@ -947,79 +943,6 @@ describe("getColumnTypeFromArrow", () => {
     "interprets %p as column type: %p",
     (arrowType: ArrowType, expectedType: ColumnCreator) => {
       expect(getColumnTypeFromArrow(arrowType)).toEqual(expectedType)
-    }
-  )
-})
-
-describe("isIntegerType", () => {
-  it.each([
-    [
-      {
-        pandas_type: "float64",
-        numpy_type: "float64",
-      },
-      false,
-    ],
-    [
-      {
-        pandas_type: "int64",
-        numpy_type: "int64",
-      },
-      true,
-    ],
-    [
-      {
-        pandas_type: "object",
-        numpy_type: "int16",
-      },
-      true,
-    ],
-    [
-      {
-        pandas_type: "range",
-        numpy_type: "range",
-      },
-      true,
-    ],
-    [
-      {
-        pandas_type: "uint64",
-        numpy_type: "uint64",
-      },
-      true,
-    ],
-    [
-      {
-        pandas_type: "unicode",
-        numpy_type: "object",
-      },
-      false,
-    ],
-    [
-      {
-        pandas_type: "bool",
-        numpy_type: "bool",
-      },
-      false,
-    ],
-    [
-      {
-        pandas_type: "categorical",
-        numpy_type: "int8",
-      },
-      false,
-    ],
-    [
-      {
-        pandas_type: "object",
-        numpy_type: "interval[int64, both]",
-      },
-      false,
-    ],
-  ])(
-    "interprets %p as integer type: %p",
-    (arrowType: ArrowType, expected: boolean) => {
-      expect(isIntegerType(getTypeName(arrowType))).toEqual(expected)
     }
   )
 })

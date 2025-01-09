@@ -529,10 +529,9 @@ function DataFrame({
   const { columns: glideColumns, onColumnResize } =
     useColumnSizer(transformedColumns)
 
-  // data.columns refers to the header rows, and
-  // not the data columns. Not sure why it is named this way.
-  // To activate the group row feature, we need at least two header rows.
-  const usesGroupRow = data.columns.length > 1
+  // To activate the group row feature (multi-level headers),
+  // we need more than one header row.
+  const usesGroupRow = data.dimensions.headerRows > 1
   const {
     minHeight,
     maxHeight,

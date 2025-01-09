@@ -23,21 +23,27 @@ from streamlit.runtime.scriptrunner import add_script_run_ctx
 
 
 @contextlib.contextmanager
-def spinner(text: str = "In progress...", *, _cache: bool = False) -> Iterator[None]:
-    """Temporarily displays a message while executing a block of code.
+def spinner(
+    text: str = "In progress...",
+    *,
+    show_time: bool = False,
+    _cache: bool = False,
+) -> Iterator[None]:
+    """Display a loading spinner while executing a block of code.
 
     Parameters
     ----------
     text : str
-        A message to display while executing that block
+        The text to display next to the spinner. Defaults to "In progress...".
+    show_time : bool
+        Whether to show the elapsed time next to the spinner text. Defaults to False.
 
     Example
     -------
-
-    >>> import time
     >>> import streamlit as st
+    >>> import time
     >>>
-    >>> with st.spinner('Wait for it...'):
+    >>> with st.spinner("Wait for it...", show_time=True):
     >>>     time.sleep(5)
     >>> st.success("Done!")
 
@@ -61,6 +67,7 @@ def spinner(text: str = "In progress...", *, _cache: bool = False) -> Iterator[N
                     spinner_proto = SpinnerProto()
                     spinner_proto.text = clean_text(text)
                     spinner_proto.cache = _cache
+                    spinner_proto.show_time = show_time
                     message._enqueue("spinner", spinner_proto)
 
         add_script_run_ctx(threading.Timer(DELAY_SECS, set_message)).start()

@@ -18,7 +18,7 @@
 import { GridCellKind, NumberCell } from "@glideapps/glide-data-grid"
 
 import {
-  Type as ArrowType,
+  PandasColumnType as ArrowType,
   DataType,
 } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 

@@ -31,7 +31,7 @@ import {
   format as formatArrowCell,
 } from "@streamlit/lib/src/dataframes/arrowFormatUtils"
 import {
-  Type as ArrowType,
+  PandasColumnType as ArrowType,
   getTypeName,
   isBooleanType,
   isNumericType,
@@ -198,7 +198,7 @@ export function getIndexFromArrow(
   data: Quiver,
   indexPosition: number
 ): BaseColumnProps {
-  const arrowType = data.types.index[indexPosition]
+  const arrowType = data.columnTypes.index[indexPosition]
   const title = data.indexNames[indexPosition]
   let isEditable = true
 
@@ -232,9 +232,11 @@ export function getColumnFromArrow(
   data: Quiver,
   columnPosition: number
 ): BaseColumnProps {
-  // data.columns refers to the header rows (not sure about why it is named this way)
-  // It is a matrix of column names.
-  const columnHeaderNames = data.columns.map(column => column[columnPosition])
+  // columnNames a matrix of column names.
+  // Multi-level headers will have more than one row of column names.
+  const columnHeaderNames = data.columnNames.map(
+    column => column[columnPosition]
+  )
   const title =
     columnHeaderNames.length > 0
       ? columnHeaderNames[columnHeaderNames.length - 1]
@@ -256,7 +258,7 @@ export function getColumnFromArrow(
           .join(" / ")
       : undefined
 
-  let arrowType = data.types.data[columnPosition]
+  let arrowType = data.columnTypes.data[columnPosition]
 
   if (isNullOrUndefined(arrowType)) {
     // Use empty column type as fallback
@@ -318,7 +320,7 @@ export function getAllColumnsFromArrow(data: Quiver): BaseColumnProps[] {
   const columns: BaseColumnProps[] = []
 
   const { dimensions } = data
-  const numIndices = dimensions.headerColumns
+  const numIndices = dimensions.indexColumns
   const numColumns = dimensions.dataColumns
 
   if (numIndices === 0 && numColumns === 0) {

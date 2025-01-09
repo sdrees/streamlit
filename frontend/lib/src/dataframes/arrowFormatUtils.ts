@@ -38,13 +38,15 @@ import {
   notNullOrUndefined,
 } from "@streamlit/lib/src/util/utils"
 
-import { DataType, getTypeName, Type } from "./arrowTypeUtils"
+import { DataType, getTypeName, PandasColumnType } from "./arrowTypeUtils"
 
-// The frequency strings defined in pandas.
-// See: https://pandas.pydata.org/docs/user_guide/timeseries.html#period-aliases
-// Not supported: "N" (nanoseconds), "U" & "us" (microseconds), and "B" (business days).
-// Reason is that these types are not supported by moment.js, but also they are not
-// very commonly used in practice.
+/**
+ * The frequency strings defined in pandas.
+ * See: https://pandas.pydata.org/docs/user_guide/timeseries.html#period-aliases
+ * Not supported: "N" (nanoseconds), "U" & "us" (microseconds), and "B" (business days).
+ * Reason is that these types are not supported by moment.js, but also they are not
+ * very commonly used in practice.
+ */
 type SupportedPandasOffsetType =
   // yearly frequency:
   | "A" // deprecated alias
@@ -70,7 +72,7 @@ type SupportedPandasOffsetType =
   | "L" // deprecated alias
   | "ms"
 
-export type PeriodFrequency =
+export type PandasPeriodFrequency =
   | SupportedPandasOffsetType
   | `${SupportedPandasOffsetType}-${string}`
 
@@ -130,6 +132,11 @@ const formatQuarter = (duration: number): string =>
     .endOf("quarter")
     .format("YYYY[Q]Q")
 
+/**
+ * Formatters for the different pandas period frequencies.
+ *
+ * This is a mapping from the frequency strings to the function that formats the period.
+ */
 const PERIOD_TYPE_FORMATTERS: Record<
   SupportedPandasOffsetType,
   (duration: number, freqParam?: string) => string
@@ -150,8 +157,8 @@ const PERIOD_TYPE_FORMATTERS: Record<
   A: formatYear,
 }
 
-/** Interval data type. */
-interface Interval {
+/** Pandas interval extension data type. */
+interface PandasInterval {
   left: number
   right: number
 }
@@ -367,7 +374,7 @@ function formatDecimal(value: Uint32Array, field?: Field): string {
 
 export function formatPeriodFromFreq(
   duration: number | bigint,
-  freq: PeriodFrequency
+  freq: PandasPeriodFrequency
 ): string {
   const [freqName, freqParam] = freq.split("-", 2)
   const momentConverter =
@@ -478,7 +485,7 @@ function formatInterval(x: StructRow, field?: Field): string {
     )
     const { subtype, closed } = extensionMetadata
 
-    const interval = (x as StructRow).toJSON() as Interval
+    const interval = (x as StructRow).toJSON() as PandasInterval
 
     const leftBracket = closed === "both" || closed === "left" ? "[" : "("
     const rightBracket = closed === "both" || closed === "right" ? "]" : ")"
@@ -512,12 +519,16 @@ function formatInterval(x: StructRow, field?: Field): string {
  * they would have to somehow deal with the exception on a cell level to not crash the full table or app.
  *
  * @param x The cell value.
- * @param type The type metadata based on the pandas metadata embedded in the arrow table.
+ * @param pandasType The type metadata based on the pandas metadata embedded in the arrow table.
  * @param field The field metadata from arrow containing metadata about the column.
  * @returns The formatted cell value.
  */
-export function format(x: DataType, type?: Type, field?: Field): string {
-  const typeName = type && getTypeName(type)
+export function format(
+  x: DataType,
+  pandasType?: PandasColumnType,
+  field?: Field
+): string {
+  const typeName = pandasType && getTypeName(pandasType)
   const extensionName = field && field.metadata.get("ARROW:extension:name")
   const fieldType = field?.type
 

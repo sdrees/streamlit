@@ -16,6 +16,7 @@ import re
 
 import pytest
 from playwright.sync_api import Page, expect
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 from e2e_playwright.conftest import ImageCompareFunction, wait_for_app_run
 from e2e_playwright.shared.app_utils import (
@@ -33,51 +34,51 @@ modal_test_id = "stDialog"
 
 
 def open_dialog_with_images(app: Page):
-    app.get_by_role("button").filter(has_text="Open Dialog with Images").click()
+    click_button(app, "Open Dialog with Images")
 
 
 def open_dialog_without_images(app: Page, *, delay: int = 0):
-    app.get_by_role("button").filter(has_text="Open Dialog without Images").click(
-        delay=delay
-    )
+    click_button(app, "Open Dialog without Images")
 
 
 def open_largewidth_dialog(app: Page):
-    app.get_by_role("button").filter(has_text="Open large-width Dialog").click()
+    click_button(app, "Open large-width Dialog")
 
 
 def open_headings_dialogs(app: Page):
-    app.get_by_role("button").filter(has_text="Open headings Dialog").click()
+    click_button(app, "Open headings Dialog")
 
 
 def open_sidebar_dialog(app: Page):
-    app.get_by_role("button").filter(has_text="Open Sidebar-Dialog").click()
+    click_button(app, "Open Sidebar-Dialog")
 
 
 def open_dialog_with_internal_error(app: Page):
-    app.get_by_role("button").filter(has_text="Open Dialog with Key Error").click()
+    click_button(app, "Open Dialog with Key Error")
 
 
 def open_nested_dialogs(app: Page):
-    app.get_by_role("button").filter(has_text="Open Nested Dialogs").click()
+    click_button(app, "Open Nested Dialogs")
 
 
 def open_submit_button_dialog(app: Page):
-    app.get_by_role("button").filter(has_text="Open submit-button Dialog").click()
+    click_button(app, "Open submit-button Dialog")
 
 
 def open_dialog_with_copy_buttons(app: Page):
-    app.get_by_role("button").filter(has_text="Open Dialog with Copy Buttons").click()
+    click_button(app, "Open Dialog with Copy Buttons")
 
 
 def open_dialog_with_deprecation_warning(app: Page):
-    app.get_by_role("button").filter(
-        has_text="Open Dialog with deprecation warning"
-    ).click()
+    click_button(app, "Open Dialog with deprecation warning")
 
 
 def open_dialog_with_chart(app: Page):
-    app.get_by_role("button").filter(has_text="Open Chart Dialog").click()
+    click_button(app, "Open Chart Dialog")
+
+
+def open_dialog_with_rerun(app: Page):
+    click_button(app, "Open Dialog with rerun")
 
 
 def click_to_dismiss(app: Page):
@@ -409,6 +410,58 @@ def test_dialog_with_dataframe_shows_toolbar(
     expect(df_toolbar).to_have_css("opacity", "1")
     expect(df_toolbar).to_be_visible()
     assert_snapshot(df_toolbar, name="st_dialog-shows_full_dataframe_toolbar")
+
+
+def test_dialog_with_rerun_closes_even_if_button_is_clicked_multiple_times(app: Page):
+    """Check that the dialog closes even if the button that calls st.rerun is clicked
+    multiple times in fast succession. We want to test this since the button click and
+    the st.rerun trigger fragment reruns and full app reruns, respectively. We want
+    to ensure that the dialog closes in both cases and fragment-rerun messages do not
+    interfere with the full app rerun (finished messages). If they would, we have
+    observed the dialog to stay open and never closer again. So this test is more about
+    sanity-checking the interplay of fragment runs and full app reruns rather than
+    testing something dialog-specific, but with the dialog we have a visual way of
+    seeing the issue.
+
+    Important: The behavior is not deterministic as it relies on a race condition.
+    This means that the test can succeed even though the underlying issue exists.
+    However, the test will not always succeed if the issue exists. So if the test
+    sometimes fails, it might point to an underlying issue.
+    Performing this test manually triggers the issue much more often.
+    """
+    import time
+
+    for _ in range(0, 10):
+        open_dialog_with_rerun(app)
+        dialog = app.get_by_role("dialog")
+        expect(dialog).to_be_visible()
+        button = (
+            app.get_by_test_id("stButton")
+            .filter(has_text="Close Dialog")
+            .locator("button")
+        )
+        counter = 0
+        # simulate clicking the button multiple times in fast succession
+        for _ in range(0, 5):
+            counter += 1
+            try:
+                button.click(timeout=1000, no_wait_after=True)
+            except PlaywrightTimeoutError:
+                # the dialog closed and the button does not exist anymore, so
+                # do not try to click it again
+                break
+
+            # sleep to mimic human behavior. If the sleep time is too small or too high,
+            # I was not able to trigger the behavior; which makes sense given that the
+            # original issue that prompted this test to be written was rooted in timing
+            # the outgoing message queue flushing / replace behavior in
+            # forward_msg_queue.py.
+            time.sleep(0.2)
+
+        # ensure that the button was clicked at least twice, otherwise the whole test
+        # does not make sense
+        assert counter >= 2
+        expect(dialog).not_to_be_attached()
 
 
 def test_check_top_level_class(app: Page):

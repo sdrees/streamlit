@@ -14,10 +14,10 @@
 
 from playwright.sync_api import Page, expect
 
-from e2e_playwright.conftest import ImageCompareFunction
-from e2e_playwright.shared.app_utils import check_top_level_class
+from e2e_playwright.conftest import ImageCompareFunction, wait_for_app_run
+from e2e_playwright.shared.app_utils import check_top_level_class, get_button
 
-VEGA_LITE_CHART_COUNT = 14
+VEGA_LITE_CHART_COUNT = 15
 
 
 def test_vega_lite_chart(app: Page):
@@ -129,3 +129,27 @@ def test_empty_vega_lite_chart(app: Page, assert_snapshot: ImageCompareFunction)
 def test_check_top_level_class(app: Page):
     """Check that the top level class is correctly set."""
     check_top_level_class(app, "stVegaLiteChart")
+
+
+def test_vega_lite_chart_updates_with_slightly_different_data(
+    app: Page, assert_snapshot: ImageCompareFunction
+):
+    """Tests that it displays interactive charts on the DOM"""
+    vega_lite_charts = app.get_by_test_id("stVegaLiteChart")
+    # expect statement here so that snapshots are taken properly
+    expect(vega_lite_charts).to_have_count(VEGA_LITE_CHART_COUNT)
+    expect(vega_lite_charts.nth(14)).to_be_visible()
+    assert_snapshot(
+        vega_lite_charts.nth(14),
+        name="st_vega_lite_chart-before_update",
+    )
+
+    get_button(app, "change").click()
+    wait_for_app_run(app)
+
+    expect(vega_lite_charts).to_have_count(VEGA_LITE_CHART_COUNT)
+    expect(vega_lite_charts.nth(14)).to_be_visible()
+    assert_snapshot(
+        vega_lite_charts.nth(14),
+        name="st_vega_lite_chart-after_update",
+    )

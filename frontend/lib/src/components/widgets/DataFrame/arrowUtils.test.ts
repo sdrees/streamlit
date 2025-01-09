@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Type as ArrowType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { PandasColumnType as ArrowType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import { DataFrameCell, Quiver } from "@streamlit/lib/src/dataframes/Quiver"
 import {
   CATEGORICAL_COLUMN,

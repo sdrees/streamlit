@@ -293,7 +293,7 @@ class ForwardMsgQueueTest(unittest.TestCase):
 
         expected_new_finished_message = ForwardMsg()
         expected_new_finished_message.script_finished = (
-            ForwardMsg.ScriptFinishedStatus.FINISHED_EARLY_FOR_RERUN
+            ForwardMsg.ScriptFinishedStatus.FINISHED_SUCCESSFULLY
         )
 
         fmq.clear(

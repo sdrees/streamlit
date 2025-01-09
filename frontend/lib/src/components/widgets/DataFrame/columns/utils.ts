@@ -33,9 +33,9 @@ import { sprintf } from "sprintf-js"
 
 import {
   formatPeriodFromFreq,
-  PeriodFrequency,
+  PandasPeriodFrequency,
 } from "@streamlit/lib/src/dataframes/arrowFormatUtils"
-import { Type as ArrowType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { PandasColumnType as ArrowType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import { EmotionTheme } from "@streamlit/lib/src/theme"
 import {
   isNullOrUndefined,
@@ -508,7 +508,7 @@ export function formatNumber(
     }
     const [, freq] = match
 
-    return formatPeriodFromFreq(value, freq as PeriodFrequency)
+    return formatPeriodFromFreq(value, freq as PandasPeriodFrequency)
   }
 
   return sprintf(format, value)

@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+
 import numpy as np
 import pandas as pd
 
@@ -181,3 +183,14 @@ def dialog_with_dataframe():
 
 if st.button("Open Dialog with dataframe"):
     dialog_with_dataframe()
+
+
+@st.dialog("Dialog with rerun")
+def dialog_with_rerun():
+    if st.button("Close Dialog"):
+        time.sleep(0.15)
+        st.rerun()
+
+
+if st.button("Open Dialog with rerun"):
+    dialog_with_rerun()

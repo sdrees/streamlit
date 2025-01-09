@@ -97,7 +97,7 @@ class MemoryFragmentStorage(FragmentStorage):
     the FragmentStorage protocol.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._fragments: dict[str, Fragment] = {}
 
     # Weirdly, we have to define this above the `set` method, or mypy gets it confused

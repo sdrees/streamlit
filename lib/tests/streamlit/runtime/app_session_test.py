@@ -284,11 +284,13 @@ class AppSessionTest(unittest.TestCase):
         self, mock_create_scriptrunner: MagicMock
     ):
         session = _create_test_session()
+        fragment_id = "my_fragment_id"
+        session._fragment_storage.set(fragment_id, lambda: None)
 
         mock_active_scriptrunner = MagicMock(spec=ScriptRunner)
         session._scriptrunner = mock_active_scriptrunner
 
-        session.request_rerun(ClientState(fragment_id="my_fragment_id"))
+        session.request_rerun(ClientState(fragment_id=fragment_id))
 
         # The active ScriptRunner should *not* be shut down or stopped.
         mock_active_scriptrunner.request_rerun.assert_called_once()

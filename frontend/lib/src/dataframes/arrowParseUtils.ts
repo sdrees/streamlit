@@ -32,49 +32,49 @@ import unzip from "lodash/unzip"
 import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
 
 import {
-  IndexTypeName,
   isRangeIndex,
-  RangeIndex,
-  Type,
+  PandasColumnType,
+  PandasIndexTypeName,
+  PandasRangeIndex,
 } from "./arrowTypeUtils"
 
 /**
- * A row-major grid of DataFrame index header values.
+ * Index data value.
  */
 type IndexValue = Vector | number[]
 
 /**
- * A row-major grid of DataFrame index header values.
+ * A row-major matrix of DataFrame index data values.
  */
-export type Index = IndexValue[]
+export type IndexData = IndexValue[]
 
 /**
- * A row-major grid of DataFrame column header values.
+ * A row-major matrix of DataFrame column header names.
+ * This is a matrix (multidimensional array) to support multi-level headers.
+ *
  * NOTE: ArrowJS automatically formats the columns in schema, i.e. we always get strings.
  */
-export type Columns = string[][]
+export type ColumnNames = string[][]
 
 /**
  * A row-major grid of DataFrame data.
  */
 export type Data = Table
 
-/** DataFrame index and data types. */
-export interface Types {
+/** A DataFrame's index and data column (pandas) types. */
+export interface PandasColumnTypes {
   /** Types for each index column. */
-  index: Type[]
+  index: PandasColumnType[]
 
   /** Types for each data column. */
-  // NOTE: `DataTypeName` should be used here, but as it's hard (maybe impossible)
-  // to define such recursive types in TS, `string` will suffice for now.
-  data: Type[]
+  data: PandasColumnType[]
 }
 
 /**
  * Metadata for a single column in an Arrow table.
  * (This can describe an index *or* a data column.)
  */
-interface ColumnSchema {
+interface ColumnMetadata {
   /**
    * The fieldName of the column.
    * For a single-index column, this is just the name of the column (e.g. "foo").
@@ -105,12 +105,11 @@ interface ColumnSchema {
 }
 
 /**
- * The Arrow table schema. It's a blueprint that tells us where data
- * is stored in the associated table. (Arrow stores the schema as a JSON string,
- * and we parse it into this typed object - so these member names come from
- * Arrow.)
+ * The Pandas schema extracted from an Arrow table.
+ * Arrow stores the schema as a JSON string, and we parse it into this typed object.
+ * The Pandas schema is only present if the Arrow table was processed through Pandas.
  */
-interface Schema {
+interface PandasSchema {
   /**
    * The DataFrame's index names (either provided by user or generated,
    * guaranteed unique). It is used to fetch the index data. Each DataFrame has
@@ -123,22 +122,25 @@ interface Schema {
    * Range index: [{ kind: "range", name: null, start: 1, step: 1, stop: 5 }]
    * Other index types: ["__index_level_0__", "foo", "bar"]
    */
-  index_columns: (string | RangeIndex)[]
+  index_columns: (string | PandasRangeIndex)[]
 
   /**
    * Schemas for each column (index *and* data columns) in the DataFrame.
    */
-  columns: ColumnSchema[]
+  columns: ColumnMetadata[]
 
   /**
    * DataFrame column headers.
    * The length represents the dimensions of the DataFrame's columns grid.
    */
-  column_indexes: ColumnSchema[]
+  column_indexes: ColumnMetadata[]
 }
 
-/** Parse Arrow table's schema from a JSON string to an object. */
-function parseSchema(table: Table): Schema {
+/**
+ * Parse the Pandas schema that is embedded in the Arrow table if the table was
+ * processed through Pandas.
+ */
+function parsePandasSchema(table: Table): PandasSchema {
   const schema = table.schema.metadata.get("pandas")
   if (isNullOrUndefined(schema)) {
     // This should never happen!
@@ -149,18 +151,20 @@ function parseSchema(table: Table): Schema {
 
 /** Get unprocessed column names for data columns. Needed for selecting
  * data columns when there are multi-columns. */
-function getRawColumns(schema: Schema): string[] {
+function getRawColumns(pandasSchema: PandasSchema): string[] {
   return (
-    schema.columns
+    pandasSchema.columns
       .map(columnSchema => columnSchema.field_name)
       // Filter out all index columns
-      .filter(columnName => !schema.index_columns.includes(columnName))
+      .filter(columnName => !pandasSchema.index_columns.includes(columnName))
   )
 }
 
-/** Parse DataFrame's index header values. */
-function parseIndex(table: Table, schema: Schema): Index {
-  return schema.index_columns
+/** Parse DataFrame's index data values. */
+function parseIndexData(table: Table, pandasSchema: PandasSchema): IndexData {
+  // TODO(lukasmasuch): Is range index the only case that is not from
+  // the table data?
+  return pandasSchema.index_columns
     .map(indexName => {
       // Generate a range using the "range" index metadata.
       if (isRangeIndex(indexName)) {
@@ -181,7 +185,7 @@ function parseIndex(table: Table, schema: Schema): Index {
 }
 
 /** Parse DataFrame's index header names. */
-function parseIndexNames(schema: Schema): string[] {
+function parseIndexNames(schema: PandasSchema): string[] {
   return schema.index_columns.map(indexName => {
     // Range indices are treated differently since they
     // contain additional metadata (e.g. start, stop, step).
@@ -198,19 +202,19 @@ function parseIndexNames(schema: Schema): string[] {
   })
 }
 
-/** Parse DataFrame's column header values. */
-function parseColumns(schema: Schema): Columns {
+/** Parse DataFrame's column header names. */
+function parseColumnNames(pandasSchema: PandasSchema): ColumnNames {
   // If DataFrame `columns` has multi-level indexing, the length of
   // `column_indexes` will show how many levels there are.
-  const isMultiIndex = schema.column_indexes.length > 1
+  const isMultiIndex = pandasSchema.column_indexes.length > 1
 
   // Perform the following transformation:
   // ["('1','foo')", "('2','bar')", "('3','baz')"] -> ... -> [["1", "2", "3"], ["foo", "bar", "baz"]]
   return unzip(
-    schema.columns
+    pandasSchema.columns
       .map(columnSchema => columnSchema.field_name)
       // Filter out all index columns
-      .filter(fieldName => !schema.index_columns.includes(fieldName))
+      .filter(fieldName => !pandasSchema.index_columns.includes(fieldName))
       .map(fieldName =>
         isMultiIndex
           ? JSON.parse(
@@ -224,14 +228,14 @@ function parseColumns(schema: Schema): Columns {
   )
 }
 
-/** Parse DataFrame's data. */
+/** Parse DataFrame's non-index data into a Table object. */
 function parseData(
   table: Table,
-  columns: Columns,
+  columnNames: ColumnNames,
   rawColumns: string[]
 ): Data {
   const numDataRows = table.numRows
-  const numDataColumns = columns.length > 0 ? columns[0].length : 0
+  const numDataColumns = columnNames.length > 0 ? columnNames[0].length : 0
   if (numDataRows === 0 || numDataColumns === 0) {
     return table.select([])
   }
@@ -240,19 +244,23 @@ function parseData(
 }
 
 /** Parse DataFrame's index and data types. */
-function parseTypes(table: Table, schema: Schema): Types {
-  const index = parseIndexType(schema)
-  const data = parseDataType(table, schema)
+function parseColumnTypes(
+  table: Table,
+  pandasSchema: PandasSchema
+): PandasColumnTypes {
+  const index = parseIndexType(pandasSchema)
+  const data = parseDataType(pandasSchema)
   return { index, data }
 }
 
 /** Parse types for each non-index column. */
-function parseDataType(table: Table, schema: Schema): Type[] {
+function parseDataType(pandasSchema: PandasSchema): PandasColumnType[] {
   return (
-    schema.columns
+    pandasSchema.columns
       // Filter out all index columns
       .filter(
-        columnSchema => !schema.index_columns.includes(columnSchema.field_name)
+        columnSchema =>
+          !pandasSchema.index_columns.includes(columnSchema.field_name)
       )
       .map(columnSchema => ({
         pandas_type: columnSchema.pandas_type,
@@ -263,18 +271,18 @@ function parseDataType(table: Table, schema: Schema): Type[] {
 }
 
 /** Parse types for each index column. */
-function parseIndexType(schema: Schema): Type[] {
-  return schema.index_columns.map(indexName => {
+function parseIndexType(pandasSchema: PandasSchema): PandasColumnType[] {
+  return pandasSchema.index_columns.map(indexName => {
     if (isRangeIndex(indexName)) {
       return {
-        pandas_type: IndexTypeName.RangeIndex,
-        numpy_type: IndexTypeName.RangeIndex,
-        meta: indexName as RangeIndex,
+        pandas_type: PandasIndexTypeName.RangeIndex,
+        numpy_type: PandasIndexTypeName.RangeIndex,
+        meta: indexName as PandasRangeIndex,
       }
     }
 
     // Find the index column we're looking for in the schema.
-    const indexColumn = schema.columns.find(
+    const indexColumn = pandasSchema.columns.find(
       column => column.field_name === indexName
     )
 
@@ -291,11 +299,12 @@ function parseIndexType(schema: Schema): Type[] {
   })
 }
 
-function parseFields(schema: ArrowSchema): Record<string, Field> {
+/** Parse Arrow fields into a mapping from column name (field name) to Field metadata. */
+function parseFields(arrowSchema: ArrowSchema): Record<string, Field> {
   // None-index data columns are listed first, and all index columns listed last
   // within the fields array in arrow.
   return Object.fromEntries(
-    (schema.fields || []).map((field, index) => [
+    (arrowSchema.fields || []).map((field, index) => [
       field.name.startsWith("__index_level_") ? field.name : String(index),
       field,
     ])
@@ -303,12 +312,12 @@ function parseFields(schema: ArrowSchema): Record<string, Field> {
 }
 
 interface ParsedTable {
-  columns: Columns
+  columnNames: ColumnNames
   fields: Record<string, Field>
-  index: Index
+  indexData: IndexData
   indexNames: string[]
   data: Data
-  types: Types
+  columnTypes: PandasColumnTypes
 }
 
 /**
@@ -316,28 +325,44 @@ interface ParsedTable {
  *
  * @param ipcBytes - Arrow bytes (IPC format)
  * @returns - Parsed Arrow table split into different
- *  components for easier access: columns, fields, index, indexNames, data, types.
+ *  components for easier access: columnNames, fields, indexData, indexNames, data, columnTypes.
  */
 export function parseArrowIpcBytes(
   ipcBytes: Uint8Array | null | undefined
 ): ParsedTable {
+  // Load arrow table object from IPC data
   const table = tableFromIPC(ipcBytes)
-  const schema = parseSchema(table)
-  const rawColumns = getRawColumns(schema)
+  // Load field information for all columns:
   const fields = parseFields(table.schema)
 
-  const index = parseIndex(table, schema)
-  const columns = parseColumns(schema)
-  const indexNames = parseIndexNames(schema)
-  const data = parseData(table, columns, rawColumns)
-  const types = parseTypes(table, schema)
+  // Load pandas schema from metadata (if it exists):
+  const pandasSchema = parsePandasSchema(table)
+
+  // Load all column names from table schema:
+  const columnNames = parseColumnNames(pandasSchema)
+
+  // Load the display names of the index columns:
+  const indexNames = parseIndexNames(pandasSchema)
+
+  // Extract unprocessed column names from pandas schema
+  // (needed for parsing the data cells below):
+  const rawColumns = getRawColumns(pandasSchema)
+
+  // Load all non-index data cells:
+  const data = parseData(table, columnNames, rawColumns)
+
+  // Load all index data cells:
+  const indexData = parseIndexData(table, pandasSchema)
+
+  // Load types for index and data columns:
+  const columnTypes = parseColumnTypes(table, pandasSchema)
 
   return {
-    columns,
+    columnNames,
     fields,
-    index,
+    indexData,
     indexNames,
     data,
-    types,
+    columnTypes,
   }
 }

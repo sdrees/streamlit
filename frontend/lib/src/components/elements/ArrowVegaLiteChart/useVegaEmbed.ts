@@ -26,7 +26,6 @@ import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
 import { logMessage } from "@streamlit/lib/src/util/log"
 
 import {
-  dataIsAnAppendOfPrev,
   getDataArray,
   getDataArrays,
   getDataSets,
@@ -190,26 +189,8 @@ export function useVegaEmbed(
         return
       }
 
-      const { dataRows: prevNumRows, dataColumns: prevNumCols } =
-        prevData.dimensions
-      const { dataRows: numRows, dataColumns: numCols } = data.dimensions
-
       // Check if dataframes have same "shape" but the new one has more rows.
-      if (
-        dataIsAnAppendOfPrev(
-          prevData,
-          prevNumRows,
-          prevNumCols,
-          data,
-          numRows,
-          numCols
-        )
-      ) {
-        if (prevNumRows < numRows) {
-          // Insert the new rows.
-          view.insert(name, getDataArray(data, prevNumRows))
-        }
-      } else {
+      if (data.hash !== prevData.hash) {
         // Clean the dataset and insert from scratch.
         view.data(name, getDataArray(data))
         logMessage(

@@ -27,7 +27,8 @@
     "testApp": "yarn workspace @streamlit/app testWatch"
   },
   "resolutions": {
-    "nwsapi": "2.2.9"
+    "nwsapi": "2.2.9",
+    "d3-color": "^3.1.0"
   },
   "browserslist": [
     ">0.2%",

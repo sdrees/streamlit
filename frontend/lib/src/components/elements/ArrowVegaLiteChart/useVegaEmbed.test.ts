@@ -314,7 +314,7 @@ describe("useVegaEmbed hook", () => {
       data: { numRows: 5, numCols: 2 },
       dimensions: { dataRows: 5, dataCols: 2 },
       isEmpty: () => false,
-      types: { index: ["int"], data: ["int"] },
+      columnTypes: { index: ["int"], data: ["int"] },
     } as any
 
     await act(async () => {

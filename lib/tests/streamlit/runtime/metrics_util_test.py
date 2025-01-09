@@ -1,4 +1,4 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -278,6 +278,8 @@ class PageTelemetryTest(DeltaGeneratorTestCase):
             "spinner",
             "progress",
             "context",
+            "login",
+            "logout",
         }
 
         # Create a list of all public API names in the `st` module (minus

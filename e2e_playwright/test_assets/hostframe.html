@@ -1,5 +1,5 @@
 <!--
- Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+ Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -39,12 +39,12 @@ Usage:
 -->
 
 <script>
-  window.addEventListener("message", event => {
-    console.log("Received message event:", event)
-  })
+  window.addEventListener("message", (event) => {
+    console.log("Received message event:", event);
+  });
 
   function sendMessage(data) {
-    const guestwindow = document.getElementById("guest").contentWindow
+    const guestwindow = document.getElementById("guest").contentWindow;
 
     guestwindow.postMessage(
       {
@@ -52,7 +52,7 @@ Usage:
         ...data,
       },
       "*"
-    )
+    );
   }
 
   function setHostMenuItem() {
@@ -68,7 +68,7 @@ Usage:
           type: "separator",
         },
       ],
-    })
+    });
   }
 
   function setHostToolbarItem() {
@@ -88,21 +88,21 @@ Usage:
           key: "Share",
         },
       ],
-    })
+    });
   }
 
   function setHideSidebarNav() {
     sendMessage({
       type: "SET_SIDEBAR_NAV_VISIBILITY",
       hidden: true,
-    })
+    });
   }
 
   function setSidebarDownshift() {
     sendMessage({
       type: "SET_SIDEBAR_CHEVRON_DOWNSHIFT",
       sidebarChevronDownshift: 50,
-    })
+    });
   }
 
   function setAuthToken() {
@@ -114,43 +114,42 @@ Usage:
       authToken: "AUTH_TOKEN",
       jwtHeaderName: "X-JWT-HEADER-NAME",
       jwtHeaderValue: "X-JWT-HEADER-VALUE",
-    })
+    });
   }
 
   function setFileUploadClientConfig() {
     sendMessage({
       type: "SET_FILE_UPLOAD_CLIENT_CONFIG",
-      prefix:
-        "https://some-prefix.com/somethingelse/",
+      prefix: "https://some-prefix.com/somethingelse/",
       headers: {
         header1: "header1value",
         header2: "header2value",
       },
-    })
+    });
   }
 
   function closeModal() {
     sendMessage({
       type: "CLOSE_MODAL",
-    })
+    });
   }
 
   function rerunScript() {
     sendMessage({
       type: "RERUN_SCRIPT",
-    })
+    });
   }
 
   function stopScript() {
     sendMessage({
       type: "STOP_SCRIPT",
-    })
+    });
   }
 
   function clearCache() {
     sendMessage({
       type: "CLEAR_CACHE",
-    })
+    });
   }
 
   function sendThemeMessage() {
@@ -210,19 +209,19 @@ Usage:
           baseFontSize: 14,
         },
       },
-    })
+    });
   }
 
   function restartWebsocketConnection() {
     sendMessage({
       type: "RESTART_WEBSOCKET_CONNECTION",
-    })
+    });
   }
 
   function terminateWebsocketConnection() {
     sendMessage({
       type: "TERMINATE_WEBSOCKET_CONNECTION",
-    })
+    });
   }
 </script>
 

@@ -1,4 +1,4 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -123,7 +123,7 @@ class ScriptRunner:
         uploaded_file_mgr: UploadedFileManager,
         script_cache: ScriptCache,
         initial_rerun_data: RerunData,
-        user_info: dict[str, str | None],
+        user_info: dict[str, str | bool | None],
         fragment_storage: FragmentStorage,
         pages_manager: PagesManager,
     ):
@@ -553,15 +553,24 @@ class ScriptRunner:
                                 wrapped_fragment()
 
                             except FragmentStorageKeyError:
-                                # Only raise an error if the fragment is not an
-                                # auto_rerun. If it is an auto_rerun, we might have a
-                                # race condition where the fragment_id is removed
-                                # but the webapp sends a rerun request before the
-                                # removal information has reached the web app
+                                # This can happen if the fragment_id is removed from the
+                                # storage before the script runner gets to it. In this
+                                # case, the fragment is simply skipped.
+                                # Also, only log an error if the fragment is not an
+                                # auto_rerun to avoid noise. If it is an auto_rerun, we
+                                # might have a race condition where the fragment_id is
+                                # removed but the webapp sends a rerun request before
+                                # the removal information has reached the web app
                                 # (see https://github.com/streamlit/streamlit/issues/9080).
                                 if not rerun_data.is_auto_rerun:
-                                    raise RuntimeError(
-                                        f"Could not find fragment with id {fragment_id}"
+                                    _LOGGER.warning(
+                                        f"Couldn't find fragment with id {fragment_id}."
+                                        " This can happen if the fragment does not"
+                                        " exist anymore when this request is processed,"
+                                        " for example because a full app rerun happened"
+                                        " that did not register the fragment."
+                                        " Usually this doesn't happen or no action is"
+                                        " required, so its mainly for debugging."
                                     )
                             except (RerunException, StopException) as e:
                                 # The wrapped_fragment function is executed

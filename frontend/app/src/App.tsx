@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+ * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import without from "lodash/without"
 import {
   AppConfig,
   AppRoot,
+  AuthRedirect,
   AutoRerun,
   BackMsg,
   BaseUriParts,
@@ -718,6 +719,16 @@ export class App extends PureComponent<Props, State> {
           this.handleLogo(logo, msgProto.metadata as ForwardMsgMetadata),
         navigation: (navigation: Navigation) =>
           this.handleNavigation(navigation),
+        authRedirect: (authRedirect: AuthRedirect) => {
+          if (isInChildFrame()) {
+            this.hostCommunicationMgr.sendMessageToSameOriginHost({
+              type: "REDIRECT_TO_URL",
+              url: authRedirect.url,
+            })
+          } else {
+            window.location.href = authRedirect.url
+          }
+        },
       })
     } catch (e) {
       const err = ensureError(e)

@@ -1,4 +1,4 @@
-Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-----
+---
 
 Files in the typing/ directory are used for catching typing errors as they are checked by our mypy script. Their purpose is to, essentially, assert that the typechecker derives the types of certain cases correctly.
 

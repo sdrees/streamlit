@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+ * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import {
   getHostSpecifiedTheme,
   HOST_COMM_VERSION,
   HostCommunicationManager,
+  IAuthRedirect,
   IAutoRerun,
   ILogo,
   INavigation,
@@ -136,6 +137,7 @@ vi.mock("@streamlit/lib/src/hostComm/HostCommunicationManager", async () => {
   const MockedClass = vi.fn().mockImplementation((...props) => {
     const hostCommunicationMgr = new actualModule.default(...props)
     vi.spyOn(hostCommunicationMgr, "sendMessageToHost")
+    vi.spyOn(hostCommunicationMgr, "sendMessageToSameOriginHost")
     return hostCommunicationMgr
   })
 
@@ -327,6 +329,7 @@ type DeltaWithElement = Omit<Delta, "fragmentId" | "newElement" | "toJSON"> & {
 type ForwardMsgType =
   | DeltaWithElement
   | ForwardMsg.ScriptFinishedStatus
+  | IAuthRedirect
   | IAutoRerun
   | ILogo
   | INavigation
@@ -1932,6 +1935,57 @@ describe("App", () => {
         expect(
           screen.queryByText("Here is some other text")
         ).not.toBeInTheDocument()
+      })
+    })
+  })
+
+  describe("authRedirect handling", () => {
+    let prevWindowLocation: Location
+    let prevWindowParent: Window
+
+    beforeEach(() => {
+      prevWindowLocation = window.location
+      prevWindowParent = window.parent
+    })
+
+    afterEach(() => {
+      window.location = prevWindowLocation
+      window.parent = prevWindowParent
+    })
+
+    it("redirects to the auth URL", () => {
+      renderApp(getProps())
+
+      // A HACK to mock `window.location.reload`.
+      // NOTE: The mocking must be done after mounting, but before `handleMessage` is called.
+      // @ts-expect-error
+      delete window.location
+      // @ts-expect-error
+      window.location = {}
+
+      sendForwardMessage("authRedirect", { url: "https://example.com" })
+
+      expect(window.location.href).toBe("https://example.com")
+    })
+    it("sends a message to the host when in child frame", () => {
+      renderApp(getProps())
+      // A HACK to mock a condition in `isInChildFrame` util function.
+      // @ts-expect-error
+      delete window.parent
+      // @ts-expect-error
+      window.parent = undefined
+
+      const hostCommunicationMgr = getStoredValue<HostCommunicationManager>(
+        HostCommunicationManager
+      )
+
+      sendForwardMessage("authRedirect", { url: "https://example.com" })
+
+      expect(
+        hostCommunicationMgr.sendMessageToSameOriginHost
+      ).toHaveBeenCalledWith({
+        type: "REDIRECT_TO_URL",
+        url: "https://example.com",
       })
     })
   })

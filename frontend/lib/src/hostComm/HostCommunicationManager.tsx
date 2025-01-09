@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+ * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,6 +139,22 @@ export default class HostCommunicationManager {
     this.allowedOrigins = allowedOrigins
 
     this.openHostCommunication()
+  }
+
+  /**
+   * Register a function to deliver a message to the Host
+   * that is on the same origin as the Guest
+   */
+  public sendMessageToSameOriginHost = (
+    message: IGuestToHostMessage
+  ): void => {
+    window.parent.postMessage(
+      {
+        stCommVersion: HOST_COMM_VERSION,
+        ...message,
+      } as VersionedMessage<IGuestToHostMessage>,
+      window.location.origin
+    )
   }
 
   /**

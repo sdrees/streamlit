@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+ * Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import Toolbar, {
 import { ElementFullscreenContext } from "@streamlit/lib/src/components/shared/ElementFullscreen/ElementFullscreenContext"
 import { useRequiredContext } from "@streamlit/lib/src/hooks/useRequiredContext"
 import { withFullScreenWrapper } from "@streamlit/lib/src/components/shared/FullScreenWrapper"
+import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown"
 
 import {
   StyledCaption,
@@ -139,7 +140,14 @@ function ImageList({
               />
               {image.caption && (
                 <StyledCaption data-testid="stImageCaption" style={imgStyle}>
-                  {` ${image.caption} `}
+                  <StreamlitMarkdown
+                    source={image.caption}
+                    allowHTML={false}
+                    isCaption
+                    // This is technically not a label but we want the same restrictions
+                    // as for labels (e.g. no Markdown tables or horizontal rule).
+                    isLabel
+                  />
                 </StyledCaption>
               )}
             </StyledImageContainer>

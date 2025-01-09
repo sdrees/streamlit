@@ -1,4 +1,4 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -273,6 +273,17 @@ class Runtime:
             return None
         return session_info.client
 
+    def clear_user_info_for_session(self, session_id: str) -> None:
+        """Clear the user_info for the given session_id.
+
+        Notes
+        -----
+        Threading: SAFE. May be called on any thread.
+        """
+        session_info = self._session_mgr.get_session_info(session_id)
+        if session_info is not None:
+            session_info.session.clear_user_info()
+
     async def start(self) -> None:
         """Start the runtime. This must be called only once, before
         any other functions are called.
@@ -335,7 +346,7 @@ class Runtime:
     def connect_session(
         self,
         client: SessionClient,
-        user_info: dict[str, str | None],
+        user_info: dict[str, str | bool | None],
         existing_session_id: str | None = None,
         session_id_override: str | None = None,
     ) -> str:
@@ -396,7 +407,7 @@ class Runtime:
     def create_session(
         self,
         client: SessionClient,
-        user_info: dict[str, str | None],
+        user_info: dict[str, str | bool | None],
         existing_session_id: str | None = None,
         session_id_override: str | None = None,
     ) -> str:

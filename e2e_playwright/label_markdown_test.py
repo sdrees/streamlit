@@ -1,4 +1,4 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2024)
+# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022-2025)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -340,6 +340,26 @@ def test_tabs_labels_handle_markdown(app: Page, assert_snapshot: ImageCompareFun
         assert_snapshot(
             tabs.nth(index),
             name=f"st_tab-{case[0]}_{case[1]}",
+        )
+
+
+def test_image_captions_handle_markdown(
+    app: Page, assert_snapshot: ImageCompareFunction
+):
+    cases = [
+        ["invalid", "table"],
+        ["valid", "markdown"],
+        ["valid", "colored"],
+        ["valid", "link"],
+    ]
+
+    images = app.get_by_test_id("stImage")
+    expect(images).to_have_count(4)
+
+    for index, case in enumerate(cases):
+        assert_snapshot(
+            images.nth(index),
+            name=f"st_image-{case[0]}_{case[1]}",
         )
 
 

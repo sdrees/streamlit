@@ -396,7 +396,12 @@ def test_number_cell_read_only_overlay_formatting(
     assert_snapshot(cell_overlay, name="st_dataframe-number_col_overlay")
 
 
-def test_number_cell_editing(themed_app: Page, assert_snapshot: ImageCompareFunction):
+def _test_number_cell_editing(
+    themed_app: Page,
+    assert_snapshot: ImageCompareFunction,
+    *,
+    skip_snapshot: bool = False,
+):
     """Test that the number cell can be edited."""
     cell_overlay_test_df = themed_app.get_by_test_id("stDataFrame").nth(3)
     expect_canvas_to_be_visible(cell_overlay_test_df)
@@ -411,7 +416,8 @@ def test_number_cell_editing(themed_app: Page, assert_snapshot: ImageCompareFunc
 
     # Get the (number) input element and check the value
     expect(cell_overlay.locator(".gdg-input")).to_have_attribute("value", "1231231.41")
-    assert_snapshot(cell_overlay, name="st_data_editor-number_col_editor")
+    if not skip_snapshot:
+        assert_snapshot(cell_overlay, name="st_data_editor-number_col_editor")
 
     # Change the value
     cell_overlay.locator(".gdg-input").fill("9876.54")
@@ -421,6 +427,18 @@ def test_number_cell_editing(themed_app: Page, assert_snapshot: ImageCompareFunc
 
     # Check if that the value was submitted
     expect_prefixed_markdown(themed_app, "Edited DF:", "9876.54", exact_match=False)
+
+
+def test_number_cell_editing(themed_app: Page, assert_snapshot: ImageCompareFunction):
+    _test_number_cell_editing(themed_app, assert_snapshot)
+
+
+@pytest.mark.performance
+def test_number_cell_editing_performance(
+    app: Page, assert_snapshot: ImageCompareFunction
+):
+    """Test that the number cell can be edited."""
+    _test_number_cell_editing(app, assert_snapshot, skip_snapshot=True)
 
 
 def test_text_cell_read_only_overlay_formatting(

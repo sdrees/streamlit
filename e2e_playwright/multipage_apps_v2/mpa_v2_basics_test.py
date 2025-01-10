@@ -13,6 +13,7 @@
 # limitations under the License.
 from __future__ import annotations
 
+import pytest
 from playwright.sync_api import Page, expect
 
 from e2e_playwright.conftest import (
@@ -93,6 +94,14 @@ def test_renders_sidebar_nav_correctly(
 
 
 def test_can_switch_between_pages_by_clicking_on_sidebar_links(app: Page):
+    """Test that we can switch between pages by clicking on sidebar links."""
+    get_page_link(app, "Different Title").click()
+    wait_for_app_run(app)
+    expect(page_heading(app)).to_contain_text("Page 3")
+
+
+@pytest.mark.performance
+def test_switching_pages_performance(app: Page):
     """Test that we can switch between pages by clicking on sidebar links."""
     get_page_link(app, "Different Title").click()
     wait_for_app_run(app)
@@ -516,3 +525,17 @@ def test_rapid_fire_interaction_in_fragment(app: Page):
     wait_for_app_run(app)
 
     expect(number_input.locator("input")).to_have_value("31")
+
+
+@pytest.mark.performance
+def test_sidebar_interaction_performance(app: Page):
+    """
+    Test the performance of the sidebar interaction.
+    As of writing, there is a re-rendering issue in the Sidebar where every
+    option is re-rendered in the sidebar when something is hovered. This
+    performance test gives us a way to measure performance improvements.
+    """
+    sidebar = app.get_by_test_id("stSidebar")
+    options = sidebar.locator("li")
+    for option in options.all():
+        option.hover()

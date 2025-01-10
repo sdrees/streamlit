@@ -299,6 +299,33 @@ class AppSessionTest(unittest.TestCase):
         # And a new ScriptRunner should *not* be created.
         mock_create_scriptrunner.assert_not_called()
 
+    @patch_config_options({"runner.fastReruns": True})
+    @patch("streamlit.runtime.app_session.AppSession._create_scriptrunner")
+    def test_rerun_fragment_does_not_request_existing_scriptrunner_when_not_existing(
+        self, mock_create_scriptrunner: MagicMock
+    ):
+        """In case the fragment was removed by a preceding full app run, we want to exit
+        early and not request a rerun on the existing ScriptRunner.
+        """
+        session = _create_test_session()
+        fragment_id = "my_fragment_id"
+
+        # leaving the following code line in to show that the fragment id
+        # is not set in the fragment storage!
+        # session._fragment_storage.set(fragment_id, lambda: None)
+
+        mock_active_scriptrunner = MagicMock(spec=ScriptRunner)
+        session._scriptrunner = mock_active_scriptrunner
+
+        session.request_rerun(ClientState(fragment_id=fragment_id))
+
+        # The active ScriptRunner should *not* be requested at all.
+        mock_active_scriptrunner.request_rerun.assert_not_called()
+        mock_active_scriptrunner.request_stop.assert_not_called()
+
+        # And a new ScriptRunner should *not* be created.
+        mock_create_scriptrunner.assert_not_called()
+
     @patch("streamlit.runtime.app_session.ScriptRunner")
     def test_create_scriptrunner(self, mock_scriptrunner: MagicMock):
         """Test that _create_scriptrunner does what it should."""

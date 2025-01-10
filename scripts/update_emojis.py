@@ -22,7 +22,7 @@ This script requires the emoji package to be installed: pip install emoji.
 import os
 import re
 
-from emoji.unicode_codes.data_dict import EMOJI_DATA
+from emoji.unicode_codes import EMOJI_DATA
 from streamlit.emojis import ALL_EMOJIS
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

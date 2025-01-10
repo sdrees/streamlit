@@ -98,7 +98,7 @@ def test_displays_dialog_properly(app: Page):
     expect(app.get_by_test_id("stAlert")).not_to_be_attached()
 
 
-def test_dialog_closes_properly(app: Page):
+def _test_dialog_closes_properly(app: Page):
     """Test that dialog closes after clicking on action button."""
     open_dialog_with_images(app)
     wait_for_app_run(app)
@@ -110,6 +110,16 @@ def test_dialog_closes_properly(app: Page):
     wait_for_app_run(app)
     main_dialog = app.get_by_test_id(modal_test_id)
     expect(main_dialog).to_have_count(0)
+
+
+def test_dialog_closes_properly(app: Page):
+    """Test that dialog closes after clicking on action button."""
+    _test_dialog_closes_properly(app)
+
+
+@pytest.mark.performance
+def test_dialog_open_and_close_performance(app: Page):
+    _test_dialog_closes_properly(app)
 
 
 def test_dialog_dismisses_properly(app: Page):

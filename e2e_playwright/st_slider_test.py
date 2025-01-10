@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
 from playwright.sync_api import Page, expect
 
 from e2e_playwright.conftest import (
@@ -189,3 +190,22 @@ def test_check_top_level_class(app: Page):
 def test_custom_css_class_via_key(app: Page):
     """Test that the element can have a custom css class via the key argument."""
     expect(get_element_by_key(app, "slider8")).to_be_visible()
+
+
+@pytest.mark.performance
+def test_slider_interaction_performance(app: Page):
+    """
+    Test a simple interaction with a slider to ensure it is performant.
+    As of writing, a simple slider interaction effectively causes a full page
+    re-render.
+    """
+    slider = app.get_by_test_id("stSlider").nth(8)
+    slider.hover()
+    # click in middle
+    app.mouse.down()
+
+    # Move mouse to 0, 0 pixels on the screen to simulate dragging left
+    app.mouse.move(0, 0)
+    app.mouse.up()
+    wait_for_app_run(app)
+    expect(app.get_by_text("Value 5: 0")).to_be_visible()

@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Callable
 
 from streamlit.proto.ForwardMsg_pb2 import ForwardMsg
 
@@ -32,6 +32,16 @@ class ForwardMsgQueue:
     ForwardMsgQueue is not thread-safe - a queue should only be used from
     a single thread.
     """
+
+    _before_enqueue_msg: Callable[[ForwardMsg], None] | None = None
+
+    @staticmethod
+    def on_before_enqueue_msg(
+        before_enqueue_msg: Callable[[ForwardMsg], None] | None,
+    ) -> None:
+        """Set a callback to be called before a message is enqueued.
+        Used in static streamlit app generation."""
+        ForwardMsgQueue._before_enqueue_msg = before_enqueue_msg
 
     def __init__(self):
         self._queue: list[ForwardMsg] = []
@@ -55,6 +65,10 @@ class ForwardMsgQueue:
 
     def enqueue(self, msg: ForwardMsg) -> None:
         """Add message into queue, possibly composing it with another message."""
+
+        if ForwardMsgQueue._before_enqueue_msg:
+            ForwardMsgQueue._before_enqueue_msg(msg)
+
         if not _is_composable_message(msg):
             self._queue.append(msg)
             return

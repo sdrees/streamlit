@@ -267,30 +267,30 @@ protobuf: check-protoc
 		proto/streamlit/proto/*.proto
 
 	@# JS protobuf generation. The --es6 flag generates a proper es6 module.
-	cd frontend/ ; ( \
+	cd frontend/lib ; ( \
 		echo "/* eslint-disable */" ; \
 		echo ; \
-		yarn --silent pbjs \
-			../proto/streamlit/proto/*.proto \
-			--path ../proto -t static-module --wrap es6 \
-	) > ./lib/src/proto.js
+		yarn run --silent pbjs \
+		  ../../proto/streamlit/proto/*.proto \
+			--path ../../proto -t static-module --wrap es6 \
+	) > ./src/proto.js
 
 	@# Typescript type declarations for our generated protobufs
-	cd frontend/ ; ( \
+	cd frontend/lib ; ( \
 		echo "/* eslint-disable */" ; \
 		echo ; \
-		yarn --silent pbts ./lib/src/proto.js \
-	) > ./lib/src/proto.d.ts
+		yarn run --silent pbts ./src/proto.js \
+	) > ./src/proto.d.ts
 
 .PHONY: react-init
 # React init.
 react-init:
-	cd frontend/ ; yarn install --frozen-lockfile
+	cd frontend/ ; yarn install --immutable
 
 .PHONY: react-build
 # React build.
 react-build:
-	cd frontend/ ; yarn run build
+	cd frontend/ ; yarn workspaces foreach --all run build
 	rsync -av --delete --delete-excluded --exclude=reports \
 		frontend/app/build/ lib/streamlit/static/
 
@@ -300,41 +300,47 @@ frontend-build-with-profiler:
 	rsync -av --delete --delete-excluded --exclude=reports \
 		frontend/app/build/ lib/streamlit/static/
 
+.PHONY: frontend-fast
+frontend-fast:
+	cd frontend/ ; yarn workspace @streamlit/app buildFast
+	rsync -av --delete --delete-excluded --exclude=reports \
+		frontend/app/build/ lib/streamlit/static/
+
 .PHONY: frontend-lib
 # Build the frontend library.
 frontend-lib:
-	cd frontend/ ; yarn run buildLib;
+	cd frontend/ ; yarn workspace @streamlit/lib build;
 
 .PHONY: frontend-app
 # Build the frontend app. One must build the frontend lib first before building the app.
 frontend-app:
-	cd frontend/ ; yarn run buildApp
+	cd frontend/ ; yarn workspace @streamlit/app build
 
 .PHONY: jslint
 # Verify that our JS/TS code is formatted and that there are no lint errors.
 jslint:
-	cd frontend/ ; yarn run formatCheck
-	cd frontend/ ; yarn run lint
+	cd frontend/ ; yarn workspaces foreach --all run formatCheck
+	cd frontend/ ; yarn workspaces foreach --all run lint
 
 .PHONY: tstypecheck
 # Typecheck the JS/TS code.
 tstypecheck:
-	cd frontend/ ; yarn run typecheck
+	cd frontend/ ; yarn workspaces foreach --all run typecheck
 
 .PHONY: jsformat
 # Fix formatting issues in our JavaScript & TypeScript files.
 jsformat:
-	cd frontend/ ; yarn run format
+	cd frontend/ ; yarn workspaces foreach --all run format
 
 .PHONY: jstest
 # Run JS unit tests.
 jstest:
-	cd frontend; TESTPATH=$(TESTPATH) yarn run test
+	cd frontend; TESTPATH=$(TESTPATH) yarn workspaces foreach --all run test
 
 .PHONY: jstestcoverage
 # Run JS unit tests and generate a coverage report.
 jstestcoverage:
-	cd frontend; TESTPATH=$(TESTPATH) yarn run testcoverage
+	cd frontend; TESTPATH=$(TESTPATH) yarn workspaces foreach --all run test --coverage
 
 .PHONY: playwright
 # Run playwright E2E tests (without custom component tests).
@@ -399,14 +405,7 @@ distribute:
 # Rebuild the NOTICES file.
 notices:
 	cd frontend; \
-		yarn licenses generate-disclaimer --silent --production --ignore-platform > ../NOTICES
-
-	@# When `yarn licenses` is run in a yarn workspace, it misnames the project as
-	@# "WORKSPACE AGGREGATOR 2B7C80A7 6734 4A68 BB93 8CC72B9A5DEA". We fix that here.
-	@# There also isn't a portable way to invoke `sed` to edit files in-place, so we have
-	@# sed create a NOTICES.bak backup file that we immediately delete afterwards.
-	sed -i'.bak' 's/PORTIONS OF THE .*PRODUCT/PORTIONS OF THE STREAMLIT PRODUCT/' NOTICES
-	rm -f NOTICES.bak
+		yarn licenses generate-disclaimer --production --recursive > ../NOTICES
 
 	./scripts/append_license.sh frontend/app/src/assets/fonts/Source_Code_Pro/Source-Code-Pro.LICENSE
 	./scripts/append_license.sh frontend/app/src/assets/fonts/Source_Sans_Pro/Source-Sans-Pro.LICENSE
@@ -435,7 +434,7 @@ pre-commit-install:
 	pre-commit install
 
 .PHONY: ensure-relative-imports
-# Ensure relative imports exist within the lib/dist folder when doing yarn buildLibProd.
+# Ensure relative imports exist within the lib/dist folder when doing building lib for production.
 ensure-relative-imports:
 	./scripts/ensure_relative_imports.sh
 
@@ -448,7 +447,7 @@ performance-lighthouse:
 .PHONY frontend-lib-prod:
 # Build the production version for @streamlit/lib.
 frontend-lib-prod:
-	cd frontend/ ; yarn run buildLibProd;
+	cd frontend/ ; yarn workspace @streamlit/lib build:prod;
 
 .PHONY streamlit-lib-prod:
 # Build the production version for @streamlit/lib while also doing a make init so it's a single command.

@@ -199,8 +199,8 @@ class Credentials:
 
         try:
             os.remove(c._conf_file)
-        except OSError as e:
-            _LOGGER.error("Error removing credentials file: %s" % e)
+        except OSError:
+            _LOGGER.exception("Error removing credentials file.")
 
     def save(self) -> None:
         """Save to toml file and send email."""
@@ -222,8 +222,8 @@ class Credentials:
 
         try:
             _send_email(self.activation.email)
-        except RequestException as e:
-            _LOGGER.error(f"Error saving email: {e}")
+        except RequestException:
+            _LOGGER.exception("Error saving email:")
 
     def activate(self, show_instructions: bool = True) -> None:
         """Activate Streamlit.

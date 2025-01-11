@@ -130,20 +130,18 @@ This is usually due to a bug in the Exception object itself. Here is some info
 about that Exception object, so you can report a bug to the original author:
 
 Exception type:
-  %(etype)s
+  %s
 
 Problem:
-  %(str_exception)s
+  %s
 
 Traceback:
-%(str_exception_tb)s
+%s
 
-        """
-            % {
-                "etype": type(exception).__name__,
-                "str_exception": str_exception,
-                "str_exception_tb": "\n".join(_get_stack_trace_str_list(str_exception)),
-            }
+        """,
+            type(exception).__name__,
+            str_exception,
+            "\n".join(_get_stack_trace_str_list(str_exception)),
         )
 
     if is_uncaught_app_exception:

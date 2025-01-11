@@ -28,9 +28,8 @@ import {
 import {
   BaseButtonKind,
   BaseButtonSize,
+  DynamicButtonLabel,
 } from "@streamlit/lib/src/components/shared/BaseButton"
-import { DynamicIcon } from "@streamlit/lib/src/components/shared/Icon"
-import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown/StreamlitMarkdown"
 
 import ButtonGroup, { getContentElement, Props } from "./ButtonGroup"
 
@@ -570,11 +569,12 @@ describe("ButtonGroup getContentElement", () => {
       ButtonGroupProto.Style.BORDERLESS
     )
 
-    expect(element.type).toBe(React.Fragment)
-    const { children } = element.props
-    expect(children).toHaveLength(2)
-    expect(children[0].type).toBe(DynamicIcon)
-    expect(children[1].type).toBe(StreamlitMarkdown)
+    expect(element.type).toBe(DynamicButtonLabel)
+    expect(element.props).toEqual({
+      label: "foo",
+      icon: "bar",
+      iconSize: "lg",
+    })
     expect(kind).toBe(BaseButtonKind.BORDERLESS_ICON)
     expect(size).toBe(BaseButtonSize.XSMALL)
   })
@@ -586,11 +586,12 @@ describe("ButtonGroup getContentElement", () => {
       ButtonGroupProto.Style.BORDERLESS
     )
 
-    expect(element.type).toBe(React.Fragment)
-    const { children } = element.props
-    expect(children).toHaveLength(2)
-    expect(children[0]).toBe(undefined)
-    expect(children[1].type).toBe(StreamlitMarkdown)
+    expect(element.type).toBe(DynamicButtonLabel)
+    expect(element.props).toEqual({
+      label: "foo",
+      icon: undefined,
+      iconSize: "lg",
+    })
     expect(kind).toBe(BaseButtonKind.BORDERLESS_ICON)
     expect(size).toBe(BaseButtonSize.XSMALL)
   })
@@ -602,11 +603,12 @@ describe("ButtonGroup getContentElement", () => {
       ButtonGroupProto.Style.BORDERLESS
     )
 
-    expect(element.type).toBe(React.Fragment)
-    const { children } = element.props
-    expect(children).toHaveLength(2)
-    expect(children[0].type).toBe(DynamicIcon)
-    expect(children[1]).toBe("")
+    expect(element.type).toBe(DynamicButtonLabel)
+    expect(element.props).toEqual({
+      label: "",
+      icon: "foo",
+      iconSize: "lg",
+    })
     expect(kind).toBe(BaseButtonKind.BORDERLESS_ICON)
     expect(size).toBe(BaseButtonSize.XSMALL)
   })
@@ -618,11 +620,12 @@ describe("ButtonGroup getContentElement", () => {
       ButtonGroupProto.Style.PILLS
     )
 
-    expect(element.type).toBe(React.Fragment)
-    const { children } = element.props
-    expect(children).toHaveLength(2)
-    expect(children[0].type).toBe(DynamicIcon)
-    expect(children[1].type).toBe(StreamlitMarkdown)
+    expect(element.type).toBe(DynamicButtonLabel)
+    expect(element.props).toEqual({
+      label: "foo",
+      icon: "bar",
+      iconSize: "base",
+    })
     expect(kind).toBe(BaseButtonKind.PILLS)
     expect(size).toBe(BaseButtonSize.MEDIUM)
   })

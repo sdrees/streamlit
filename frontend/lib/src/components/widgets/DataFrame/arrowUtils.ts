@@ -32,9 +32,19 @@ import {
 } from "@streamlit/lib/src/dataframes/arrowFormatUtils"
 import {
   PandasColumnType as ArrowType,
-  getTypeName,
   isBooleanType,
+  isBytesType,
+  isCategoricalType,
+  isDatetimeType,
+  isDateType,
+  isDecimalType,
+  isEmptyType,
+  isListType,
   isNumericType,
+  isObjectType,
+  isRangeIndexType,
+  isStringType,
+  isTimeType,
 } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import {
   isNullOrUndefined,
@@ -145,29 +155,19 @@ export function applyPandasStylerCss(
  * Maps the data type from Arrow to a column type.
  */
 export function getColumnTypeFromArrow(arrowType: ArrowType): ColumnCreator {
-  let typeName = arrowType ? getTypeName(arrowType) : null
-
-  if (!typeName) {
-    // Use object column as fallback
-    return ObjectColumn
-  }
-
-  typeName = typeName.toLowerCase().trim()
-  // Match based on arrow types
-  if (["unicode", "empty", "large_string[pyarrow]"].includes(typeName)) {
+  if (isStringType(arrowType) || isEmptyType(arrowType)) {
     return TextColumn
   }
-
-  if (["datetime", "datetimetz"].includes(typeName)) {
+  if (isDatetimeType(arrowType)) {
     return DateTimeColumn
   }
-  if (typeName === "time") {
+  if (isTimeType(arrowType)) {
     return TimeColumn
   }
-  if (typeName === "date") {
+  if (isDateType(arrowType)) {
     return DateColumn
   }
-  if (["object", "bytes"].includes(typeName)) {
+  if (isObjectType(arrowType) || isBytesType(arrowType)) {
     return ObjectColumn
   }
   if (isBooleanType(arrowType)) {
@@ -176,10 +176,10 @@ export function getColumnTypeFromArrow(arrowType: ArrowType): ColumnCreator {
   if (isNumericType(arrowType)) {
     return NumberColumn
   }
-  if (typeName === "categorical") {
+  if (isCategoricalType(arrowType)) {
     return SelectboxColumn
   }
-  if (typeName.startsWith("list")) {
+  if (isListType(arrowType)) {
     return ListColumn
   }
 
@@ -202,7 +202,7 @@ export function getIndexFromArrow(
   const title = data.indexNames[indexPosition]
   let isEditable = true
 
-  if (getTypeName(arrowType) === "range") {
+  if (isRangeIndexType(arrowType)) {
     // Range indices are not editable
     isEditable = false
   }
@@ -270,7 +270,7 @@ export function getColumnFromArrow(
   }
 
   let columnTypeOptions
-  if (getTypeName(arrowType) === "categorical") {
+  if (isCategoricalType(arrowType)) {
     // Get the available categories and use it in column type metadata
     const options = data.getCategoricalOptions(columnPosition)
     if (notNullOrUndefined(options)) {
@@ -320,8 +320,8 @@ export function getAllColumnsFromArrow(data: Quiver): BaseColumnProps[] {
   const columns: BaseColumnProps[] = []
 
   const { dimensions } = data
-  const numIndices = dimensions.indexColumns
-  const numColumns = dimensions.dataColumns
+  const numIndices = dimensions.numIndexColumns
+  const numColumns = dimensions.numDataColumns
 
   if (numIndices === 0 && numColumns === 0) {
     // Tables that don't have any columns cause an exception in glide-data-grid.
@@ -366,12 +366,13 @@ export function getCellFromArrow(
   arrowCell: DataFrameCell,
   cssStyles: string | undefined = undefined
 ): GridCell {
-  const typeName = column.arrowType ? getTypeName(column.arrowType) : null
-
   let cellTemplate
   if (column.kind === "object") {
     // Always use display value from Quiver for object types
     // these are special types that the dataframe only support in read-only mode.
+
+    // TODO(lukasmasuch): Move this to object column once the
+    // field information is available in the arrowType.
     cellTemplate = column.getCell(
       notNullOrUndefined(arrowCell.content)
         ? removeLineBreaks(
@@ -393,9 +394,12 @@ export function getCellFromArrow(
     // to a date object based on the arrow field metadata.
     // Our implementation only supports unix timestamps in seconds, so we need to
     // do some custom conversion here.
+
+    // TODO(lukasmasuch): Move this to time/date/datetime column once the
+    // field information is available in the arrowType.
     let parsedDate
     if (
-      typeName === "time" &&
+      isTimeType(column.arrowType) &&
       notNullOrUndefined(arrowCell.field?.type?.unit)
     ) {
       // Time values needs to be adjusted to seconds based on the unit
@@ -406,10 +410,13 @@ export function getCellFromArrow(
     }
 
     cellTemplate = column.getCell(parsedDate)
-  } else if (typeName === "decimal") {
+  } else if (isDecimalType(column.arrowType)) {
     // This is a special case where we want to already prepare a decimal value
     // to a number string based on the arrow field metadata. This is required
     // because we don't have access to the required scale in the number column.
+
+    // TODO(lukasmasuch): Move this to number column once the
+    // field information is available in the arrowType.
     const decimalStr = isNullOrUndefined(arrowCell.content)
       ? null
       : formatArrowCell(

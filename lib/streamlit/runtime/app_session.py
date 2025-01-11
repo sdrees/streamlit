@@ -304,7 +304,7 @@ class AppSession:
                 _LOGGER.warning('No handler for "%s"', msg_type)
 
         except Exception as ex:
-            _LOGGER.error(ex)
+            _LOGGER.exception("Error processing back message")
             self.handle_backmsg_exception(ex)
 
     def handle_backmsg_exception(self, e: BaseException) -> None:

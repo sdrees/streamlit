@@ -31,10 +31,6 @@ import "moment-timezone"
 import numbro from "numbro"
 import { sprintf } from "sprintf-js"
 
-import {
-  formatPeriodFromFreq,
-  PandasPeriodFrequency,
-} from "@streamlit/lib/src/dataframes/arrowFormatUtils"
 import { PandasColumnType as ArrowType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import { EmotionTheme } from "@streamlit/lib/src/theme"
 import {
@@ -499,16 +495,6 @@ export function formatNumber(
     return new Intl.NumberFormat(undefined, {
       notation: format as any,
     }).format(value)
-  } else if (format === "duration[ns]") {
-    return moment.duration(value / (1000 * 1000), "milliseconds").humanize()
-  } else if (format.startsWith("period[")) {
-    const match = format.match(/period\[(.*)]/)
-    if (match === null) {
-      return String(value)
-    }
-    const [, freq] = match
-
-    return formatPeriodFromFreq(value, freq as PandasPeriodFrequency)
   }
 
   return sprintf(format, value)

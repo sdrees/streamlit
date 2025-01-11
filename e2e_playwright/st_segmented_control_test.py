@@ -54,17 +54,17 @@ def test_click_multiple_segmented_control_button_and_take_snapshot(
     wait_for_app_run(themed_app)
 
     # click on second element to test multiselect
-    get_segment_button(segmented_control, "📊 Charts").click()
+    get_segment_button(segmented_control, "Charts").click()
     wait_for_app_run(themed_app)
     expect_markdown(themed_app, "Multi selection: ['Foobar', '📊 Charts']")
 
     # click on same element to test unselect
-    get_segment_button(segmented_control, "📊 Charts").click()
+    get_segment_button(segmented_control, "Charts").click()
     wait_for_app_run(themed_app)
     expect_markdown(themed_app, "Multi selection: ['Foobar']")
 
     # click on same element and take screenshot of multiple selected segmented control buttons
-    get_segment_button(segmented_control, "📊 Charts").click()
+    get_segment_button(segmented_control, "Charts").click()
     # take away hover focus of button
     themed_app.get_by_test_id("stApp").click(position={"x": 0, "y": 0})
     wait_for_app_run(themed_app)

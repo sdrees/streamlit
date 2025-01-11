@@ -38,7 +38,20 @@ import {
   notNullOrUndefined,
 } from "@streamlit/lib/src/util/utils"
 
-import { DataType, getTypeName, PandasColumnType } from "./arrowTypeUtils"
+import {
+  DataType,
+  isDatetimeType,
+  isDateType,
+  isDecimalType,
+  isDurationType,
+  isFloatType,
+  isIntervalType,
+  isListType,
+  isObjectType,
+  isPeriodType,
+  isTimeType,
+  PandasColumnType,
+} from "./arrowTypeUtils"
 
 /**
  * The frequency strings defined in pandas.
@@ -72,7 +85,7 @@ type SupportedPandasOffsetType =
   | "L" // deprecated alias
   | "ms"
 
-export type PandasPeriodFrequency =
+type PandasPeriodFrequency =
   | SupportedPandasOffsetType
   | `${SupportedPandasOffsetType}-${string}`
 
@@ -528,7 +541,6 @@ export function format(
   pandasType?: PandasColumnType,
   field?: Field
 ): string {
-  const typeName = pandasType && getTypeName(pandasType)
   const extensionName = field && field.metadata.get("ARROW:extension:name")
   const fieldType = field?.type
 
@@ -538,50 +550,47 @@ export function format(
 
   // date
   const isDate = x instanceof Date || Number.isFinite(x)
-  if (isDate && typeName === "date") {
+  if (isDate && isDateType(pandasType)) {
     return formatDate(x as Date | number)
   }
 
   // time
-  if (typeof x === "bigint" && typeName === "time") {
+  if (typeof x === "bigint" && isTimeType(pandasType)) {
     return formatTime(Number(x), field)
   }
 
   // datetimetz, datetime, datetime64, datetime64[ns], etc.
   if (
     isDate &&
-    (typeName?.startsWith("datetime") || fieldType instanceof Timestamp)
+    (isDatetimeType(pandasType) || fieldType instanceof Timestamp)
   ) {
     return formatDatetime(x as Date | number, field)
   }
 
-  if (typeName?.startsWith("period") || extensionName === "pandas.period") {
+  if (isPeriodType(pandasType) || extensionName === "pandas.period") {
     return formatPeriod(x as bigint, field)
   }
 
-  if (
-    typeName?.startsWith("interval") ||
-    extensionName === "pandas.interval"
-  ) {
+  if (isIntervalType(pandasType) || extensionName === "pandas.interval") {
     return formatInterval(x as StructRow, field)
   }
 
-  if (typeName?.startsWith("timedelta")) {
+  if (isDurationType(pandasType)) {
     return formatDuration(x as number | bigint, field)
   }
 
-  if (typeName === "decimal") {
+  if (isDecimalType(pandasType)) {
     return formatDecimal(x as Uint32Array, field)
   }
 
   if (
-    (typeName === "float64" || fieldType instanceof Float) &&
+    (isFloatType(pandasType) || fieldType instanceof Float) &&
     Number.isFinite(x)
   ) {
     return formatFloat(x as number)
   }
 
-  if (typeName === "object" || typeName?.startsWith("list")) {
+  if (isObjectType(pandasType) || isListType(pandasType)) {
     return formatObject(x, field)
   }
 

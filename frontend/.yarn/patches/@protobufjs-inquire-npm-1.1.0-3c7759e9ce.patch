@@ -1,7 +1,7 @@
-diff --git a/node_modules/@protobufjs/inquire/index.js b/node_modules/@protobufjs/inquire/index.js
-index 33778b5..eb0d85b 100644
---- a/node_modules/@protobufjs/inquire/index.js
-+++ b/node_modules/@protobufjs/inquire/index.js
+diff --git a/index.js b/index.js
+index 33778b5539b7fcd7a1e99474a4ecb1745fdfe508..eb0d85bc854ffc3e228520d9be85341192f44f82 100644
+--- a/index.js
++++ b/index.js
 @@ -8,6 +8,10 @@ module.exports = inquire;
   * @returns {?Object} Required module if available and not empty, otherwise `null`
   */

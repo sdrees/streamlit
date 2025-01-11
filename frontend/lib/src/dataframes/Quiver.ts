@@ -21,11 +21,7 @@ import { Dictionary, Field, Vector } from "apache-arrow"
 import { immerable, produce } from "immer"
 
 import { IArrow, Styler as StylerProto } from "@streamlit/lib/src/proto"
-import {
-  hashString,
-  isNullOrUndefined,
-  notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
+import { hashString, notNullOrUndefined } from "@streamlit/lib/src/util/utils"
 
 import { concat } from "./arrowConcatUtils"
 import {
@@ -39,7 +35,6 @@ import {
   convertVectorToList,
   DataType,
   PandasColumnType,
-  PandasIndexTypeName,
 } from "./arrowTypeUtils"
 
 /**
@@ -53,10 +48,19 @@ interface PandasStylerData {
   uuid: string
 
   /** Optional user-specified caption. */
-  caption: string | null
+  caption?: string
 
   /** CSS styles from Styler. */
-  styles: string | null
+  cssStyles?: string
+
+  /** CSS ID to use for the Table.
+   *
+   * Format ot the CSS ID: `T_${StylerUUID}`
+   *
+   * This id is used by styled tables and styled dataframes to associate
+   * the Styler CSS with the styled data.
+   */
+  cssId?: string
 
   /**
    * Stringified versions of each cell in the DataFrame, in the
@@ -71,17 +75,17 @@ interface PandasStylerData {
 /** Dimensions of the DataFrame. */
 interface DataFrameDimensions {
   // The number of header rows (> 1 for multi-level headers)
-  headerRows: number
+  numHeaderRows: number
   // The number of index columns
-  indexColumns: number
+  numIndexColumns: number
   // The number of data rows (excluding header rows)
-  dataRows: number
+  numDataRows: number
   // The number of data columns (excluding index columns)
-  dataColumns: number
+  numDataColumns: number
   // The total number of rows (header rows + data rows)
-  rows: number
+  numRows: number
   // The total number of columns (index + data columns)
-  columns: number
+  numColumns: number
 }
 
 /**
@@ -185,33 +189,6 @@ export class Quiver {
     this._num_bytes = element.data?.length ?? 0
   }
 
-  /**
-   * Returns the categorical options defined for a given data column.
-   * Returns undefined if the column is not categorical.
-   *
-   * This function only works for non-index columns and expects the index at 0
-   * for the first non-index data column.
-   */
-  public getCategoricalOptions(dataColumnIndex: number): string[] | undefined {
-    const { dataColumns: numDataColumns } = this.dimensions
-
-    if (dataColumnIndex < 0 || dataColumnIndex >= numDataColumns) {
-      throw new Error(`Column index is out of range: ${dataColumnIndex}`)
-    }
-
-    if (!(this._fields[String(dataColumnIndex)].type instanceof Dictionary)) {
-      // This is not a categorical column
-      return undefined
-    }
-
-    const categoricalDict =
-      this._data.getChildAt(dataColumnIndex)?.data[0]?.dictionary
-
-    return notNullOrUndefined(categoricalDict)
-      ? convertVectorToList(categoricalDict)
-      : undefined
-  }
-
   /** Cell values of the index columns (there can be multiple index columns). */
   public get indexData(): IndexData {
     return this._indexData
@@ -237,56 +214,30 @@ export class Quiver {
     return this._columnTypes
   }
 
-  /**
-   * The CSS id given to the DataFrame from Pandas Styler (if it has one).
-   *
-   * If the DataFrame has a Styler, the  CSS id is `T_${StylerUUID}`. Otherwise,
-   * it's undefined.
-   *
-   * This id is used by styled tables and styled dataframes to associate
-   * the Styler CSS with the styled data.
-   */
-  public get cssId(): string | undefined {
-    if (
-      isNullOrUndefined(this._styler) ||
-      isNullOrUndefined(this._styler.uuid)
-    ) {
-      return undefined
-    }
-
-    return `T_${this._styler.uuid}`
-  }
-
-  /** The DataFrame's CSS styles, if it has a Styler. */
-  public get cssStyles(): string | undefined {
-    return this._styler?.styles || undefined
-  }
-
-  /** The DataFrame's caption, if it's been set. */
-  public get caption(): string | undefined {
-    return this._styler?.caption || undefined
+  public get styler(): PandasStylerData | undefined {
+    return this._styler
   }
 
   /** Dimensions of the DataFrame. */
   public get dimensions(): DataFrameDimensions {
-    const indexColumns =
+    const numIndexColumns =
       // TODO(lukasmasuch): Change default to 0?
       this._indexData.length || this.columnTypes.index.length || 1
-    const headerRows = this._columnNames.length || 1
-    const dataRows = this._data.numRows || 0
-    const dataColumns =
+    const numHeaderRows = this._columnNames.length || 1
+    const numDataRows = this._data.numRows || 0
+    const numDataColumns =
       this._data.numCols || this._columnNames?.[0]?.length || 0
 
-    const rows = headerRows + dataRows
-    const columns = indexColumns + dataColumns
+    const numRows = numHeaderRows + numDataRows
+    const numColumns = numIndexColumns + numDataColumns
 
     return {
-      headerRows,
-      indexColumns,
-      dataRows,
-      dataColumns,
-      rows,
-      columns,
+      numHeaderRows,
+      numIndexColumns,
+      numDataRows,
+      numDataColumns,
+      numRows,
+      numColumns,
     }
   }
 
@@ -301,47 +252,36 @@ export class Quiver {
     // since some of the data can change when `add_rows` is
     // used.
     const valuesToHash = [
-      this.dimensions.columns,
-      this.dimensions.dataColumns,
-      this.dimensions.dataRows,
-      this.dimensions.indexColumns,
-      this.dimensions.headerRows,
-      this.dimensions.rows,
+      this.dimensions.numColumns,
+      this.dimensions.numDataColumns,
+      this.dimensions.numDataRows,
+      this.dimensions.numIndexColumns,
+      this.dimensions.numHeaderRows,
+      this.dimensions.numRows,
       this._num_bytes,
       this._columnNames,
     ]
     return hashString(valuesToHash.join("-"))
   }
 
-  /** True if the DataFrame has no index, columns, and data. */
-  public isEmpty(): boolean {
-    return (
-      this._indexData.length === 0 &&
-      this._columnNames.length === 0 &&
-      this._data.numRows === 0 &&
-      this._data.numCols === 0
-    )
-  }
-
   /** Return a single cell in the table. */
   public getCell(rowIndex: number, columnIndex: number): DataFrameCell {
-    const {
-      headerRows,
-      indexColumns: headerColumns,
-      rows,
-      columns,
-    } = this.dimensions
+    const { numHeaderRows, numIndexColumns, numRows, numColumns } =
+      this.dimensions
 
-    if (rowIndex < 0 || rowIndex >= rows) {
+    if (rowIndex < 0 || rowIndex >= numRows) {
       throw new Error(`Row index is out of range: ${rowIndex}`)
     }
-    if (columnIndex < 0 || columnIndex >= columns) {
+    if (columnIndex < 0 || columnIndex >= numColumns) {
       throw new Error(`Column index is out of range: ${columnIndex}`)
     }
 
-    const isBlankCell = rowIndex < headerRows && columnIndex < headerColumns
-    const isIndexCell = rowIndex >= headerRows && columnIndex < headerColumns
-    const isColumnsCell = rowIndex < headerRows && columnIndex >= headerColumns
+    const isBlankCell =
+      rowIndex < numHeaderRows && columnIndex < numIndexColumns
+    const isIndexCell =
+      rowIndex >= numHeaderRows && columnIndex < numIndexColumns
+    const isColumnsCell =
+      rowIndex < numHeaderRows && columnIndex >= numIndexColumns
 
     if (isBlankCell) {
       // Blank cells include `blank`.
@@ -358,10 +298,10 @@ export class Quiver {
     }
 
     if (isIndexCell) {
-      const dataRowIndex = rowIndex - headerRows
+      const dataRowIndex = rowIndex - numHeaderRows
 
-      const cssId = this._styler?.uuid
-        ? `${this.cssId}level${columnIndex}_row${dataRowIndex}`
+      const cssId = this._styler?.cssId
+        ? `${this._styler.cssId}level${columnIndex}_row${dataRowIndex}`
         : undefined
 
       // Index label cells include:
@@ -379,7 +319,7 @@ export class Quiver {
       let field = this._fields[`__index_level_${String(columnIndex)}__`]
       if (field === undefined) {
         // If the index column has a name, we need to get it differently:
-        field = this._fields[String(columns - headerColumns)]
+        field = this._fields[String(numColumns - numIndexColumns)]
       }
       return {
         type: DataFrameCellType.INDEX,
@@ -392,7 +332,7 @@ export class Quiver {
     }
 
     if (isColumnsCell) {
-      const dataColumnIndex = columnIndex - headerColumns
+      const dataColumnIndex = columnIndex - numIndexColumns
 
       // Column label cells include:
       // - col_heading
@@ -411,17 +351,17 @@ export class Quiver {
         // ArrowJS automatically converts "columns" cells to strings.
         // Keep ArrowJS structure for consistency.
         contentType: {
-          pandas_type: PandasIndexTypeName.UnicodeIndex,
+          pandas_type: "unicode",
           numpy_type: "object",
         },
       }
     }
 
-    const dataRowIndex = rowIndex - headerRows
-    const dataColumnIndex = columnIndex - headerColumns
+    const dataRowIndex = rowIndex - numHeaderRows
+    const dataColumnIndex = columnIndex - numIndexColumns
 
-    const cssId = this._styler?.uuid
-      ? `${this.cssId}row${dataRowIndex}_col${dataColumnIndex}`
+    const cssId = this._styler?.cssId
+      ? `${this._styler.cssId}row${dataRowIndex}_col${dataColumnIndex}`
       : undefined
 
     // Data cells include `data`.
@@ -464,6 +404,33 @@ export class Quiver {
   }
 
   /**
+   * Returns the categorical options defined for a given data column.
+   * Returns undefined if the column is not categorical.
+   *
+   * This function only works for non-index columns and expects the index at 0
+   * for the first non-index data column.
+   */
+  public getCategoricalOptions(dataColumnIndex: number): string[] | undefined {
+    const { numDataColumns: numDataColumns } = this.dimensions
+
+    if (dataColumnIndex < 0 || dataColumnIndex >= numDataColumns) {
+      throw new Error(`Column index is out of range: ${dataColumnIndex}`)
+    }
+
+    if (!(this._fields[String(dataColumnIndex)].type instanceof Dictionary)) {
+      // This is not a categorical column
+      return undefined
+    }
+
+    const categoricalDict =
+      this._data.getChildAt(dataColumnIndex)?.data[0]?.dictionary
+
+    return notNullOrUndefined(categoricalDict)
+      ? convertVectorToList(categoricalDict)
+      : undefined
+  }
+
+  /**
    * Add the contents of another table (data + indexes) to this table.
    * Extra columns will not be created.
    */
@@ -483,13 +450,13 @@ st.add_rows(my_styler.data)
     }
 
     // Don't do anything if the incoming DataFrame is empty.
-    if (other.isEmpty()) {
+    if (other.dimensions.numDataRows === 0) {
       return produce(this, (draft: Quiver) => draft)
     }
 
     // We need to handle this separately, as columns need to be reassigned.
     // We don't concatenate columns in the general case.
-    if (this.isEmpty()) {
+    if (this.dimensions.numDataRows === 0) {
       return produce(other, (draft: Quiver) => draft)
     }
 
@@ -520,8 +487,8 @@ function parseStyler(pandasStyler: StylerProto): PandasStylerData {
   return {
     uuid: pandasStyler.uuid,
     caption: pandasStyler.caption,
-    styles: pandasStyler.styles,
-
+    cssStyles: pandasStyler.styles,
+    cssId: pandasStyler.uuid ? `T_${pandasStyler.uuid}` : undefined,
     // Recursively create a new Quiver instance for Styler's display values.
     // This values will be used for rendering the DataFrame, while the original values
     // will be used for sorting, etc.

@@ -273,9 +273,9 @@ class DataCaches(CacheStatsProvider):
         except InvalidCacheStorageContext as e:
             _LOGGER.error(
                 "Cache params for function %s are incompatible with current "
-                "cache storage manager: %s",
+                "cache storage manager.",
                 function_name,
-                e,
+                exc_info=e,
             )
             raise
 

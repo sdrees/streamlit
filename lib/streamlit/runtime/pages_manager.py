@@ -300,7 +300,9 @@ class PagesManager:
         if isinstance(self.pages_strategy, PagesStrategyV1):
             if os.path.exists(self.main_script_parent / "pages"):
                 _LOGGER.warning(
-                    "st.navigation was called in an app with a pages/ directory. This may cause unusual app behavior. You may want to rename the pages/ directory."
+                    "st.navigation was called in an app with a pages/ directory. "
+                    "This may cause unusual app behavior. You may want to rename the "
+                    "pages/ directory."
                 )
             PagesManager.DefaultStrategy = PagesStrategyV2
             self.pages_strategy = PagesStrategyV2(self)

@@ -247,11 +247,11 @@ describe("format", () => {
   test("period", () => {
     const mockElement = { data: PERIOD }
     const q = new Quiver(mockElement)
-    const { rows, columns } = q.dimensions
+    const { numRows, numColumns } = q.dimensions
     const table: Record<string, string[]> = {}
-    for (let columnIndex = 1; columnIndex < columns; columnIndex++) {
+    for (let columnIndex = 1; columnIndex < numColumns; columnIndex++) {
       const column = []
-      for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+      for (let rowIndex = 0; rowIndex < numRows; rowIndex++) {
         const { content, contentType, field } = q.getCell(
           rowIndex,
           columnIndex

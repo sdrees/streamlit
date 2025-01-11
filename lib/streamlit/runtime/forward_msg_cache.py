@@ -133,7 +133,9 @@ class ForwardMsgCache(CacheStatsProvider):
             if script_run_count < prev_run_count:
                 _LOGGER.error(
                     "New script_run_count (%s) is < prev_run_count (%s). "
-                    "This should never happen!" % (script_run_count, prev_run_count)
+                    "This should never happen!",
+                    script_run_count,
+                    prev_run_count,
                 )
                 script_run_count = prev_run_count
             self._session_script_run_counts[session] = script_run_count

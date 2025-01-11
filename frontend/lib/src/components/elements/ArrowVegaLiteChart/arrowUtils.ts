@@ -15,8 +15,10 @@
  */
 
 import {
-  getTypeName,
-  PandasIndexTypeName,
+  getTimezone,
+  isDatetimeType,
+  isDateType,
+  isNumericType,
 } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
 import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
@@ -24,15 +26,6 @@ import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
 const MagicFields = {
   DATAFRAME_INDEX: "(index)",
 }
-
-/** Types of dataframe-indices that are supported as x axis. */
-const SUPPORTED_INDEX_TYPES = new Set([
-  PandasIndexTypeName.DatetimeIndex,
-  PandasIndexTypeName.Float64Index,
-  PandasIndexTypeName.Int64Index,
-  PandasIndexTypeName.RangeIndex,
-  PandasIndexTypeName.UInt64Index,
-])
 
 /** All of the data that makes up a VegaLite chart. */
 export interface VegaLiteChartElement {
@@ -86,7 +79,7 @@ export interface WrappedNamedDataset {
 export function getInlineData(
   quiverData: Quiver | null
 ): { [field: string]: any }[] | null {
-  if (!quiverData || quiverData.data.numRows === 0) {
+  if (!quiverData || quiverData.dimensions.numDataRows === 0) {
     return null
   }
 
@@ -142,47 +135,55 @@ export function getDataArray(
   quiverData: Quiver,
   startIndex = 0
 ): { [field: string]: any }[] {
-  if (quiverData.isEmpty()) {
+  if (quiverData.dimensions.numDataRows === 0) {
     return []
   }
 
   const dataArr = []
-  const { dataRows: rows, dataColumns: cols } = quiverData.dimensions
+  const { numDataRows, numDataColumns } = quiverData.dimensions
 
-  const indexType = getTypeName(quiverData.columnTypes.index[0])
-  const hasSupportedIndex = SUPPORTED_INDEX_TYPES.has(
-    indexType as PandasIndexTypeName
-  )
+  // This currently only works with a single index column.
+  // Supporting multiple index columns would require some
+  // changes to this logic:
+  const firstIndexColumnType = quiverData.columnTypes.index[0] ?? undefined
+  const hasSupportedIndex =
+    firstIndexColumnType &&
+    (isNumericType(firstIndexColumnType) ||
+      isDatetimeType(firstIndexColumnType) ||
+      isDateType(firstIndexColumnType))
 
-  for (let rowIndex = startIndex; rowIndex < rows; rowIndex++) {
+  for (let rowIndex = startIndex; rowIndex < numDataRows; rowIndex++) {
     const row: { [field: string]: any } = {}
 
     if (hasSupportedIndex) {
       const indexValue = quiverData.getIndexValue(rowIndex, 0)
       // VegaLite can't handle BigInts, so they have to be converted to Numbers first
+      // Converting to numbers here might loses accuracy for numbers larger than the max safe integer.
       row[MagicFields.DATAFRAME_INDEX] =
         typeof indexValue === "bigint" ? Number(indexValue) : indexValue
     }
 
-    for (let colIndex = 0; colIndex < cols; colIndex++) {
+    for (let colIndex = 0; colIndex < numDataColumns; colIndex++) {
       const dataValue = quiverData.getDataValue(rowIndex, colIndex)
       const dataType = quiverData.columnTypes.data[colIndex]
-      const typeName = getTypeName(dataType)
 
       if (
-        typeName !== "datetimetz" &&
         (dataValue instanceof Date || Number.isFinite(dataValue)) &&
-        (typeName.startsWith("datetime") || typeName === "date")
+        (isDatetimeType(dataType) || isDateType(dataType)) &&
+        // Only convert dates without timezone information
+        // to utc timezone
+        !getTimezone(dataType)
       ) {
         // For dates that do not contain timezone information.
         // Vega JS assumes dates in the local timezone, so we need to convert
         // UTC date to be the same date in the local timezone.
         const offset = new Date(dataValue).getTimezoneOffset() * 60 * 1000 // minutes to milliseconds
         row[quiverData.columnNames[0][colIndex]] = dataValue.valueOf() + offset
-      } else if (typeof dataValue === "bigint") {
-        row[quiverData.columnNames[0][colIndex]] = Number(dataValue)
       } else {
-        row[quiverData.columnNames[0][colIndex]] = dataValue
+        // VegaLite can't handle BigInts, so they have to be converted to Numbers first.
+        // Converting to numbers here might loses accuracy for numbers larger than the max safe integer.
+        row[quiverData.columnNames[0][colIndex]] =
+          typeof dataValue === "bigint" ? Number(dataValue) : dataValue
       }
     }
     dataArr.push(row)

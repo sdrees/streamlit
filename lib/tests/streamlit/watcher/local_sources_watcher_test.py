@@ -178,7 +178,8 @@ class LocalSourcesWatcherTest(unittest.TestCase):
         fob.assert_called_once()  # Just __init__.py
 
         patched_logger.warning.assert_called_once_with(
-            "Examining the path of MisbehavedModule raised: Oh noes!"
+            "Examining the path of MisbehavedModule raised:",
+            exc_info=True,
         )
 
     @patch("streamlit.watcher.local_sources_watcher.PathWatcher")

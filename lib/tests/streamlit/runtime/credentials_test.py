@@ -298,9 +298,7 @@ class CredentialsClassTest(unittest.TestCase):
             "streamlit.runtime.credentials.os.remove", side_effect=OSError("some error")
         ), patch("streamlit.runtime.credentials._LOGGER") as p:
             Credentials.reset()
-            p.error.assert_called_once_with(
-                "Error removing credentials file: some error"
-            )
+            p.exception.assert_called_once_with("Error removing credentials file.")
 
     @tempdir()
     def test_email_send(self, temp_dir):
@@ -347,7 +345,7 @@ class CredentialsClassTest(unittest.TestCase):
             ) as mock_logger:
                 creds.save()
                 assert len(mock_logger.output) == 1
-                assert "Error saving email: 403" in mock_logger.output[0]
+                assert "Error saving email" in mock_logger.output[0]
 
 
 class CredentialsModulesTest(unittest.TestCase):

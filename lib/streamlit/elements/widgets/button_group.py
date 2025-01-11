@@ -52,7 +52,7 @@ from streamlit.proto.ButtonGroup_pb2 import ButtonGroup as ButtonGroupProto
 from streamlit.runtime.metrics_util import gather_metrics
 from streamlit.runtime.scriptrunner_utils.script_run_context import get_script_run_ctx
 from streamlit.runtime.state import register_widget
-from streamlit.string_util import validate_material_icon
+from streamlit.string_util import is_emoji, validate_material_icon
 from streamlit.type_util import T
 
 if TYPE_CHECKING:
@@ -822,10 +822,12 @@ class ButtonGroupMixin:
             if len(transformed_parts) > 0:
                 maybe_icon = transformed_parts[0].strip()
                 try:
-                    # we only want to extract material icons because we treat them
-                    # differently than emojis visually
                     if maybe_icon.startswith(":material"):
                         icon = validate_material_icon(maybe_icon)
+                    elif is_emoji(maybe_icon):
+                        icon = maybe_icon
+
+                    if icon:
                         # reassamble the option string without the icon - also
                         # works if len(transformed_parts) == 1
                         transformed = " ".join(transformed_parts[1:])

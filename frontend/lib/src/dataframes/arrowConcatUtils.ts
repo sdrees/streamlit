@@ -26,11 +26,43 @@ import { Data, IndexData, PandasColumnTypes } from "./arrowParseUtils"
 import {
   getTypeName,
   PandasColumnType,
-  PandasIndexTypeName,
   PandasRangeIndex,
-  sameDataTypes,
-  sameIndexTypes,
+  PandasRangeIndexType,
 } from "./arrowTypeUtils"
+
+/** True if both arrays contain the same data types in the same order.
+ *
+ * Dataframes to have the same types if all columns that exist in t1
+ * also exist in t2 in the same order and with the same type. t2 can be larger
+ * than t1 but not the other way around.
+ */
+function sameDataTypes(
+  t1: PandasColumnType[],
+  t2: PandasColumnType[]
+): boolean {
+  return t1.every(
+    (type: PandasColumnType, index: number) =>
+      type.pandas_type === t2[index]?.pandas_type
+  )
+}
+
+/** True if both arrays contain the same index types in the same order.
+ * If the arrays have different lengths, they are never the same
+ */
+function sameIndexTypes(
+  t1: PandasColumnType[],
+  t2: PandasColumnType[]
+): boolean {
+  // Make sure both indexes have same dimensions.
+  if (t1.length !== t2.length) {
+    return false
+  }
+
+  return t1.every(
+    (type: PandasColumnType, index: number) =>
+      index < t2.length && getTypeName(type) === getTypeName(t2[index])
+  )
+}
 
 /** Concatenate the original DataFrame index with the given one. */
 function concatIndexes(
@@ -71,7 +103,7 @@ but was expecting \`${JSON.stringify(expectedIndexTypes)}\`.
 
   // NOTE: "range" index cannot be a part of a multi-index, i.e.
   // if the index type is "range", there will only be one element in the index array.
-  if (baseIndexTypes[0].pandas_type === PandasIndexTypeName.RangeIndex) {
+  if (baseIndexTypes[0].pandas_type === PandasRangeIndexType) {
     // Continue the sequence for a "range" index.
     // NOTE: The metadata of the original index will be used, i.e.
     // if both indexes are of type "range" and they have different
@@ -174,7 +206,7 @@ but was expecting \`${JSON.stringify(expectedIndexTypes)}\`.
   return baseIndexTypes.map(indexType => {
     // NOTE: "range" index cannot be a part of a multi-index, i.e.
     // if the index type is "range", there will only be one element in the index array.
-    if (indexType.pandas_type === PandasIndexTypeName.RangeIndex) {
+    if (indexType.pandas_type === PandasRangeIndexType) {
       const { stop, step } = indexType.meta as PandasRangeIndex
       const {
         start: appendStart,

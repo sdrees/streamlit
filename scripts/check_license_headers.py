@@ -53,6 +53,8 @@ IGNORE_PATTERN = re.compile(
     # degree of creativity.
     r"|^(\.dockerignore|\.editorconfig|\.gitignore|\.gitmodules)$"
     r"|^frontend/(\.dockerignore|\.eslintrc.js|\.prettierignore)$"
+    r"|^frontend/\.yarn"  # Exclude everything in the .yarn folder
+    r"|^component-lib/\.yarn"
     r"|^lib/(\.coveragerc|\.dockerignore|MANIFEST\.in|mypy\.ini)$"
     r"|^lib/.*-requirements\.txt$"
     r"|^lib/min-constraints-gen\.txt"

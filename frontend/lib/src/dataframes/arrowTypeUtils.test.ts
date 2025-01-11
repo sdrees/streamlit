@@ -40,13 +40,25 @@ import {
   getTimezone,
   getTypeName,
   isBooleanType,
+  isBytesType,
+  isCategoricalType,
+  isDatetimeType,
+  isDateType,
   isDecimalType,
+  isDurationType,
+  isEmptyType,
   isFloatType,
   isIntegerType,
+  isIntervalType,
+  isListType,
   isNumericType,
+  isObjectType,
+  isPeriodType,
+  isRangeIndexType,
+  isStringType,
+  isTimeType,
   isUnsignedIntegerType,
   PandasColumnType,
-  PandasIndexTypeName,
 } from "./arrowTypeUtils"
 
 describe("getTypeName", () => {
@@ -122,9 +134,7 @@ describe("getTypeName", () => {
       const q = new Quiver(mockElement)
       const indexType = q.columnTypes.index[0]
 
-      expect(getTypeName(indexType)).toEqual(
-        PandasIndexTypeName.CategoricalIndex
-      )
+      expect(getTypeName(indexType)).toEqual("categorical")
     })
 
     test("date", () => {
@@ -132,7 +142,7 @@ describe("getTypeName", () => {
       const q = new Quiver(mockElement)
       const indexType = q.columnTypes.index[0]
 
-      expect(getTypeName(indexType)).toEqual(PandasIndexTypeName.DatetimeIndex)
+      expect(getTypeName(indexType)).toEqual("datetime")
     })
 
     test("float64", () => {
@@ -140,7 +150,7 @@ describe("getTypeName", () => {
       const q = new Quiver(mockElement)
       const indexType = q.columnTypes.index[0]
 
-      expect(getTypeName(indexType)).toEqual(PandasIndexTypeName.Float64Index)
+      expect(getTypeName(indexType)).toEqual("float64")
     })
 
     test("int64", () => {
@@ -148,7 +158,7 @@ describe("getTypeName", () => {
       const q = new Quiver(mockElement)
       const indexType = q.columnTypes.index[0]
 
-      expect(getTypeName(indexType)).toEqual(PandasIndexTypeName.Int64Index)
+      expect(getTypeName(indexType)).toEqual("int64")
     })
 
     test("range", () => {
@@ -156,7 +166,7 @@ describe("getTypeName", () => {
       const q = new Quiver(mockElement)
       const indexType = q.columnTypes.index[0]
 
-      expect(getTypeName(indexType)).toEqual(PandasIndexTypeName.RangeIndex)
+      expect(getTypeName(indexType)).toEqual("range")
     })
 
     test("uint64", () => {
@@ -164,7 +174,7 @@ describe("getTypeName", () => {
       const q = new Quiver(mockElement)
       const indexType = q.columnTypes.index[0]
 
-      expect(getTypeName(indexType)).toEqual(PandasIndexTypeName.UInt64Index)
+      expect(getTypeName(indexType)).toEqual("uint64")
     })
 
     test("unicode", () => {
@@ -172,7 +182,7 @@ describe("getTypeName", () => {
       const q = new Quiver(mockElement)
       const indexType = q.columnTypes.index[0]
 
-      expect(getTypeName(indexType)).toEqual(PandasIndexTypeName.UnicodeIndex)
+      expect(getTypeName(indexType)).toEqual("unicode")
     })
   })
 })
@@ -549,4 +559,525 @@ describe("convertVectorToList", () => {
     const expected = [1, 2, 3]
     expect(convertVectorToList(vector)).toEqual(expected)
   })
+})
+
+describe("isDurationType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "timedelta64[ns]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "timedelta64[s]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "float64",
+        numpy_type: "float64",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "timedelta64[ns]",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as duration type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isDurationType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isPeriodType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "period[Y-DEC]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "period[M]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "float64",
+        numpy_type: "float64",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "period[Y]",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as period type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isPeriodType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isDatetimeType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "datetime",
+        numpy_type: "datetime64[ns]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "datetime64[s]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "float64",
+        numpy_type: "float64",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "datetime64[ns]",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as datetime type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isDatetimeType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isDateType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "date",
+        numpy_type: "date",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "date",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "datetime",
+        numpy_type: "datetime64[ns]",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "date",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as date type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isDateType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isTimeType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "time",
+        numpy_type: "time",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "time",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "datetime",
+        numpy_type: "datetime64[ns]",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "time",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as time type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isTimeType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isCategoricalType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "category",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "categorical",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "datetime",
+        numpy_type: "datetime64[ns]",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "int64",
+        numpy_type: "int64",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as categorical type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isCategoricalType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isListType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "list[int64]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "list[str]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "datetime",
+        numpy_type: "datetime64[ns]",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "list[int64]",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as list type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isListType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isObjectType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "object",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "dict",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "int64",
+        numpy_type: "int64",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "object",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as object type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isObjectType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isBytesType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "bytes",
+        numpy_type: "bytes",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "bytes",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "unicode",
+        numpy_type: "object",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "bytes",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as bytes type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isBytesType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isStringType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "unicode",
+        numpy_type: "object",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "large_string[pyarrow]",
+        numpy_type: "object",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "string",
+        numpy_type: "object",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "unicode",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "object",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as string type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isStringType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isEmptyType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "empty",
+        numpy_type: "object",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "empty",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "null",
+        numpy_type: "object",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "empty",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as empty type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isEmptyType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isIntervalType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "interval[datetime64[ns], right]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "interval[int64, both]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "interval[float64, left]",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "interval[int64, right]",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "int64",
+        numpy_type: "int64",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as interval type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isIntervalType(arrowType)).toEqual(expected)
+    }
+  )
+})
+
+describe("isRangeIndexType", () => {
+  it.each([
+    [undefined, false],
+    [
+      {
+        pandas_type: "range",
+        numpy_type: "range",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "object",
+        numpy_type: "range",
+      },
+      true,
+    ],
+    [
+      {
+        pandas_type: "int64",
+        numpy_type: "int64",
+      },
+      false,
+    ],
+    [
+      {
+        pandas_type: "categorical",
+        numpy_type: "range",
+      },
+      false,
+    ],
+  ])(
+    "interprets %s as range index type: %s",
+    (arrowType: PandasColumnType | undefined, expected: boolean) => {
+      expect(isRangeIndexType(arrowType)).toEqual(expected)
+    }
+  )
 })

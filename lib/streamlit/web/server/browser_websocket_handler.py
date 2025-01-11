@@ -232,7 +232,7 @@ class BrowserWebSocketHandler(WebSocketHandler, SessionClient):
             _LOGGER.debug("Received the following back message:\n%s", msg)
 
         except Exception as ex:
-            _LOGGER.error(ex)
+            _LOGGER.exception("Error deserializing back message")
             self._runtime.handle_backmsg_deserialization_exception(self._session_id, ex)
             return
 

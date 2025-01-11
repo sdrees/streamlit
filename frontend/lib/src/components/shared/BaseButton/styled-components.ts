@@ -358,7 +358,6 @@ export const StyledPillsButton = styled(
   return {
     borderRadius: theme.radii.full,
     padding: `${theme.spacing.twoXS} ${theme.spacing.md}`,
-    gap: theme.spacing.xs,
   }
 })
 

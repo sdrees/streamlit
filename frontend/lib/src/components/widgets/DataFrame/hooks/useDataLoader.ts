@@ -46,7 +46,7 @@ function useDataLoader(
   editingState: React.MutableRefObject<EditingState>
 ): DataLoaderReturn {
   // numHeaderRows > 1 for multi-level headers
-  const numHeaderRows = data.dimensions.headerRows
+  const numHeaderRows = data.dimensions.numHeaderRows
   const getCellContent = React.useCallback(
     ([col, row]: readonly [number, number]): GridCell => {
       if (col > columns.length - 1) {
@@ -93,7 +93,7 @@ function useDataLoader(
           originalRow + numHeaderRows,
           originalCol
         )
-        return getCellFromArrow(column, arrowCell, data.cssStyles)
+        return getCellFromArrow(column, arrowCell, data.styler?.cssStyles)
       } catch (error) {
         return getErrorCell(
           "Error during cell creation",

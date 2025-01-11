@@ -21,7 +21,6 @@ import { arrayFromVector } from "@streamlit/lib/src/test_util"
 import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
 
 import { AppNode, AppRoot, BlockNode, ElementNode } from "./AppNode"
-import { PandasIndexTypeName } from "./dataframes/arrowTypeUtils"
 import { UNICODE } from "./mocks/arrow"
 import {
   ArrowNamedDataSet,
@@ -114,7 +113,7 @@ describe("ElementNode.quiverElement", () => {
     expect(q.columnTypes).toEqual({
       index: [
         {
-          pandas_type: PandasIndexTypeName.UnicodeIndex,
+          pandas_type: "unicode",
           numpy_type: "object",
           meta: null,
         },
@@ -147,7 +146,7 @@ describe("ElementNode.quiverElement", () => {
     expect(q.columnTypes).toEqual({
       index: [
         {
-          pandas_type: PandasIndexTypeName.UnicodeIndex,
+          pandas_type: "unicode",
           numpy_type: "object",
           meta: null,
         },
@@ -219,7 +218,7 @@ describe("ElementNode.vegaLiteChartElement", () => {
     expect(element.data?.columnTypes).toEqual({
       index: [
         {
-          pandas_type: PandasIndexTypeName.UnicodeIndex,
+          pandas_type: "unicode",
           numpy_type: "object",
           meta: null,
         },
@@ -291,7 +290,7 @@ describe("ElementNode.vegaLiteChartElement", () => {
     expect(element.datasets[0].data.columnTypes).toEqual({
       index: [
         {
-          pandas_type: PandasIndexTypeName.UnicodeIndex,
+          pandas_type: "unicode",
           numpy_type: "object",
           meta: null,
         },
@@ -378,7 +377,7 @@ describe("ElementNode.arrowAddRows", () => {
       expect(q.columnTypes).toEqual({
         index: [
           {
-            pandas_type: PandasIndexTypeName.UnicodeIndex,
+            pandas_type: "unicode",
             numpy_type: "object",
             meta: null,
           },
@@ -425,7 +424,7 @@ describe("ElementNode.arrowAddRows", () => {
       expect(q.columnTypes).toEqual({
         index: [
           {
-            pandas_type: PandasIndexTypeName.UnicodeIndex,
+            pandas_type: "unicode",
             numpy_type: "object",
             meta: null,
           },
@@ -497,7 +496,7 @@ describe("ElementNode.arrowAddRows", () => {
         expect(element.datasets[0].data.columnTypes).toEqual({
           index: [
             {
-              pandas_type: PandasIndexTypeName.UnicodeIndex,
+              pandas_type: "unicode",
               numpy_type: "object",
               meta: null,
             },
@@ -539,7 +538,7 @@ describe("ElementNode.arrowAddRows", () => {
         expect(element.datasets[0].data.columnTypes).toEqual({
           index: [
             {
-              pandas_type: PandasIndexTypeName.UnicodeIndex,
+              pandas_type: "unicode",
               numpy_type: "object",
               meta: null,
             },
@@ -577,7 +576,7 @@ describe("ElementNode.arrowAddRows", () => {
         expect(element.data?.columnTypes).toEqual({
           index: [
             {
-              pandas_type: PandasIndexTypeName.UnicodeIndex,
+              pandas_type: "unicode",
               numpy_type: "object",
               meta: null,
             },
@@ -618,7 +617,7 @@ describe("ElementNode.arrowAddRows", () => {
         expect(element.data?.columnTypes).toEqual({
           index: [
             {
-              pandas_type: PandasIndexTypeName.UnicodeIndex,
+              pandas_type: "unicode",
               numpy_type: "object",
               meta: null,
             },
@@ -654,7 +653,7 @@ describe("ElementNode.arrowAddRows", () => {
         expect(element.data?.columnTypes).toEqual({
           index: [
             {
-              pandas_type: PandasIndexTypeName.UnicodeIndex,
+              pandas_type: "unicode",
               numpy_type: "object",
               meta: null,
             },
@@ -699,7 +698,7 @@ describe("ElementNode.arrowAddRows", () => {
         expect(element.datasets[0].data.columnTypes).toEqual({
           index: [
             {
-              pandas_type: PandasIndexTypeName.UnicodeIndex,
+              pandas_type: "unicode",
               numpy_type: "object",
               meta: null,
             },
@@ -740,7 +739,7 @@ describe("ElementNode.arrowAddRows", () => {
         expect(element.data?.columnTypes).toEqual({
           index: [
             {
-              pandas_type: PandasIndexTypeName.UnicodeIndex,
+              pandas_type: "unicode",
               numpy_type: "object",
               meta: null,
             },
@@ -779,7 +778,7 @@ describe("ElementNode.arrowAddRows", () => {
         expect(element.data?.columnTypes).toEqual({
           index: [
             {
-              pandas_type: PandasIndexTypeName.UnicodeIndex,
+              pandas_type: "unicode",
               numpy_type: "object",
               meta: null,
             },

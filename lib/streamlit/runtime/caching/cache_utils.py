@@ -486,10 +486,11 @@ def _make_function_key(cache_type: CacheType, func: FunctionType) -> str:
     source_code: str | bytes
     try:
         source_code = inspect.getsource(func)
-    except OSError as e:
+    except OSError as ex:
         _LOGGER.debug(
-            "Failed to retrieve function's source code when building its key; falling back to bytecode. err={0}",
-            e,
+            "Failed to retrieve function's source code when building its key; "
+            "falling back to bytecode.",
+            exc_info=ex,
         )
         source_code = func.__code__.co_code
 

@@ -218,8 +218,10 @@ def get_module_paths(module: ModuleType) -> set[str]:
         except AttributeError:
             # Some modules might not have __file__ or __spec__ attributes.
             pass
-        except Exception as e:
-            _LOGGER.warning(f"Examining the path of {module.__name__} raised: {e}")
+        except Exception:
+            _LOGGER.warning(
+                f"Examining the path of {module.__name__} raised:", exc_info=True
+            )
 
         all_paths.update(
             [os.path.abspath(str(p)) for p in potential_paths if _is_valid_path(p)]

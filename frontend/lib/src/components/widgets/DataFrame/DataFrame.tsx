@@ -180,7 +180,7 @@ function DataFrame({
 
   // Number of rows of the table minus 1 for the header row:
   const dataDimensions = data.dimensions
-  const originalNumRows = Math.max(0, dataDimensions.dataRows)
+  const originalNumRows = Math.max(0, dataDimensions.numDataRows)
 
   // For empty tables, we show an extra row that
   // contains "empty" as a way to indicate that the table is empty.
@@ -188,7 +188,7 @@ function DataFrame({
     originalNumRows === 0 &&
     // We don't show empty state for dynamic mode with a table that has
     // data columns defined.
-    !(element.editingMode === DYNAMIC && dataDimensions.dataColumns > 0)
+    !(element.editingMode === DYNAMIC && dataDimensions.numDataColumns > 0)
 
   // For large tables, we apply some optimizations to handle large data
   const isLargeTable = originalNumRows > LARGE_TABLE_ROWS_THRESHOLD
@@ -531,7 +531,7 @@ function DataFrame({
 
   // To activate the group row feature (multi-level headers),
   // we need more than one header row.
-  const usesGroupRow = data.dimensions.headerRows > 1
+  const usesGroupRow = data.dimensions.numHeaderRows > 1
   const {
     minHeight,
     maxHeight,

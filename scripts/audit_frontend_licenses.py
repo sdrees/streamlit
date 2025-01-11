@@ -27,7 +27,7 @@ from typing import NoReturn, Set, Tuple, cast
 
 from typing_extensions import TypeAlias
 
-PackageInfo: TypeAlias = Tuple[str, str, str, str, str, str]
+PackageInfo: TypeAlias = Tuple[str, str]
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 FRONTEND_DIR_LIB = SCRIPT_DIR.parent / "frontend/lib"
@@ -73,76 +73,51 @@ ACCEPTABLE_LICENSES = {
 PACKAGE_EXCEPTIONS: Set[PackageInfo] = {
     (
         # MIT license: https://github.com/mapbox/jsonlint
-        "@mapbox/jsonlint-lines-primitives",
-        "2.0.2",
+        "@mapbox/jsonlint-lines-primitives@npm:2.0.2",
         "UNKNOWN",
-        "git://github.com/mapbox/jsonlint.git",
-        "http://zaa.ch",
-        "Zach Carter",
-    ),
-    (
-        # Apache 2.0 license: https://github.com/google/flatbuffers
-        "flatbuffers",
-        "23.5.26",
-        "SEE LICENSE IN LICENSE",
-        "git+https://github.com/google/flatbuffers.git",
-        "https://google.github.io/flatbuffers/",
-        "The FlatBuffers project",
     ),
     (
         # Mapbox Web SDK license: https://github.com/mapbox/mapbox-gl-js/blob/main/LICENSE.txt
-        "@plotly/mapbox-gl",
-        "1.13.4",
+        "@plotly/mapbox-gl@npm:1.13.4",
         "SEE LICENSE IN LICENSE.txt",
-        "git://github.com/plotly/mapbox-gl-js.git",
-        "Unknown",
-        "Unknown",
     ),
     (
         # Mapbox Web SDK license: https://github.com/mapbox/mapbox-gl-js/blob/main/LICENSE.txt
-        "mapbox-gl",
-        "1.13.3",
+        "mapbox-gl@npm:1.13.3",
         "SEE LICENSE IN LICENSE.txt",
-        "git://github.com/mapbox/mapbox-gl-js.git",
-        "Unknown",
-        "Unknown",
-    ),
-    (
-        # CC-BY-3.0 license: https://github.com/cartodb/cartocolor#licensing
-        "cartocolor",
-        "4.0.2",
-        "UNKNOWN",
-        "https://github.com/cartodb/cartocolor",
-        "http://carto.com/",
-        "Unknown",
     ),
     (
         # Apache-2.0 license: https://github.com/saikocat/colorbrewer/blob/master/LICENSE.txt
-        "colorbrewer",
-        "1.0.0",
-        "Apache*",
-        "https://github.com/saikocat/colorbrewer",
-        "http://colorbrewer2.org/",
-        "Cynthia Brewer",
+        "colorbrewer@npm:1.5.6",
+        "UNKNOWN",
+    ),
+    (
+        # This is our workspace
+        "streamlit@workspace:.",
+        "UNKNOWN",
+    ),
+    (
+        # MIT license: https://github.com/felixge/node-stack-trace/blob/master/License
+        "stack-trace@npm:0.0.9",
+        "UNKNOWN",
     ),
 }
 
 
 def get_license_type(package: PackageInfo) -> str:
     """Return the license type string for a dependency entry."""
-    return package[2]
+    return package[1]
 
 
 def check_licenses(licenses) -> NoReturn:
     # `yarn licenses` outputs a bunch of lines.
     # The last line contains the JSON object we care about
-    licenses_json = json.loads(licenses[len(licenses) - 1])
-    assert licenses_json["type"] == "table"
-
-    # Pull out the list of package infos from the JSON.
-    packages = [
-        cast(PackageInfo, tuple(package)) for package in licenses_json["data"]["body"]
-    ]
+    packages = []
+    for license in licenses:
+        license_json = json.loads(license)
+        license_name = license_json["value"]
+        for package_name in license_json["children"].keys():
+            packages.append(cast(PackageInfo, (package_name, license_name)))
 
     # Discover dependency exceptions that are no longer used and can be
     # jettisoned, and print them out with a warning.
@@ -169,7 +144,7 @@ def check_licenses(licenses) -> NoReturn:
         print(f"{len(bad_packages)} unacceptable licenses")
         sys.exit(1)
 
-    print(f"No unacceptable licenses")
+    print(f"No unacceptable licenses: {len(packages)} checked")
     sys.exit(0)
 
 
@@ -177,7 +152,7 @@ def main() -> NoReturn:
     # Run `yarn licenses` for lib.
     licenses_output = (
         subprocess.check_output(
-            ["yarn", "licenses", "list", "--json", "--production", "--ignore-platform"],
+            ["yarn", "licenses", "list", "--json", "--production", "--recursive"],
             cwd=str(FRONTEND_DIR_LIB),
         )
         .decode()
@@ -187,7 +162,7 @@ def main() -> NoReturn:
     # Run `yarn licenses` for app.
     licenses_output = licenses_output + (
         subprocess.check_output(
-            ["yarn", "licenses", "list", "--json", "--production", "--ignore-platform"],
+            ["yarn", "licenses", "list", "--json", "--production", "--recursive"],
             cwd=str(FRONTEND_DIR_APP),
         )
         .decode()

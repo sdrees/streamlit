@@ -503,7 +503,7 @@ class ScriptRunner:
 
             except Exception as ex:
                 # We got a compile error. Send an error event and bail immediately.
-                _LOGGER.debug("Fatal script error: %s", ex)
+                _LOGGER.debug("Fatal script error", exc_info=ex)
                 self._session_state[SCRIPT_RUN_WITHOUT_ERRORS_KEY] = False
                 self.on_event.send(
                     self,

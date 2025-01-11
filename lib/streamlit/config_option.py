@@ -250,13 +250,6 @@ class ConfigOption:
         self.is_default = value == self.default_val
 
         if self.deprecated and self.where_defined != ConfigOption.DEFAULT_DEFINITION:
-            details = {
-                "key": self.key,
-                "file": self.where_defined,
-                "explanation": self.deprecation_text,
-                "date": self.expiration_date,
-            }
-
             if self.is_expired():
                 # Import here to avoid circular imports
                 from streamlit.logger import get_logger
@@ -264,17 +257,16 @@ class ConfigOption:
                 LOGGER = get_logger(__name__)
                 LOGGER.error(
                     textwrap.dedent(
-                        """
+                        f"""
                     ════════════════════════════════════════════════
-                    %(key)s IS NO LONGER SUPPORTED.
+                    {self.key} IS NO LONGER SUPPORTED.
 
-                    %(explanation)s
+                    {self.deprecation_text}
 
-                    Please update %(file)s.
+                    Please update {self.where_defined}.
                     ════════════════════════════════════════════════
                     """
                     )
-                    % details
                 )
             else:
                 # Import here to avoid circular imports
@@ -283,18 +275,17 @@ class ConfigOption:
                 LOGGER = get_logger(__name__)
                 LOGGER.warning(
                     textwrap.dedent(
-                        """
+                        f"""s
                     ════════════════════════════════════════════════
-                    %(key)s IS DEPRECATED.
-                    %(explanation)s
+                    {self.key} IS DEPRECATED.
+                    {self.deprecation_text}
 
-                    This option will be removed on or after %(date)s.
+                    This option will be removed on or after {self.expiration_date}.
 
-                    Please update %(file)s.
+                    Please update {self.where_defined}.
                     ════════════════════════════════════════════════
                     """
                     )
-                    % details
                 )
 
     def is_expired(self) -> bool:

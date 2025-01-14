@@ -243,6 +243,17 @@ const Multiselect: FC<Props> = props => {
           filterOptions={filterOptions}
           closeOnSelect={false}
           overrides={{
+            Popover: {
+              props: {
+                overrides: {
+                  Body: {
+                    style: () => ({
+                      marginTop: theme.spacing.px,
+                    }),
+                  },
+                },
+              },
+            },
             SelectArrow: {
               component: ChevronDown,
               props: {

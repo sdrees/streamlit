@@ -29,10 +29,10 @@ import {
 import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
 import {
   Args,
-  CORS_ERROR_MESSAGE_DOCUMENTATION_LINK,
-  doInitPings,
   WebsocketConnection,
 } from "@streamlit/app/src/connection/WebsocketConnection"
+import { CORS_ERROR_MESSAGE_DOCUMENTATION_LINK } from "@streamlit/app/src/connection/constants"
+import { doInitPings } from "@streamlit/app/src/connection/DoInitPings"
 
 const MOCK_ALLOWED_ORIGINS_CONFIG = {
   allowedOrigins: ["list", "of", "allowed", "origins"],

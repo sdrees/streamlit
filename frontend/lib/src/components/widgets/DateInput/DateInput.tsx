@@ -45,6 +45,7 @@ import {
 import TooltipIcon from "@streamlit/lib/src/components/shared/TooltipIcon"
 import { Placement } from "@streamlit/lib/src/components/shared/Tooltip"
 import { LibContext } from "@streamlit/lib/src/components/core/LibContext"
+import { EmotionTheme } from "@streamlit/lib/src/theme"
 
 import { useIntlLocale } from "./useIntlLocale"
 
@@ -79,6 +80,8 @@ function DateInput({
   width,
   fragmentId,
 }: Props): ReactElement {
+  const theme: EmotionTheme = useTheme()
+
   /**
    * An array with start and end date specified by the user via the UI. If the user
    * didn't touch this widget's UI, the default value is used. End date is optional.
@@ -204,7 +207,7 @@ function DateInput({
               overrides: {
                 Body: {
                   style: {
-                    border: `${sizes.borderWidth} solid ${colors.borderColor}`,
+                    marginTop: theme.spacing.px,
                   },
                 },
               },

@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from "react"
-
 import styled from "@emotion/styled"
-import axios from "axios"
 
+import {
+  LOG,
+  PING_MAXIMUM_RETRY_PERIOD_MS,
+  PING_MINIMUM_RETRY_PERIOD_MS,
+  WEBSOCKET_STREAM_PATH,
+  WEBSOCKET_TIMEOUT_MS,
+} from "@streamlit/app/src/connection/constants"
+import {
+  Event,
+  OnConnectionStateChange,
+  OnMessage,
+  OnRetry,
+} from "@streamlit/app/src/connection/types"
 import {
   BackMsg,
   BaseUriParts,
-  buildHttpUri,
   buildWsUri,
   ForwardMsg,
   ForwardMsgCache,
@@ -35,66 +44,11 @@ import {
   logWarning,
   notNullOrUndefined,
   PerformanceEvents,
-  Resolver,
   SessionInfo,
   StreamlitEndpoints,
-  StreamlitMarkdown,
 } from "@streamlit/lib"
 import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
-
-/**
- * Name of the logger.
- */
-const LOG = "WebsocketConnection"
-
-/**
- * The path where we should ping (via HTTP) to see if the server is up.
- */
-const SERVER_PING_PATH = "_stcore/health"
-
-/**
- * The path to fetch the host configuration and allowed-message-origins.
- */
-const HOST_CONFIG_PATH = "_stcore/host-config"
-
-/**
- * The path of the server's websocket endpoint.
- */
-const WEBSOCKET_STREAM_PATH = "_stcore/stream"
-
-/**
- * Min and max wait time between pings in millis.
- */
-const PING_MINIMUM_RETRY_PERIOD_MS = 500
-const PING_MAXIMUM_RETRY_PERIOD_MS = 1000 * 60
-
-/**
- * Ping timeout in millis.
- */
-const PING_TIMEOUT_MS = 15 * 1000
-
-/**
- * Timeout when attempting to connect to a websocket, in millis.
- */
-const WEBSOCKET_TIMEOUT_MS = 15 * 1000
-
-/**
- * If the ping retrieves a 403 status code a message will be displayed.
- * This constant is the link to the documentation.
- */
-export const CORS_ERROR_MESSAGE_DOCUMENTATION_LINK =
-  "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
-
-type OnMessage = (ForwardMsg: any) => void
-type OnConnectionStateChange = (
-  connectionState: ConnectionState,
-  errMsg?: string
-) => void
-type OnRetry = (
-  totalTries: number,
-  errorNode: React.ReactNode,
-  retryTimeout: number
-) => void
+import { doInitPings } from "@streamlit/app/src/connection/DoInitPings"
 
 export interface Args {
   /** The application's SessionInfo instance */
@@ -170,14 +124,6 @@ interface MessageQueue {
  *                    :
  *   <ANY_STATE> ──────────────> DISCONNECTED_FOREVER
  */
-type Event =
-  | "INITIALIZED"
-  | "CONNECTION_CLOSED"
-  | "CONNECTION_ERROR"
-  | "CONNECTION_SUCCEEDED"
-  | "CONNECTION_TIMED_OUT"
-  | "SERVER_PING_SUCCEEDED"
-  | "FATAL_ERROR" // Unrecoverable error. This should never happen!
 
 /**
  * This class connects to the server and gets deltas over a websocket connection.
@@ -605,142 +551,3 @@ export const StyledBashCode = styled.code(({ theme }) => ({
     marginRight: "1ex",
   },
 }))
-
-/**
- * Attempts to connect to the URIs in uriList (in round-robin fashion) and
- * retries forever until one of the URIs responds with 'ok'.
- * Returns a promise with the index of the URI that worked.
- */
-export function doInitPings(
-  uriPartsList: BaseUriParts[],
-  minimumTimeoutMs: number,
-  maximumTimeoutMs: number,
-  retryCallback: OnRetry,
-  onHostConfigResp: (resp: IHostConfigResponse) => void
-): Promise<number> {
-  const resolver = new Resolver<number>()
-  let totalTries = 0
-  let uriNumber = 0
-
-  // Hoist the connect() declaration.
-  let connect = (): void => {}
-
-  const retryImmediately = (): void => {
-    uriNumber++
-    if (uriNumber >= uriPartsList.length) {
-      uriNumber = 0
-    }
-
-    connect()
-  }
-
-  const retry = (errorNode: React.ReactNode): void => {
-    // Adjust retry time by +- 20% to spread out load
-    const jitter = Math.random() * 0.4 - 0.2
-    // Exponential backoff to reduce load from health pings when experiencing
-    // persistent failure. Starts at minimumTimeoutMs.
-    const timeoutMs =
-      totalTries === 1
-        ? minimumTimeoutMs
-        : minimumTimeoutMs * 2 ** (totalTries - 1) * (1 + jitter)
-    const retryTimeout = Math.min(maximumTimeoutMs, timeoutMs)
-
-    retryCallback(totalTries, errorNode, retryTimeout)
-
-    window.setTimeout(retryImmediately, retryTimeout)
-  }
-
-  const retryWhenTheresNoResponse = (): void => {
-    const uriParts = uriPartsList[uriNumber]
-    const uri = new URL(buildHttpUri(uriParts, ""))
-
-    if (uri.hostname === "localhost") {
-      const markdownMessage = `
-Is Streamlit still running? If you accidentally stopped Streamlit, just restart it in your terminal:
-
-\`\`\`bash
-streamlit run yourscript.py
-\`\`\`
-      `
-      retry(<StreamlitMarkdown source={markdownMessage} allowHTML={false} />)
-    } else {
-      retry("Connection failed with status 0.")
-    }
-  }
-
-  const retryWhenIsForbidden = (): void => {
-    retry(
-      <Fragment>
-        <p>Cannot connect to Streamlit (HTTP status: 403).</p>
-        <p>
-          If you are trying to access a Streamlit app running on another
-          server, this could be due to the app's{" "}
-          <a href={CORS_ERROR_MESSAGE_DOCUMENTATION_LINK}>CORS</a> settings.
-        </p>
-      </Fragment>
-    )
-  }
-
-  connect = () => {
-    const uriParts = uriPartsList[uriNumber]
-    const healthzUri = buildHttpUri(uriParts, SERVER_PING_PATH)
-    const hostConfigUri = buildHttpUri(uriParts, HOST_CONFIG_PATH)
-
-    logMessage(LOG, `Attempting to connect to ${healthzUri}.`)
-
-    if (uriNumber === 0) {
-      totalTries++
-    }
-
-    // We fire off requests to the server's healthz and host-config
-    // endpoints in parallel to avoid having to wait on too many sequential
-    // round trip network requests before we can try to establish a WebSocket
-    // connection. Technically, it would have been possible to implement a
-    // single "get server health and origins whitelist" endpoint, but we chose
-    // not to do so as it's semantically cleaner to not give the healthcheck
-    // endpoint additional responsibilities.
-    Promise.all([
-      axios.get(healthzUri, { timeout: PING_TIMEOUT_MS }),
-      axios.get(hostConfigUri, { timeout: PING_TIMEOUT_MS }),
-    ])
-      .then(([_, hostConfigResp]) => {
-        onHostConfigResp(hostConfigResp.data)
-        resolver.resolve(uriNumber)
-      })
-      .catch(error => {
-        if (error.code === "ECONNABORTED") {
-          return retry("Connection timed out.")
-        }
-
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-
-          const { data, status } = error.response
-
-          if (status === /* NO RESPONSE */ 0) {
-            return retryWhenTheresNoResponse()
-          }
-          if (status === 403) {
-            return retryWhenIsForbidden()
-          }
-          return retry(
-            `Connection failed with status ${status}, ` +
-              `and response "${data}".`
-          )
-        }
-        if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          return retryWhenTheresNoResponse()
-        }
-        // Something happened in setting up the request that triggered an Error
-        return retry(error.message)
-      })
-  }
-
-  connect()
-
-  return resolver.promise
-}

@@ -251,3 +251,21 @@ def test_handles_host_terminate_and_restart_websocket_connection_messages(
     expect(frame_locator.get_by_test_id("stApp")).to_have_attribute(
         "data-test-script-state", "notRunning"
     )
+
+
+def test_color_picker_closes_without_security_error(iframed_app: IframedPage):
+    """
+    Our color picker component has a bug that causes a security error when
+    closing the color picker from an iframe with a different origin. See
+    `BaseColorPicker.tsx` for more details. This test verifies that the color
+    picker closes without causing a security error in an iframe.
+    """
+    frame_locator, _ = _load_html_and_get_locators(iframed_app)
+
+    # Open the color picker, then click somewhere else to close it.
+    frame_locator.get_by_test_id("stColorPickerBlock").click()
+    frame_locator.get_by_test_id("stMain").click()
+
+    # Wait a bit, then verify no error message is shown in the app.
+    iframed_app.page.wait_for_timeout(1000)
+    expect(frame_locator.get_by_test_id("stException")).not_to_be_attached()

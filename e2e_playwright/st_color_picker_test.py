@@ -40,6 +40,18 @@ def test_color_picker_widget_display(
     assert_snapshot(color_pickers.nth(7), name="st_color_picker-markdown_label")
 
 
+def test_color_picker_popover_display(
+    themed_app: Page, assert_snapshot: ImageCompareFunction
+):
+    """Test that color picker popover renders correctly in both themes."""
+    color_pickers = themed_app.get_by_test_id("stColorPicker")
+    color_pickers.nth(0).get_by_test_id("stColorPickerBlock").click()
+
+    popover = themed_app.get_by_test_id("stColorPickerPopover")
+    expect(popover).to_be_visible()
+    assert_snapshot(popover, name="st_color_picker-popover")
+
+
 def test_help_tooltip_works(app: Page):
     element_with_help = app.get_by_test_id("stColorPicker").nth(1)
     expect_help_tooltip(app, element_with_help, "help string")

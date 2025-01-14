@@ -184,3 +184,7 @@ st.slider(
     max_value=1e6 + 100,
     value=(1e6 + 48, 1e6 + 52),
 )
+
+st.slider(
+    "Label 18 -> :material/check: :rainbow[Fancy] _**markdown** `label` _support_"
+)

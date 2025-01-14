@@ -52,3 +52,7 @@ with st.expander("Grouped toggles", expanded=True):
     st.toggle("toggle group - 2")
     st.toggle("toggle group - 3")
     st.text("A non-toggle element")
+
+st.toggle(
+    "toggle 9 -> :material/check: :rainbow[Fancy] _**markdown** `label` _support_"
+)

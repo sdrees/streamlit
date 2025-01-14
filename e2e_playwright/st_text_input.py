@@ -85,6 +85,10 @@ form_value = (
 st.write("text input 13 (value from form) - value: ", form_value)
 
 
+st.text_input(
+    "text input 14 -> :material/check: :rainbow[Fancy] **markdown** `label` _support_"
+)
+
 if "rerun_counter" not in st.session_state:
     st.session_state.rerun_counter = 0
 

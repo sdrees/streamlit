@@ -17,7 +17,11 @@ import re
 from playwright.sync_api import Page, expect
 
 from e2e_playwright.conftest import ImageCompareFunction
-from e2e_playwright.shared.app_utils import check_top_level_class, get_image
+from e2e_playwright.shared.app_utils import (
+    check_top_level_class,
+    get_element_by_key,
+    get_image,
+)
 
 
 def test_image_display(app: Page):
@@ -197,6 +201,15 @@ def test_image_list_overflow(app: Page, assert_snapshot: ImageCompareFunction):
     """Test that st.image can display a list of images."""
     image_list = get_image(app, "Overflow")
     assert_snapshot(image_list, name="st_image-image_list_overflow")
+
+
+def test_markdown_caption_support(app: Page, assert_snapshot: ImageCompareFunction):
+    image_element = (
+        get_element_by_key(app, "image_with_markdown_caption")
+        .get_by_test_id("stImage")
+        .first
+    )
+    assert_snapshot(image_element, name="st_image-markdown_caption_support")
 
 
 def test_check_top_level_class(app: Page):

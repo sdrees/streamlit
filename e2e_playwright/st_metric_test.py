@@ -103,6 +103,15 @@ def test_label_visibility_set_to_collapse(
     )
 
 
+def test_markdown_label_support(
+    themed_app: Page, assert_snapshot: ImageCompareFunction
+):
+    assert_snapshot(
+        themed_app.get_by_test_id("stMetric").nth(11),
+        name="st_metric-markdown_label",
+    )
+
+
 def test_ellipses_and_help_shows_up_properly(
     themed_app: Page, assert_snapshot: ImageCompareFunction
 ):

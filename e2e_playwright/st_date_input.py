@@ -101,3 +101,8 @@ v14 = st.date_input(
     key="date_input_14",
 )
 st.write("Value 14:", v14)
+
+st.date_input(
+    "date input 15 -> :material/check: :rainbow[Fancy] _**markdown** `label` _support_",
+    date(1970, 1, 1),
+)

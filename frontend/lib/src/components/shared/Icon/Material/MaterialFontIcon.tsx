@@ -55,6 +55,10 @@ const MaterialFontIcon = ({
     <StyledMaterialIcon
       {...getDefaultProps(props)}
       data-testid={props.testid || "stIconMaterial"}
+      // Prevent the icon text from being translated
+      // this would break the icon display in the UI.
+      // https://github.com/streamlit/streamlit/issues/10168
+      translate="no"
     >
       {snakeCase(iconName)}
     </StyledMaterialIcon>

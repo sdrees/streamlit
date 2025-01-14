@@ -87,3 +87,8 @@ i12 = multiple_cols[0].multiselect(
     "multiselect 12", ["A long option"], default="A long option"
 )
 st.text(f"value 12: {i12}")
+
+st.multiselect(
+    "multiselect 13 -> :material/check: :rainbow[Fancy] _**markdown** `label` _support_",
+    options=options,
+)

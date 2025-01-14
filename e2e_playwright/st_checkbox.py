@@ -60,3 +60,7 @@ with st.expander("Grouped checkboxes", expanded=True):
     st.checkbox("checkbox group - 2")
     st.checkbox("checkbox group - 3")
     st.text("A non-checkbox element")
+
+st.checkbox(
+    "checkbox 9 -> :material/check: :rainbow[Fancy] _**markdown** `label` _support_"
+)

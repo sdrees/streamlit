@@ -23,7 +23,7 @@ from e2e_playwright.shared.app_utils import (
     get_expander,
 )
 
-CHECKBOX_ELEMENTS = 11
+CHECKBOX_ELEMENTS = 12
 
 
 def test_checkbox_widget_display(
@@ -41,6 +41,7 @@ def test_checkbox_widget_display(
     assert_snapshot(checkbox_elements.nth(5), name="st_checkbox-true_disabled")
     assert_snapshot(checkbox_elements.nth(6), name="st_checkbox-hidden_label")
     assert_snapshot(checkbox_elements.nth(7), name="st_checkbox-collapsed_label")
+    assert_snapshot(checkbox_elements.nth(11), name="st_checkbox-markdown_label")
 
 
 def test_help_tooltip_works(app: Page):

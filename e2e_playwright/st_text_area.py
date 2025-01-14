@@ -94,3 +94,7 @@ form_value = (
     st.session_state["text_area_14"] if "text_area_14" in st.session_state else None
 )
 st.write("text area 14 (value from form) - value: ", form_value)
+
+st.text_area(
+    "text area 15 -> :material/check: :rainbow[Fancy] **markdown** `label` _support_"
+)

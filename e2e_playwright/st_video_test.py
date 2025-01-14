@@ -21,14 +21,14 @@ from e2e_playwright.shared.app_utils import (
     check_top_level_class,
     click_button,
     click_checkbox,
-    click_radio_button,
+    select_radio_option,
 )
 
 VIDEO_ELEMENTS_COUNT = 12
 
 
 def _select_video_to_show(app: Page, label: str) -> Locator:
-    click_radio_button(app, re.compile(f"^{label}$"))
+    select_radio_option(app, re.compile(f"^{label}$"))
     video_element = app.get_by_test_id("stVideo").first
     # Prevent flakiness: we move the mouse before scrolling to prevent the cursor
     # hovering over a video element and, thereby, changing how the video interface is

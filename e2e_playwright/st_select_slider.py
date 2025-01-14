@@ -130,6 +130,11 @@ def test_fragment():
 
 test_fragment()
 
+st.select_slider(
+    "Label 12 -> :material/check: :rainbow[Fancy] _**markdown** `label` _support_",
+    options=np.array([1, 2, 3, 4, 5]),
+)
+
 if "runs" not in st.session_state:
     st.session_state.runs = 0
 st.session_state.runs += 1

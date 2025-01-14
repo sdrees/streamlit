@@ -20,11 +20,12 @@ from e2e_playwright.shared.app_utils import check_top_level_class, get_expander
 
 def test_tabs_render_correctly(themed_app: Page, assert_snapshot: ImageCompareFunction):
     st_tabs = themed_app.get_by_test_id("stTabs")
-    expect(st_tabs).to_have_count(3)
+    expect(st_tabs).to_have_count(4)
 
     assert_snapshot(st_tabs.nth(0), name="st_tabs-sidebar")
     assert_snapshot(st_tabs.nth(1), name="st_tabs-text_input")
     assert_snapshot(st_tabs.nth(2), name="st_tabs-many")
+    assert_snapshot(st_tabs.nth(3), name="st_tabs-markdown_labels")
 
 
 def test_displays_correctly_in_sidebar(app: Page):

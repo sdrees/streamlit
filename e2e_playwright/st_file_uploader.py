@@ -117,6 +117,8 @@ def test_file_fragment():
 
 test_file_fragment()
 
+st.file_uploader(":material/check: :rainbow[Fancy] _**markdown** `label` _support_")
+
 if "runs" not in st.session_state:
     st.session_state.runs = 0
 st.session_state.runs += 1

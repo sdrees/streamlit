@@ -43,6 +43,8 @@ describe("Dynamic icon", () => {
     expect(testId).toBeInTheDocument()
     expect(icon).toBeInTheDocument()
     expect(testId.textContent).toEqual(icon.textContent)
+    // Should have translate="no" to prevent the icon text from being translated:
+    expect(testId).toHaveAttribute("translate", "no")
   })
 
   it("renders without crashing with Emoji icon", () => {

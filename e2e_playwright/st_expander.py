@@ -75,3 +75,7 @@ expander_material_icon = st.expander(
 expander_emoji_icon = st.expander("Expander with emoji icon!", icon="🎈").write(
     "This is an expander with an emoji icon."
 )
+
+st.expander(
+    "-> :material/check: :rainbow[Fancy] _**markdown** `label` _support_"
+).write("Content")

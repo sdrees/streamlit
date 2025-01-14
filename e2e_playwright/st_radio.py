@@ -97,3 +97,8 @@ if runtime.exists():
 
 v13 = st.radio("radio 13 (empty selection)", options, index=None)
 st.write("value 13:", v13)
+
+st.radio(
+    "radio 14 -> :material/check: :rainbow[Fancy] _**markdown** `label` _support_",
+    options=markdown_options,
+)

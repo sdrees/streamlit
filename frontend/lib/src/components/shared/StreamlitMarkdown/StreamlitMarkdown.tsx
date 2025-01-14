@@ -441,6 +441,10 @@ export function RenderedMarkdown({
             hProperties: {
               role: "img",
               ariaLabel: iconName + " icon",
+              // Prevent the icon text from being translated
+              // this would break the icon display in the UI.
+              // https://github.com/streamlit/streamlit/issues/10168
+              translate: "no",
               style: {
                 display: "inline-block",
                 fontFamily: theme.genericFonts.iconFont,

@@ -27,7 +27,7 @@ def test_time_input_widget_rendering(
 ):
     """Test that the time input widgets are correctly rendered via screenshot matching."""
     time_input_widgets = themed_app.get_by_test_id("stTimeInput")
-    expect(time_input_widgets).to_have_count(9)
+    expect(time_input_widgets).to_have_count(10)
 
     assert_snapshot(time_input_widgets.nth(0), name="st_time_input-8_45")
     assert_snapshot(time_input_widgets.nth(1), name="st_time_input-21_15_help")
@@ -38,6 +38,7 @@ def test_time_input_widget_rendering(
     assert_snapshot(time_input_widgets.nth(6), name="st_time_input-step_60")
     assert_snapshot(time_input_widgets.nth(7), name="st_time_input-empty")
     assert_snapshot(time_input_widgets.nth(8), name="st_time_input-value_from_state")
+    assert_snapshot(time_input_widgets.nth(9), name="st_time_input-markdown_label")
 
 
 def test_help_tooltip_works(app: Page):

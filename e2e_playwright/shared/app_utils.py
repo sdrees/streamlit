@@ -48,7 +48,7 @@ def get_checkbox(locator: Locator | Page, label: str | Pattern[str]) -> Locator:
     return element
 
 
-def get_radio_button(locator: Locator | Page, label: str | Pattern[str]) -> Locator:
+def get_radio_option(locator: Locator | Page, label: str | Pattern[str]) -> Locator:
     """Get a radio button widget with the given label.
 
     Parameters
@@ -66,6 +66,23 @@ def get_radio_button(locator: Locator | Page, label: str | Pattern[str]) -> Loca
         The element.
     """
     element = locator.locator('[data-baseweb="radio"]').filter(has_text=label)
+    expect(element).to_be_visible()
+    return element
+
+
+def get_radio(locator: Locator | Page, label: str | Pattern[str]) -> Locator:
+    """Get a radio widget with the given label.
+
+    Parameters
+    ----------
+
+    locator : Locator
+        The locator to search for the element.
+
+    label : str or Pattern[str]
+        The label of the element to get.
+    """
+    element = locator.get_by_test_id("stRadio").filter(has_text=label)
     expect(element).to_be_visible()
     return element
 
@@ -362,21 +379,34 @@ def click_toggle(
     click_checkbox(page, label)
 
 
-def click_radio_button(page: Page, label: str | Pattern[str]) -> None:
-    """Click a radio button with the given label
+def select_radio_option(
+    page: Page,
+    option: str | Pattern[str],
+    label: str | Pattern[str] | None = None,
+) -> None:
+    """Click a radio option with the given option label
     and wait for the app to run.
 
     Parameters
     ----------
 
     page : Page
-        The page to click the radio button on.
+        The page to click the radio option on.
 
-    label : str or Pattern[str]
-        The label of the radio button to click.
+    option : str or Pattern[str]
+        The option label of the radio option to click.
+
+    label : str or Pattern[str] or None
+        The label of the radio group. If None, the radio option
+        is searched on the full page.
     """
-    radio_button = get_radio_button(page, label)
-    radio_button.click()
+    locator: Page | Locator = page
+
+    if label is not None:
+        # Get the radio group widget:
+        locator = get_radio(page, label)
+
+    get_radio_option(locator, option).click()
     wait_for_app_run(page)
 
 

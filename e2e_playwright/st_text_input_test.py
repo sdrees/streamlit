@@ -28,7 +28,7 @@ def test_text_input_widget_rendering(
 ):
     """Test that the st.text_input widgets are correctly rendered via screenshot matching."""
     text_input_widgets = themed_app.get_by_test_id("stTextInput")
-    expect(text_input_widgets).to_have_count(13)
+    expect(text_input_widgets).to_have_count(14)
 
     assert_snapshot(text_input_widgets.nth(0), name="st_text_input-default")
     assert_snapshot(text_input_widgets.nth(1), name="st_text_input-value_some_text")
@@ -41,6 +41,7 @@ def test_text_input_widget_rendering(
     assert_snapshot(text_input_widgets.nth(8), name="st_text_input-callback_help")
     assert_snapshot(text_input_widgets.nth(9), name="st_text_input-max_chars_5")
     assert_snapshot(text_input_widgets.nth(10), name="st_text_input-type_password")
+    assert_snapshot(text_input_widgets.nth(13), name="st_text_input-markdown_label")
 
 
 def test_text_input_has_correct_initial_values(app: Page):

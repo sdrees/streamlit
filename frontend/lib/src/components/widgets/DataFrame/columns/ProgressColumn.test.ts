@@ -16,6 +16,9 @@
 
 import { GridCellKind } from "@glideapps/glide-data-grid"
 import { RangeCellType } from "@glideapps/glide-data-grid-cells"
+import { Field, Float64, Int64 } from "apache-arrow"
+
+import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 
 import ProgressColumn, { ProgressColumnParams } from "./ProgressColumn"
 import { BaseColumnProps, ErrorCell, isErrorCell } from "./utils"
@@ -31,10 +34,15 @@ const PROGRESS_COLUMN_TEMPLATE = {
   isPinned: false,
   isStretched: false,
   arrowType: {
-    // The arrow type of the underlying data is
-    // not used for anything inside the column.
-    pandas_type: "float64",
-    numpy_type: "float64",
+    type: DataFrameCellType.DATA,
+    arrowField: new Field("progress_column", new Float64(), true),
+    pandasType: {
+      field_name: "progress_column",
+      name: "progress_column",
+      pandas_type: "float64",
+      numpy_type: "float64",
+      metadata: null,
+    },
   },
 } as BaseColumnProps
 
@@ -209,8 +217,15 @@ describe("ProgressColumn", () => {
     const mockColumn = ProgressColumn({
       ...PROGRESS_COLUMN_TEMPLATE,
       arrowType: {
-        pandas_type: "int64",
-        numpy_type: "int64",
+        type: DataFrameCellType.DATA,
+        arrowField: new Field("progress_column", new Int64(), true),
+        pandasType: {
+          field_name: "progress_column",
+          name: "progress_column",
+          pandas_type: "int64",
+          numpy_type: "int64",
+          metadata: null,
+        },
       },
     } as BaseColumnProps)
     const mockCell = mockColumn.getCell(52)

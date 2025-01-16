@@ -16,9 +16,11 @@
 /* eslint-disable  @typescript-eslint/no-non-null-assertion */
 
 import { GridCellKind, NumberCell } from "@glideapps/glide-data-grid"
+import { Field, Float64, Int64, Uint64 } from "apache-arrow"
 
 import {
-  PandasColumnType as ArrowType,
+  ArrowType,
+  DataFrameCellType,
   DataType,
 } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 
@@ -26,18 +28,39 @@ import NumberColumn, { NumberColumnParams } from "./NumberColumn"
 import { BaseColumnProps, ErrorCell, isErrorCell } from "./utils"
 
 const MOCK_FLOAT_ARROW_TYPE: ArrowType = {
-  pandas_type: "float64",
-  numpy_type: "float64",
+  type: DataFrameCellType.DATA,
+  arrowField: new Field("float_column", new Float64(), true),
+  pandasType: {
+    field_name: "float_column",
+    name: "float_column",
+    pandas_type: "float64",
+    numpy_type: "float64",
+    metadata: null,
+  },
 }
 
 const MOCK_INT_ARROW_TYPE: ArrowType = {
-  pandas_type: "int64",
-  numpy_type: "int64",
+  type: DataFrameCellType.DATA,
+  arrowField: new Field("int_column", new Int64(), true),
+  pandasType: {
+    field_name: "int_column",
+    name: "int_column",
+    pandas_type: "int64",
+    numpy_type: "int64",
+    metadata: null,
+  },
 }
 
 const MOCK_UINT_ARROW_TYPE: ArrowType = {
-  pandas_type: "uint64",
-  numpy_type: "uint64",
+  type: DataFrameCellType.DATA,
+  arrowField: new Field("uint_column", new Uint64(), true),
+  pandasType: {
+    field_name: "uint_column",
+    name: "uint_column",
+    pandas_type: "uint64",
+    numpy_type: "uint64",
+    metadata: null,
+  },
 }
 
 const NUMBER_COLUMN_TEMPLATE: Partial<BaseColumnProps> = {

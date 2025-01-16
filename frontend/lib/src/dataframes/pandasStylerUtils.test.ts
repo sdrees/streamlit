@@ -32,13 +32,13 @@ describe("getStyledHeaders", () => {
         numRows: 1,
         numColumns: 2,
       },
-      columnNames: [["col1", "col2"]],
+      columnNames: [["", "col1", "col2"]],
     } as unknown as Quiver
 
     const headers = getStyledHeaders(mockQuiver)
     expect(headers).toEqual([
       [
-        { name: "", cssClass: "blank index_name" },
+        { name: "", cssClass: "blank index_name level0" },
         { name: "col1", cssClass: "col_heading level0 col0" },
         { name: "col2", cssClass: "col_heading level0 col1" },
       ],
@@ -56,21 +56,21 @@ describe("getStyledHeaders", () => {
         numColumns: 4,
       },
       columnNames: [
-        ["top1", "top2"],
-        ["sub1", "sub2"],
+        ["", "", "top1", "top2"],
+        ["", "", "sub1", "sub2"],
       ],
     } as unknown as Quiver
 
     const headers = getStyledHeaders(mockQuiver)
     expect(headers).toEqual([
       [
-        { name: "", cssClass: "blank index_name" },
+        { name: "", cssClass: "blank index_name level0" },
         { name: "", cssClass: "blank index_name level0" },
         { name: "top1", cssClass: "col_heading level0 col0" },
         { name: "top2", cssClass: "col_heading level0 col1" },
       ],
       [
-        { name: "", cssClass: "blank index_name" },
+        { name: "", cssClass: "blank index_name level1" },
         { name: "", cssClass: "blank index_name level1" },
         { name: "sub1", cssClass: "col_heading level1 col0" },
         { name: "sub2", cssClass: "col_heading level1 col1" },
@@ -88,11 +88,13 @@ describe("getStyledHeaders", () => {
         numRows: 1,
         numColumns: 1,
       },
-      columnNames: [[]],
+      columnNames: [[""]],
     } as unknown as Quiver
 
     const headers = getStyledHeaders(mockQuiver)
-    expect(headers).toEqual([[{ name: "", cssClass: "blank index_name" }]])
+    expect(headers).toEqual([
+      [{ name: "", cssClass: "blank index_name level0" }],
+    ])
   })
 })
 

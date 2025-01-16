@@ -53,7 +53,9 @@ function SelectboxColumn(props: BaseColumnProps): BaseColumn {
   const parameters = mergeColumnParameters(
     // Default parameters:
     {
-      options: isBooleanType(props.arrowType) ? [true, false] : [],
+      options: isBooleanType(props.arrowType)
+        ? [true, false]
+        : props.arrowType.categoricalOptions ?? [],
     },
     // User parameters:
     props.columnTypeOptions

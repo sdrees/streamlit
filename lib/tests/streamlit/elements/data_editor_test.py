@@ -516,7 +516,6 @@ class DataEditorTest(DeltaGeneratorTestCase):
 
     @parameterized.expand(
         [
-            (pd.CategoricalIndex(["a", "b", "c"]),),
             (pd.PeriodIndex(["2020-01-01", "2020-01-02", "2020-01-03"], freq="D"),),
             (pd.TimedeltaIndex(["1 day", "2 days", "3 days"]),),
             (pd.MultiIndex.from_tuples([("a", "b"), ("c", "d"), ("e", "f")]),),
@@ -544,6 +543,7 @@ class DataEditorTest(DeltaGeneratorTestCase):
             (pd.Index([1.0, 2.0, 3.0], dtype="float"),),
             (pd.Index(["a", "b", "c"]),),
             (pd.DatetimeIndex(["2020-01-01", "2020-01-02", "2020-01-03"]),),
+            (pd.CategoricalIndex(["a", "b", "c"], categories=["a", "b", "c"]),),
         ]
     )
     def test_with_supported_index(self, index: pd.Index):

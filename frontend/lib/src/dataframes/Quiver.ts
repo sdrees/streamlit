@@ -17,25 +17,20 @@
 // Private members use _.
 /* eslint-disable no-underscore-dangle */
 
-import { Dictionary, Field, Vector } from "apache-arrow"
+import { Field, Vector } from "apache-arrow"
 import { immerable, produce } from "immer"
 
 import { IArrow, Styler as StylerProto } from "@streamlit/lib/src/proto"
-import { hashString, notNullOrUndefined } from "@streamlit/lib/src/util/utils"
+import { hashString } from "@streamlit/lib/src/util/utils"
 
 import { concat } from "./arrowConcatUtils"
 import {
   ColumnNames,
   Data,
   IndexData,
-  PandasColumnTypes,
   parseArrowIpcBytes,
 } from "./arrowParseUtils"
-import {
-  convertVectorToList,
-  DataType,
-  PandasColumnType,
-} from "./arrowTypeUtils"
+import { ArrowType, DataFrameCellType, DataType } from "./arrowTypeUtils"
 
 /**
  * Pandas Styler data from proto message.
@@ -88,14 +83,6 @@ interface DataFrameDimensions {
   numColumns: number
 }
 
-/** The type of the cell. */
-export enum DataFrameCellType {
-  // Index cells
-  INDEX = "index",
-  // Data cells
-  DATA = "data",
-}
-
 /** Data for a single cell in a DataFrame. */
 export interface DataFrameCell {
   /** The cell's type (index or data). */
@@ -106,7 +93,7 @@ export interface DataFrameCell {
 
   /** The cell's content type. */
   // For "blank" cells "contentType" is undefined.
-  contentType: PandasColumnType
+  contentType: ArrowType
 
   /** The cell's field. */
   field: Field
@@ -125,29 +112,26 @@ export class Quiver {
    */
   [immerable] = true
 
-  /** Column names (matrix of column names to support multi-level headers). */
+  /** Index & data column names (matrix of column names to support multi-level headers). */
   private _columnNames: ColumnNames
 
-  /** Column names of the (Pandas) index columns (there can be multiple index columns).
+  /** Column type information for the (Pandas) index columns.
    *
    * Index columns only exist if the DataFrame was created based on a Pandas DataFrame.
    */
-  private _indexNames: string[]
+  private _pandasIndexColumnTypes: ArrowType[]
 
-  /** Cell values of the (Pandas) index columns (there can be multiple index columns).
+  /** Column type information for the data columns. */
+  private _dataColumnTypes: ArrowType[]
+
+  /** Cell values of the (Pandas) index columns.
    *
    *  Index columns only exist if the DataFrame was created based on a Pandas DataFrame.
    */
-  private _indexData: IndexData
+  private _pandasIndexData: IndexData
 
   /** Cell values of the data columns. */
   private _data: Data
-
-  /** Definition for DataFrame's fields. */
-  private _fields: Record<string, Field<any>>
-
-  /** Types (from Pandas) for DataFrame's index and data columns. */
-  private _columnTypes: PandasColumnTypes
 
   /** [optional] Pandas Styler data. This will be defined if the user styled the dataframe. */
   private readonly _styler?: PandasStylerData
@@ -156,8 +140,13 @@ export class Quiver {
   private _num_bytes: number
 
   constructor(element: IArrow) {
-    const { indexData, columnNames, data, columnTypes, fields, indexNames } =
-      parseArrowIpcBytes(element.data)
+    const {
+      pandasIndexData,
+      columnNames,
+      data,
+      dataColumnTypes,
+      pandasIndexColumnTypes,
+    } = parseArrowIpcBytes(element.data)
 
     // Load styler data (if provided):
     const styler = element.styler
@@ -166,60 +155,42 @@ export class Quiver {
 
     // The assignment is done below to avoid partially populating the instance
     // if an error is thrown.
-    this._indexData = indexData
+    this._pandasIndexData = pandasIndexData
     this._columnNames = columnNames
     this._data = data
-    this._columnTypes = columnTypes
-    this._fields = fields
+    this._dataColumnTypes = dataColumnTypes
+    this._pandasIndexColumnTypes = pandasIndexColumnTypes
     this._styler = styler
-    this._indexNames = indexNames
     this._num_bytes = element.data?.length ?? 0
   }
 
-  /** Cell values of the (Pandas) index columns (there can be multiple index columns).
+  /** Matrix of column names of the index- & data-columns.
    *
+   * This is a matrix to support multi-level headers.
    * Index columns only exist if the DataFrame was created based on a Pandas DataFrame.
    */
-  public get indexData(): IndexData {
-    return this._indexData
-  }
-
-  /** Column names of the (Pandas) index columns (there can be multiple index columns).
-   *
-   * Index columns only exist if the DataFrame was created based on a Pandas DataFrame.
-   */
-  public get indexNames(): string[] {
-    return this._indexNames
-  }
-
-  /** Column names of the data columns (there can be multiple data columns). */
   public get columnNames(): ColumnNames {
     return this._columnNames
   }
 
-  /** Cell values of the data columns. */
-  public get data(): Data {
-    return this._data
+  /** List of column types for every index- & data-column. */
+  public get columnTypes(): ArrowType[] {
+    return this._pandasIndexColumnTypes.concat(this._dataColumnTypes)
   }
 
-  /** Types (from Pandas) for the index and data columns. */
-  public get columnTypes(): PandasColumnTypes {
-    return this._columnTypes
-  }
-
+  /** Pandas Styler data. This will only be defined if the user styled the dataframe
+   * via Pandas Styler.
+   */
   public get styler(): PandasStylerData | undefined {
     return this._styler
   }
 
   /** Dimensions of the DataFrame. */
   public get dimensions(): DataFrameDimensions {
-    const numIndexColumns =
-      // TODO(lukasmasuch): Change default to 0?
-      this._indexData.length || this.columnTypes.index.length || 1
+    const numIndexColumns = this._pandasIndexColumnTypes.length || 0
     const numHeaderRows = this._columnNames.length || 1
     const numDataRows = this._data.numRows || 0
-    const numDataColumns =
-      this._data.numCols || this._columnNames?.[0]?.length || 0
+    const numDataColumns = this._dataColumnTypes.length || 0
 
     const numRows = numHeaderRows + numDataRows
     const numColumns = numIndexColumns + numDataColumns
@@ -257,7 +228,7 @@ export class Quiver {
     return hashString(valuesToHash.join("-"))
   }
 
-  /** Return a single cell from an (Pandas)index column or data column of the DataFrame.
+  /** Return a single cell from an (Pandas) index- or data-column of the DataFrame.
    *
    * @param rowIndex - The row index of the cell (0 is the first data or index row excluding header rows)
    * @param columnIndex - The column index of the cell (0 is the first data or index column)
@@ -276,31 +247,26 @@ export class Quiver {
     const isIndexCell = columnIndex < numIndexColumns
 
     if (isIndexCell) {
-      const contentType = this.columnTypes.index[columnIndex]
+      const contentType = this._pandasIndexColumnTypes[columnIndex]
       const content = this.getIndexValue(rowIndex, columnIndex)
-      let field = this._fields[`__index_level_${String(columnIndex)}__`]
-      if (field === undefined) {
-        // If the index column has a name, we need to get it differently:
-        field = this._fields[String(numColumns - numIndexColumns)]
-      }
+
       return {
         type: DataFrameCellType.INDEX,
         content,
         contentType,
-        field,
+        field: contentType.arrowField,
       }
     }
 
     const dataColumnIndex = columnIndex - numIndexColumns
-    const contentType = this.columnTypes.data[dataColumnIndex]
-    const field = this._fields[String(dataColumnIndex)]
+    const contentType = this._dataColumnTypes[dataColumnIndex]
     const content = this.getDataValue(rowIndex, dataColumnIndex)
 
     return {
       type: DataFrameCellType.DATA,
       content,
       contentType,
-      field,
+      field: contentType.arrowField,
     }
   }
 
@@ -308,43 +274,16 @@ export class Quiver {
    *
    * Index columns only exist if the DataFrame was created based on a Pandas DataFrame.
    */
-  public getIndexValue(rowIndex: number, columnIndex: number): any {
-    const index = this._indexData[columnIndex]
+  private getIndexValue(rowIndex: number, columnIndex: number): any {
+    const index = this._pandasIndexData[columnIndex]
     const value =
       index instanceof Vector ? index.get(rowIndex) : index[rowIndex]
     return value
   }
 
   /** Get the raw value of a data cell. */
-  public getDataValue(rowIndex: number, columnIndex: number): any {
+  private getDataValue(rowIndex: number, columnIndex: number): any {
     return this._data.getChildAt(columnIndex)?.get(rowIndex)
-  }
-
-  /**
-   * Returns the categorical options defined for a given data column.
-   * Returns undefined if the column is not categorical.
-   *
-   * This function only works for non-index columns and expects the index at 0
-   * for the first non-index data column.
-   */
-  public getCategoricalOptions(dataColumnIndex: number): string[] | undefined {
-    const { numDataColumns: numDataColumns } = this.dimensions
-
-    if (dataColumnIndex < 0 || dataColumnIndex >= numDataColumns) {
-      throw new Error(`Column index is out of range: ${dataColumnIndex}`)
-    }
-
-    if (!(this._fields[String(dataColumnIndex)].type instanceof Dictionary)) {
-      // This is not a categorical column
-      return undefined
-    }
-
-    const categoricalDict =
-      this._data.getChildAt(dataColumnIndex)?.data[0]?.dictionary
-
-    return notNullOrUndefined(categoricalDict)
-      ? convertVectorToList(categoricalDict)
-      : undefined
   }
 
   /**
@@ -380,21 +319,25 @@ st.add_rows(my_styler.data)
     const {
       index: newIndex,
       data: newData,
-      types: newTypes,
+      indexTypes: newIndexTypes,
+      dataTypes: newDataTypes,
     } = concat(
-      this._columnTypes,
-      this._indexData,
+      this._dataColumnTypes,
+      this._pandasIndexColumnTypes,
+      this._pandasIndexData,
       this._data,
-      other._columnTypes,
-      other._indexData,
+      other._dataColumnTypes,
+      other._pandasIndexColumnTypes,
+      other._pandasIndexData,
       other._data
     )
 
     // If we get here, then we had no concatenation errors.
     return produce(this, (draft: Quiver) => {
-      draft._indexData = newIndex
+      draft._pandasIndexData = newIndex
       draft._data = newData
-      draft._columnTypes = newTypes
+      draft._pandasIndexColumnTypes = newIndexTypes
+      draft._dataColumnTypes = newDataTypes
     })
   }
 }

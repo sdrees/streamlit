@@ -22,9 +22,9 @@ import merge from "lodash/merge"
 import mergeWith from "lodash/mergeWith"
 
 import {
-  getAllColumnsFromArrow,
   getColumnTypeFromArrow,
-  getEmptyIndexColumn,
+  initAllColumnsFromArrow,
+  initEmptyIndexColumn,
 } from "@streamlit/lib/src/components/widgets/DataFrame/arrowUtils"
 import {
   BaseColumn,
@@ -299,7 +299,7 @@ function useColumnLoader(
 
   // Converts the columns from Arrow into columns compatible with glide-data-grid
   const columns: BaseColumn[] = React.useMemo(() => {
-    const visibleColumns = getAllColumnsFromArrow(data)
+    const visibleColumns = initAllColumnsFromArrow(data)
       .map(column => {
         // Apply column configurations
         let updatedColumn = {
@@ -403,7 +403,7 @@ function useColumnLoader(
     // to prevent errors from glide-data-grid.
     return orderedColumns.length > 0
       ? orderedColumns
-      : [ObjectColumn(getEmptyIndexColumn())]
+      : [ObjectColumn(initEmptyIndexColumn())]
   }, [
     data,
     columnConfigMapping,

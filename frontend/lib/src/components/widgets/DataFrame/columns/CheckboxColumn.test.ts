@@ -15,6 +15,9 @@
  */
 
 import { BooleanCell, GridCellKind } from "@glideapps/glide-data-grid"
+import { Bool, Field } from "apache-arrow"
+
+import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 
 import CheckboxColumn from "./CheckboxColumn"
 import { isErrorCell } from "./utils"
@@ -30,10 +33,15 @@ const MOCK_CHECKBOX_COLUMN_PROPS = {
   isPinned: false,
   isStretched: false,
   arrowType: {
-    // The arrow type of the underlying data is
-    // not used for anything inside the column.
-    pandas_type: "bool",
-    numpy_type: "bool",
+    type: DataFrameCellType.DATA,
+    arrowField: new Field("checkbox_column", new Bool(), true),
+    pandasType: {
+      field_name: "checkbox_column",
+      name: "checkbox_column",
+      pandas_type: "bool",
+      numpy_type: "bool",
+      metadata: null,
+    },
   },
 }
 

@@ -17,6 +17,9 @@
 /* eslint-disable  @typescript-eslint/no-non-null-assertion */
 
 import { GridCellKind, UriCell } from "@glideapps/glide-data-grid"
+import { Field, Utf8 } from "apache-arrow"
+
+import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 
 import LinkColumn from "./LinkColumn"
 import { ErrorCell, isErrorCell } from "./utils"
@@ -32,10 +35,15 @@ const MOCK_LINK_COLUMN_PROPS = {
   isPinned: false,
   isStretched: false,
   arrowType: {
-    // The arrow type of the underlying data is
-    // not used for anything inside the column.
-    pandas_type: "unicode",
-    numpy_type: "object",
+    type: DataFrameCellType.DATA,
+    arrowField: new Field("link_column", new Utf8(), true),
+    pandasType: {
+      field_name: "link_column",
+      name: "link_column",
+      pandas_type: "unicode",
+      numpy_type: "object",
+      metadata: null,
+    },
   },
 }
 

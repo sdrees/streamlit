@@ -21,6 +21,7 @@ from unittest import IsolatedAsyncioTestCase
 from unittest.mock import Mock, patch
 
 from streamlit import config
+from streamlit.runtime.runtime import Runtime
 from streamlit.web import bootstrap
 from tests import testutil
 from tests.testutil import patch_config_options
@@ -406,3 +407,26 @@ class BootstrapPrintTest(IsolatedAsyncioTestCase):
                 "server.port": 8502,
             },
         )
+
+
+class BootstrapRunTest(IsolatedAsyncioTestCase):
+    def tearDown(self):
+        #  Reset the Runtime._instance for subsequent test runs. Otherwise we will get
+        # a "Runtime already exists" error.
+        Runtime._instance = None
+
+    def test_bootstrap_run(self):
+        with testutil.patch_config_options({"server.headless": True}):
+            bootstrap.run("", False, [], {}, stop_immediately_for_testing=True)
+
+    def test_bootstrap_run_in_existing_event_loop(self):
+        import asyncio
+
+        event_loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(event_loop)
+        with testutil.patch_config_options({"server.headless": True}):
+
+            async def _run():
+                bootstrap.run("", False, [], {}, stop_immediately_for_testing=True)
+
+            event_loop.run_until_complete(_run())

@@ -19,15 +19,7 @@
  * a human-readable format.
  */
 
-import {
-  Field,
-  Float,
-  Struct,
-  StructRow,
-  Timestamp,
-  TimeUnit,
-  util,
-} from "apache-arrow"
+import { Field, Struct, StructRow, TimeUnit, util } from "apache-arrow"
 import trimEnd from "lodash/trimEnd"
 import moment from "moment-timezone"
 import numbro from "numbro"
@@ -39,6 +31,8 @@ import {
 } from "@streamlit/lib/src/util/utils"
 
 import {
+  ArrowType,
+  DataFrameCellType,
   DataType,
   isDatetimeType,
   isDateType,
@@ -50,7 +44,6 @@ import {
   isObjectType,
   isPeriodType,
   isTimeType,
-  PandasColumnType,
 } from "./arrowTypeUtils"
 
 /**
@@ -503,22 +496,30 @@ function formatInterval(x: StructRow, field?: Field): string {
     const leftBracket = closed === "both" || closed === "left" ? "[" : "("
     const rightBracket = closed === "both" || closed === "right" ? "]" : ")"
 
-    const leftInterval = format(
-      interval.left,
-      {
+    const leftInterval = format(interval.left, {
+      // Construct a arrow type for the left interval
+      type: DataFrameCellType.DATA,
+      pandasType: {
         pandas_type: subtype,
         numpy_type: subtype,
+        field_name: "",
+        name: "",
+        metadata: null,
       },
-      (field.type as Struct)?.children?.[0]
-    )
-    const rightInterval = format(
-      interval.right,
-      {
+      arrowField: (field.type as Struct)?.children?.[0],
+    })
+    const rightInterval = format(interval.right, {
+      // Construct a arrow type for the right interval
+      type: DataFrameCellType.DATA,
+      pandasType: {
         pandas_type: subtype,
         numpy_type: subtype,
+        field_name: "",
+        name: "",
+        metadata: null,
       },
-      (field.type as Struct)?.children?.[1]
-    )
+      arrowField: (field.type as Struct)?.children?.[1],
+    })
 
     return `${leftBracket + leftInterval}, ${rightInterval + rightBracket}`
   }
@@ -536,62 +537,46 @@ function formatInterval(x: StructRow, field?: Field): string {
  * @param field The field metadata from arrow containing metadata about the column.
  * @returns The formatted cell value.
  */
-export function format(
-  x: DataType,
-  pandasType?: PandasColumnType,
-  field?: Field
-): string {
-  const extensionName = field && field.metadata.get("ARROW:extension:name")
-  const fieldType = field?.type
-
+export function format(x: DataType, type: ArrowType): string {
   if (isNullOrUndefined(x)) {
     return "<NA>"
   }
 
-  // date
   const isDate = x instanceof Date || Number.isFinite(x)
-  if (isDate && isDateType(pandasType)) {
+  if (isDate && isDateType(type)) {
     return formatDate(x as Date | number)
   }
 
-  // time
-  if (typeof x === "bigint" && isTimeType(pandasType)) {
-    return formatTime(Number(x), field)
+  if (typeof x === "bigint" && isTimeType(type)) {
+    return formatTime(Number(x), type.arrowField)
   }
 
-  // datetimetz, datetime, datetime64, datetime64[ns], etc.
-  if (
-    isDate &&
-    (isDatetimeType(pandasType) || fieldType instanceof Timestamp)
-  ) {
-    return formatDatetime(x as Date | number, field)
+  if (isDate && isDatetimeType(type)) {
+    return formatDatetime(x as Date | number, type.arrowField)
   }
 
-  if (isPeriodType(pandasType) || extensionName === "pandas.period") {
-    return formatPeriod(x as bigint, field)
+  if (isPeriodType(type)) {
+    return formatPeriod(x as bigint, type.arrowField)
   }
 
-  if (isIntervalType(pandasType) || extensionName === "pandas.interval") {
-    return formatInterval(x as StructRow, field)
+  if (isIntervalType(type)) {
+    return formatInterval(x as StructRow, type.arrowField)
   }
 
-  if (isDurationType(pandasType)) {
-    return formatDuration(x as number | bigint, field)
+  if (isDurationType(type)) {
+    return formatDuration(x as number | bigint, type.arrowField)
   }
 
-  if (isDecimalType(pandasType)) {
-    return formatDecimal(x as Uint32Array, field)
+  if (isDecimalType(type)) {
+    return formatDecimal(x as Uint32Array, type.arrowField)
   }
 
-  if (
-    (isFloatType(pandasType) || fieldType instanceof Float) &&
-    Number.isFinite(x)
-  ) {
+  if (isFloatType(type) && Number.isFinite(x)) {
     return formatFloat(x as number)
   }
 
-  if (isObjectType(pandasType) || isListType(pandasType)) {
-    return formatObject(x, field)
+  if (isObjectType(type) || isListType(type)) {
+    return formatObject(x, type.arrowField)
   }
 
   return String(x)

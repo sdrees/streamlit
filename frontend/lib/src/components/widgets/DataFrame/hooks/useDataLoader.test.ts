@@ -18,6 +18,7 @@ import React from "react"
 
 import { GridCellKind } from "@glideapps/glide-data-grid"
 import { renderHook } from "@testing-library/react-hooks"
+import { Field, Utf8 } from "apache-arrow"
 
 import {
   BaseColumn,
@@ -25,6 +26,7 @@ import {
   TextColumn,
 } from "@streamlit/lib/src/components/widgets/DataFrame/columns"
 import EditingState from "@streamlit/lib/src/components/widgets/DataFrame/EditingState"
+import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
 import { MULTI, UNICODE } from "@streamlit/lib/src/mocks/arrow"
 import { Arrow as ArrowProto } from "@streamlit/lib/src/proto"
@@ -34,7 +36,17 @@ import useDataLoader from "./useDataLoader"
 // These columns are based on the UNICODE mock arrow table:
 const MOCK_COLUMNS: BaseColumn[] = [
   TextColumn({
-    arrowType: { meta: null, numpy_type: "object", pandas_type: "unicode" },
+    arrowType: {
+      type: DataFrameCellType.DATA,
+      arrowField: new Field("index-0", new Utf8(), true),
+      pandasType: {
+        field_name: "index-0",
+        name: "index-0",
+        pandas_type: "unicode",
+        numpy_type: "unicode",
+        metadata: null,
+      },
+    },
     id: "index-0",
     name: "",
     indexNumber: 0,
@@ -46,7 +58,17 @@ const MOCK_COLUMNS: BaseColumn[] = [
     title: "",
   }),
   TextColumn({
-    arrowType: { meta: null, numpy_type: "object", pandas_type: "unicode" },
+    arrowType: {
+      type: DataFrameCellType.DATA,
+      arrowField: new Field("column-c1-0", new Utf8(), true),
+      pandasType: {
+        field_name: "column-c1-0",
+        name: "column-c1-0",
+        pandas_type: "unicode",
+        numpy_type: "object",
+        metadata: null,
+      },
+    },
     id: "column-c1-0",
     name: "c1",
     indexNumber: 1,
@@ -58,7 +80,17 @@ const MOCK_COLUMNS: BaseColumn[] = [
     title: "c1",
   }),
   TextColumn({
-    arrowType: { meta: null, numpy_type: "object", pandas_type: "unicode" },
+    arrowType: {
+      type: DataFrameCellType.DATA,
+      arrowField: new Field("column-c2-1", new Utf8(), true),
+      pandasType: {
+        field_name: "column-c2-1",
+        name: "column-c2-1",
+        pandas_type: "unicode",
+        numpy_type: "object",
+        metadata: null,
+      },
+    },
     columnTypeOptions: undefined,
     id: "column-c2-1",
     name: "c2",

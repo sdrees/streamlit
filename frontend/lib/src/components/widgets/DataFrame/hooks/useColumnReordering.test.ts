@@ -15,12 +15,14 @@
  */
 
 import { act, renderHook } from "@testing-library/react-hooks"
+import { Field, Int64, Utf8 } from "apache-arrow"
 
 import {
   BaseColumn,
   NumberColumn,
   TextColumn,
 } from "@streamlit/lib/src/components/widgets/DataFrame/columns"
+import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 
 import useColumnReordering from "./useColumnReordering"
 
@@ -31,8 +33,15 @@ const MOCK_COLUMNS: BaseColumn[] = [
     title: "column_1",
     indexNumber: 0,
     arrowType: {
-      pandas_type: "int64",
-      numpy_type: "int64",
+      type: DataFrameCellType.DATA,
+      arrowField: new Field("column_1", new Int64(), true),
+      pandasType: {
+        field_name: "column_1",
+        name: "column_1",
+        pandas_type: "int64",
+        numpy_type: "int64",
+        metadata: null,
+      },
     },
     isEditable: false,
     isHidden: false,
@@ -46,8 +55,15 @@ const MOCK_COLUMNS: BaseColumn[] = [
     title: "column_2",
     indexNumber: 1,
     arrowType: {
-      pandas_type: "unicode",
-      numpy_type: "object",
+      type: DataFrameCellType.DATA,
+      arrowField: new Field("column_2", new Utf8(), true),
+      pandasType: {
+        field_name: "column_2",
+        name: "column_2",
+        pandas_type: "unicode",
+        numpy_type: "object",
+        metadata: null,
+      },
     },
     isEditable: false,
     isHidden: false,

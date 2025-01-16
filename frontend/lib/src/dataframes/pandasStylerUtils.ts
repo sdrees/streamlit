@@ -50,41 +50,41 @@ export interface StyledCell {
  * This is a matrix (multidimensional array) to support multi-level headers.
  */
 export function getStyledHeaders(data: Quiver): StyledHeader[][] {
-  const { numHeaderRows, numIndexColumns } = data.dimensions
+  const { numIndexColumns } = data.dimensions
 
   // Create a matrix to hold all headers
   const headers: StyledHeader[][] = []
 
   // For each header row
-  for (let rowIndex = 0; rowIndex < numHeaderRows; rowIndex++) {
+  for (let rowIndex = 0; rowIndex < data.columnNames.length; rowIndex++) {
     const headerRow: StyledHeader[] = []
 
-    // Add blank cells for index columns in header rows
-    for (let colIndex = 0; colIndex < numIndexColumns; colIndex++) {
-      const cssClasses = ["blank", "index_name"]
-      if (colIndex > 0) {
-        cssClasses.push(`level${rowIndex}`)
-      }
-      headerRow.push({
-        name: "",
-        cssClass: cssClasses.join(" "),
-      })
-    }
-
-    // Add data column headers
+    // For each column in current header row:
     for (
       let colIndex = 0;
-      colIndex < data.columnNames[rowIndex]?.length || 0;
+      colIndex < data.columnNames[rowIndex].length;
       colIndex++
     ) {
-      // Column label cells include:
-      // - col_heading
-      // - col<n> where n is the numeric position of the column
-      // - level<k> where k is the level in a MultiIndex
-      // See: https://pandas.pydata.org/docs/user_guide/style.html#CSS-Classes-and-Ids
+      // Add blank cells for index columns in header rows
+      const cssClasses = []
+      if (colIndex < numIndexColumns) {
+        cssClasses.push("blank")
+        cssClasses.push("index_name")
+        cssClasses.push(`level${rowIndex}`)
+      } else {
+        // Column label cells include:
+        // - col_heading
+        // - col<n> where n is the numeric position of the column
+        // - level<k> where k is the level in a MultiIndex
+        // See: https://pandas.pydata.org/docs/user_guide/style.html#CSS-Classes-and-Ids
+        cssClasses.push("col_heading")
+        cssClasses.push(`level${rowIndex}`)
+        cssClasses.push(`col${colIndex - numIndexColumns}`)
+      }
+
       headerRow.push({
         name: data.columnNames[rowIndex][colIndex],
-        cssClass: `col_heading level${rowIndex} col${colIndex}`,
+        cssClass: cssClasses.join(" "),
       })
     }
 

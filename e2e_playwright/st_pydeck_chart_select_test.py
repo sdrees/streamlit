@@ -309,6 +309,7 @@ def test_pydeck_chart_selection_state_remains_after_unmounting(
     assert_snapshot(
         click_handling_div,
         name="st_pydeck_chart_selection_state_remains_after_unmounting",
+        pixel_threshold=PIXEL_THRESHOLD,
     )
 
 

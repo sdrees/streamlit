@@ -18,6 +18,9 @@
 
 import { GridCellKind } from "@glideapps/glide-data-grid"
 import { DatePickerType } from "@glideapps/glide-data-grid-cells"
+import { DateDay, Field, Time, Timestamp, TimeUnit } from "apache-arrow"
+
+import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 
 import DateTimeColumn, { DateColumn, TimeColumn } from "./DateTimeColumn"
 import { BaseColumnProps, isErrorCell } from "./utils"
@@ -35,8 +38,19 @@ const MOCK_DATETIME_COLUMN_TEMPLATE: BaseColumnProps = {
   arrowType: {
     // The arrow type of the underlying data is
     // not used for anything inside the column.
-    pandas_type: "datetime",
-    numpy_type: "datetime64",
+    type: DataFrameCellType.DATA,
+    arrowField: new Field(
+      "datetime_column",
+      new Timestamp(TimeUnit.SECOND),
+      true
+    ),
+    pandasType: {
+      field_name: "datetime_column",
+      name: "datetime_column",
+      pandas_type: "datetime",
+      numpy_type: "datetime64",
+      metadata: null,
+    },
   },
 }
 
@@ -53,8 +67,15 @@ const MOCK_DATE_COLUMN_TEMPLATE: BaseColumnProps = {
   arrowType: {
     // The arrow type of the underlying data is
     // not used for anything inside the column.
-    pandas_type: "date",
-    numpy_type: "object",
+    type: DataFrameCellType.DATA,
+    arrowField: new Field("date_column", new DateDay(), true),
+    pandasType: {
+      field_name: "date_column",
+      name: "date_column",
+      pandas_type: "date",
+      numpy_type: "object",
+      metadata: null,
+    },
   },
 }
 
@@ -71,8 +92,15 @@ const MOCK_TIME_COLUMN_TEMPLATE: BaseColumnProps = {
   arrowType: {
     // The arrow type of the underlying data is
     // not used for anything inside the column.
-    pandas_type: "time",
-    numpy_type: "object",
+    type: DataFrameCellType.DATA,
+    arrowField: new Field("time_column", new Time(TimeUnit.SECOND, 64), true),
+    pandasType: {
+      field_name: "time_column",
+      name: "time_column",
+      pandas_type: "time",
+      numpy_type: "object",
+      metadata: null,
+    },
   },
 }
 
@@ -246,7 +274,10 @@ describe("DateTimeColumn", () => {
       ...MOCK_DATETIME_COLUMN_TEMPLATE,
       arrowType: {
         ...MOCK_DATETIME_COLUMN_TEMPLATE.arrowType,
-        meta: { timezone: "+05:00" },
+        pandasType: {
+          ...MOCK_DATETIME_COLUMN_TEMPLATE.arrowType.pandasType,
+          metadata: { timezone: "+05:00" },
+        } as any,
       },
     }
 

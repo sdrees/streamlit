@@ -15,6 +15,9 @@
  */
 
 import { BubbleCell, GridCellKind } from "@glideapps/glide-data-grid"
+import { Field, List, Utf8 } from "apache-arrow"
+
+import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
 
 import ListColumn from "./ListColumn"
 
@@ -29,10 +32,19 @@ const MOCK_LIST_COLUMN_PROPS = {
   isPinned: false,
   isStretched: false,
   arrowType: {
-    // The arrow type of the underlying data is
-    // not used for anything inside the column.
-    pandas_type: "object",
-    numpy_type: "list[unicode]",
+    type: DataFrameCellType.DATA,
+    arrowField: new Field(
+      "list_column",
+      new List(new Field("item", new Utf8(), true)),
+      true
+    ),
+    pandasType: {
+      field_name: "list_column",
+      name: "list_column",
+      pandas_type: "object",
+      numpy_type: "list[unicode]",
+      metadata: null,
+    },
   },
 }
 

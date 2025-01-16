@@ -46,6 +46,7 @@ import {
   isStringType,
   isTimeType,
 } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { StyledCell } from "@streamlit/lib/src/dataframes/pandasStylerUtils"
 import {
   isNullOrUndefined,
   notNullOrUndefined,
@@ -364,6 +365,7 @@ export function getAllColumnsFromArrow(data: Quiver): BaseColumnProps[] {
 export function getCellFromArrow(
   column: BaseColumn,
   arrowCell: DataFrameCell,
+  styledCell: StyledCell | undefined,
   cssStyles: string | undefined = undefined
 ): GridCell {
   let cellTemplate
@@ -436,8 +438,8 @@ export function getCellFromArrow(
 
   if (!column.isEditable) {
     // Only apply display content and css styles to non-editable cells.
-    if (notNullOrUndefined(arrowCell.displayContent)) {
-      const displayData = removeLineBreaks(arrowCell.displayContent)
+    if (styledCell && notNullOrUndefined(styledCell?.displayContent)) {
+      const displayData = removeLineBreaks(styledCell.displayContent)
       // If the display content is set, use that instead of the content.
       // This is only supported for text, object, date, datetime, time and number cells.
       // Non-editable datetime cells will use the text cell kind
@@ -487,10 +489,10 @@ export function getCellFromArrow(
       }
     }
 
-    if (cssStyles && arrowCell.cssId) {
+    if (cssStyles && styledCell?.cssId) {
       cellTemplate = applyPandasStylerCss(
         cellTemplate,
-        arrowCell.cssId,
+        styledCell.cssId,
         cssStyles
       )
     }

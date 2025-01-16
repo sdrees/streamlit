@@ -121,8 +121,8 @@ def Page(
     >>>     st.title("Second page")
     >>>
     >>> pg = st.navigation([
-    >>>	    st.Page("page1.py", title="First page", icon="🔥"),
-    >>>	    st.Page(page2, title="Second page", icon=":material/favorite:"),
+    >>>     st.Page("page1.py", title="First page", icon="🔥"),
+    >>>     st.Page(page2, title="Second page", icon=":material/favorite:"),
     >>> ])
     >>> pg.run()
     """
@@ -174,6 +174,10 @@ class StreamlitPage:
         url_path: str | None = None,
         default: bool = False,
     ):
+        # Must appear before the return so all pages, even if running in bare Python,
+        # have a _default property. This way we can always tell which script needs to run.
+        self._default: bool = default
+
         ctx = get_script_run_ctx()
         if not ctx:
             return
@@ -230,7 +234,6 @@ class StreamlitPage:
         if self._icon:
             validate_icon_or_emoji(self._icon)
 
-        self._default: bool = default
         # used by st.navigation to ordain a page as runnable
         self._can_be_called: bool = False
 

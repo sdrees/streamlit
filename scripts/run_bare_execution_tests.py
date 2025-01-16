@@ -33,7 +33,11 @@ from typing import Set
 import click
 
 # Where we expect to find the example files.
-E2E_DIR = "e2e_playwright"
+E2E_DIRS = [
+    "e2e_playwright",
+    "e2e_playwright/multipage_apps",
+    "e2e_playwright/multipage_apps_v2",
+]
 
 # the hostframe_app.py script does not work because without a script_context
 # the navigation function will raise an exception when trying some non-existing page properties.
@@ -49,15 +53,21 @@ def _command_to_string(command):
     return " ".join(command) if isinstance(command, list) else command
 
 
-def _get_filenames(folder):
-    folder_path = os.path.abspath(folder)
-    return [
-        os.path.join(folder_path, filename)
-        for filename in sorted(os.listdir(folder_path))
-        if filename.endswith(".py")
-        and not filename.endswith("_test.py")
-        and filename not in EXCLUDED_FILENAMES
-    ]
+def _get_filenames(folders):
+    filenames = []
+
+    for folder in folders:
+        folder_path = os.path.abspath(folder)
+
+        for filename in sorted(os.listdir(folder_path)):
+            if (
+                filename.endswith(".py")
+                and not filename.endswith("_test.py")
+                and filename not in EXCLUDED_FILENAMES
+            ):
+                filenames.append(os.path.join(folder_path, filename))
+
+    return filenames
 
 
 def run_commands(section_header, commands):
@@ -89,7 +99,7 @@ def run_commands(section_header, commands):
 
 
 def main():
-    filenames = _get_filenames(E2E_DIR)
+    filenames = _get_filenames(E2E_DIRS)
     commands = [f"python {filename}" for filename in filenames]
     failed = run_commands("bare scripts", commands)
 

@@ -15,6 +15,10 @@
  */
 
 import { PandasColumnType as ArrowType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import {
+  getStyledCell,
+  StyledCell,
+} from "@streamlit/lib/src/dataframes/pandasStylerUtils"
 import { DataFrameCell, Quiver } from "@streamlit/lib/src/dataframes/Quiver"
 import {
   CATEGORICAL_COLUMN,
@@ -469,7 +473,12 @@ describe("getCellFromArrow", () => {
       data: UNICODE,
     })
     const data = new Quiver(element)
-    const cell = getCellFromArrow(MOCK_TEXT_COLUMN, data.getCell(1, 1))
+    const cell = getCellFromArrow(
+      MOCK_TEXT_COLUMN,
+      data.getCell(0, 1),
+      undefined,
+      undefined
+    )
 
     expect(cell).toEqual({
       allowOverlay: true,
@@ -505,7 +514,12 @@ describe("getCellFromArrow", () => {
       data: DECIMAL, // should be interpreted as object
     })
     const data = new Quiver(element)
-    const cell = getCellFromArrow(decimalColumn, data.getCell(1, 1))
+    const cell = getCellFromArrow(
+      decimalColumn,
+      data.getCell(0, 1),
+      undefined,
+      undefined
+    )
 
     expect(cell).toEqual({
       allowNegative: true,
@@ -553,14 +567,22 @@ describe("getCellFromArrow", () => {
           unit: 2, // Microseconds
         },
       },
-      displayContent: "FOOO",
-      cssId: null,
-      cssClass: null,
       type: "columns",
     } as object as DataFrameCell
 
+    const styledCell = {
+      displayContent: "FOOO",
+      cssId: "FAKE_ID",
+      cssClass: "FAKE_CLASS",
+    } as StyledCell
+
     // Call the getCellFromArrow function
-    const cell = getCellFromArrow(MOCK_TIME_COLUMN, arrowCell)
+    const cell = getCellFromArrow(
+      MOCK_TIME_COLUMN,
+      arrowCell,
+      styledCell,
+      undefined
+    )
     expect((cell as any).data.displayDate).toEqual("FOOO")
   })
 
@@ -597,14 +619,17 @@ describe("getCellFromArrow", () => {
           unit: 2, // Microseconds
         },
       },
-      displayContent: "FOOO",
-      cssId: null,
-      cssClass: null,
       type: "columns",
     } as object as DataFrameCell
 
+    const styledCell = {
+      displayContent: "FOOO",
+      cssId: "FAKE_ID",
+      cssClass: "FAKE_CLASS",
+    } as StyledCell
+
     // Call the getCellFromArrow function
-    const cell = getCellFromArrow(MOCK_TIME_COLUMN, arrowCell)
+    const cell = getCellFromArrow(MOCK_TIME_COLUMN, arrowCell, styledCell)
     // Should use the formatted value from the cell and not the displayContent
     // from pandas styler
     expect((cell as any).data.displayDate).toEqual("2021")
@@ -641,14 +666,11 @@ describe("getCellFromArrow", () => {
           unit: 2, // Microseconds
         },
       },
-      displayContent: null,
-      cssId: null,
-      cssClass: null,
       type: "columns",
     } as object as DataFrameCell
 
     // Call the getCellFromArrow function
-    getCellFromArrow(MOCK_TIME_COLUMN, arrowCell)
+    getCellFromArrow(MOCK_TIME_COLUMN, arrowCell, undefined, undefined)
 
     // Check if the timestamp is adjusted properly
     expect(MOCK_TIME_COLUMN.getCell).toHaveBeenCalledWith(
@@ -685,14 +707,11 @@ describe("getCellFromArrow", () => {
       // Our internal parsing assumes seconds as default unit.
       content: 1632950000123,
       contentType: null,
-      displayContent: null,
-      cssId: null,
-      cssClass: null,
       type: "columns",
     } as object as DataFrameCell
 
     // Call the getCellFromArrow function
-    getCellFromArrow(MOCK_TIME_COLUMN, arrowCell)
+    getCellFromArrow(MOCK_TIME_COLUMN, arrowCell, undefined, undefined)
 
     // Check if the timestamp is adjusted properly
     expect(MOCK_TIME_COLUMN.getCell).toHaveBeenCalledWith(
@@ -711,7 +730,13 @@ describe("getCellFromArrow", () => {
       },
     }
     const data = new Quiver(element)
-    const cell = getCellFromArrow(MOCK_NUMBER_COLUMN, data.getCell(1, 1))
+
+    const cell = getCellFromArrow(
+      MOCK_NUMBER_COLUMN,
+      data.getCell(0, 1),
+      getStyledCell(data, 0, 1),
+      undefined
+    )
 
     expect(cell).toEqual({
       allowOverlay: true,
@@ -744,7 +769,8 @@ describe("getCellFromArrow", () => {
 
     const cell = getCellFromArrow(
       MOCK_NUMBER_COLUMN,
-      data.getCell(1, 1),
+      data.getCell(0, 1),
+      getStyledCell(data, 0, 1),
       element.styler.styles
     )
 
@@ -784,7 +810,8 @@ it("doesn't apply Pandas Styler CSS for editable columns", () => {
 
   const cell = getCellFromArrow(
     { ...MOCK_NUMBER_COLUMN, isEditable: true },
-    data.getCell(1, 1),
+    data.getCell(0, 1),
+    getStyledCell(data, 0, 1),
     element.styler.styles
   )
 

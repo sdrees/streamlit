@@ -70,10 +70,12 @@ export interface PandasColumnTypes {
 }
 
 /**
- * Metadata for a single column in an Arrow table.
- * (This can describe an index *or* a data column.)
+ * Pandas metadata extracted from an Arrow table.
+ * This describes a single column (either index or data column).
+ * It needs to exactly match the structure used in the JSON
+ * representation of the Pandas schema in the Arrow table.
  */
-interface ColumnMetadata {
+interface PandasColumnMetadata {
   /**
    * The fieldName of the column.
    * For a single-index column, this is just the name of the column (e.g. "foo").
@@ -126,13 +128,13 @@ interface PandasSchema {
   /**
    * Schemas for each column (index *and* data columns) in the DataFrame.
    */
-  columns: ColumnMetadata[]
+  columns: PandasColumnMetadata[]
 
   /**
    * DataFrame column headers.
    * The length represents the dimensions of the DataFrame's columns grid.
    */
-  column_indexes: ColumnMetadata[]
+  column_indexes: PandasColumnMetadata[]
 }
 
 /** True if the index name represents a "range" index.
@@ -253,10 +255,7 @@ function parseData(
 }
 
 /** Parse DataFrame's index and data types. */
-function parseColumnTypes(
-  table: Table,
-  pandasSchema: PandasSchema
-): PandasColumnTypes {
+function parseColumnTypes(pandasSchema: PandasSchema): PandasColumnTypes {
   const index = parseIndexType(pandasSchema)
   const data = parseDataType(pandasSchema)
   return { index, data }
@@ -364,7 +363,7 @@ export function parseArrowIpcBytes(
   const indexData = parseIndexData(table, pandasSchema)
 
   // Load types for index and data columns:
-  const columnTypes = parseColumnTypes(table, pandasSchema)
+  const columnTypes = parseColumnTypes(pandasSchema)
 
   return {
     columnNames,

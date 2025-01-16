@@ -804,6 +804,11 @@ class ButtonMixin:
         use_container_width: bool | None = None,
     ) -> DeltaGenerator:
         page_link_proto = PageLinkProto()
+
+        ctx = get_script_run_ctx()
+        if not ctx:
+            return self.dg._enqueue("page_link", page_link_proto)
+
         page_link_proto.disabled = disabled
 
         if label is not None:
@@ -837,12 +842,10 @@ class ButtonMixin:
                     page_link_proto.external = True
                     return self.dg._enqueue("page_link", page_link_proto)
 
-            ctx = get_script_run_ctx()
             ctx_main_script = ""
             all_app_pages = {}
-            if ctx:
-                ctx_main_script = ctx.main_script_path
-                all_app_pages = ctx.pages_manager.get_pages()
+            ctx_main_script = ctx.main_script_path
+            all_app_pages = ctx.pages_manager.get_pages()
 
             main_script_directory = get_main_script_directory(ctx_main_script)
             requested_page = os.path.realpath(
@@ -862,9 +865,7 @@ class ButtonMixin:
 
             if page_link_proto.page_script_hash == "":
                 is_mpa_v2 = (
-                    ctx is not None
-                    and ctx.pages_manager is not None
-                    and ctx.pages_manager.mpa_version == 2
+                    ctx.pages_manager is not None and ctx.pages_manager.mpa_version == 2
                 )
 
                 raise StreamlitPageNotFoundError(

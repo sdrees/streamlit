@@ -61,7 +61,7 @@ describe("format", () => {
   test("int64", () => {
     const mockElement = { data: INT64 }
     const q = new Quiver(mockElement)
-    const { content } = q.getCell(1, 2)
+    const { content } = q.getCell(0, 2)
 
     expect(
       format(content, {
@@ -74,7 +74,7 @@ describe("format", () => {
   test("uint64", () => {
     const mockElement = { data: UINT64 }
     const q = new Quiver(mockElement)
-    const { content } = q.getCell(1, 2)
+    const { content } = q.getCell(0, 2)
 
     expect(
       format(content, {
@@ -149,7 +149,7 @@ describe("format", () => {
   test("interval datetime64[ns]", () => {
     const mockElement = { data: INTERVAL_DATETIME64 }
     const q = new Quiver(mockElement)
-    const { content, contentType, field } = q.getCell(1, 0)
+    const { content, contentType, field } = q.getCell(0, 0)
 
     expect(format(content, contentType, field)).toEqual(
       "(2017-01-01 00:00:00, 2017-01-02 00:00:00]"
@@ -159,7 +159,7 @@ describe("format", () => {
   test("interval float64", () => {
     const mockElement = { data: INTERVAL_FLOAT64 }
     const q = new Quiver(mockElement)
-    const { content, contentType, field } = q.getCell(1, 0)
+    const { content, contentType, field } = q.getCell(0, 0)
 
     expect(format(content, contentType, field)).toEqual("(0.0000, 1.5000]")
   })
@@ -167,7 +167,7 @@ describe("format", () => {
   test("interval int64", () => {
     const mockElement = { data: INTERVAL_INT64 }
     const q = new Quiver(mockElement)
-    const { content, field } = q.getCell(1, 0)
+    const { content, field } = q.getCell(0, 0)
 
     expect(
       format(
@@ -184,7 +184,7 @@ describe("format", () => {
   test("interval uint64", () => {
     const mockElement = { data: INTERVAL_UINT64 }
     const q = new Quiver(mockElement)
-    const { content, contentType, field } = q.getCell(1, 0)
+    const { content, contentType, field } = q.getCell(0, 0)
 
     expect(format(content, contentType, field)).toEqual("(0, 1]")
   })
@@ -192,22 +192,22 @@ describe("format", () => {
   test("decimal", () => {
     const mockElement = { data: DECIMAL }
     const q = new Quiver(mockElement)
-    const cell1 = q.getCell(1, 1)
+    const cell1 = q.getCell(0, 1)
     expect(format(cell1.content, cell1.contentType, cell1.field)).toEqual(
       "1.1"
     )
 
-    const cell2 = q.getCell(2, 1)
+    const cell2 = q.getCell(1, 1)
     expect(format(cell2.content, cell2.contentType, cell2.field)).toEqual(
       "10000"
     )
 
-    const cell3 = q.getCell(1, 2)
+    const cell3 = q.getCell(0, 2)
     expect(format(cell3.content, cell3.contentType, cell3.field)).toEqual(
       "2.23"
     )
 
-    const cell4 = q.getCell(2, 2)
+    const cell4 = q.getCell(1, 2)
     expect(format(cell4.content, cell4.contentType, cell4.field)).toEqual(
       "-0.1"
     )
@@ -216,22 +216,22 @@ describe("format", () => {
   test("timedelta", () => {
     const mockElement = { data: TIMEDELTA }
     const q = new Quiver(mockElement)
-    const cell1 = q.getCell(1, 1)
+    const cell1 = q.getCell(0, 1)
     expect(format(cell1.content, cell1.contentType, cell1.field)).toEqual(
       "a few seconds"
     )
 
-    const cell2 = q.getCell(2, 1)
+    const cell2 = q.getCell(1, 1)
     expect(format(cell2.content, cell2.contentType, cell2.field)).toEqual(
       "4 hours"
     )
 
-    const cell3 = q.getCell(1, 2)
+    const cell3 = q.getCell(0, 2)
     expect(format(cell3.content, cell3.contentType, cell3.field)).toEqual(
       "20 days"
     )
 
-    const cell4 = q.getCell(2, 2)
+    const cell4 = q.getCell(1, 2)
     expect(format(cell4.content, cell4.contentType, cell4.field)).toEqual(
       "2 hours"
     )
@@ -240,26 +240,33 @@ describe("format", () => {
   test("dictionary", () => {
     const mockElement = { data: DICTIONARY }
     const q = new Quiver(mockElement)
-    const { content, contentType, field } = q.getCell(1, 1)
+    const { content, contentType, field } = q.getCell(0, 1)
     expect(format(content, contentType, field)).toEqual(`{"a":1,"b":2}`)
   })
 
   test("period", () => {
     const mockElement = { data: PERIOD }
     const q = new Quiver(mockElement)
-    const { numRows, numColumns } = q.dimensions
+    const { numDataRows, numColumns } = q.dimensions
     const table: Record<string, string[]> = {}
+
+    // Get column names
+    const headers = q.columnNames[0]
+
+    // Start from index 1 to skip the index column
     for (let columnIndex = 1; columnIndex < numColumns; columnIndex++) {
-      const column = []
-      for (let rowIndex = 0; rowIndex < numRows; rowIndex++) {
+      const values = []
+      // Iterate through data rows
+      for (let rowIndex = 0; rowIndex < numDataRows; rowIndex++) {
         const { content, contentType, field } = q.getCell(
           rowIndex,
           columnIndex
         )
         const cellValue = format(content, contentType, field)
-        column.push(cellValue)
+        values.push(cellValue)
       }
-      table[column[0]] = [column[1], column[2]]
+      // add it via the header name key:
+      table[headers[columnIndex - 1]] = values
     }
 
     expect(table).toEqual({

@@ -79,6 +79,7 @@ DISALLOWED_MARKDOWN_FEATURES: dict[str, list[str]] = {
     "st_metric": DISALLOWED_FEATURES_IN_LABEL,
     "st_image": DISALLOWED_FEATURES_IN_LABEL,
     "st_progress": DISALLOWED_FEATURES_IN_LABEL,
+    "st_table": [],
 }
 
 # Mapping between a markdown feature and the playwright locator to detect the feature:

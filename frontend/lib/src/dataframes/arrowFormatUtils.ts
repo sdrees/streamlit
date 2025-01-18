@@ -539,7 +539,7 @@ function formatInterval(x: StructRow, field?: Field): string {
  */
 export function format(x: DataType, type: ArrowType): string {
   if (isNullOrUndefined(x)) {
-    return "<NA>"
+    return ""
   }
 
   const isDate = x instanceof Date || Number.isFinite(x)

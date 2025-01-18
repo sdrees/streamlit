@@ -28,6 +28,7 @@ import {
   getStyledHeaders,
 } from "@streamlit/lib/src/dataframes/pandasStylerUtils"
 import { format as formatArrowCell } from "@streamlit/lib/src/dataframes/arrowFormatUtils"
+import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown/StreamlitMarkdown"
 
 import {
   StyledEmptyTableCell,
@@ -101,7 +102,10 @@ function generateTableHeader(table: Quiver): ReactElement {
               className={header.cssClass}
               scope="col"
             >
-              {header.name || "\u00A0"}
+              <StreamlitMarkdown
+                source={header.name || "\u00A0"}
+                allowHTML={false}
+              />
             </StyledTableCellHeader>
           ))}
         </tr>
@@ -156,7 +160,10 @@ function generateTableCell(
           id={styledCell?.cssId}
           className={styledCell?.cssClass}
         >
-          {formattedContent}
+          <StreamlitMarkdown
+            source={formattedContent || "\u00A0"}
+            allowHTML={false}
+          />
         </StyledTableCellHeader>
       )
     }
@@ -168,7 +175,10 @@ function generateTableCell(
           className={styledCell?.cssClass}
           style={style}
         >
-          {formattedContent}
+          <StreamlitMarkdown
+            source={formattedContent || "\u00A0"}
+            allowHTML={false}
+          />
         </StyledTableCell>
       )
     }

@@ -17,6 +17,7 @@
 import React from "react"
 
 import { act, fireEvent, screen } from "@testing-library/react"
+import { userEvent } from "@testing-library/user-event"
 
 import { render } from "@streamlit/lib/src/test_util"
 import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
@@ -47,11 +48,11 @@ const getProps = (
 })
 
 const pickOption = (selectbox: HTMLElement, value: string): void => {
-  // TODO: Utilize user-event instead of fireEvent
+  // TODO: Utilize userEvent instead of fireEvent. This somehow fails with userEvent.
   // eslint-disable-next-line testing-library/prefer-user-event
   fireEvent.click(selectbox)
   const valueElement = screen.getByText(value)
-  // TODO: Utilize user-event instead of fireEvent
+  // TODO: Utilize userEvent instead of fireEvent. This somehow fails with userEvent.
   // eslint-disable-next-line testing-library/prefer-user-event
   fireEvent.click(valueElement)
 }
@@ -152,5 +153,37 @@ describe("Selectbox widget", () => {
       },
       undefined
     )
+  })
+
+  it("maintains scroll position when reopening dropdown", async () => {
+    const user = userEvent.setup()
+    const props = getProps({
+      options: Array.from({ length: 100 }, (_, i) => `Option ${i}`),
+    })
+    vi.spyOn(Utils, "convertRemToPx").mockImplementation(mockConvertRemToPx)
+
+    render(<Selectbox {...props} />)
+    const selectbox = screen.getByRole("combobox")
+
+    // Open dropdown
+    await user.click(selectbox)
+
+    // Get dropdown content and scroll
+    const dropdown = screen.getByTestId("stSelectboxVirtualDropdown")
+    act(() => {
+      // Simulate scrolling down
+      const scrollEvent = new Event("scroll", { bubbles: true })
+      Object.defineProperty(dropdown, "scrollTop", { value: 500 })
+      dropdown.dispatchEvent(scrollEvent)
+    })
+
+    // Close dropdown
+    await user.keyboard("{Escape}")
+
+    // Reopen dropdown
+    await user.click(selectbox)
+
+    // Check if scroll position was maintained
+    expect(dropdown.scrollTop).toBe(500)
   })
 })

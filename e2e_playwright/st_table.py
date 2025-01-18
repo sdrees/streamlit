@@ -182,7 +182,6 @@ styled_df = weather_df.style.pipe(make_pretty)
 st.table(styled_df)
 
 # Advanced styling example with styled headers, hovering and caption:
-
 styled_df = pd.DataFrame(
     [[38.0, 2.0, 18.0, 22.0, 21, np.nan], [19, 439, 6, 452, 226, 232]],
     index=pd.Index(
@@ -215,3 +214,40 @@ styled_df.set_table_styles(
 )
 styled_df.set_caption("Confusion matrix for multiple cancer prediction models.")
 st.table(styled_df)
+
+
+st.header("Markdown Support")
+index = pd.Index(
+    [
+        ":material/check_circle: Row 1",
+        ":streamlit: Row 2",
+        "**Bold** Row 3",
+        "*Italic* Row 4",
+        "~Strikethrough~ Row 5",
+        "`Code Block` Row 6",
+    ]
+)
+
+data = pd.DataFrame(
+    {
+        "**Basic** Formatting": [
+            "**Bold** text",
+            "*Italic* text",
+            "~Strikethrough~ text",
+            "`Code Block` text",
+            "# Heading 1",
+            "> This is a blockquote",
+        ],
+        "*Advanced* Features": [
+            ":red[Red text] :red-background[Red background]",
+            "[Streamlit](https://streamlit.io)",
+            "![Image](app/static/cat.jpg)",
+            "| Table | Row |\n|---|---|\n| Cell | Cell |",
+            "```python\ndef code():\n    pass\n```",
+            "<- -> <-> -- >= <= ~=",
+        ],
+    },
+    index=index,
+)
+
+st.table(data)

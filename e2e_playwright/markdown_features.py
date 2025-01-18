@@ -164,3 +164,8 @@ st.container(key="st_image").image(
     np.repeat(0, 10000).reshape(100, 100), caption=selected_feature_markdown
 )
 st.container(key="st_progress").progress(0.5, selected_feature_markdown)
+st.container(key="st_table").table(
+    {
+        "Header": [selected_feature_markdown],
+    }
+)

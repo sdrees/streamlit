@@ -58,7 +58,7 @@ describe("format", () => {
         arrowField: new Field("test", new Utf8(), true),
         pandasType: undefined,
       })
-    ).toEqual("<NA>")
+    ).toEqual("")
   })
 
   test("string", () => {

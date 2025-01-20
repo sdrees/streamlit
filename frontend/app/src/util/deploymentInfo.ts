@@ -14,21 +14,9 @@
  * limitations under the License.
  */
 
-import { Config } from "@streamlit/lib"
-import { isLocalhost } from "@streamlit/app/src/util/deploymentInfo"
-
-export const showDevelopmentOptions = (
-  hostIsOwner: boolean | undefined,
-  toolbarMode: Config.ToolbarMode
-): boolean => {
-  if (toolbarMode == Config.ToolbarMode.DEVELOPER) {
-    return true
-  }
-  if (
-    Config.ToolbarMode.VIEWER == toolbarMode ||
-    Config.ToolbarMode.MINIMAL == toolbarMode
-  ) {
-    return false
-  }
-  return hostIsOwner || isLocalhost()
+export const isLocalhost = (): boolean => {
+  return (
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+  )
 }

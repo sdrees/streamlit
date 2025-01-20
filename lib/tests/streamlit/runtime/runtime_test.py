@@ -548,64 +548,134 @@ class RuntimeTest(RuntimeTestCase):
         """Test that the ForwardMsgCache gets properly cleared when scripts
         finish running.
         """
-        with patch_config_options(
-            {"global.minCachedMessageSize": 0, "global.maxCachedMessageAge": 1}
-        ):
-            await self.runtime.start()
+        await self.runtime.start()
 
-            client = MockSessionClient()
-            session_id = self.runtime.connect_session(
-                client=client, user_info=MagicMock()
-            )
+        client = MockSessionClient()
+        session_id = self.runtime.connect_session(client=client, user_info=MagicMock())
 
-            data_msg = create_dataframe_msg([1, 2, 3])
+        async def finish_script(success: bool, fragment: bool = False) -> None:
+            status = ForwardMsg.FINISHED_SUCCESSFULLY
+            if fragment:
+                status = ForwardMsg.FINISHED_FRAGMENT_RUN_SUCCESSFULLY
+            if not success:
+                status = ForwardMsg.FINISHED_WITH_COMPILE_ERROR
 
-            async def finish_script(success: bool) -> None:
-                status = (
-                    ForwardMsg.FINISHED_SUCCESSFULLY
-                    if success
-                    else ForwardMsg.FINISHED_WITH_COMPILE_ERROR
+            finish_msg = create_script_finished_message(status)
+            self.enqueue_forward_msg(session_id, finish_msg)
+            await self.tick_runtime_loop()
+
+        def is_data_msg_cached(data_msg) -> bool:
+            return self.runtime._message_cache.get_message(data_msg.hash) is not None
+
+        async def send_data_msg(data_msg) -> None:
+            self.enqueue_forward_msg(session_id, data_msg)
+            await self.tick_runtime_loop()
+
+        async def test_standard_message_caching():
+            with patch_config_options(
+                {"global.minCachedMessageSize": 0, "global.maxCachedMessageAge": 1}
+            ):
+                data_msg = create_dataframe_msg([1, 2, 3])
+
+                await send_data_msg(data_msg=data_msg)
+                self.assertTrue(
+                    is_data_msg_cached(data_msg=data_msg),
+                    "Send a cacheable message. It should be cached.",
                 )
-                finish_msg = create_script_finished_message(status)
-                self.enqueue_forward_msg(session_id, finish_msg)
-                await self.tick_runtime_loop()
 
-            def is_data_msg_cached() -> bool:
-                return (
-                    self.runtime._message_cache.get_message(data_msg.hash) is not None
+                # End the script with a compile error. Nothing should change;
+                # compile errors don't increase the age of items in the cache.
+                await finish_script(False)
+                self.assertTrue(
+                    is_data_msg_cached(data_msg=data_msg),
+                    "Compile error should not increment count.",
                 )
 
-            async def send_data_msg() -> None:
-                self.enqueue_forward_msg(session_id, data_msg)
-                await self.tick_runtime_loop()
+                # End the script successfully. Nothing should change, because
+                # the age of the cached message is now 1.
+                await finish_script(True)
+                self.assertTrue(
+                    is_data_msg_cached(data_msg=data_msg),
+                    "Age of message is 1. Remains cached.",
+                )
 
-            # Send a cacheable message. It should be cached.
-            await send_data_msg()
-            self.assertTrue(is_data_msg_cached())
+                # Send the message again. This should reset its age to 0 in the
+                # cache, so it won't be evicted when the script next finishes.
+                await send_data_msg(data_msg=data_msg)
+                self.assertTrue(
+                    is_data_msg_cached(data_msg=data_msg),
+                    "Sending the message again resets the age.",
+                )
 
-            # End the script with a compile error. Nothing should change;
-            # compile errors don't increase the age of items in the cache.
-            await finish_script(False)
-            self.assertTrue(is_data_msg_cached())
+                # Finish the script. The cached message age is now 1.
+                await finish_script(True)
+                self.assertTrue(
+                    is_data_msg_cached(data_msg=data_msg), "Message age is 1 again."
+                )
 
-            # End the script successfully. Nothing should change, because
-            # the age of the cached message is now 1.
-            await finish_script(True)
-            self.assertTrue(is_data_msg_cached())
+                # Finish again. The cached message age will be 2, and so it
+                # should be evicted from the cache.
+                await finish_script(True)
+                self.assertFalse(
+                    is_data_msg_cached(data_msg=data_msg),
+                    "Message age is 2 and message is evicted from cache.",
+                )
 
-            # Send the message again. This should reset its age to 0 in the
-            # cache, so it won't be evicted when the script next finishes.
-            await send_data_msg()
-            self.assertTrue(is_data_msg_cached())
+        async def test_fragment_run_message_caching():
+            with patch_config_options(
+                {"global.minCachedMessageSize": 0, "global.maxCachedMessageAge": 1}
+            ):
+                data_msg = create_dataframe_msg([4, 5, 6])
 
-            # Finish the script. The cached message age is now 1.
-            await finish_script(True)
-            self.assertTrue(is_data_msg_cached())
+                await send_data_msg(data_msg=data_msg)
 
-            # Finish again. The cached message age will be 2, and so it
-            # should be evicted from the cache.
-            await finish_script(True)
-            self.assertFalse(is_data_msg_cached())
+                # After a regular and fragment run the message is not
+                # evicted because the fragment run doesn't increment
+                # the count.
+                await finish_script(True, fragment=False)
+                await finish_script(True, fragment=True)
+                self.assertTrue(
+                    is_data_msg_cached(data_msg=data_msg),
+                    "Fragment run does not evict message from the cache.",
+                )
+
+                await finish_script(True, fragment=False)
+                self.assertFalse(
+                    is_data_msg_cached(data_msg=data_msg),
+                    "Another full run clears the cache.",
+                )
+
+        async def test_fragment_run_message_caching_with_fragment_counting():
+            with patch_config_options(
+                {
+                    "global.minCachedMessageSize": 0,
+                    "global.maxCachedMessageAge": 1,
+                    "global.includeFragmentRunsInForwardMessageCacheCount": True,
+                }
+            ):
+                data_msg = create_dataframe_msg([7, 8, 9])
+
+                await send_data_msg(data_msg=data_msg)
+
+                await finish_script(True, fragment=True)
+                self.assertTrue(
+                    is_data_msg_cached(data_msg=data_msg),
+                    "The message age is 1 with one fragment run.",
+                )
+
+                await finish_script(True, fragment=False)
+                self.assertFalse(
+                    is_data_msg_cached(data_msg=data_msg),
+                    "Another full run clears the cache.",
+                )
+
+        # TODO: As part of the forward message cache refactoring (Q1FY26) we may
+        # remove some of these tests. If we don't, we should move the
+        # caching tests into a separate test file and make these functions
+        # into separate test cases.
+        await test_standard_message_caching()
+        await test_fragment_run_message_caching()
+        await test_fragment_run_message_caching_with_fragment_counting()
 
     async def test_get_async_objs(self):
         """Runtime._get_async_objs() will raise an error if called before the

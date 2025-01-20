@@ -420,6 +420,20 @@ _create_option(
     type_=bool,
 )
 
+_create_option(
+    "global.includeFragmentRunsInForwardMessageCacheCount",
+    description="""
+        If True, the server will include fragment runs in the count for the
+        forward message cache. The implication is that apps with fragments may
+        see messages being removed from the cache faster. This aligns the server
+        count with the frontend count. This is a temporary fix while we assess the
+        design of the cache.
+    """,
+    visibility="hidden",
+    default_val=False,
+    type_=bool,
+)
+
 
 # Config Section: Logger #
 _create_section("logger", "Settings to customize Streamlit log messages.")

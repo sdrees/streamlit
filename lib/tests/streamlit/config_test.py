@@ -401,6 +401,7 @@ class ConfigTest(unittest.TestCase):
                 "global.minCachedMessageSize",
                 "global.showWarningOnDirectExecution",
                 "global.storeCachedForwardMessagesInMemory",
+                "global.includeFragmentRunsInForwardMessageCacheCount",
                 "global.suppressDeprecationWarnings",
                 "global.unitTest",
                 "logger.enableRich",

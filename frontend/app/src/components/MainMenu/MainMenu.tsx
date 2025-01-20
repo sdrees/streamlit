@@ -93,13 +93,6 @@ const getOpenInWindowCallback = (url: string) => (): void => {
   window.open(url, "_blank")
 }
 
-export const isLocalhost = (): boolean => {
-  return (
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1"
-  )
-}
-
 export interface MenuItemProps {
   item: any
   "aria-selected": boolean

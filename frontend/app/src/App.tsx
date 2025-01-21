@@ -113,9 +113,9 @@ import DeployButton from "@streamlit/app/src/components/DeployButton"
 import Header from "@streamlit/app/src/components/Header"
 import {
   DialogProps,
-  DialogType,
   StreamlitDialog,
 } from "@streamlit/app/src/components/StreamlitDialog"
+import { DialogType } from "@streamlit/app/src/components/StreamlitDialog/constants"
 import { ConnectionManager } from "@streamlit/app/src/connection/ConnectionManager"
 import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
 import { SessionEventDispatcher } from "@streamlit/app/src/SessionEventDispatcher"

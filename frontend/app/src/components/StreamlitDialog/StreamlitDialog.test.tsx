@@ -19,8 +19,8 @@ import React, { Fragment } from "react"
 import { screen } from "@testing-library/react"
 
 import { mockSessionInfo, render, SessionInfo } from "@streamlit/lib"
-
-import { DialogType, StreamlitDialog } from "./StreamlitDialog"
+import { DialogType } from "@streamlit/app/src/components/StreamlitDialog/constants"
+import { StreamlitDialog } from "@streamlit/app/src/components/StreamlitDialog"
 
 function flushPromises(): Promise<void> {
   return new Promise(process.nextTick)

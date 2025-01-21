@@ -13,5 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { DeployDialog } from "./DeployDialog"
-export type { DeployDialogProps } from "./DeployDialog"
+
+export enum DialogType {
+  ABOUT = "about",
+  CLEAR_CACHE = "clearCache",
+  SETTINGS = "settings",
+  SCRIPT_COMPILE_ERROR = "scriptCompileError",
+  THEME_CREATOR = "themeCreator",
+  WARNING = "warning",
+  DEPLOY_ERROR = "deployError",
+  DEPLOY_DIALOG = "deployDialog",
+}

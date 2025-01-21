@@ -17,9 +17,6 @@
 import React, { ReactElement } from "react"
 
 import { Check } from "@emotion-icons/material-outlined"
-import { toHex } from "color2k"
-import humanizeString from "humanize-string"
-import mapValues from "lodash/mapValues"
 
 import {
   BaseButton,
@@ -27,163 +24,26 @@ import {
   BaseColorPicker,
   createTheme,
   CUSTOM_THEME_NAME,
-  CustomThemeConfig,
-  darkTheme,
-  EmotionTheme,
   Icon,
   LibContext,
-  lightTheme,
   Modal,
   ModalBody,
   ModalHeader,
   StreamlitMarkdown,
   ThemeConfig,
   toThemeInput,
-  UISelectbox,
 } from "@streamlit/lib"
 import { MetricsManager } from "@streamlit/app/src/MetricsManager"
+import {
+  themeBuilder,
+  toMinimalToml,
+} from "@streamlit/app/src/components/StreamlitDialog/themeUtils"
 
 import {
   StyledBackButton,
   StyledDialogBody,
   StyledFullRow,
 } from "./styled-components"
-
-interface ThemeOptionBuilder {
-  help: string
-  title: string
-  component: any
-  options?: any[]
-  getValue: (value: string, config: ThemeOptionBuilder) => any
-}
-
-const valueToColor = (value: string, _config: ThemeOptionBuilder): string =>
-  toHex(value).toUpperCase()
-
-const displayFontOption = (
-  font: CustomThemeConfig.FontFamily | string
-): string =>
-  // @ts-expect-error
-  humanizeString(CustomThemeConfig.FontFamily[font])
-
-const themeBuilder: Record<string, ThemeOptionBuilder> = {
-  primaryColor: {
-    help: "Primary accent color for interactive elements.",
-    title: "Primary color",
-    component: BaseColorPicker,
-    getValue: valueToColor,
-  },
-  backgroundColor: {
-    help: "Background color for the main content area.",
-    title: "Background color",
-    component: BaseColorPicker,
-    getValue: valueToColor,
-  },
-  secondaryBackgroundColor: {
-    help: "Background color used for the sidebar and most interactive widgets.",
-    title: "Secondary background color",
-    component: BaseColorPicker,
-    getValue: valueToColor,
-  },
-  textColor: {
-    help: "Color used for almost all text.",
-    title: "Text color",
-    component: BaseColorPicker,
-    getValue: valueToColor,
-  },
-  font: {
-    help: "Font family for all text in the app, except code blocks.",
-    title: "Font family",
-    options: Object.keys(CustomThemeConfig.FontFamily).map(font =>
-      humanizeString(font)
-    ),
-    getValue: (value: string, config: ThemeOptionBuilder): number =>
-      (config.options &&
-        config.options.findIndex(
-          (font: string) => font === displayFontOption(value)
-        )) ||
-      0,
-    component: UISelectbox,
-  },
-}
-
-const changedColorConfig = (
-  themeInput: Partial<CustomThemeConfig>,
-  baseTheme: EmotionTheme
-): Array<string> => {
-  const toLowerCaseIfString = (x: any): any => {
-    if (typeof x === "string") {
-      return x.toLowerCase()
-    }
-    return x
-  }
-
-  const baseInput: Partial<CustomThemeConfig> = mapValues(
-    toThemeInput(baseTheme),
-    toLowerCaseIfString
-  )
-  themeInput = mapValues(themeInput, toLowerCaseIfString)
-  const configLines: Array<string> = []
-
-  // This is tedious, but typescript won't let us define an array with the keys
-  // ["primaryColor", "backgroundColor", etc.] and use its elements to key into
-  // themeInput and baseInput since it can't infer that the string literals in
-  // the array are indeed valid fields.
-  if (themeInput.primaryColor !== baseInput.primaryColor) {
-    configLines.push(`primaryColor="${themeInput.primaryColor}"`)
-  }
-  if (themeInput.backgroundColor !== baseInput.backgroundColor) {
-    configLines.push(`backgroundColor="${themeInput.backgroundColor}"`)
-  }
-  if (
-    themeInput.secondaryBackgroundColor !== baseInput.secondaryBackgroundColor
-  ) {
-    configLines.push(
-      `secondaryBackgroundColor="${themeInput.secondaryBackgroundColor}"`
-    )
-  }
-  if (themeInput.textColor !== baseInput.textColor) {
-    configLines.push(`textColor="${themeInput.textColor}"`)
-  }
-
-  return configLines
-}
-
-export const toMinimalToml = (
-  themeInput: Partial<CustomThemeConfig>
-): string => {
-  const lines = ["[theme]"]
-
-  const lightBaseConfig = changedColorConfig(themeInput, lightTheme.emotion)
-  const darkBaseConfig = changedColorConfig(themeInput, darkTheme.emotion)
-
-  const lbcLength = lightBaseConfig.length
-  const dbcLength = darkBaseConfig.length
-
-  if (lbcLength === dbcLength) {
-    // Since the light and dark themes have different background, secondary
-    // background, and text colors, this can only happen if all three of those
-    // are changed. We don't need to define a base theme in this case.
-    lines.push(...lightBaseConfig)
-  } else if (lbcLength < dbcLength) {
-    // Technically, the default base theme is light, but we break minimality
-    // and set it here anyway to be more explicit.
-    lines.push('base="light"', ...lightBaseConfig)
-  } else {
-    lines.push('base="dark"', ...darkBaseConfig)
-  }
-
-  if (themeInput.font) {
-    const fontString = displayFontOption(themeInput.font).toLowerCase()
-    lines.push(`font="${fontString}"`)
-  }
-
-  return [
-    ...lines,
-    // Add a newline to the end.
-    "",
-  ].join("\n")
-}
 
 export interface Props {
   backToSettings: (animateModal: boolean) => void

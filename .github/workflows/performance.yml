@@ -1,31 +1,26 @@
-name: Performance - Lighthouse
+name: Performance Suite
 
 on:
+  push:
+    branches:
+      - "develop"
   pull_request:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
+    types: [opened, synchronize, reopened]
   # Allows workflow to be called from other workflows
   workflow_call:
     inputs:
       ref:
         required: true
         type: string
-      externalCall:
-        description: "To distinguish workflow_call from regular push"
-        type: boolean
-        required: false
-        default: false
 
 # Avoid duplicate workflows on same branch
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-performance-lighthouse
+  group: ${{ github.workflow }}-${{ github.ref }}-performance
   cancel-in-progress: true
 
 jobs:
-  performance-lighthouse:
-    # Only run this job if the PR has the label 'perf:lighthouse' or if it's been called by another workflow
-    # See https://github.com/actions/runner/discussions/1884 for discussion on why `externalCall` is used
-    if: contains(github.event.pull_request.labels.*.name, 'perf:lighthouse') || inputs.externalCall
-    runs-on: ubuntu-latest
+  performance:
+    runs-on: ubuntu-latest-8-cores
 
     defaults:
       run:
@@ -47,14 +42,28 @@ jobs:
           python-version: "${{ env.PYTHON_MAX_VERSION }}"
       - name: Setup virtual env
         uses: ./.github/actions/make_init
-      - name: Run make frontend
-        run: make frontend
-      - name: Run Performance Lighthouse
+      - name: Install playwright
+        run: python -m playwright install --with-deps
+      - name: Run make frontend-build-with-profiler
+        run: make frontend-build-with-profiler
+      - name: Run make performance-playwright
+        run: make performance-playwright
+      - name: Run make performance-pytest
+        run: make performance-pytest
+      - name: Run make performance-lighthouse
         run: make performance-lighthouse
       - name: Set MY_DATE_TIME env var
         run: echo "MY_DATE_TIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-      - name: Upload artifacts
+      - name: Upload failed test results
         uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: performance_lighthouse_${{ env.MY_DATE_TIME }}
-          path: frontend/app/performance/lighthouse/reports
+          name: playwright_test_results
+          path: e2e_playwright/test-results
+      - name: Upload Performance results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance_results_${{ env.MY_DATE_TIME }}
+          include-hidden-files: true
+          path: .benchmarks

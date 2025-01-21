@@ -124,7 +124,7 @@ def measure_performance(
         parsed_captured_traces = json.loads(captured_traces)
 
         performance_results_dir = os.path.join(
-            get_git_root(), "e2e_playwright", "performance-results"
+            get_git_root(), ".benchmarks", "playwright"
         )
 
         # Ensure the directory exists

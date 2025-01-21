@@ -146,6 +146,19 @@ pytest:
 		PYTHONPATH=. \
 		pytest -v \
 			-l tests/ \
+			-m "not performance" \
+			$(PYTHON_MODULES)
+
+.PHONY: performance-pytest
+# Run Python benchmark tests
+performance-pytest:
+	cd lib; \
+		PYTHONPATH=. \
+		pytest -v \
+			-l tests/ \
+			-m "performance" \
+			--benchmark-autosave \
+			--benchmark-storage file://../.benchmarks/pytest \
 			$(PYTHON_MODULES)
 
 # Run Python integration tests.
@@ -218,6 +231,7 @@ clean:
 	find . -name '*.pyc' -type f -delete || true
 	find . -name __pycache__ -type d -delete || true
 	find . -name .pytest_cache -exec rm -rfv {} \; || true
+	find . -name '.benchmarks' -type d -exec rm -rfv {} \; || true
 	rm -rf .mypy_cache
 	rm -rf .ruff_cache
 	rm -f lib/streamlit/proto/*_pb2.py*
@@ -350,8 +364,8 @@ playwright:
 	rm -rf ./test-results; \
 	pytest --ignore ${custom_components_test_folder} --browser webkit --browser chromium --browser firefox --video retain-on-failure --screenshot only-on-failure --output ./test-results/ -n auto --reruns 1 --reruns-delay 1 --rerun-except "Missing snapshot" --durations=5 -r aR -v -m "not performance"
 
-.PHONY: playwright-performance
-playwright-performance:
+.PHONY: performance-playwright
+performance-playwright:
 	cd e2e_playwright; \
 	rm -rf ./test-results; \
 	pytest --browser chromium --output ./test-results/ -n 1 --reruns 1 --reruns-delay 1 --rerun-except "Missing snapshot" --durations=5 -r aR -v -m "performance" --count=10

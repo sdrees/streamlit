@@ -22,9 +22,11 @@ from playwright.sync_api import Locator, Page, Position, expect
 ROW_MARKER_COLUMN_WIDTH_PX: Final = 30
 
 # These values are defined in useColumnLoader of the DataFrame component:
-COLUMN_SMALL_WIDTH_PX: Final = 75
-COLUMN_MEDIUM_WIDTH_PX: Final = 200
-COLUMN_LARGE_WIDTH_PX: Final = 400
+COLUMN_SIZE_MAPPING: Final = {
+    "small": 75,
+    "medium": 200,
+    "large": 400,
+}
 
 # This value is defined in useTableSizer of the DataFrame component:
 ROW_HEIGHT_PX: Final = 35
@@ -66,11 +68,7 @@ def calc_middle_cell_position(
     tuple[int, int]
         The x and y positions of the middle of the cell.
     """
-    column_width_px = COLUMN_MEDIUM_WIDTH_PX
-    if column_width == "small":
-        column_width_px = COLUMN_SMALL_WIDTH_PX
-    elif column_width == "large":
-        column_width_px = COLUMN_LARGE_WIDTH_PX
+    column_width_px = COLUMN_SIZE_MAPPING[column_width]
 
     row_middle_height_px = row_pos * ROW_HEIGHT_PX + (ROW_HEIGHT_PX / 2)
     if has_row_marker_col:
@@ -86,6 +84,56 @@ def calc_middle_cell_position(
         column_middle_width_px = col_pos * column_width_px + (column_width_px / 2)
 
     return column_middle_width_px, row_middle_height_px
+
+
+def unfocus_dataframe(page: Page) -> None:
+    """Unfocus the dataframe.
+
+    This can be used to clear all selections and remove the focus and hovering from
+    the dataframe element. This can be useful before taking screenshots.
+    """
+    page.keyboard.press("Escape")
+    # Click somewhere to clear the focus from elements:
+    page.get_by_test_id("stApp").click(position={"x": 0, "y": 0})
+
+
+def open_column_menu(
+    dataframe_element: Locator,
+    col_pos: int,
+    column_width: Literal["small", "medium", "large"] = "small",
+    has_row_marker_col: bool = False,
+) -> None:
+    """Open the column menu for the specified column.
+
+    Parameters
+    ----------
+    dataframe_element : Locator
+        The dataframe element to open the column menu for.
+
+    col_pos : int
+        The column number to open the column menu for.
+
+    column_width : "small" | "medium" | "large"
+        The shared width setting of all columns. Can be "small", "medium" or "large".
+        This needs to be enforced in the dataframe via column config.
+
+    has_row_marker_col : bool
+        Whether the dataframe has a row marker column (used when row selections are
+        activated).
+    """
+    column_middle_width_px, row_middle_height_px = calc_middle_cell_position(
+        0, col_pos, column_width, has_row_marker_col
+    )
+    position: Position = {
+        # We need to click on the menu icon on the right side of the column header:
+        "x": column_middle_width_px + (COLUMN_SIZE_MAPPING[column_width] / 2) - 4,
+        "y": row_middle_height_px,
+    }
+
+    dataframe_element.click(position=position)
+    expect(
+        dataframe_element.page.get_by_test_id("stDataFrameColumnMenu")
+    ).to_be_visible()
 
 
 def click_on_cell(

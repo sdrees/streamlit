@@ -129,6 +129,13 @@ class DataframeUtilTest(unittest.TestCase):
         # The original dataframe should be changed here since ensure_copy is False
         self.assertEqual(orginal_df["integer"].to_list(), [4, 5, 6])
 
+    @pytest.mark.usefixtures("benchmark")
+    def test_convert_anything_to_pandas_df_ensure_copy_performance(self):
+        """Performance test for `convert_anything_to_pandas_df` with `ensure_copy`."""
+        self.benchmark(
+            DataframeUtilTest.test_convert_anything_to_pandas_df_ensure_copy, self
+        )
+
     def test_convert_anything_to_pandas_df_supports_key_value_dicts(self):
         """Test that `convert_anything_to_pandas_df` correctly converts
         key-value dicts to a dataframe.

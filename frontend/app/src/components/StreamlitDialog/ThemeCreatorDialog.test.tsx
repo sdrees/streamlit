@@ -26,13 +26,11 @@ import {
   LibContextProps,
   lightTheme,
   mockSessionInfo,
-  toThemeInput,
 } from "@streamlit/lib"
 import { MetricsManager } from "@streamlit/app/src/MetricsManager"
 
 import ThemeCreatorDialog, {
   Props as ThemeCreatorDialogProps,
-  toMinimalToml,
 } from "./ThemeCreatorDialog"
 
 const mockSetTheme = vi.fn()
@@ -72,95 +70,6 @@ describe("Renders ThemeCreatorDialog", () => {
 
     expect(screen.getByTestId("stThemeCreatorDialog")).toBeInTheDocument()
     expect(screen.getByText("Edit active theme")).toBeInTheDocument()
-  })
-})
-
-describe("toMinimalToml", () => {
-  it("outputs the correct config for the preset lightTheme", () => {
-    const themeInput = toThemeInput(lightTheme.emotion)
-    expect(toMinimalToml(themeInput)).toBe(`[theme]
-base="light"
-`)
-  })
-
-  it("is not case sensitive with color hex codes", () => {
-    const themeInput = {
-      ...toThemeInput(lightTheme.emotion),
-      backgroundColor: "#fFfFff",
-    }
-    expect(toMinimalToml(themeInput)).toBe(`[theme]
-base="light"
-`)
-  })
-
-  it("sets base = light when closer to lightTheme", () => {
-    const themeInput = {
-      ...toThemeInput(lightTheme.emotion),
-      primaryColor: "blue",
-    }
-    expect(toMinimalToml(themeInput)).toBe(`[theme]
-base="light"
-primaryColor="blue"
-`)
-  })
-
-  it("outputs the correct config for the preset darkTheme", () => {
-    const themeInput = toThemeInput(darkTheme.emotion)
-    expect(toMinimalToml(themeInput)).toBe(`[theme]
-base="dark"
-`)
-  })
-
-  it("sets base = dark when closer to darkTheme", () => {
-    const themeInput = {
-      ...toThemeInput(darkTheme.emotion),
-      primaryColor: "blue",
-    }
-    expect(toMinimalToml(themeInput)).toBe(`[theme]
-base="dark"
-primaryColor="blue"
-`)
-  })
-
-  it("does not set base if all non-primaryColor color options are set", () => {
-    const themeInput = {
-      ...toThemeInput(darkTheme.emotion),
-      backgroundColor: "red",
-      secondaryBackgroundColor: "blue",
-      textColor: "purple",
-    }
-    expect(toMinimalToml(themeInput)).toBe(`[theme]
-backgroundColor="red"
-secondaryBackgroundColor="blue"
-textColor="purple"
-`)
-  })
-
-  it("does not set base if all color options are set", () => {
-    const themeInput = {
-      ...toThemeInput(darkTheme.emotion),
-      primaryColor: "pink",
-      backgroundColor: "red",
-      secondaryBackgroundColor: "blue",
-      textColor: "purple",
-    }
-    expect(toMinimalToml(themeInput)).toBe(`[theme]
-primaryColor="pink"
-backgroundColor="red"
-secondaryBackgroundColor="blue"
-textColor="purple"
-`)
-  })
-
-  it("sets font if not sans serif", () => {
-    const themeInput = {
-      ...toThemeInput(lightTheme.emotion),
-      font: CustomThemeConfig.FontFamily.MONOSPACE,
-    }
-    expect(toMinimalToml(themeInput)).toBe(`[theme]
-base="light"
-font="monospace"
-`)
   })
 })
 

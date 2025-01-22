@@ -54,9 +54,3 @@ jobs:
         with:
           name: playwright_test_results
           path: e2e_playwright/test-results
-      - name: Upload performance results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright_performance_results
-          path: e2e_playwright/performance-results

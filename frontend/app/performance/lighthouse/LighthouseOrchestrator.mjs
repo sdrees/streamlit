@@ -31,7 +31,10 @@ import { exec, execSync } from "child_process"
 import { MODES } from "./constants.mjs"
 
 const PATHNAME = new URL(".", import.meta.url).pathname
-const REPORTS_DIRECTORY = path.resolve(PATHNAME, "./reports")
+const REPORTS_DIRECTORY = path.resolve(
+  PATHNAME,
+  "../../../../.benchmarks/lighthouse"
+)
 
 /**
  * This class is responsible for managing the lifecycle of a headless Chrome

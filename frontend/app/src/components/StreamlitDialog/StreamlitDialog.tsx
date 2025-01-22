@@ -29,6 +29,7 @@ import {
   StreamlitSyntaxHighlighter,
 } from "@streamlit/lib"
 import { STREAMLIT_HOME_URL } from "@streamlit/app/src/urls"
+import { DialogType } from "@streamlit/app/src/components/StreamlitDialog/constants"
 
 import { SettingsDialog, Props as SettingsDialogProps } from "./SettingsDialog"
 import ThemeCreatorDialog, {
@@ -60,17 +61,6 @@ export type DialogProps =
   | WarningProps
   | DeployErrorProps
   | DeployDialogProps
-
-export enum DialogType {
-  ABOUT = "about",
-  CLEAR_CACHE = "clearCache",
-  SETTINGS = "settings",
-  SCRIPT_COMPILE_ERROR = "scriptCompileError",
-  THEME_CREATOR = "themeCreator",
-  WARNING = "warning",
-  DEPLOY_ERROR = "deployError",
-  DEPLOY_DIALOG = "deployDialog",
-}
 
 export function StreamlitDialog(dialogProps: DialogProps): ReactNode {
   switch (dialogProps.type) {

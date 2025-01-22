@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement } from "react"
+import React, { ReactElement, useCallback } from "react"
 
 import {
   CompactSelection,
@@ -22,8 +22,10 @@ import {
   DataEditor as GlideDataEditor,
   GridCell,
   Item as GridCellPosition,
+  GridColumn,
   GridMouseEventArgs,
   GridSelection,
+  Rectangle,
 } from "@glideapps/glide-data-grid"
 import { Resizable } from "re-resizable"
 import {
@@ -51,6 +53,7 @@ import { ElementFullscreenContext } from "@streamlit/lib/src/components/shared/E
 import { useRequiredContext } from "@streamlit/lib/src/hooks/useRequiredContext"
 import { useDebouncedCallback } from "@streamlit/lib/src/hooks/useDebouncedCallback"
 
+import ColumnMenu from "./ColumnMenu"
 import EditingState, { getColumnName } from "./EditingState"
 import {
   useColumnLoader,
@@ -151,6 +154,12 @@ function DataFrame({
     React.useState<boolean>(false)
   const [hasHorizontalScroll, setHasHorizontalScroll] =
     React.useState<boolean>(false)
+  const [showMenu, setShowMenu] = React.useState<{
+    // The index number of the column that the menu is shown for:
+    columnIdx: number
+    // The bounds of the column header:
+    headerBounds: Rectangle
+  }>()
 
   // Determine if the device is primary using touch as input:
   const isTouchDevice = React.useMemo<boolean>(
@@ -192,6 +201,8 @@ function DataFrame({
 
   // For large tables, we apply some optimizations to handle large data
   const isLargeTable = originalNumRows > LARGE_TABLE_ROWS_THRESHOLD
+  const isSortingEnabled =
+    !isLargeTable && !isEmptyTable && element.editingMode !== DYNAMIC
 
   const editingState = React.useRef<EditingState>(
     new EditingState(originalNumRows)
@@ -522,9 +533,21 @@ function DataFrame({
 
   const { drawCell, customRenderers } = useCustomRenderer(columns)
 
+  // Callback that can be used to configure the column menu for the columns
+  const configureColumnMenu = useCallback(
+    (column: GridColumn): GridColumn => {
+      return {
+        ...column,
+        hasMenu: !isEmptyTable,
+      }
+    },
+    [isEmptyTable]
+  )
+
+  // Convert columns from our structure into the glide-data-grid compatible structure
   const transformedColumns = React.useMemo(
-    () => columns.map(column => toGlideColumn(column)),
-    [columns]
+    () => columns.map(column => configureColumnMenu(toGlideColumn(column))),
+    [columns, configureColumnMenu]
   )
   const { columns: glideColumns, onColumnResize } =
     useColumnSizer(transformedColumns)
@@ -850,8 +873,8 @@ function DataFrame({
             clearTooltip()
           }}
           // Header click is used for column sorting:
-          onHeaderClicked={(colIndex: number, _event) => {
-            if (isEmptyTable || isLargeTable || isColumnSelectionActivated) {
+          onHeaderClicked={(columnIdx: number, _event) => {
+            if (!isSortingEnabled || isColumnSelectionActivated) {
               // Deactivate sorting for empty state, for large dataframes, or
               // when column selection is activated.
               return
@@ -864,8 +887,12 @@ function DataFrame({
               // the same row after sorting, hover that would require us to map the selection
               // to the new index of the selected row which adds complexity.
               clearSelection()
+            } else {
+              // Cell selection are kept on the old position,
+              // which can be confusing. So we clear all cell selections before sorting.
+              clearSelection(true, true)
             }
-            sortColumn(colIndex)
+            sortColumn(columnIdx, "auto")
           }}
           gridSelection={gridSelection}
           // We don't have to react to "onSelectionCleared" since
@@ -924,6 +951,13 @@ function DataFrame({
           headerIcons={gridTheme.headerIcons}
           // Add support for user input validation:
           validateCell={validateCell}
+          // Open column context menu:
+          onHeaderMenuClick={(columnIdx, screenPosition) => {
+            setShowMenu({
+              columnIdx,
+              headerBounds: screenPosition,
+            })
+          }}
           // The default setup is read only, and therefore we deactivate paste here:
           onPaste={false}
           // Activate features required for row selection:
@@ -1011,6 +1045,25 @@ function DataFrame({
           content={tooltip.content}
           clearTooltip={clearTooltip}
         ></Tooltip>
+      )}
+      {showMenu && (
+        // A context menu that provides interactive features (sorting, pinning, show/hide)
+        // for a grid column.
+        <ColumnMenu
+          top={showMenu.headerBounds.y + showMenu.headerBounds.height}
+          left={showMenu.headerBounds.x + showMenu.headerBounds.width}
+          onMenuClosed={() => setShowMenu(undefined)}
+          onSortColumn={
+            isSortingEnabled
+              ? (direction: "asc" | "desc" | undefined) => {
+                  // Cell selection are kept on the old position,
+                  // which can be confusing. So we clear all cell selections before sorting.
+                  clearSelection(true, true)
+                  sortColumn(showMenu.columnIdx, direction, true)
+                }
+              : undefined
+          }
+        ></ColumnMenu>
       )}
     </StyledResizableContainer>
   )

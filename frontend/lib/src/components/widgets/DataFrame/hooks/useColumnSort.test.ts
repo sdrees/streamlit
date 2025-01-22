@@ -106,7 +106,7 @@ describe("useColumnSort hook", () => {
     // Sort the first time for ascending order
     act(() => {
       const { sortColumn } = result.current
-      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber)
+      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber, "auto")
     })
 
     // Column header should contain ascending sort icon
@@ -144,7 +144,7 @@ describe("useColumnSort hook", () => {
     // Sort again for descending order
     act(() => {
       const { sortColumn } = result.current
-      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber)
+      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber, "auto")
     })
 
     // Column header should contain descending sort icon
@@ -179,7 +179,7 @@ describe("useColumnSort hook", () => {
     // Sort the first time for ascending order
     act(() => {
       const { sortColumn } = result.current
-      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber)
+      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber, "auto")
     })
 
     // Column header should contain ascending sort icon
@@ -202,7 +202,7 @@ describe("useColumnSort hook", () => {
     // Sort again for descending order
     act(() => {
       const { sortColumn } = result.current
-      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber)
+      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber, "auto")
     })
 
     // Column header should contain descending sort icon
@@ -221,5 +221,111 @@ describe("useColumnSort hook", () => {
       /// Sort as text array
       Array.from(sortedDataDesc).sort().reverse()
     )
+  })
+
+  it("should sort in descending order when direction is set to desc", () => {
+    const { result } = renderHook(() =>
+      useColumnSort(
+        MOCK_PROPS.numRows,
+        MOCK_PROPS.columns,
+        MOCK_PROPS.getCellContent
+      )
+    )
+    const SELECTED_COLUMN = 0
+
+    // Sort explicitly descending
+    act(() => {
+      const { sortColumn } = result.current
+      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber, "desc")
+    })
+
+    // Column header should contain descending sort icon
+    expect(result.current.columns[SELECTED_COLUMN].title).toContain("↓")
+
+    const sortedDataDesc = []
+    for (let i = 0; i < MOCK_PROPS.numRows; i++) {
+      sortedDataDesc.push(
+        (result.current.getCellContent([SELECTED_COLUMN, i]) as NumberCell)
+          .data
+      )
+    }
+
+    // Verify data is sorted in descending order
+    expect(Array.from(sortedDataDesc)).toEqual(
+      Array.from(sortedDataDesc)
+        .sort((a, b) => {
+          if (a === undefined) return -1
+          if (b === undefined) return 1
+          return a - b
+        })
+        .reverse()
+    )
+  })
+
+  it("should sort in ascending order when direction is set to asc", () => {
+    const { result } = renderHook(() =>
+      useColumnSort(
+        MOCK_PROPS.numRows,
+        MOCK_PROPS.columns,
+        MOCK_PROPS.getCellContent
+      )
+    )
+    const SELECTED_COLUMN = 0
+
+    // Change to ascending explicitly
+    act(() => {
+      const { sortColumn } = result.current
+      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber, "asc")
+    })
+
+    // Column header should contain ascending sort icon
+    expect(result.current.columns[SELECTED_COLUMN].title).toContain("↑")
+
+    const sortedDataAsc = []
+    for (let i = 0; i < MOCK_PROPS.numRows; i++) {
+      sortedDataAsc.push(
+        (result.current.getCellContent([SELECTED_COLUMN, i]) as NumberCell)
+          .data
+      )
+    }
+
+    // Verify data is sorted in ascending order
+    expect(Array.from(sortedDataAsc)).toEqual(
+      Array.from(sortedDataAsc).sort((a, b) => {
+        if (a === undefined) return -1
+        if (b === undefined) return 1
+        return a - b
+      })
+    )
+  })
+
+  it("should respect autoReset parameter when sorting", () => {
+    const { result } = renderHook(() =>
+      useColumnSort(
+        MOCK_PROPS.numRows,
+        MOCK_PROPS.columns,
+        MOCK_PROPS.getCellContent
+      )
+    )
+    const SELECTED_COLUMN = 0
+
+    // Sort ascending
+    act(() => {
+      const { sortColumn } = result.current
+      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber, "asc")
+    })
+
+    // Column header should contain ascending sort icon
+    expect(result.current.columns[SELECTED_COLUMN].title).toContain("↑")
+
+    // Sort ascending again with autoReset true - should remove sorting
+    act(() => {
+      const { sortColumn } = result.current
+      sortColumn?.(MOCK_COLUMNS[SELECTED_COLUMN].indexNumber, "asc", true)
+    })
+
+    // Column header should not contain any sort icon
+    expect(result.current.columns[SELECTED_COLUMN].title).not.toContain("↑")
+    expect(result.current.columns[SELECTED_COLUMN].title).not.toContain("↓")
   })
 })

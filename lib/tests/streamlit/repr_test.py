@@ -14,6 +14,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 import streamlit.util as util
 
 
@@ -46,3 +48,8 @@ def test_repr_thread_class():
     thread = threading.current_thread()
     # This should return a non empty string and not raise an exception.
     assert str(thread) is not None
+
+
+@pytest.mark.usefixtures("benchmark")
+def test_repr_dict_class_performance(benchmark):
+    benchmark(test_repr_dict_class)

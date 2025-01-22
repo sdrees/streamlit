@@ -24,7 +24,7 @@ export interface StyledChatInputContainerProps {
 export const StyledChatInputContainer =
   styled.div<StyledChatInputContainerProps>(({ theme, width }) => {
     return {
-      borderRadius: theme.radii.xxxl,
+      borderRadius: theme.radii.chatInput,
       display: "flex",
       backgroundColor:
         theme.colors.widgetBackgroundColor ?? theme.colors.secondaryBg,
@@ -37,7 +37,7 @@ export const StyledChatInput = styled.div(({ theme }) => {
     backgroundColor: theme.colors.transparent,
     position: "relative",
     flexGrow: 1,
-    borderRadius: theme.radii.xxxl,
+    borderRadius: theme.radii.chatInput,
     display: "flex",
     alignItems: "center",
   }
@@ -57,9 +57,9 @@ export const StyledSendIconButton = styled.button<StyledSendIconButtonProps>(
     return {
       border: "none",
       backgroundColor: theme.colors.transparent,
-      borderTopRightRadius: extended ? "0" : theme.radii.xxxl,
+      borderTopRightRadius: extended ? "0" : theme.radii.chatInput,
       borderTopLeftRadius: extended ? theme.radii.default : "0",
-      borderBottomRightRadius: theme.radii.xxxl,
+      borderBottomRightRadius: theme.radii.chatInput,
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",

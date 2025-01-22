@@ -1052,7 +1052,7 @@ function DataFrame({
         <ColumnMenu
           top={showMenu.headerBounds.y + showMenu.headerBounds.height}
           left={showMenu.headerBounds.x + showMenu.headerBounds.width}
-          onMenuClosed={() => setShowMenu(undefined)}
+          onCloseMenu={() => setShowMenu(undefined)}
           onSortColumn={
             isSortingEnabled
               ? (direction: "asc" | "desc" | undefined) => {
@@ -1063,6 +1063,13 @@ function DataFrame({
                 }
               : undefined
           }
+          isColumnPinned={originalColumns[showMenu.columnIdx].isPinned}
+          onUnpinColumn={() => {
+            unpinColumn(originalColumns[showMenu.columnIdx].id)
+          }}
+          onPinColumn={() => {
+            pinColumn(originalColumns[showMenu.columnIdx].id)
+          }}
         ></ColumnMenu>
       )}
     </StyledResizableContainer>

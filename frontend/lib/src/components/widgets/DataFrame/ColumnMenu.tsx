@@ -25,18 +25,28 @@ import {
 } from "@streamlit/lib/src/theme"
 import { DynamicIcon } from "@streamlit/lib/src/components/shared/Icon"
 
-import { StyledMenuList, StyledMenuListItem } from "./styled-components"
+import {
+  StyledMenuDivider,
+  StyledMenuList,
+  StyledMenuListItem,
+} from "./styled-components"
 
 export interface ColumnMenuProps {
   // The top position of the menu
   top: number
   // The left position of the menu
   left: number
-  // Callback to close the menu
-  onMenuClosed: () => void
+  // Callback used to instruct the parent to close the menu
+  onCloseMenu: () => void
   // Callback to sort column
   // If undefined, the sort menu item will not be shown
   onSortColumn: ((direction: "asc" | "desc") => void) | undefined
+  // Whether the column is pinned
+  isColumnPinned: boolean
+  // Callback to pin the column
+  onPinColumn: () => void
+  // Callback to unpin the column
+  onUnpinColumn: () => void
 }
 
 /**
@@ -45,7 +55,10 @@ export interface ColumnMenuProps {
 function ColumnMenu({
   top,
   left,
-  onMenuClosed,
+  isColumnPinned,
+  onPinColumn,
+  onUnpinColumn,
+  onCloseMenu,
   onSortColumn,
 }: ColumnMenuProps): ReactElement {
   const theme: EmotionTheme = useTheme()
@@ -73,8 +86,8 @@ function ColumnMenu({
   }, [])
 
   const closeMenu = React.useCallback((): void => {
-    onMenuClosed()
-  }, [onMenuClosed])
+    onCloseMenu()
+  }, [onCloseMenu])
 
   return (
     <Popover
@@ -114,7 +127,40 @@ function ColumnMenu({
                 />
                 Sort descending
               </StyledMenuListItem>
+              <StyledMenuDivider />
             </>
+          )}
+          {isColumnPinned && (
+            <StyledMenuListItem
+              onClick={() => {
+                onUnpinColumn()
+                closeMenu()
+              }}
+            >
+              <DynamicIcon
+                size={"base"}
+                margin="0"
+                color="inherit"
+                iconValue=":material/keep_off:"
+              />
+              Unpin column
+            </StyledMenuListItem>
+          )}
+          {!isColumnPinned && (
+            <StyledMenuListItem
+              onClick={() => {
+                onPinColumn()
+                closeMenu()
+              }}
+            >
+              <DynamicIcon
+                size={"base"}
+                margin="0"
+                color="inherit"
+                iconValue=":material/keep:"
+              />
+              Pin column
+            </StyledMenuListItem>
           )}
         </StyledMenuList>
       }

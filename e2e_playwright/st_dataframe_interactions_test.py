@@ -599,6 +599,26 @@ def test_opening_column_menu(themed_app: Page, assert_snapshot: ImageCompareFunc
     assert_snapshot(df, name="st_dataframe-column_menu")
 
 
+def test_column_pinning_via_ui(app: Page, assert_snapshot: ImageCompareFunction):
+    """Test that a column can be pinned via the column menu."""
+
+    df = app.get_by_test_id("stDataFrame").nth(0)
+    expect_canvas_to_be_visible(df)
+
+    unfocus_dataframe(app)
+    assert_snapshot(df, name="st_dataframe-column_unpinned")
+
+    open_column_menu(df, 2, "small")
+    app.get_by_test_id("stDataFrameColumnMenu").get_by_text("Pin column").click()
+    unfocus_dataframe(app)
+    assert_snapshot(df, name="st_dataframe-column_pinned")
+
+    open_column_menu(df, 1, "small")
+    app.get_by_test_id("stDataFrameColumnMenu").get_by_text("Unpin column").click()
+    unfocus_dataframe(app)
+    assert_snapshot(df, name="st_dataframe-column_unpinned")
+
+
 # TODO(lukasmasuch): Add additional interactive tests:
 # - Copy data to clipboard
 # - Paste in data

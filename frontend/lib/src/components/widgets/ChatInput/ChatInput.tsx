@@ -184,7 +184,10 @@ function ChatInput({
                 outline: "none",
                 backgroundColor: theme.colors.transparent,
                 // Baseweb requires long-hand props, short-hand leads to weird bugs & warnings.
-                borderRadius: theme.radii.xxxl,
+                borderBottomLeftRadius: theme.radii.chatInput,
+                borderBottomRightRadius: theme.radii.chatInput,
+                borderTopLeftRadius: theme.radii.chatInput,
+                borderTopRightRadius: theme.radii.chatInput,
                 borderLeftWidth: theme.sizes.borderWidth,
                 borderRightWidth: theme.sizes.borderWidth,
                 borderTopWidth: theme.sizes.borderWidth,

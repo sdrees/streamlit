@@ -30,6 +30,9 @@ export const StyledWaveformContainerDiv = styled.div(({ theme }) => ({
   position: "relative",
   paddingLeft: theme.spacing.xs,
   paddingRight: theme.spacing.sm,
+  border: theme.colors.widgetBorderColor
+    ? `${theme.sizes.borderWidth} solid ${theme.colors.widgetBorderColor}`
+    : undefined,
 }))
 
 export const StyledWaveformInnerDiv = styled.div({

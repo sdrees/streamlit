@@ -67,8 +67,6 @@ export type UseDeckGlProps = Omit<DeckGLProps, "mapboxToken"> & {
   theme: EmotionTheme
 }
 
-const DEFAULT_DECK_GL_HEIGHT = 500
-
 export const EMPTY_STATE: DeckGlElementState = {
   selection: {
     indices: {},
@@ -194,7 +192,7 @@ export const useDeckGl = (props: UseDeckGlProps): UseDeckGlShape => {
     container: { height: propsHeight, width: propsWidth },
     heightFallback:
       (viewState.initialViewState as { height: number } | undefined)?.height ||
-      DEFAULT_DECK_GL_HEIGHT,
+      theme.sizes.defaultMapHeight,
   })
 
   const [initialViewState, setInitialViewState] = useState<

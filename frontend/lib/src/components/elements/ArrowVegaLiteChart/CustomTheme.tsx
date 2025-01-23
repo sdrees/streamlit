@@ -89,13 +89,17 @@ export function applyStreamlitTheme(config: any, theme: EmotionTheme): any {
       titleFontWeight: theme.fontWeights.normal,
       titleFontStyle: "normal",
       titleColor: getGray70(theme),
+      // TODO(lukasmasuch): Change padding here to use a spacing
+      // based on our available spacings (-> 4px = 0.25rem)
       titlePadding: 5,
       labelPadding: convertRemToPx(theme.spacing.lg),
       columnPadding: convertRemToPx(theme.spacing.sm),
       rowPadding: convertRemToPx(theme.spacing.twoXS),
+      // TODO(lukasmasuch): Change padding here to use a spacing
+      // based on our available spacings (-> 8px = 0.5rem)
       // eslint-disable-next-line streamlit-custom/no-hardcoded-theme-values
       padding: 7,
-      symbolStrokeWidth: 4,
+      symbolStrokeWidth: convertRemToPx(theme.spacing.twoXS),
     },
     range: {
       category: getCategoricalColorsArray(theme),
@@ -107,8 +111,8 @@ export function applyStreamlitTheme(config: any, theme: EmotionTheme): any {
       columns: 1,
       strokeWidth: 0,
       stroke: "transparent",
-      continuousHeight: 350,
-      continuousWidth: 400,
+      continuousHeight: convertRemToPx(theme.sizes.defaultChartHeight),
+      continuousWidth: convertRemToPx(theme.sizes.defaultChartWidth),
     },
     concat: {
       columns: 1,
@@ -181,8 +185,8 @@ export function applyThemeDefaults(config: any, theme: EmotionTheme): any {
     },
     view: {
       stroke: getGray30(theme),
-      continuousHeight: 350,
-      continuousWidth: 400,
+      continuousHeight: convertRemToPx(theme.sizes.defaultChartHeight),
+      continuousWidth: convertRemToPx(theme.sizes.defaultChartWidth),
     },
     mark: {
       tooltip: true,

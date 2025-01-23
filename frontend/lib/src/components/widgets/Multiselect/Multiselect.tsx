@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC, memo, useCallback, useMemo, useState } from "react"
+import React, { FC, memo, useCallback, useMemo } from "react"
 
 import { ChevronDown } from "baseui/icon"
 import {
@@ -44,7 +44,6 @@ import {
   useBasicWidgetState,
   ValueWithSource,
 } from "@streamlit/lib/src/hooks/useBasicWidgetState"
-import { convertRemToPx } from "@streamlit/lib/src/theme/utils"
 
 export interface Props {
   disabled: boolean
@@ -208,28 +207,6 @@ const Multiselect: FC<Props> = props => {
   // Check if we have more than 10 options in the selectbox.
   // If that's true, we show the keyboard on mobile. If not, we hide it.
   const showKeyboardOnMobile = options.length > 10
-
-  const [scrollPosition, setScrollPosition] = useState(0)
-  const [hasBeenScrolled, setHasBeenScrolled] = useState(false)
-
-  const getInitialScrollPosition = useCallback(() => {
-    // If the dropdown has been manually scrolled before, open it at the position it
-    // was last scrolled to.
-    if (hasBeenScrolled) {
-      return scrollPosition
-    }
-
-    // If the dropdown has not been manually scrolled, open it at the position
-    // of the (last) selected default value, or at the top if the default value is not
-    // set. Note that multiselect removes selected items from the dropdown, so this will
-    // actually show the next item in the list.
-    if (!value || value.length === 0) {
-      return 0
-    }
-    return (
-      value[value.length - 1] * convertRemToPx(theme.sizes.dropdownItemHeight)
-    )
-  }, [value, hasBeenScrolled, scrollPosition, theme.sizes.dropdownItemHeight])
 
   return (
     <div className="stMultiSelect" data-testid="stMultiSelect" style={style}>
@@ -410,18 +387,7 @@ const Multiselect: FC<Props> = props => {
                     : null,
               },
             },
-            Dropdown: {
-              component: VirtualDropdown,
-              props: {
-                $menuListProps: {
-                  initialScrollOffset: getInitialScrollPosition(),
-                  onScroll: (offset: number) => {
-                    setHasBeenScrolled(true)
-                    setScrollPosition(offset)
-                  },
-                },
-              },
-            },
+            Dropdown: { component: VirtualDropdown },
           }}
         />
       </StyledUISelect>

@@ -59,10 +59,6 @@ function FixedSizeListItem(props: FixedSizeListItemProps): ReactElement {
 const VirtualDropdown = React.forwardRef<any, any>((props, ref) => {
   const theme = useTheme()
   const children = React.Children.toArray(props.children) as ReactElement[]
-  const listRef = React.useRef<FixedSizeList>(null)
-
-  // Get initial scroll offset from props
-  const initialScrollOffset = props.$menuListProps?.initialScrollOffset || 0
 
   if (!children[0] || !children[0].props.item) {
     const childrenProps = children[0] ? children[0].props : {}
@@ -116,7 +112,6 @@ const VirtualDropdown = React.forwardRef<any, any>((props, ref) => {
       data-testid="stSelectboxVirtualDropdown"
     >
       <FixedSizeList
-        ref={listRef}
         width="100%"
         height={height}
         itemCount={children.length}
@@ -125,13 +120,6 @@ const VirtualDropdown = React.forwardRef<any, any>((props, ref) => {
           data[index].props.item.value
         }
         itemSize={convertRemToPx(theme.sizes.dropdownItemHeight)}
-        initialScrollOffset={initialScrollOffset}
-        onScroll={({ scrollOffset }) => {
-          // Pass scroll position back through props
-          if (props.$menuListProps?.onScroll) {
-            props.$menuListProps.onScroll(scrollOffset)
-          }
-        }}
       >
         {FixedSizeListItem}
       </FixedSizeList>

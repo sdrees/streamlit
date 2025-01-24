@@ -28,6 +28,7 @@ import {
 } from "@streamlit/lib"
 
 import { ConnectionState } from "./ConnectionState"
+import { establishStaticConnection } from "./StaticConnection"
 import { WebsocketConnection } from "./WebsocketConnection"
 
 /**
@@ -87,7 +88,7 @@ interface Props {
 export class ConnectionManager {
   private readonly props: Props
 
-  private connection?: WebsocketConnection
+  private websocketConnection?: WebsocketConnection | null
 
   private connectionState: ConnectionState = ConnectionState.INITIAL
 
@@ -110,15 +111,18 @@ export class ConnectionManager {
    * if we are connected to a server.
    */
   public getBaseUriParts(): BaseUriParts | undefined {
-    if (this.connection instanceof WebsocketConnection) {
-      return this.connection.getBaseUriParts()
+    if (this.websocketConnection instanceof WebsocketConnection) {
+      return this.websocketConnection.getBaseUriParts()
     }
     return undefined
   }
 
   public sendMessage(obj: BackMsg): void {
-    if (this.connection instanceof WebsocketConnection && this.isConnected()) {
-      this.connection.sendMessage(obj)
+    if (
+      this.websocketConnection instanceof WebsocketConnection &&
+      this.isConnected()
+    ) {
+      this.websocketConnection.sendMessage(obj)
     } else {
       // Don't need to make a big deal out of this. Just print to console.
       logError(`Cannot send message when server is disconnected: ${obj}`)
@@ -131,26 +135,55 @@ export class ConnectionManager {
    */
   public incrementMessageCacheRunCount(maxMessageAge: number): void {
     // StaticConnection does not use a MessageCache.
-    if (this.connection instanceof WebsocketConnection) {
-      this.connection.incrementMessageCacheRunCount(maxMessageAge)
+    if (this.websocketConnection instanceof WebsocketConnection) {
+      this.websocketConnection.incrementMessageCacheRunCount(maxMessageAge)
     }
   }
 
+  /**
+   * Checks query params to determine if static notebook Id has been passed.
+   * If so, returns the Id.
+   */
+  private checkStaticConnection(): string | null {
+    const queryParams = new URLSearchParams(document.location.search)
+    return queryParams.get("staticAppId")
+  }
+
+  /**
+   * Establish either a WebsocketConnection or StaticConnection
+   * based on query params.
+   */
   private async connect(): Promise<void> {
-    try {
-      this.connection = await this.connectToRunningServer()
-    } catch (e) {
-      const err = ensureError(e)
-      logError(err.message)
-      this.setConnectionState(
-        ConnectionState.DISCONNECTED_FOREVER,
-        err.message
+    const staticAppId = this.checkStaticConnection()
+
+    if (staticAppId) {
+      // Establish a static connection
+      establishStaticConnection(
+        staticAppId,
+        this.setConnectionState,
+        this.props.onMessage,
+        this.props.onConnectionError
       )
+      // Static apps are not connected to server, so saving the
+      // connection is unnecessary.
+      this.websocketConnection = null
+    } else {
+      // Establish a websocket connection
+      try {
+        this.websocketConnection = await this.connectToRunningServer()
+      } catch (e) {
+        const err = ensureError(e)
+        logError(err.message)
+        this.setConnectionState(
+          ConnectionState.DISCONNECTED_FOREVER,
+          err.message
+        )
+      }
     }
   }
 
   disconnect(): void {
-    this.connection?.disconnect()
+    this.websocketConnection?.disconnect()
   }
 
   private setConnectionState = (

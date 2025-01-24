@@ -16,7 +16,7 @@
 
 import React from "react"
 
-import { BaseColumn } from "@streamlit/lib/src/components/widgets/DataFrame/columns"
+import { BaseColumn } from "~lib/components/widgets/DataFrame/columns"
 
 type ColumnPinningReturn = {
   // The number of columns to freeze.

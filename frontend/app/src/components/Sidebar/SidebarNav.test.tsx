@@ -24,9 +24,9 @@ import { IAppPage, mockEndpoints, render } from "@streamlit/lib"
 
 import SidebarNav, { Props } from "./SidebarNav"
 
-vi.mock("@streamlit/lib/src/util/Hooks", async () => ({
+vi.mock("~lib/util/Hooks", async () => ({
   __esModule: true,
-  ...(await vi.importActual("@streamlit/lib/src/util/Hooks")),
+  ...(await vi.importActual("~lib/util/Hooks")),
   useIsOverflowing: vi.fn(),
 }))
 

@@ -17,10 +17,6 @@
 import { Writer } from "protobufjs"
 import { MockInstance } from "vitest"
 
-import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
-
-import { AppNode, AppRoot, BlockNode, ElementNode } from "./AppNode"
-import { UNICODE } from "./mocks/arrow"
 import {
   ArrowNamedDataSet,
   Block as BlockProto,
@@ -29,7 +25,12 @@ import {
   ForwardMsgMetadata,
   IArrowVegaLiteChart,
   Logo as LogoProto,
-} from "./proto"
+} from "@streamlit/protobuf"
+
+import { isNullOrUndefined } from "~lib/util/utils"
+
+import { AppNode, AppRoot, BlockNode, ElementNode } from "./AppNode"
+import { UNICODE } from "./mocks/arrow"
 
 const NO_SCRIPT_RUN_ID = "NO_SCRIPT_RUN_ID"
 const FAKE_SCRIPT_HASH = "fake_script_hash"

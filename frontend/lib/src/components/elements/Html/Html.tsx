@@ -18,7 +18,7 @@ import React, { ReactElement, useEffect, useRef, useState } from "react"
 
 import DOMPurify from "dompurify"
 
-import { Html as HtmlProto } from "@streamlit/lib/src/proto"
+import { Html as HtmlProto } from "@streamlit/protobuf"
 
 export interface HtmlProps {
   width: number

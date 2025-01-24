@@ -20,11 +20,11 @@ import { act, renderHook } from "@testing-library/react-hooks"
 import { render, screen } from "@testing-library/react"
 import { userEvent } from "@testing-library/user-event"
 
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
-import { Form } from "@streamlit/lib/src/components/widgets/Form"
-import { ScriptRunState } from "@streamlit/lib/src/ScriptRunState"
-import { RootStyleProvider } from "@streamlit/lib/src/RootStyleProvider"
-import { getDefaultTheme } from "@streamlit/lib/src/theme"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
+import { Form } from "~lib/components/widgets/Form"
+import { ScriptRunState } from "~lib/ScriptRunState"
+import { RootStyleProvider } from "~lib/RootStyleProvider"
+import { getDefaultTheme } from "~lib/theme"
 
 import useWidgetManagerElementState from "./useWidgetManagerElementState"
 

@@ -18,21 +18,19 @@ import React from "react"
 
 import { screen, waitFor } from "@testing-library/react"
 
-import { render } from "@streamlit/lib/src/test_util"
 import {
   Balloons as BalloonsProto,
   ForwardMsgMetadata,
   Snow as SnowProto,
-} from "@streamlit/lib/src/proto"
-import { ElementNode } from "@streamlit/lib/src/AppNode"
-import { ScriptRunState } from "@streamlit/lib/src/ScriptRunState"
-import {
-  createFormsData,
-  WidgetStateManager,
-} from "@streamlit/lib/src/WidgetStateManager"
-import { FileUploadClient } from "@streamlit/lib/src/FileUploadClient"
-import { ComponentRegistry } from "@streamlit/lib/src/components/widgets/CustomComponent"
-import { mockEndpoints, mockSessionInfo } from "@streamlit/lib/src/mocks/mocks"
+} from "@streamlit/protobuf"
+
+import { render } from "~lib/test_util"
+import { ElementNode } from "~lib/AppNode"
+import { ScriptRunState } from "~lib/ScriptRunState"
+import { createFormsData, WidgetStateManager } from "~lib/WidgetStateManager"
+import { FileUploadClient } from "~lib/FileUploadClient"
+import { ComponentRegistry } from "~lib/components/widgets/CustomComponent"
+import { mockEndpoints, mockSessionInfo } from "~lib/mocks/mocks"
 
 import ElementNodeRenderer, {
   ElementNodeRendererProps,

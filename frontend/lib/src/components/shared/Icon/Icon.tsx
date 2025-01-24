@@ -18,7 +18,7 @@ import React, { ReactElement, ReactNode } from "react"
 
 import { EmotionIcon } from "@emotion-icons/emotion-icon"
 
-import { IconSize, ThemeColor } from "@streamlit/lib/src/theme"
+import { IconSize, ThemeColor } from "~lib/theme"
 
 import { StyledEmojiIcon, StyledIcon } from "./styled-components"
 

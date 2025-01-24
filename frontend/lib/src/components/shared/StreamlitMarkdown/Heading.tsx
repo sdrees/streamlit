@@ -16,9 +16,10 @@
 
 import React, { Fragment, ReactElement } from "react"
 
-import { Heading as HeadingProto } from "@streamlit/lib/src/proto"
-import IsSidebarContext from "@streamlit/lib/src/components/core/IsSidebarContext"
-import IsDialogContext from "@streamlit/lib/src/components/core/IsDialogContext"
+import { Heading as HeadingProto } from "@streamlit/protobuf"
+
+import IsSidebarContext from "~lib/components/core/IsSidebarContext"
+import IsDialogContext from "~lib/components/core/IsDialogContext"
 
 import {
   StyledHeaderDivider,

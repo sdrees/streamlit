@@ -26,7 +26,7 @@ import {
   getGray30,
   getGray70,
   getSequentialColorsArray,
-} from "@streamlit/lib/src/theme"
+} from "~lib/theme"
 
 export function applyStreamlitTheme(config: any, theme: EmotionTheme): any {
   // This theming config contains multiple hard coded spacing values.

@@ -29,7 +29,7 @@ import {
   vectorFromArray,
 } from "apache-arrow"
 
-import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
+import { Quiver } from "~lib/dataframes/Quiver"
 import {
   DECIMAL,
   DICTIONARY,
@@ -41,7 +41,7 @@ import {
   PERIOD,
   TIMEDELTA,
   UINT64,
-} from "@streamlit/lib/src/mocks/arrow"
+} from "~lib/mocks/arrow"
 
 import {
   convertTimeToDate,

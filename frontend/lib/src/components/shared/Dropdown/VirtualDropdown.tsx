@@ -20,11 +20,8 @@ import { OptionListProps, StyledEmptyState, StyledList } from "baseui/menu"
 import { FixedSizeList } from "react-window"
 import { useTheme } from "@emotion/react"
 
-import {
-  OverflowTooltip,
-  Placement,
-} from "@streamlit/lib/src/components/shared/Tooltip"
-import { convertRemToPx } from "@streamlit/lib/src/theme/utils"
+import { OverflowTooltip, Placement } from "~lib/components/shared/Tooltip"
+import { convertRemToPx } from "~lib/theme/utils"
 
 import { ThemedStyledDropdownListItem } from "./styled-components"
 

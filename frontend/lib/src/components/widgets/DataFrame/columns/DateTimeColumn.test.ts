@@ -20,7 +20,7 @@ import { GridCellKind } from "@glideapps/glide-data-grid"
 import { DatePickerType } from "@glideapps/glide-data-grid-cells"
 import { DateDay, Field, Time, Timestamp, TimeUnit } from "apache-arrow"
 
-import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { DataFrameCellType } from "~lib/dataframes/arrowTypeUtils"
 
 import DateTimeColumn, { DateColumn, TimeColumn } from "./DateTimeColumn"
 import { BaseColumnProps, isErrorCell } from "./utils"

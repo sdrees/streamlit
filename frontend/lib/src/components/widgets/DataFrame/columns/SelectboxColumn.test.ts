@@ -18,10 +18,7 @@ import { GridCellKind } from "@glideapps/glide-data-grid"
 import { DropdownCellType } from "@glideapps/glide-data-grid-cells"
 import { Bool, Field, Int8 } from "apache-arrow"
 
-import {
-  ArrowType,
-  DataFrameCellType,
-} from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { ArrowType, DataFrameCellType } from "~lib/dataframes/arrowTypeUtils"
 
 import SelectboxColumn, { SelectboxColumnParams } from "./SelectboxColumn"
 import { BaseColumnProps, isErrorCell, isMissingValueCell } from "./utils"

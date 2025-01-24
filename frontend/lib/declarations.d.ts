@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+/// <reference types="vite/client" />
+/// <reference types="vitest/globals" />
+
 declare module "@loaders.gl/core"
 
 declare module "@loaders.gl/csv"
@@ -24,7 +27,7 @@ declare module "native-file-system-adapter"
 
 declare module "fzy.js" {
   export function score(pattern: string, subject: string): number
-  export function positions(pattern: string, subject: string): Array<number>
+  export function positions(pattern: string, subject: string): number[]
   export function hasMatch(pattern: string, subject: string): boolean
 }
 

@@ -16,7 +16,7 @@
 
 import styled from "@emotion/styled"
 
-import { LabelVisibilityOptions } from "@streamlit/lib/src/util/utils"
+import { LabelVisibilityOptions } from "~lib/util/utils"
 
 export interface StyledCheckboxProps {
   width: number

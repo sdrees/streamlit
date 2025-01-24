@@ -16,9 +16,9 @@
 
 import React from "react"
 
-import ErrorElement from "@streamlit/lib/src/components/shared/ErrorElement"
-import { logError } from "@streamlit/lib/src/util/log"
-import { StyledInlineCode } from "@streamlit/lib/src/components/elements/CodeBlock/styled-components"
+import ErrorElement from "~lib/components/shared/ErrorElement"
+import { logError } from "~lib/util/log"
+import { StyledInlineCode } from "~lib/components/elements/CodeBlock/styled-components"
 
 export interface Props {
   width?: number

@@ -16,13 +16,11 @@
 
 import React, { ReactElement, useEffect, useState } from "react"
 
-import Modal, {
-  ModalBody,
-  ModalHeader,
-} from "@streamlit/lib/src/components/shared/Modal"
-import { Block as BlockProto } from "@streamlit/lib/src/proto"
-import IsDialogContext from "@streamlit/lib/src/components/core/IsDialogContext"
-import { notNullOrUndefined } from "@streamlit/lib/src/util/utils"
+import { Block as BlockProto } from "@streamlit/protobuf"
+
+import Modal, { ModalBody, ModalHeader } from "~lib/components/shared/Modal"
+import IsDialogContext from "~lib/components/core/IsDialogContext"
+import { notNullOrUndefined } from "~lib/util/utils"
 
 export interface Props {
   element: BlockProto.Dialog

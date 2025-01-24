@@ -16,8 +16,8 @@
 
 import React, { useCallback } from "react"
 
-import { LibContext } from "@streamlit/lib/src/components/core/LibContext"
-import createDownloadLinkElement from "@streamlit/lib/src/util/createDownloadLinkElement"
+import { LibContext } from "~lib/components/core/LibContext"
+import createDownloadLinkElement from "~lib/util/createDownloadLinkElement"
 
 const useDownloadUrl = (
   url: string | null,

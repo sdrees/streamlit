@@ -18,9 +18,9 @@ import React, { FC, PropsWithChildren, useMemo } from "react"
 
 import { useTheme } from "@emotion/react"
 
-import { StyledFullScreenFrame } from "@streamlit/lib/src/components/shared/FullScreenWrapper/styled-components"
-import { ElementFullscreenContext } from "@streamlit/lib/src/components/shared/ElementFullscreen/ElementFullscreenContext"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
+import { StyledFullScreenFrame } from "~lib/components/shared/FullScreenWrapper/styled-components"
+import { ElementFullscreenContext } from "~lib/components/shared/ElementFullscreen/ElementFullscreenContext"
+import { EmotionTheme } from "~lib/theme"
 
 import { useFullscreen } from "./useFullscreen"
 

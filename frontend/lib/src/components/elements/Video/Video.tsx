@@ -16,10 +16,11 @@
 
 import React, { ReactElement, useEffect, useMemo, useRef } from "react"
 
-import { ISubtitleTrack, Video as VideoProto } from "@streamlit/lib/src/proto"
-import { StreamlitEndpoints } from "@streamlit/lib/src/StreamlitEndpoints"
-import { IS_DEV_ENV } from "@streamlit/lib/src/baseconsts"
-import { WidgetStateManager as ElementStateManager } from "@streamlit/lib/src/WidgetStateManager"
+import { ISubtitleTrack, Video as VideoProto } from "@streamlit/protobuf"
+
+import { StreamlitEndpoints } from "~lib/StreamlitEndpoints"
+import { IS_DEV_ENV } from "~lib/baseconsts"
+import { WidgetStateManager as ElementStateManager } from "~lib/WidgetStateManager"
 
 import { StyledVideoIframe } from "./styled-components"
 

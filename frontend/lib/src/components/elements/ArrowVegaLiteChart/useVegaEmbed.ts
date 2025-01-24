@@ -20,10 +20,10 @@ import { truthy, View as VegaView } from "vega"
 import embed from "vega-embed"
 import { expressionInterpreter } from "vega-interpreter"
 
-import { useFormClearHelper } from "@streamlit/lib/src/components/widgets/Form"
-import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
-import { logMessage } from "@streamlit/lib/src/util/log"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
+import { useFormClearHelper } from "~lib/components/widgets/Form"
+import { Quiver } from "~lib/dataframes/Quiver"
+import { logMessage } from "~lib/util/log"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
 
 import {
   getDataArray,

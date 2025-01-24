@@ -18,7 +18,7 @@ import { CancelToken } from "axios"
 import isEqual from "lodash/isEqual"
 import { v4 as uuidv4 } from "uuid"
 
-import { IFileURLs, IFileURLsResponse } from "@streamlit/lib/src/proto"
+import { IFileURLs, IFileURLsResponse } from "@streamlit/protobuf"
 
 import { SessionInfo } from "./SessionInfo"
 import { StreamlitEndpoints } from "./StreamlitEndpoints"

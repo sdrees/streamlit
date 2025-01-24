@@ -16,7 +16,7 @@
 
 import React, { ReactElement } from "react"
 
-import { ENABLE_PERIPHERALS_DOCS_URL } from "@streamlit/lib/src/urls"
+import { ENABLE_PERIPHERALS_DOCS_URL } from "~lib/urls"
 
 import {
   StyledErrorContainerDiv,

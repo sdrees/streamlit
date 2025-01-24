@@ -58,13 +58,15 @@ export default defineConfig({
     viteTsconfigPaths(),
     // this plugin checks for type errors on a separate process
     checker({
-      typescript: true,
+      // Do not run during tests because it produces forking errors
+      // This is primarily a development feature anyways
+      typescript: !Boolean(process.env.VITEST),
     }),
   ],
   resolve: {
     alias: [
       {
-        find: "@streamlit/lib/src",
+        find: "~lib",
         replacement: path.resolve(__dirname, "../lib/src"),
       },
       {

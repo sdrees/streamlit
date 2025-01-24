@@ -16,7 +16,7 @@
 
 import React, { ReactElement } from "react"
 
-import { IconSize, ThemeColor } from "@streamlit/lib/src/theme"
+import { IconSize, ThemeColor } from "~lib/theme"
 
 import {
   StyledMaterialIcon,

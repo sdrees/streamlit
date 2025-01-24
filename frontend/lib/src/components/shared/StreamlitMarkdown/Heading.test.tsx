@@ -18,10 +18,11 @@ import React from "react"
 
 import { screen } from "@testing-library/react"
 
-import { render } from "@streamlit/lib/src/test_util"
-import { Heading as HeadingProto } from "@streamlit/lib/src/proto"
-import IsDialogContext from "@streamlit/lib/src/components/core/IsDialogContext"
-import IsSidebarContext from "@streamlit/lib/src/components/core/IsSidebarContext"
+import { Heading as HeadingProto } from "@streamlit/protobuf"
+
+import { render } from "~lib/test_util"
+import IsDialogContext from "~lib/components/core/IsDialogContext"
+import IsSidebarContext from "~lib/components/core/IsSidebarContext"
 
 import Heading, { HeadingProtoProps } from "./Heading"
 

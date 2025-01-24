@@ -16,8 +16,8 @@
 
 import React, { ReactElement } from "react"
 
-import ErrorElement from "@streamlit/lib/src/components/shared/ErrorElement"
-import { StyledInlineCode } from "@streamlit/lib/src/components/elements/CodeBlock/styled-components"
+import ErrorElement from "~lib/components/shared/ErrorElement"
+import { StyledInlineCode } from "~lib/components/elements/CodeBlock/styled-components"
 
 import {
   MapboxTokenFetchingError,

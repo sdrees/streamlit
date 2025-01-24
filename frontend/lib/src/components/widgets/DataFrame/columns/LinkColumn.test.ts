@@ -19,7 +19,7 @@
 import { GridCellKind, UriCell } from "@glideapps/glide-data-grid"
 import { Field, Utf8 } from "apache-arrow"
 
-import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { DataFrameCellType } from "~lib/dataframes/arrowTypeUtils"
 
 import LinkColumn from "./LinkColumn"
 import { ErrorCell, isErrorCell } from "./utils"

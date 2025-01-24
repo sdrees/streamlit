@@ -16,7 +16,7 @@
 
 import React from "react"
 
-import { render } from "@streamlit/lib/src/test_util"
+import { render } from "~lib/test_util"
 
 import StreamlitSyntaxHighlighter, {
   StreamlitSyntaxHighlighterProps,

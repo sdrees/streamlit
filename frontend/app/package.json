@@ -13,8 +13,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "testWatch": "vitest",
-    "typecheck": "tsc --noEmit",
     "lint": "eslint --ext .js --ext .jsx --ext .ts --ext .tsx --max-warnings 0 src",
+    "typecheck": "yarn run typecheck:all",
     "lighthouse:run": "node ./performance/lighthouse/run.mjs",
     "format": "prettier --write --config ../.prettierrc --ignore-path ../.prettierignore './src/**/*.{js,ts,jsx,tsx}'",
     "formatCheck": "prettier --check --config ../.prettierrc --ignore-path ../.prettierignore './src/**/*.{js,ts,jsx,tsx}'"
@@ -101,7 +101,6 @@
     "source-map-explorer": "^2.5.3",
     "tree-kill": "^1.2.2",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
-    "typescript": "^4.9.5",
     "util": "^0.12.5",
     "vite": "^5.4.12",
     "vite-plugin-checker": "^0.6.4",

@@ -24,11 +24,8 @@ import trimEnd from "lodash/trimEnd"
 import moment from "moment-timezone"
 import numbro from "numbro"
 
-import { logWarning } from "@streamlit/lib/src/util/log"
-import {
-  isNullOrUndefined,
-  notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
+import { logWarning } from "~lib/util/log"
+import { isNullOrUndefined, notNullOrUndefined } from "~lib/util/utils"
 
 import {
   ArrowType,

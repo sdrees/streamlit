@@ -18,17 +18,17 @@ import React, { memo, ReactElement } from "react"
 
 import range from "lodash/range"
 
-import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
+import { Quiver } from "~lib/dataframes/Quiver"
 import {
   DataFrameCellType,
   isNumericType,
-} from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+} from "~lib/dataframes/arrowTypeUtils"
 import {
   getStyledCell,
   getStyledHeaders,
-} from "@streamlit/lib/src/dataframes/pandasStylerUtils"
-import { format as formatArrowCell } from "@streamlit/lib/src/dataframes/arrowFormatUtils"
-import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown/StreamlitMarkdown"
+} from "~lib/dataframes/pandasStylerUtils"
+import { format as formatArrowCell } from "~lib/dataframes/arrowFormatUtils"
+import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown/StreamlitMarkdown"
 
 import {
   StyledEmptyTableCell,

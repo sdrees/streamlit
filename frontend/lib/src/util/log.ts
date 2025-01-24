@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { IS_DEV_ENV } from "@streamlit/lib/src/baseconsts"
+import { IS_DEV_ENV } from "~lib/baseconsts"
 
 /* eslint-disable no-console */
 

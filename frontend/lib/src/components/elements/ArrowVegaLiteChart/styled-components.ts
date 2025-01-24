@@ -18,7 +18,7 @@ import { CSSObject } from "@emotion/react"
 import styled from "@emotion/styled"
 import { transparentize } from "color2k"
 
-import { EmotionTheme } from "@streamlit/lib/src/theme"
+import { EmotionTheme } from "~lib/theme"
 
 export const StyledVegaLiteChartTooltips = (
   theme: EmotionTheme

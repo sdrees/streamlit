@@ -17,8 +17,8 @@ import { GridCell, GridCellKind } from "@glideapps/glide-data-grid"
 import { Field, Utf8 } from "apache-arrow"
 import moment, { Moment } from "moment-timezone"
 
-import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
-import { withTimezones } from "@streamlit/lib/src/util/withTimezones"
+import { DataFrameCellType } from "~lib/dataframes/arrowTypeUtils"
+import { withTimezones } from "~lib/util/withTimezones"
 
 import {
   BaseColumnProps,

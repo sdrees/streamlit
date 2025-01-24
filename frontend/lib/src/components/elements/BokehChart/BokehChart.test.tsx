@@ -18,13 +18,14 @@ import React from "react"
 
 import { screen } from "@testing-library/react"
 
-import { render } from "@streamlit/lib/src/test_util"
-import { BokehChart as BokehChartProto } from "@streamlit/lib/src/proto"
-import Bokeh from "@streamlit/lib/src/vendor/bokeh/bokeh.esm"
+import { BokehChart as BokehChartProto } from "@streamlit/protobuf"
+
+import { render } from "~lib/test_util"
+import Bokeh from "~lib/vendor/bokeh/bokeh.esm"
 
 import { BokehChart, BokehChartProps } from "./BokehChart"
 
-vi.mock("@streamlit/lib/src/vendor/bokeh/bokeh.esm", () => ({
+vi.mock("~lib/vendor/bokeh/bokeh.esm", () => ({
   // needed to parse correctly
   __esModule: true,
   default: {

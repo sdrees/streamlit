@@ -19,8 +19,8 @@ import React from "react"
 import { screen } from "@testing-library/react"
 import { userEvent } from "@testing-library/user-event"
 
-import { render } from "@streamlit/lib/src/test_util"
-import { lightTheme } from "@streamlit/lib/src/theme"
+import { render } from "~lib/test_util"
+import { lightTheme } from "~lib/theme"
 
 import BaseButton, {
   BaseButtonKind,

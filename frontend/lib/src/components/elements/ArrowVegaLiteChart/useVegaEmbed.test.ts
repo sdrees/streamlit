@@ -22,8 +22,8 @@ import embed from "vega-embed"
 import { expressionInterpreter } from "vega-interpreter"
 import { Mock, Mocked } from "vitest"
 
-import { useFormClearHelper } from "@streamlit/lib/src/components/widgets/Form"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
+import { useFormClearHelper } from "~lib/components/widgets/Form"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
 
 import { getDataArrays, getInlineData } from "./arrowUtils"
 import { useVegaEmbed } from "./useVegaEmbed"
@@ -42,7 +42,7 @@ vi.mock("./useVegaLiteSelections", () => ({
 }))
 
 // Mock "useFormClearHelper" to ensure it is called:
-vi.mock("@streamlit/lib/src/components/widgets/Form", () => ({
+vi.mock("~lib/components/widgets/Form", () => ({
   __esModule: true,
   useFormClearHelper: vi.fn(),
 }))

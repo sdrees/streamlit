@@ -17,7 +17,7 @@
 import { waitFor } from "@testing-library/react"
 import { renderHook } from "@testing-library/react-hooks"
 
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
 
 import useSubmitFormViaEnterKey from "./useSubmitFormViaEnterKey"
 

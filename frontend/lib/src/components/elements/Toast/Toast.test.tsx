@@ -20,10 +20,11 @@ import { RenderResult, screen, waitFor, within } from "@testing-library/react"
 import { PLACEMENT, ToasterContainer } from "baseui/toast"
 import { userEvent } from "@testing-library/user-event"
 
-import { render } from "@streamlit/lib/src/test_util"
-import { Toast as ToastProto } from "@streamlit/lib/src/proto"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
-import { mockTheme } from "@streamlit/lib/src/mocks/mockTheme"
+import { Toast as ToastProto } from "@streamlit/protobuf"
+
+import { render } from "~lib/test_util"
+import { EmotionTheme } from "~lib/theme"
+import { mockTheme } from "~lib/mocks/mockTheme"
 
 import { shortenMessage, Toast, ToastProps } from "./Toast"
 

@@ -16,10 +16,10 @@
 
 import React, { ReactElement, ReactNode, useEffect, useState } from "react"
 
-import AlertElement from "@streamlit/lib/src/components/elements/AlertElement"
-import { Kind } from "@streamlit/lib/src/components/shared/AlertContainer"
-import { ScriptRunState } from "@streamlit/lib/src/ScriptRunState"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
+import AlertElement from "~lib/components/elements/AlertElement"
+import { Kind } from "~lib/components/shared/AlertContainer"
+import { ScriptRunState } from "~lib/ScriptRunState"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
 
 import { StyledErrorContainer, StyledForm } from "./styled-components"
 

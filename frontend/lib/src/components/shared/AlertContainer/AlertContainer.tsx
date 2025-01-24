@@ -19,7 +19,7 @@ import React, { ReactElement, ReactNode } from "react"
 import { KIND, Notification } from "baseui/notification"
 import { useTheme } from "@emotion/react"
 
-import { EmotionTheme } from "@streamlit/lib/src/theme"
+import { EmotionTheme } from "~lib/theme"
 
 import { StyledAlertContent } from "./styled-components"
 

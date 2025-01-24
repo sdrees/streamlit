@@ -18,7 +18,7 @@ import { useCallback, useEffect, useState } from "react"
 
 import { useTheme } from "@emotion/react"
 
-import { convertRemToPx } from "@streamlit/lib/src/theme/utils"
+import { convertRemToPx } from "~lib/theme/utils"
 
 export type WindowDimensions = {
   fullWidth: number

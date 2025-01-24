@@ -53,10 +53,7 @@ const getProps = (extend?: Partial<Props>): Props => ({
   developerMode: true,
   animateModal: true,
   openThemeCreator: vi.fn(),
-  metricsMgr: new MetricsManager(
-    // @ts-expect-error The mock seems to have a mismatched internal type to what's expected.
-    mockSessionInfo()
-  ),
+  metricsMgr: new MetricsManager(mockSessionInfo()),
   ...extend,
 })
 

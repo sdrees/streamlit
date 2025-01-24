@@ -19,11 +19,7 @@ import isPropValid from "@emotion/is-prop-valid"
 import styled from "@emotion/styled"
 import { Spinner } from "baseui/spinner"
 
-import {
-  computeSpacingStyle,
-  IconSize,
-  ThemeColor,
-} from "@streamlit/lib/src/theme"
+import { computeSpacingStyle, IconSize, ThemeColor } from "~lib/theme"
 
 interface StyledSpinnerIconProps {
   usingCustomTheme: boolean

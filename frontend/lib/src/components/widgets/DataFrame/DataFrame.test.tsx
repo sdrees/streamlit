@@ -19,10 +19,11 @@ import React from "react"
 import { screen } from "@testing-library/react"
 import * as glideDataGridModule from "@glideapps/glide-data-grid"
 
-import { TEN_BY_TEN } from "@streamlit/lib/src/mocks/arrow"
-import { render } from "@streamlit/lib/src/test_util"
-import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
-import { Arrow as ArrowProto } from "@streamlit/lib/src/proto"
+import { Arrow as ArrowProto } from "@streamlit/protobuf"
+
+import { TEN_BY_TEN } from "~lib/mocks/arrow"
+import { render } from "~lib/test_util"
+import { Quiver } from "~lib/dataframes/Quiver"
 
 vi.mock("@glideapps/glide-data-grid", async () => ({
   ...(await vi.importActual("@glideapps/glide-data-grid")),

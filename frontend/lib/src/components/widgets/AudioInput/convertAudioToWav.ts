@@ -15,7 +15,7 @@
  */
 // code in this file was adapted from recorder.js library
 
-import { logError } from "@streamlit/lib/src/util/log"
+import { logError } from "~lib/util/log"
 
 /**
  * Converts a file Blob (audio/video) to a WAV Blob.

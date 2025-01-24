@@ -18,14 +18,15 @@ import React, { ReactElement } from "react"
 
 import { useTheme } from "@emotion/react"
 
-import { DynamicIcon } from "@streamlit/lib/src/components/shared/Icon"
-import { Placement } from "@streamlit/lib/src/components/shared/Tooltip"
-import { PageLink as PageLinkProto } from "@streamlit/lib/src/proto"
-import { BaseButtonTooltip } from "@streamlit/lib/src/components/shared/BaseButton"
-import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
-import { LibContext } from "@streamlit/lib/src/components/core/LibContext"
-import IsSidebarContext from "@streamlit/lib/src/components/core/IsSidebarContext"
+import { PageLink as PageLinkProto } from "@streamlit/protobuf"
+
+import { DynamicIcon } from "~lib/components/shared/Icon"
+import { Placement } from "~lib/components/shared/Tooltip"
+import { BaseButtonTooltip } from "~lib/components/shared/BaseButton"
+import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown"
+import { EmotionTheme } from "~lib/theme"
+import { LibContext } from "~lib/components/core/LibContext"
+import IsSidebarContext from "~lib/components/core/IsSidebarContext"
 
 import {
   StyledNavLink,

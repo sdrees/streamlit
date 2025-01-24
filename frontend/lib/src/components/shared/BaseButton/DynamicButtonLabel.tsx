@@ -16,9 +16,9 @@
 
 import React from "react"
 
-import { DynamicIcon } from "@streamlit/lib/src/components/shared/Icon"
-import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown"
-import { IconSize } from "@streamlit/lib/src/theme"
+import { DynamicIcon } from "~lib/components/shared/Icon"
+import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown"
+import { IconSize } from "~lib/theme"
 
 export interface DynamicButtonLabelProps {
   icon?: string

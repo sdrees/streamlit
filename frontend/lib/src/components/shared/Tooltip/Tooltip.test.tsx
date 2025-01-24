@@ -20,7 +20,7 @@ import { screen } from "@testing-library/react"
 import { BaseProvider, LightTheme } from "baseui"
 import { userEvent } from "@testing-library/user-event"
 
-import { render } from "@streamlit/lib/src/test_util"
+import { render } from "~lib/test_util"
 
 import Tooltip, { Placement, TooltipProps } from "./Tooltip"
 

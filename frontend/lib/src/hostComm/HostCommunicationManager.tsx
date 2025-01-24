@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { ICustomThemeConfig, WidgetStates } from "@streamlit/lib/src/proto"
-import { isValidOrigin } from "@streamlit/lib/src/util/UriUtil"
-import { PresetThemeName } from "@streamlit/lib/src/theme/types"
-import Resolver from "@streamlit/lib/src/util/Resolver"
+import { ICustomThemeConfig, WidgetStates } from "@streamlit/protobuf"
+
+import { isValidOrigin } from "~lib/util/UriUtil"
+import { PresetThemeName } from "~lib/theme/types"
+import Resolver from "~lib/util/Resolver"
 
 import {
   AppConfig,

@@ -16,7 +16,7 @@
 
 import React, { Suspense } from "react"
 
-import { IconSize, ThemeColor } from "@streamlit/lib/src/theme"
+import { IconSize, ThemeColor } from "~lib/theme"
 
 import { EmojiIcon } from "./Icon"
 import MaterialFontIcon from "./Material/MaterialFontIcon"

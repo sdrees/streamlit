@@ -15,15 +15,13 @@
  */
 import React, { ReactElement } from "react"
 
-import {
-  isNullOrUndefined,
-  notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
-import { IFrame as IFrameProto } from "@streamlit/lib/src/proto"
+import { IFrame as IFrameProto } from "@streamlit/protobuf"
+
+import { isNullOrUndefined, notNullOrUndefined } from "~lib/util/utils"
 import {
   DEFAULT_IFRAME_FEATURE_POLICY,
   DEFAULT_IFRAME_SANDBOX_POLICY,
-} from "@streamlit/lib/src/util/IFrameUtil"
+} from "~lib/util/IFrameUtil"
 
 import { StyledIframe } from "./styled-components"
 

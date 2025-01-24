@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-/// <reference types="vite/client" />
-/// <reference types="vitest/globals" />
+export * from "./proto"

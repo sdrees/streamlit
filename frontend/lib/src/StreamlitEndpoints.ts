@@ -16,7 +16,7 @@
 
 import { CancelToken } from "axios"
 
-import { IAppPage } from "./proto"
+import { IAppPage } from "@streamlit/protobuf"
 
 export type FileUploadClientConfig = {
   prefix: string

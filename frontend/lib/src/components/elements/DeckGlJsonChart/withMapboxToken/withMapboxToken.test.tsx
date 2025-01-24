@@ -19,8 +19,9 @@ import React, { ReactElement } from "react"
 import axios from "axios"
 import { screen, waitFor } from "@testing-library/react"
 
-import { customRenderLibContext, render } from "@streamlit/lib/src/test_util"
-import { DeckGlJsonChart as DeckGlJsonChartProto } from "@streamlit/lib/src/proto"
+import { DeckGlJsonChart as DeckGlJsonChartProto } from "@streamlit/protobuf"
+
+import { customRenderLibContext, render } from "~lib/test_util"
 
 import withMapboxToken, {
   MapboxTokenFetchingError,

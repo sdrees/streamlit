@@ -45,11 +45,13 @@ describe("isLocalhost", () => {
   })
 
   it("returns false given null", () => {
+    // @ts-expect-error
     window.location.hostname = null
     expect(isLocalhost()).toBe(false)
   })
 
   it("returns false given undefined", () => {
+    // @ts-expect-error
     window.location.hostname = undefined
     expect(isLocalhost()).toBe(false)
   })

@@ -31,10 +31,7 @@ import {
 import range from "lodash/range"
 import unzip from "lodash/unzip"
 
-import {
-  isNullOrUndefined,
-  notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
+import { isNullOrUndefined, notNullOrUndefined } from "~lib/util/utils"
 
 import {
   ArrowType,

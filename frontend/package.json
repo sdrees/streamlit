@@ -4,7 +4,9 @@
   "private": true,
   "workspaces": [
     "app",
-    "lib"
+    "lib",
+    "protobuf",
+    "typescript-config"
   ],
   "scripts": {
     "start": "yarn workspace @streamlit/app start",

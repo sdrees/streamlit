@@ -16,7 +16,7 @@
 
 import styled from "@emotion/styled"
 
-import { hasLightBackgroundColor } from "@streamlit/lib/src/theme"
+import { hasLightBackgroundColor } from "~lib/theme"
 
 export interface StyledDeckGlChartProps {
   width: number | string

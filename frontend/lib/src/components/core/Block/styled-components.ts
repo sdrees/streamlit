@@ -18,9 +18,10 @@ import React from "react"
 
 import styled from "@emotion/styled"
 
-import { StyledCheckbox } from "@streamlit/lib/src/components/widgets/Checkbox/styled-components"
-import { Block as BlockProto } from "@streamlit/lib/src/proto"
-import { EmotionTheme, STALE_STYLES } from "@streamlit/lib/src/theme"
+import { Block as BlockProto } from "@streamlit/protobuf"
+
+import { StyledCheckbox } from "~lib/components/widgets/Checkbox/styled-components"
+import { EmotionTheme, STALE_STYLES } from "~lib/theme"
 
 function translateGapWidth(gap: string, theme: EmotionTheme): string {
   let gapWidth = theme.spacing.lg

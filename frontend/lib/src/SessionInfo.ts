@@ -20,7 +20,8 @@ import {
   Initialize,
   NewSession,
   UserInfo,
-} from "./proto"
+} from "@streamlit/protobuf"
+
 import { hashString, notNullOrUndefined } from "./util/utils"
 
 /**

@@ -23,7 +23,7 @@ import {
   Vector,
 } from "apache-arrow"
 
-import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
+import { isNullOrUndefined } from "~lib/util/utils"
 
 /** Data types used by ArrowJS. */
 export type DataType =

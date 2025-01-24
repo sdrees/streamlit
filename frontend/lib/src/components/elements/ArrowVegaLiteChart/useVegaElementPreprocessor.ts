@@ -18,10 +18,10 @@ import { useMemo } from "react"
 
 import { useTheme } from "@emotion/react"
 
-import { ElementFullscreenContext } from "@streamlit/lib/src/components/shared/ElementFullscreen/ElementFullscreenContext"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
-import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
-import { useRequiredContext } from "@streamlit/lib/src/hooks/useRequiredContext"
+import { ElementFullscreenContext } from "~lib/components/shared/ElementFullscreen/ElementFullscreenContext"
+import { EmotionTheme } from "~lib/theme"
+import { isNullOrUndefined } from "~lib/util/utils"
+import { useRequiredContext } from "~lib/hooks/useRequiredContext"
 
 import { applyStreamlitTheme, applyThemeDefaults } from "./CustomTheme"
 import { VegaLiteChartElement } from "./arrowUtils"

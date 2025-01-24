@@ -75,9 +75,9 @@ import {
 import { showDevelopmentOptions } from "./showDevelopmentOptions"
 import { App, Props } from "./App"
 
-vi.mock("@streamlit/lib/src/baseconsts", async () => {
+vi.mock("~lib/baseconsts", async () => {
   return {
-    ...(await vi.importActual("@streamlit/lib/src/baseconsts")),
+    ...(await vi.importActual("~lib/baseconsts")),
   }
 })
 
@@ -109,10 +109,8 @@ vi.mock("@streamlit/app/src/connection/ConnectionManager", async () => {
     ConnectionManager: MockedClass,
   }
 })
-vi.mock("@streamlit/lib/src/SessionInfo", async () => {
-  const actualModule = await vi.importActual<any>(
-    "@streamlit/lib/src/SessionInfo"
-  )
+vi.mock("~lib/SessionInfo", async () => {
+  const actualModule = await vi.importActual<any>("~lib/SessionInfo")
 
   const MockedClass = vi.fn().mockImplementation(() => {
     return new actualModule.SessionInfo()
@@ -129,9 +127,9 @@ vi.mock("@streamlit/lib/src/SessionInfo", async () => {
   }
 })
 
-vi.mock("@streamlit/lib/src/hostComm/HostCommunicationManager", async () => {
+vi.mock("~lib/hostComm/HostCommunicationManager", async () => {
   const actualModule = await vi.importActual<any>(
-    "@streamlit/lib/src/hostComm/HostCommunicationManager"
+    "~lib/hostComm/HostCommunicationManager"
   )
 
   const MockedClass = vi.fn().mockImplementation((...props) => {
@@ -166,10 +164,8 @@ vi.mock(
   }
 )
 
-vi.mock("@streamlit/lib/src/WidgetStateManager", async () => {
-  const actualModule = await vi.importActual<any>(
-    "@streamlit/lib/src/WidgetStateManager"
-  )
+vi.mock("~lib/WidgetStateManager", async () => {
+  const actualModule = await vi.importActual<any>("~lib/WidgetStateManager")
 
   const MockedClass = vi.fn().mockImplementation((...props) => {
     const widgetStateManager = new actualModule.WidgetStateManager(...props)
@@ -202,10 +198,8 @@ vi.mock("@streamlit/app/src/MetricsManager", async () => {
   }
 })
 
-vi.mock("@streamlit/lib/src/FileUploadClient", async () => {
-  const actualModule = await vi.importActual<any>(
-    "@streamlit/lib/src/FileUploadClient"
-  )
+vi.mock("~lib/FileUploadClient", async () => {
+  const actualModule = await vi.importActual<any>("~lib/FileUploadClient")
 
   const MockedClass = vi.fn().mockImplementation((...props) => {
     return new actualModule.FileUploadClient(...props)
@@ -2295,11 +2289,11 @@ describe("App", () => {
         getStoredValue<FileUploadClient>(FileUploadClient)
 
       // @ts-expect-error - requestFileURLs is private
-      fileUploadClient.requestFileURLs(
-        "myRequestId",
-        // @ts-expect-error
-        [{ name: "file1.txt" }, { name: "file2.txt" }, { name: "file3.txt" }]
-      )
+      fileUploadClient.requestFileURLs("myRequestId", [
+        new File([""], "file1.txt"),
+        new File([""], "file2.txt"),
+        new File([""], "file3.txt"),
+      ])
 
       // It's called twice
       // Once for the initial script run
@@ -2325,11 +2319,11 @@ describe("App", () => {
         getStoredValue<FileUploadClient>(FileUploadClient)
 
       // @ts-expect-error - requestFileURLs is private
-      fileUploadClient.requestFileURLs(
-        "myRequestId",
-        // @ts-expect-error
-        [{ name: "file1.txt" }, { name: "file2.txt" }, { name: "file3.txt" }]
-      )
+      fileUploadClient.requestFileURLs("myRequestId", [
+        new File([""], "file1.txt"),
+        new File([""], "file2.txt"),
+        new File([""], "file3.txt"),
+      ])
 
       const connectionManager = getMockConnectionManager()
 

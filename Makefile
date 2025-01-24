@@ -316,7 +316,7 @@ frontend-build-with-profiler:
 
 .PHONY: frontend-fast
 frontend-fast:
-	cd frontend/ ; yarn workspace @streamlit/app buildFast
+	cd frontend/ ; yarn workspace @streamlit/app build
 	rsync -av --delete --delete-excluded --exclude=reports \
 		frontend/app/build/ lib/streamlit/static/
 

@@ -21,7 +21,9 @@ export const sizes = {
   fullScreenHeaderHeight: "2.875rem",
   sidebarTopSpace: "6rem",
   toastWidth: "21rem",
-  contentMaxWidth: "46rem",
+  // Use px here since we want to keep the width the same
+  // regardless of the root font size.
+  contentMaxWidth: "736px",
   maxChartTooltipWidth: "30rem",
   // Used for checkboxes, radio, and toggles:
   checkbox: "1rem",

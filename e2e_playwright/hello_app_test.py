@@ -220,3 +220,14 @@ def test_app_print_mode_landscape_with_sidebar_closed(
     _evaluate_match_media_print(app)
 
     assert_snapshot(app, name="hello_app-print_media-landscape-sidebar_closed")
+
+
+def test_max_content_width_uses_px(app: Page):
+    """Test that the max content width uses px and not rem.
+
+    We don't want to adjust the content max width based on the root font size,
+    therefore, we are changing this setting to px instead of rem. This allows
+    us to fill the same screen estate regardless of the root font size
+    -> which allows more compact apps by using a small font size.
+    """
+    expect(app.get_by_test_id("stMainBlockContainer")).to_have_css("max-width", "736px")

@@ -60,7 +60,7 @@ const materialIconOnlyOptions = [
   }),
   ButtonGroupProto.Option.create({
     contentIcon: `:material/${materialIconNames[1]}:`,
-    selectedContentIcon: ":material/icon2_selected:",
+    selectedContentIcon: ":material/icon_2_selected:",
   }),
   ButtonGroupProto.Option.create({
     contentIcon: `:material/${materialIconNames[2]}:`,

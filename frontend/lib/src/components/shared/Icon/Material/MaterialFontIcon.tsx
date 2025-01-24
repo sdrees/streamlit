@@ -16,8 +16,6 @@
 
 import React, { ReactElement } from "react"
 
-import snakeCase from "lodash/snakeCase"
-
 import { IconSize, ThemeColor } from "@streamlit/lib/src/theme"
 
 import {
@@ -60,7 +58,7 @@ const MaterialFontIcon = ({
       // https://github.com/streamlit/streamlit/issues/10168
       translate="no"
     >
-      {snakeCase(iconName)}
+      {iconName}
     </StyledMaterialIcon>
   )
 }

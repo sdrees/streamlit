@@ -201,4 +201,4 @@ class QueryParams(MutableMapping[str, str]):
 
 
 def missing_key_error_message(key: str) -> str:
-    return f'st.query_params has no key "{key}". Did you forget to initialize it?'
+    return f'st.query_params has no key "{key}".'

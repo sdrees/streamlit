@@ -831,21 +831,12 @@ def wait_for_app_run(
         page.wait_for_timeout(wait_delay)
 
 
-def wait_for_app_loaded(
-    page: Page,
-    embedded: bool = False,
-):
+def wait_for_app_loaded(page: Page):
     """Wait for the app to fully load."""
     # Wait for the app view container to appear:
     page.wait_for_selector(
         "[data-testid='stAppViewContainer']", timeout=30000, state="attached"
     )
-
-    # Wait for the main menu to appear:
-    if not embedded:
-        page.wait_for_selector(
-            "[data-testid='stMainMenu']", timeout=20000, state="attached"
-        )
 
     wait_for_app_run(page)
 

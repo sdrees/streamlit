@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
-import { logWarning } from "@streamlit/lib/src/util/log"
 import {
   ArrowDataframe,
   ComponentInstance as ComponentInstanceProto,
   ISpecialArg,
   SpecialArg as SpecialArgProto,
-} from "@streamlit/lib/src/proto"
-import { EmotionTheme, toExportedTheme } from "@streamlit/lib/src/theme"
-import {
-  Source,
-  WidgetStateManager,
-} from "@streamlit/lib/src/WidgetStateManager"
+} from "@streamlit/protobuf"
+
+import { isNullOrUndefined } from "~lib/util/utils"
+import { logWarning } from "~lib/util/log"
+import { EmotionTheme, toExportedTheme } from "~lib/theme"
+import { Source, WidgetStateManager } from "~lib/WidgetStateManager"
 
 import { ComponentMessageType, StreamlitMessageType } from "./enums"
 

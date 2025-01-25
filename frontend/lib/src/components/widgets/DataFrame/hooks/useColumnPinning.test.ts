@@ -21,8 +21,8 @@ import {
   BaseColumn,
   NumberColumn,
   TextColumn,
-} from "@streamlit/lib/src/components/widgets/DataFrame/columns"
-import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+} from "~lib/components/widgets/DataFrame/columns"
+import { DataFrameCellType } from "~lib/dataframes/arrowTypeUtils"
 
 import useColumnPinning from "./useColumnPinning"
 

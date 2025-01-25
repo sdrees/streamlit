@@ -26,10 +26,10 @@ import {
   BaseColumn,
   NumberColumn,
   TextColumn,
-} from "@streamlit/lib/src/components/widgets/DataFrame/columns"
-import EditingState from "@streamlit/lib/src/components/widgets/DataFrame/EditingState"
-import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
-import { notNullOrUndefined } from "@streamlit/lib/src/util/utils"
+} from "~lib/components/widgets/DataFrame/columns"
+import EditingState from "~lib/components/widgets/DataFrame/EditingState"
+import { DataFrameCellType } from "~lib/dataframes/arrowTypeUtils"
+import { notNullOrUndefined } from "~lib/util/utils"
 
 import useDataEditor from "./useDataEditor"
 

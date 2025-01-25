@@ -16,10 +16,7 @@
 
 import styled from "@emotion/styled"
 
-import {
-  STALE_STYLES,
-  STALE_TRANSITION_PARAMS,
-} from "@streamlit/lib/src/theme"
+import { STALE_STYLES, STALE_TRANSITION_PARAMS } from "~lib/theme"
 
 export interface StyledExpandableContainerProps {
   empty: boolean

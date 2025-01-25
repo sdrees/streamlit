@@ -144,7 +144,7 @@ const StatusWidget: React.FC<StatusWidgetProps> = ({
   const [showRunningMan, setShowRunningMan] = useState(false)
   const minimizePromptTimer: React.MutableRefObject<Timer | null> =
     useRef(null)
-  const showRunningManTimer: React.MutableRefObject<Timer | null> =
+  const delayShowRunningManTimer: React.MutableRefObject<Timer | null> =
     useRef(null)
   const sessionEventConn = useRef<SignalConnection>()
   const theme = useTheme()
@@ -190,8 +190,8 @@ const StatusWidget: React.FC<StatusWidgetProps> = ({
 
   const showRunningManAfterInitialDelay = useCallback(
     (delay: number): void => {
-      if (showRunningManTimer.current !== null) {
-        showRunningManTimer.current.setTimeout(() => {
+      if (delayShowRunningManTimer.current !== null) {
+        delayShowRunningManTimer.current.setTimeout(() => {
           setShowRunningMan(true)
         }, delay)
       }
@@ -247,6 +247,14 @@ const StatusWidget: React.FC<StatusWidgetProps> = ({
         }
       case ConnectionState.CONNECTED:
         return undefined
+      case ConnectionState.STATIC_CONNECTING:
+        return {
+          icon: Ellipses,
+          label: "Connecting",
+          tooltip: "Connecting to static app",
+        }
+      case ConnectionState.STATIC_CONNECTED:
+        return undefined
       case ConnectionState.DISCONNECTED_FOREVER:
       default:
         return {
@@ -272,16 +280,16 @@ const StatusWidget: React.FC<StatusWidgetProps> = ({
     if (minimizePromptTimer.current === null) {
       minimizePromptTimer.current = new Timer()
     }
-    if (showRunningManTimer.current === null) {
-      showRunningManTimer.current = new Timer()
+    if (delayShowRunningManTimer.current === null) {
+      delayShowRunningManTimer.current = new Timer()
     }
 
     const minimizePromptTimerCurr = minimizePromptTimer.current
-    const showRunningManTimerCurr = minimizePromptTimer.current
+    const delayShowRunningManTimerCurr = minimizePromptTimer.current
 
     return () => {
       minimizePromptTimerCurr.cancel()
-      showRunningManTimerCurr.cancel()
+      delayShowRunningManTimerCurr.cancel()
     }
   }, [])
 

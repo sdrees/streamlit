@@ -18,7 +18,7 @@ import React from "react"
 
 import { DataEditorProps } from "@glideapps/glide-data-grid"
 
-import { BaseColumn } from "@streamlit/lib/src/components/widgets/DataFrame/columns"
+import { BaseColumn } from "~lib/components/widgets/DataFrame/columns"
 
 type ColumnReorderingReturn = Pick<DataEditorProps, "onColumnMoved">
 

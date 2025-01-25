@@ -16,9 +16,9 @@
 
 import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 
-import { LibContext } from "@streamlit/lib/src/components/core/LibContext"
-import { WindowDimensionsContext } from "@streamlit/lib/src/components/shared/WindowDimensions"
-import { useRequiredContext } from "@streamlit/lib/src/hooks/useRequiredContext"
+import { LibContext } from "~lib/components/core/LibContext"
+import { WindowDimensionsContext } from "~lib/components/shared/WindowDimensions"
+import { useRequiredContext } from "~lib/hooks/useRequiredContext"
 
 export type UseEscapeToCollapseArgs = {
   expanded: boolean

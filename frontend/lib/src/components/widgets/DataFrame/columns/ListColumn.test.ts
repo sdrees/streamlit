@@ -17,7 +17,7 @@
 import { BubbleCell, GridCellKind } from "@glideapps/glide-data-grid"
 import { Field, List, Utf8 } from "apache-arrow"
 
-import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { DataFrameCellType } from "~lib/dataframes/arrowTypeUtils"
 
 import ListColumn from "./ListColumn"
 

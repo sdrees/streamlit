@@ -16,10 +16,8 @@
 
 import React, { ReactElement } from "react"
 
-import AlertContainer, {
-  Kind,
-} from "@streamlit/lib/src/components/shared/AlertContainer"
-import { StyledCode } from "@streamlit/lib/src/components/elements/CodeBlock/styled-components"
+import AlertContainer, { Kind } from "~lib/components/shared/AlertContainer"
+import { StyledCode } from "~lib/components/elements/CodeBlock/styled-components"
 
 import { StyledErrorName, StyledStackTrace } from "./styled-components"
 

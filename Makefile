@@ -280,21 +280,8 @@ protobuf: check-protoc
 		--mypy_out=lib \
 		proto/streamlit/proto/*.proto
 
-	@# JS protobuf generation. The --es6 flag generates a proper es6 module.
-	cd frontend/lib ; ( \
-		echo "/* eslint-disable */" ; \
-		echo ; \
-		yarn run --silent pbjs \
-		  ../../proto/streamlit/proto/*.proto \
-			--path ../../proto -t static-module --wrap es6 \
-	) > ./src/proto.js
-
-	@# Typescript type declarations for our generated protobufs
-	cd frontend/lib ; ( \
-		echo "/* eslint-disable */" ; \
-		echo ; \
-		yarn run --silent pbts ./src/proto.js \
-	) > ./src/proto.d.ts
+	@# JS/TS protobuf generation
+	cd frontend/ ; yarn workspace @streamlit/protobuf run generate-protobuf
 
 .PHONY: react-init
 # React init.
@@ -316,7 +303,7 @@ frontend-build-with-profiler:
 
 .PHONY: frontend-fast
 frontend-fast:
-	cd frontend/ ; yarn workspace @streamlit/app buildFast
+	cd frontend/ ; yarn workspace @streamlit/app build
 	rsync -av --delete --delete-excluded --exclude=reports \
 		frontend/app/build/ lib/streamlit/static/
 
@@ -461,7 +448,7 @@ performance-lighthouse:
 .PHONY frontend-lib-prod:
 # Build the production version for @streamlit/lib.
 frontend-lib-prod:
-	cd frontend/ ; yarn workspace @streamlit/lib build:prod;
+	cd frontend/ ; yarn workspace @streamlit/lib build;
 
 .PHONY streamlit-lib-prod:
 # Build the production version for @streamlit/lib while also doing a make init so it's a single command.

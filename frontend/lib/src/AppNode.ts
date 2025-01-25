@@ -17,16 +17,6 @@
 import { produce } from "immer"
 
 import {
-  getLoadingScreenType,
-  isNullOrUndefined,
-  LoadingScreenType,
-  makeAppSkeletonElement,
-  makeElementWithErrorText,
-  makeElementWithInfoText,
-  notUndefined,
-} from "@streamlit/lib/src/util/utils"
-
-import {
   ArrowNamedDataSet,
   Arrow as ArrowProto,
   ArrowVegaLiteChart as ArrowVegaLiteChartProto,
@@ -37,7 +27,18 @@ import {
   IArrow,
   IArrowNamedDataSet,
   Logo,
-} from "./proto"
+} from "@streamlit/protobuf"
+
+import {
+  getLoadingScreenType,
+  isNullOrUndefined,
+  LoadingScreenType,
+  makeAppSkeletonElement,
+  makeElementWithErrorText,
+  makeElementWithInfoText,
+  notUndefined,
+} from "~lib/util/utils"
+
 import {
   VegaLiteChartElement,
   WrappedNamedDataset,

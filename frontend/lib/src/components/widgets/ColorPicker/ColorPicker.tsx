@@ -16,14 +16,15 @@
 
 import React, { FC, memo, useCallback } from "react"
 
-import { ColorPicker as ColorPickerProto } from "@streamlit/lib/src/proto"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
-import BaseColorPicker from "@streamlit/lib/src/components/shared/BaseColorPicker"
-import { labelVisibilityProtoValueToEnum } from "@streamlit/lib/src/util/utils"
+import { ColorPicker as ColorPickerProto } from "@streamlit/protobuf"
+
+import { WidgetStateManager } from "~lib/WidgetStateManager"
+import BaseColorPicker from "~lib/components/shared/BaseColorPicker"
+import { labelVisibilityProtoValueToEnum } from "~lib/util/utils"
 import {
   useBasicWidgetState,
   ValueWithSource,
-} from "@streamlit/lib/src/hooks/useBasicWidgetState"
+} from "~lib/hooks/useBasicWidgetState"
 
 export interface Props {
   disabled: boolean

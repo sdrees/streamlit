@@ -22,8 +22,8 @@ import { darken, transparentize } from "color2k"
 import {
   BaseButtonKind,
   BaseButtonSize,
-} from "@streamlit/lib/src/components/shared/BaseButton/styled-components"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
+} from "~lib/components/shared/BaseButton/styled-components"
+import { EmotionTheme } from "~lib/theme"
 
 export { BaseButtonKind, BaseButtonSize }
 

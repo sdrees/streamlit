@@ -20,9 +20,9 @@ import {
   isDatetimeType,
   isDateType,
   isNumericType,
-} from "@streamlit/lib/src/dataframes/arrowTypeUtils"
-import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
-import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
+} from "~lib/dataframes/arrowTypeUtils"
+import { Quiver } from "~lib/dataframes/Quiver"
+import { isNullOrUndefined } from "~lib/util/utils"
 
 const MagicFields = {
   DATAFRAME_INDEX: "(index)",

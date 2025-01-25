@@ -23,19 +23,15 @@ import { useTheme } from "@emotion/react"
 import { hasMatch, score } from "fzy.js"
 import sortBy from "lodash/sortBy"
 
-import VirtualDropdown from "@streamlit/lib/src/components/shared/Dropdown/VirtualDropdown"
-import {
-  isNullOrUndefined,
-  LabelVisibilityOptions,
-} from "@streamlit/lib/src/util/utils"
-import { Placement } from "@streamlit/lib/src/components/shared/Tooltip"
-import TooltipIcon from "@streamlit/lib/src/components/shared/TooltipIcon"
+import VirtualDropdown from "~lib/components/shared/Dropdown/VirtualDropdown"
+import { isNullOrUndefined, LabelVisibilityOptions } from "~lib/util/utils"
+import { Placement } from "~lib/components/shared/Tooltip"
+import TooltipIcon from "~lib/components/shared/TooltipIcon"
 import {
   StyledWidgetLabelHelp,
   WidgetLabel,
-} from "@streamlit/lib/src/components/widgets/BaseWidget"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
-import { convertRemToPx } from "@streamlit/lib/src/theme/utils"
+} from "~lib/components/widgets/BaseWidget"
+import { EmotionTheme } from "~lib/theme"
 
 const NO_OPTIONS_MSG = "No options to select."
 
@@ -92,8 +88,6 @@ const Selectbox: React.FC<Props> = ({
 }) => {
   const theme: EmotionTheme = useTheme()
   const [value, setValue] = useState<number | null>(propValue)
-  const [scrollPosition, setScrollPosition] = useState(0)
-  const [hasBeenScrolled, setHasBeenScrolled] = useState(false)
 
   // Update the value whenever the value provided by the props changes
   // TODO: Find a better way to handle this to prevent unneeded re-renders
@@ -153,21 +147,6 @@ const Selectbox: React.FC<Props> = ({
   // If that's true, we show the keyboard on mobile. If not, we hide it.
   const showKeyboardOnMobile = options.length > 10
 
-  const getDropdownInitialScrollPosition = useCallback(() => {
-    // If the dropdown has been manually scrolled before, open it at the position it
-    // was last scrolled to.
-    if (hasBeenScrolled) {
-      return scrollPosition
-    }
-
-    // If the dropdown has not been manually scrolled, open it at the position
-    // of the selected default value, or at the top if the default value is not set.
-    if (isNullOrUndefined(value)) {
-      return 0
-    }
-    return value * convertRemToPx(theme.sizes.dropdownItemHeight)
-  }, [value, hasBeenScrolled, scrollPosition, theme.sizes.dropdownItemHeight])
-
   return (
     <div className="stSelectbox" data-testid="stSelectbox" style={{ width }}>
       <WidgetLabel
@@ -199,18 +178,7 @@ const Selectbox: React.FC<Props> = ({
               lineHeight: theme.lineHeights.inputWidget,
             }),
           },
-          Dropdown: {
-            component: VirtualDropdown,
-            props: {
-              $menuListProps: {
-                initialScrollOffset: getDropdownInitialScrollPosition(),
-                onScroll: (offset: number) => {
-                  setHasBeenScrolled(true)
-                  setScrollPosition(offset)
-                },
-              },
-            },
-          },
+          Dropdown: { component: VirtualDropdown },
           ClearIcon: {
             props: {
               overrides: {

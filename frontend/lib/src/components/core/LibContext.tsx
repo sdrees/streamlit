@@ -16,7 +16,7 @@
 
 import React from "react"
 
-import { baseTheme, ThemeConfig } from "@streamlit/lib/src/theme"
+import { baseTheme, ThemeConfig } from "~lib/theme"
 
 /**
  * The lib config contains various configurations that the host platform can

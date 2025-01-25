@@ -25,17 +25,15 @@ import React, {
 import { useTheme } from "@emotion/react"
 import Plot, { Figure as PlotlyFigureType } from "react-plotly.js"
 
-import { EmotionTheme } from "@streamlit/lib/src/theme"
-import { PlotlyChart as PlotlyChartProto } from "@streamlit/lib/src/proto"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
-import {
-  keysToSnakeCase,
-  notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
-import { FormClearHelper } from "@streamlit/lib/src/components/widgets/Form/FormClearHelper"
-import { ElementFullscreenContext } from "@streamlit/lib/src/components/shared/ElementFullscreen/ElementFullscreenContext"
-import { useRequiredContext } from "@streamlit/lib/src/hooks/useRequiredContext"
-import { withFullScreenWrapper } from "@streamlit/lib/src/components/shared/FullScreenWrapper"
+import { PlotlyChart as PlotlyChartProto } from "@streamlit/protobuf"
+
+import { EmotionTheme } from "~lib/theme"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
+import { keysToSnakeCase, notNullOrUndefined } from "~lib/util/utils"
+import { FormClearHelper } from "~lib/components/widgets/Form/FormClearHelper"
+import { ElementFullscreenContext } from "~lib/components/shared/ElementFullscreen/ElementFullscreenContext"
+import { useRequiredContext } from "~lib/hooks/useRequiredContext"
+import { withFullScreenWrapper } from "~lib/components/shared/FullScreenWrapper"
 
 import {
   applyStreamlitTheme,

@@ -19,15 +19,16 @@ import React from "react"
 import { screen } from "@testing-library/react"
 import { userEvent } from "@testing-library/user-event"
 
-import { render } from "@streamlit/lib/src/test_util"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
-import { DownloadButton as DownloadButtonProto } from "@streamlit/lib/src/proto"
-import { mockEndpoints } from "@streamlit/lib/src/mocks/mocks"
+import { DownloadButton as DownloadButtonProto } from "@streamlit/protobuf"
+
+import { render } from "~lib/test_util"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
+import { mockEndpoints } from "~lib/mocks/mocks"
 
 import DownloadButton, { createDownloadLink, Props } from "./DownloadButton"
 
-vi.mock("@streamlit/lib/src/WidgetStateManager")
-vi.mock("@streamlit/lib/src/StreamlitEndpoints")
+vi.mock("~lib/WidgetStateManager")
+vi.mock("~lib/StreamlitEndpoints")
 
 const getProps = (
   elementProps: Partial<DownloadButtonProto> = {},

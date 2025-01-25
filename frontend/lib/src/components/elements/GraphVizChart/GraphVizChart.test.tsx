@@ -20,9 +20,10 @@ import { Mock } from "vitest"
 import { screen } from "@testing-library/react"
 import { graphviz } from "d3-graphviz"
 
-import { logError } from "@streamlit/lib/src/util/log"
-import { render } from "@streamlit/lib/src/test_util"
-import { GraphVizChart as GraphVizChartProto } from "@streamlit/lib/src/proto"
+import { GraphVizChart as GraphVizChartProto } from "@streamlit/protobuf"
+
+import { logError } from "~lib/util/log"
+import { render } from "~lib/test_util"
 
 import GraphVizChart, { GraphVizChartProps } from "./GraphVizChart"
 
@@ -41,7 +42,7 @@ vi.mock("d3-graphviz", () => ({
     }),
   }),
 }))
-vi.mock("@streamlit/lib/src/util/log", () => ({
+vi.mock("~lib/util/log", () => ({
   logError: vi.fn(),
   logMessage: vi.fn(),
 }))

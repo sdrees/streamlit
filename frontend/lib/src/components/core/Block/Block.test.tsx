@@ -18,10 +18,11 @@ import React, { ReactElement } from "react"
 
 import { screen } from "@testing-library/react"
 
-import { Block as BlockProto } from "@streamlit/lib/src/proto"
-import { render } from "@streamlit/lib/src/test_util"
-import { BlockNode } from "@streamlit/lib/src/AppNode"
-import { ScriptRunState } from "@streamlit/lib/src/ScriptRunState"
+import { Block as BlockProto } from "@streamlit/protobuf"
+
+import { render } from "~lib/test_util"
+import { BlockNode } from "~lib/AppNode"
+import { ScriptRunState } from "~lib/ScriptRunState"
 
 import VerticalBlock from "./Block"
 

@@ -27,10 +27,8 @@ import {
 } from "baseui/modal"
 import merge from "lodash/merge"
 
-import BaseButton, {
-  BaseButtonProps,
-} from "@streamlit/lib/src/components/shared/BaseButton"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
+import BaseButton, { BaseButtonProps } from "~lib/components/shared/BaseButton"
+import { EmotionTheme } from "~lib/theme"
 
 import { StyledModalButton } from "./styled-components"
 

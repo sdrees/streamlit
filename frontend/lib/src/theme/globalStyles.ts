@@ -17,7 +17,7 @@
 import { css, SerializedStyles } from "@emotion/react"
 import { transparentize } from "color2k"
 
-import { EmotionTheme } from "@streamlit/lib/src/theme"
+import { EmotionTheme } from "~lib/theme"
 
 /**
  * Contains various styles that are applied globally to the app.

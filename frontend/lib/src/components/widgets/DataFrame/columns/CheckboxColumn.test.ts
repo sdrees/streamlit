@@ -17,7 +17,7 @@
 import { BooleanCell, GridCellKind } from "@glideapps/glide-data-grid"
 import { Bool, Field } from "apache-arrow"
 
-import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+import { DataFrameCellType } from "~lib/dataframes/arrowTypeUtils"
 
 import CheckboxColumn from "./CheckboxColumn"
 import { isErrorCell } from "./utils"

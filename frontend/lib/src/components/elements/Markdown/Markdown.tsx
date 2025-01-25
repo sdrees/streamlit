@@ -16,12 +16,13 @@
 
 import React, { ReactElement } from "react"
 
-import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown"
-import { Markdown as MarkdownProto } from "@streamlit/lib/src/proto"
+import { Markdown as MarkdownProto } from "@streamlit/protobuf"
+
+import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown"
 import {
   InlineTooltipIcon,
   StyledLabelHelpWrapper,
-} from "@streamlit/lib/src/components/shared/TooltipIcon"
+} from "~lib/components/shared/TooltipIcon"
 
 export interface MarkdownProps {
   width: number

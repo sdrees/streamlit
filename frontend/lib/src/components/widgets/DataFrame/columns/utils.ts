@@ -31,12 +31,9 @@ import "moment-timezone"
 import numbro from "numbro"
 import { sprintf } from "sprintf-js"
 
-import { ArrowType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
-import {
-  isNullOrUndefined,
-  notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
+import { ArrowType } from "~lib/dataframes/arrowTypeUtils"
+import { EmotionTheme } from "~lib/theme"
+import { isNullOrUndefined, notNullOrUndefined } from "~lib/util/utils"
 
 /**
  * Interface used for defining the properties (configuration options) of a column.

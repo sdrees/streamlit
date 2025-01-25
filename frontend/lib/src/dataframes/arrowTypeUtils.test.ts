@@ -33,7 +33,7 @@ import {
   Utf8,
 } from "apache-arrow"
 
-import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
+import { Quiver } from "~lib/dataframes/Quiver"
 import {
   CATEGORICAL,
   DATE,
@@ -50,7 +50,7 @@ import {
   TIMEDELTA,
   UINT64,
   UNICODE,
-} from "@streamlit/lib/src/mocks/arrow"
+} from "~lib/mocks/arrow"
 
 import {
   ArrowType,

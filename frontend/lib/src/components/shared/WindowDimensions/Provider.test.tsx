@@ -18,11 +18,11 @@ import React, { FC } from "react"
 
 import { render, screen } from "@testing-library/react"
 
-import ThemeProvider from "@streamlit/lib/src/components/core/ThemeProvider"
-import { mockTheme } from "@streamlit/lib/src/mocks/mockTheme"
-import { useRequiredContext } from "@streamlit/lib/src/hooks/useRequiredContext"
-import { WindowDimensionsProvider } from "@streamlit/lib/src/components/shared/WindowDimensions/Provider"
-import { WindowDimensionsContext } from "@streamlit/lib/src/components/shared/WindowDimensions"
+import ThemeProvider from "~lib/components/core/ThemeProvider"
+import { mockTheme } from "~lib/mocks/mockTheme"
+import { useRequiredContext } from "~lib/hooks/useRequiredContext"
+import { WindowDimensionsProvider } from "~lib/components/shared/WindowDimensions/Provider"
+import { WindowDimensionsContext } from "~lib/components/shared/WindowDimensions"
 
 describe("WindowDimensionsProvider", () => {
   it("should provide the width and height of the window and take into account the theme padding", () => {

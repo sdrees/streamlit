@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ElementNode } from "@streamlit/lib/src/AppNode"
-import { ScriptRunState } from "@streamlit/lib/src/ScriptRunState"
+import { ElementNode } from "~lib/AppNode"
+import { ScriptRunState } from "~lib/ScriptRunState"
 
 import { convertKeyToClassName, getKeyFromId, isElementStale } from "./utils"
 

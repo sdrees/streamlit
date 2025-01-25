@@ -58,18 +58,27 @@ export default defineConfig({
     viteTsconfigPaths(),
     // this plugin checks for type errors on a separate process
     checker({
-      typescript: true,
+      // Do not run during tests because it produces forking errors
+      // This is primarily a development feature anyways
+      typescript: !Boolean(process.env.VITEST),
     }),
   ],
   resolve: {
     alias: [
       {
-        find: "@streamlit/lib/src",
+        find: "~lib",
         replacement: path.resolve(__dirname, "../lib/src"),
       },
       {
         find: "@streamlit/lib",
         replacement: path.resolve(__dirname, "../lib/src"),
+      },
+      // Alias react-syntax-highlighter to the cjs version to avoid
+      // issues with the esm version causing a bug in rendering
+      // See https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/565
+      {
+        find: "react-syntax-highlighter",
+        replacement: "react-syntax-highlighter/dist/cjs/index.js",
       },
       ...profilerAliases,
     ],

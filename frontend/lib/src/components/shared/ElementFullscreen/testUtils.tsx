@@ -23,11 +23,8 @@ import {
   RenderHookOptions,
 } from "@testing-library/react-hooks"
 
-import ElementFullscreenWrapper from "@streamlit/lib/src/components/shared/ElementFullscreen/ElementFullscreenWrapper"
-import {
-  TestAppWrapper,
-  render as testUtilRender,
-} from "@streamlit/lib/src/test_util"
+import ElementFullscreenWrapper from "~lib/components/shared/ElementFullscreen/ElementFullscreenWrapper"
+import { TestAppWrapper, render as testUtilRender } from "~lib/test_util"
 
 /**
  * Reusable test harness for rendering components in a fullscreen context.

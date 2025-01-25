@@ -16,9 +16,10 @@
 
 import React, { ReactElement, useEffect, useMemo, useRef } from "react"
 
-import { Audio as AudioProto } from "@streamlit/lib/src/proto"
-import { StreamlitEndpoints } from "@streamlit/lib/src/StreamlitEndpoints"
-import { WidgetStateManager as ElementStateManager } from "@streamlit/lib/src/WidgetStateManager"
+import { Audio as AudioProto } from "@streamlit/protobuf"
+
+import { StreamlitEndpoints } from "~lib/StreamlitEndpoints"
+import { WidgetStateManager as ElementStateManager } from "~lib/WidgetStateManager"
 
 export interface AudioProps {
   endpoints: StreamlitEndpoints

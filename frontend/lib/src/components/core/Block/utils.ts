@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-import { AppNode, BlockNode } from "@streamlit/lib/src/AppNode"
-import { ComponentRegistry } from "@streamlit/lib/src/components/widgets/CustomComponent"
-import { FileUploadClient } from "@streamlit/lib/src/FileUploadClient"
-import { ScriptRunState } from "@streamlit/lib/src/ScriptRunState"
-import { StreamlitEndpoints } from "@streamlit/lib/src/StreamlitEndpoints"
-import { EmotionTheme, getDividerColors } from "@streamlit/lib/src/theme"
-import { isValidElementId } from "@streamlit/lib/src/util/utils"
-import {
-  FormsData,
-  WidgetStateManager,
-} from "@streamlit/lib/src/WidgetStateManager"
+import { AppNode, BlockNode } from "~lib/AppNode"
+import { ComponentRegistry } from "~lib/components/widgets/CustomComponent"
+import { FileUploadClient } from "~lib/FileUploadClient"
+import { ScriptRunState } from "~lib/ScriptRunState"
+import { StreamlitEndpoints } from "~lib/StreamlitEndpoints"
+import { EmotionTheme, getDividerColors } from "~lib/theme"
+import { isValidElementId } from "~lib/util/utils"
+import { FormsData, WidgetStateManager } from "~lib/WidgetStateManager"
 
 export function shouldComponentBeEnabled(
   elementType: string,

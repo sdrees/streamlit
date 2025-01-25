@@ -18,16 +18,16 @@ import { Mock, Mocked } from "vitest"
 import { View as VegaView } from "vega"
 import { act, renderHook } from "@testing-library/react-hooks"
 
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
-import { debounce } from "@streamlit/lib/src/util/utils"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
+import { debounce } from "~lib/util/utils"
 
 import { useVegaLiteSelections } from "./useVegaLiteSelections"
 import { VegaLiteChartElement } from "./arrowUtils"
 
 // Mock the debounce so we can control how/when it is invoked.
-vi.mock("@streamlit/lib/src/util/utils", async () => ({
+vi.mock("~lib/util/utils", async () => ({
   // we will override the `debounce`
-  ...(await vi.importActual("@streamlit/lib/src/util/utils")),
+  ...(await vi.importActual("~lib/util/utils")),
   debounce: vi.fn(),
 }))
 

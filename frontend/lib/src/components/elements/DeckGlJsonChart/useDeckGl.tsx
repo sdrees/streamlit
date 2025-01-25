@@ -18,20 +18,21 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 
 import JSON5 from "json5"
 import { PickingInfo, ViewStateChangeParameters } from "@deck.gl/core"
-import isEqual from "lodash/isEqual"
 import { TooltipContent } from "@deck.gl/core/dist/lib/tooltip"
+import isEqual from "lodash/isEqual"
 import { parseToRgba } from "color2k"
 
-import { useStWidthHeight } from "@streamlit/lib/src/hooks/useStWidthHeight"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
-import { DeckGlJsonChart as DeckGlJsonChartProto } from "@streamlit/lib/src/proto"
+import { DeckGlJsonChart as DeckGlJsonChartProto } from "@streamlit/protobuf"
+
+import { useStWidthHeight } from "~lib/hooks/useStWidthHeight"
+import { EmotionTheme } from "~lib/theme"
 import {
   useBasicWidgetClientState,
   ValueWithSource,
-} from "@streamlit/lib/src/hooks/useBasicWidgetState"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
-import { useRequiredContext } from "@streamlit/lib/src/hooks/useRequiredContext"
-import { ElementFullscreenContext } from "@streamlit/lib/src/components/shared/ElementFullscreen/ElementFullscreenContext"
+} from "~lib/hooks/useBasicWidgetState"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
+import { useRequiredContext } from "~lib/hooks/useRequiredContext"
+import { ElementFullscreenContext } from "~lib/components/shared/ElementFullscreen/ElementFullscreenContext"
 
 import type {
   DeckGlElementState,
@@ -66,8 +67,6 @@ export type UseDeckGlProps = Omit<DeckGLProps, "mapboxToken"> & {
   isLightTheme: boolean
   theme: EmotionTheme
 }
-
-const DEFAULT_DECK_GL_HEIGHT = 500
 
 export const EMPTY_STATE: DeckGlElementState = {
   selection: {
@@ -194,7 +193,7 @@ export const useDeckGl = (props: UseDeckGlProps): UseDeckGlShape => {
     container: { height: propsHeight, width: propsWidth },
     heightFallback:
       (viewState.initialViewState as { height: number } | undefined)?.height ||
-      DEFAULT_DECK_GL_HEIGHT,
+      theme.sizes.defaultMapHeight,
   })
 
   const [initialViewState, setInitialViewState] = useState<

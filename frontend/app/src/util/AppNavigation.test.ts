@@ -15,6 +15,8 @@
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
+import { MockInstance } from "vitest"
+
 import {
   AppPage,
   HostCommunicationManager,
@@ -31,24 +33,6 @@ import {
   PageUrlUpdateCallback,
   SetIconCallback,
 } from "./AppNavigation"
-
-vi.mock("@streamlit/lib/src/hostComm/HostCommunicationManager", async () => {
-  const actualModule = await vi.importActual<any>(
-    "@streamlit/lib/src/hostComm/HostCommunicationManager"
-  )
-
-  const MockedClass = vi.fn().mockImplementation((...props) => {
-    const hostCommunicationMgr = new actualModule.default(...props)
-    vi.spyOn(hostCommunicationMgr, "sendMessageToHost")
-    return hostCommunicationMgr
-  })
-
-  return {
-    __esModule: true,
-    ...actualModule,
-    default: MockedClass,
-  }
-})
 
 function generateNewSession(changes = {}): NewSession {
   return new NewSession({
@@ -99,6 +83,7 @@ function generateNewSession(changes = {}): NewSession {
 
 describe("AppNavigation", () => {
   let hostCommunicationMgr: HostCommunicationManager
+  let sendMessageToHost: MockInstance
   let onUpdatePageUrl: PageUrlUpdateCallback
   let onPageNotFound: PageNotFoundCallback
   let onPageIconChange: SetIconCallback
@@ -125,7 +110,11 @@ describe("AppNavigation", () => {
       deployedAppMetadataChanged: () => {},
       restartWebsocketConnection: () => {},
       terminateWebsocketConnection: () => {},
+      streamlitExecutionStartedAt: 0,
+      fileUploadClientConfigChanged: () => {},
     })
+
+    sendMessageToHost = vi.spyOn(hostCommunicationMgr, "sendMessageToHost")
     onUpdatePageUrl = vi.fn()
     onPageNotFound = vi.fn()
     onPageIconChange = vi.fn()
@@ -631,7 +620,7 @@ describe("AppNavigation", () => {
 
     it("does not set the icon if set page config sets title or icon", () => {
       // Clear the mock calls to avoid any confusion from setup
-      hostCommunicationMgr.sendMessageToHost.mockClear()
+      sendMessageToHost.mockClear()
       appNavigation.handlePageConfigChanged(
         new PageConfig({
           title: "foo",
@@ -664,7 +653,7 @@ describe("AppNavigation", () => {
         expanded: false,
       })
       appNavigation.handleNavigation(navigation)
-      const hostCommCalls = hostCommunicationMgr.sendMessageToHost.mock.calls
+      const hostCommCalls = sendMessageToHost.mock.calls
 
       expect(
         hostCommCalls.some(call => call[0].type === "SET_PAGE_TITLE")

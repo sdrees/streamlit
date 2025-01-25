@@ -26,27 +26,28 @@ import {
   FileURLs as FileURLsProto,
   IFileURLs,
   UploadedFileInfo as UploadedFileInfoProto,
-} from "@streamlit/lib/src/proto"
-import Icon from "@streamlit/lib/src/components/shared/Icon"
-import { Placement } from "@streamlit/lib/src/components/shared/Tooltip"
-import TooltipIcon from "@streamlit/lib/src/components/shared/TooltipIcon"
+} from "@streamlit/protobuf"
+
+import Icon from "~lib/components/shared/Icon"
+import { Placement } from "~lib/components/shared/Tooltip"
+import TooltipIcon from "~lib/components/shared/TooltipIcon"
 import {
   StyledWidgetLabelHelp,
   WidgetLabel,
-} from "@streamlit/lib/src/components/widgets/BaseWidget"
-import { FormClearHelper } from "@streamlit/lib/src/components/widgets/Form"
-import { FileUploadClient } from "@streamlit/lib/src/FileUploadClient"
-import { logError } from "@streamlit/lib/src/util/log"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
+} from "~lib/components/widgets/BaseWidget"
+import { FormClearHelper } from "~lib/components/widgets/Form"
+import { FileUploadClient } from "~lib/FileUploadClient"
+import { logError } from "~lib/util/log"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
 import {
   isNullOrUndefined,
   labelVisibilityProtoValueToEnum,
-} from "@streamlit/lib/src/util/utils"
+} from "~lib/util/utils"
 import {
   UploadedStatus,
   UploadFileInfo,
   UploadingStatus,
-} from "@streamlit/lib/src/components/widgets/FileUploader/UploadFileInfo"
+} from "~lib/components/widgets/FileUploader/UploadFileInfo"
 
 import CameraInputButton from "./CameraInputButton"
 import { FacingMode } from "./SwitchFacingModeButton"

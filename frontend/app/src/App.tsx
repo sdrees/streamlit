@@ -1371,7 +1371,7 @@ export class App extends PureComponent<Props, State> {
     // It's not a problem that we're mucking around with private fields since
     // this is a test-only method anyway.
     // @ts-expect-error
-    this.connectionManager?.connection?.cache.messages.clear()
+    this.connectionManager?.websocketConnection?.cache.messages.clear()
   }
 
   /**

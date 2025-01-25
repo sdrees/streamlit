@@ -18,9 +18,10 @@ import React from "react"
 
 import { screen } from "@testing-library/react"
 
-import { render } from "@streamlit/lib/src/test_util"
-import { Kind } from "@streamlit/lib/src/components/shared/AlertContainer"
-import { Alert as AlertProto } from "@streamlit/lib/src/proto"
+import { Alert as AlertProto } from "@streamlit/protobuf"
+
+import { render } from "~lib/test_util"
+import { Kind } from "~lib/components/shared/AlertContainer"
 
 import AlertElement, {
   AlertElementProps,

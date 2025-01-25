@@ -17,7 +17,7 @@
 import { Field } from "apache-arrow"
 import cloneDeep from "lodash/cloneDeep"
 
-import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
+import { Quiver } from "~lib/dataframes/Quiver"
 import {
   CATEGORICAL,
   DATE,
@@ -37,7 +37,7 @@ import {
   STYLER,
   UINT64,
   UNICODE,
-} from "@streamlit/lib/src/mocks/arrow"
+} from "~lib/mocks/arrow"
 
 import { DataFrameCellType } from "./arrowTypeUtils"
 

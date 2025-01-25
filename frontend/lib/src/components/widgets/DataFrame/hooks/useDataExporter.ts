@@ -18,13 +18,13 @@ import React from "react"
 
 import { DataEditorProps } from "@glideapps/glide-data-grid"
 
-import createDownloadLinkElement from "@streamlit/lib/src/util/createDownloadLinkElement"
+import createDownloadLinkElement from "~lib/util/createDownloadLinkElement"
 import {
   BaseColumn,
   toSafeString,
-} from "@streamlit/lib/src/components/widgets/DataFrame/columns"
-import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
-import { logError, logWarning } from "@streamlit/lib/src/util/log"
+} from "~lib/components/widgets/DataFrame/columns"
+import { isNullOrUndefined } from "~lib/util/utils"
+import { logError, logWarning } from "~lib/util/log"
 
 // Delimiter between cells
 const CSV_DELIMITER = ","

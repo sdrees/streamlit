@@ -16,14 +16,13 @@
 
 import React, { ReactElement } from "react"
 
-import { notNullOrUndefined } from "@streamlit/lib/src/util/utils"
-import AlertContainer, {
-  Kind,
-} from "@streamlit/lib/src/components/shared/AlertContainer"
-import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown"
-import { Exception as ExceptionProto } from "@streamlit/lib/src/proto"
-import { StyledCode } from "@streamlit/lib/src/components/elements/CodeBlock/styled-components"
-import { StyledStackTrace } from "@streamlit/lib/src/components/shared/ErrorElement/styled-components"
+import { Exception as ExceptionProto } from "@streamlit/protobuf"
+
+import { notNullOrUndefined } from "~lib/util/utils"
+import AlertContainer, { Kind } from "~lib/components/shared/AlertContainer"
+import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown"
+import { StyledCode } from "~lib/components/elements/CodeBlock/styled-components"
+import { StyledStackTrace } from "~lib/components/shared/ErrorElement/styled-components"
 
 import {
   StyledExceptionMessage,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { withTimezones } from "@streamlit/lib/src/util/withTimezones"
+import { withTimezones } from "~lib/util/withTimezones"
 
 import formatTime from "./formatTime"
 

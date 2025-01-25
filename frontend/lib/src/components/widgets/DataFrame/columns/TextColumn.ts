@@ -16,10 +16,7 @@
 
 import { GridCell, GridCellKind, TextCell } from "@glideapps/glide-data-grid"
 
-import {
-  isNullOrUndefined,
-  notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
+import { isNullOrUndefined, notNullOrUndefined } from "~lib/util/utils"
 
 import {
   BaseColumn,

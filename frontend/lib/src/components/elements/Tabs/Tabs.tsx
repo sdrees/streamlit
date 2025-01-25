@@ -25,12 +25,12 @@ import React, {
 import { useTheme } from "@emotion/react"
 import { Tab as UITab, Tabs as UITabs } from "baseui/tabs-motion"
 
-import { AppNode, BlockNode } from "@streamlit/lib/src/AppNode"
-import { BlockPropsWithoutWidth } from "@streamlit/lib/src/components/core/Block"
-import { isElementStale } from "@streamlit/lib/src/components/core/Block/utils"
-import { LibContext } from "@streamlit/lib/src/components/core/LibContext"
-import StreamlitMarkdown from "@streamlit/lib/src/components/shared/StreamlitMarkdown"
-import { STALE_STYLES } from "@streamlit/lib/src/theme"
+import { AppNode, BlockNode } from "~lib/AppNode"
+import { BlockPropsWithoutWidth } from "~lib/components/core/Block"
+import { isElementStale } from "~lib/components/core/Block/utils"
+import { LibContext } from "~lib/components/core/LibContext"
+import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown"
+import { STALE_STYLES } from "~lib/theme"
 
 import { StyledTabContainer } from "./styled-components"
 

@@ -19,11 +19,8 @@ import React, { memo, ReactElement, useEffect } from "react"
 import { useTheme } from "@emotion/react"
 import { ACCESSIBILITY_TYPE, PLACEMENT, Popover } from "baseui/popover"
 
-import {
-  EmotionTheme,
-  hasLightBackgroundColor,
-} from "@streamlit/lib/src/theme"
-import { DynamicIcon } from "@streamlit/lib/src/components/shared/Icon"
+import { EmotionTheme, hasLightBackgroundColor } from "~lib/theme"
+import { DynamicIcon } from "~lib/components/shared/Icon"
 
 import {
   StyledMenuDivider,

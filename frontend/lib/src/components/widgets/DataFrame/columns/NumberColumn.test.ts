@@ -22,7 +22,7 @@ import {
   ArrowType,
   DataFrameCellType,
   DataType,
-} from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+} from "~lib/dataframes/arrowTypeUtils"
 
 import NumberColumn, { NumberColumnParams } from "./NumberColumn"
 import { BaseColumnProps, ErrorCell, isErrorCell } from "./utils"

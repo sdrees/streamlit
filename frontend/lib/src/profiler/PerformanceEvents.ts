@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { logMessage } from "@streamlit/lib/src/util/log"
-import { getRerunAnalysis } from "@streamlit/lib/src/profiler/RerunAnalyzer"
-import { ScriptRunState } from "@streamlit/lib/src/ScriptRunState"
+import { logMessage } from "~lib/util/log"
+import { getRerunAnalysis } from "~lib/profiler/RerunAnalyzer"
+import { ScriptRunState } from "~lib/ScriptRunState"
 
 interface PerformanceEventBase {
   timestamp?: number

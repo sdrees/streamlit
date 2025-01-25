@@ -20,7 +20,7 @@ import Clipboard from "clipboard"
 import { Copy as CopyIcon } from "react-feather"
 import { useTheme } from "@emotion/react"
 
-import { EmotionTheme } from "@streamlit/lib/src/theme"
+import { EmotionTheme } from "~lib/theme"
 
 import { StyledCopyButton } from "./styled-components"
 

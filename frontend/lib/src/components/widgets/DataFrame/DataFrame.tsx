@@ -36,22 +36,18 @@ import {
   Search,
 } from "@emotion-icons/material-outlined"
 
-import { useFormClearHelper } from "@streamlit/lib/src/components/widgets/Form"
-import { withFullScreenWrapper } from "@streamlit/lib/src/components/shared/FullScreenWrapper"
-import { Quiver } from "@streamlit/lib/src/dataframes/Quiver"
-import { Arrow as ArrowProto } from "@streamlit/lib/src/proto"
-import {
-  WidgetInfo,
-  WidgetStateManager,
-} from "@streamlit/lib/src/WidgetStateManager"
-import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
-import Toolbar, {
-  ToolbarAction,
-} from "@streamlit/lib/src/components/shared/Toolbar"
-import { LibContext } from "@streamlit/lib/src/components/core/LibContext"
-import { ElementFullscreenContext } from "@streamlit/lib/src/components/shared/ElementFullscreen/ElementFullscreenContext"
-import { useRequiredContext } from "@streamlit/lib/src/hooks/useRequiredContext"
-import { useDebouncedCallback } from "@streamlit/lib/src/hooks/useDebouncedCallback"
+import { Arrow as ArrowProto } from "@streamlit/protobuf"
+
+import { useFormClearHelper } from "~lib/components/widgets/Form"
+import { withFullScreenWrapper } from "~lib/components/shared/FullScreenWrapper"
+import { Quiver } from "~lib/dataframes/Quiver"
+import { WidgetInfo, WidgetStateManager } from "~lib/WidgetStateManager"
+import { isNullOrUndefined } from "~lib/util/utils"
+import Toolbar, { ToolbarAction } from "~lib/components/shared/Toolbar"
+import { LibContext } from "~lib/components/core/LibContext"
+import { ElementFullscreenContext } from "~lib/components/shared/ElementFullscreen/ElementFullscreenContext"
+import { useRequiredContext } from "~lib/hooks/useRequiredContext"
+import { useDebouncedCallback } from "~lib/hooks/useDebouncedCallback"
 
 import ColumnMenu from "./ColumnMenu"
 import EditingState, { getColumnName } from "./EditingState"

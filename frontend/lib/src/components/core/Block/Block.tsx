@@ -26,20 +26,18 @@ import React, {
 import classNames from "classnames"
 import { useTheme } from "@emotion/react"
 
-import { LibContext } from "@streamlit/lib/src/components/core/LibContext"
-import { Block as BlockProto } from "@streamlit/lib/src/proto"
-import { AppNode, BlockNode, ElementNode } from "@streamlit/lib/src/AppNode"
-import {
-  getElementId,
-  notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
-import { Form } from "@streamlit/lib/src/components/widgets/Form"
-import Tabs, { TabProps } from "@streamlit/lib/src/components/elements/Tabs"
-import Popover from "@streamlit/lib/src/components/elements/Popover"
-import ChatMessage from "@streamlit/lib/src/components/elements/ChatMessage"
-import Dialog from "@streamlit/lib/src/components/elements/Dialog"
-import Expander from "@streamlit/lib/src/components/elements/Expander"
-import { useScrollToBottom } from "@streamlit/lib/src/hooks/useScrollToBottom"
+import { Block as BlockProto } from "@streamlit/protobuf"
+
+import { LibContext } from "~lib/components/core/LibContext"
+import { AppNode, BlockNode, ElementNode } from "~lib/AppNode"
+import { getElementId, notNullOrUndefined } from "~lib/util/utils"
+import { Form } from "~lib/components/widgets/Form"
+import Tabs, { TabProps } from "~lib/components/elements/Tabs"
+import Popover from "~lib/components/elements/Popover"
+import ChatMessage from "~lib/components/elements/ChatMessage"
+import Dialog from "~lib/components/elements/Dialog"
+import Expander from "~lib/components/elements/Expander"
+import { useScrollToBottom } from "~lib/hooks/useScrollToBottom"
 
 import {
   assignDividerColor,

@@ -20,8 +20,8 @@ import { Field, Utf8 } from "apache-arrow"
 import {
   BaseColumnProps,
   TextColumn,
-} from "@streamlit/lib/src/components/widgets/DataFrame/columns"
-import { DataFrameCellType } from "@streamlit/lib/src/dataframes/arrowTypeUtils"
+} from "~lib/components/widgets/DataFrame/columns"
+import { DataFrameCellType } from "~lib/dataframes/arrowTypeUtils"
 
 import EditingState from "./EditingState"
 

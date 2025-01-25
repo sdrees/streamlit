@@ -19,32 +19,27 @@ import React, { ReactElement, useEffect, useRef, useState } from "react"
 import { withTheme } from "@emotion/react"
 import queryString from "query-string"
 
-import AlertElement from "@streamlit/lib/src/components/elements/AlertElement"
-import { Skeleton } from "@streamlit/lib/src/components/elements/Skeleton"
-import ErrorElement from "@streamlit/lib/src/components/shared/ErrorElement"
-import { Kind } from "@streamlit/lib/src/components/shared/AlertContainer"
-import useTimeout from "@streamlit/lib/src/hooks/useTimeout"
 import {
   ComponentInstance as ComponentInstanceProto,
   ISpecialArg,
   Skeleton as SkeletonProto,
-} from "@streamlit/lib/src/proto"
-import { EmotionTheme } from "@streamlit/lib/src/theme"
+} from "@streamlit/protobuf"
+
+import AlertElement from "~lib/components/elements/AlertElement"
+import { Skeleton } from "~lib/components/elements/Skeleton"
+import ErrorElement from "~lib/components/shared/ErrorElement"
+import { Kind } from "~lib/components/shared/AlertContainer"
+import useTimeout from "~lib/hooks/useTimeout"
+import { EmotionTheme } from "~lib/theme"
 import {
   DEFAULT_IFRAME_FEATURE_POLICY,
   DEFAULT_IFRAME_SANDBOX_POLICY,
-} from "@streamlit/lib/src/util/IFrameUtil"
-import { logWarning } from "@streamlit/lib/src/util/log"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
-import {
-  COMMUNITY_URL,
-  COMPONENT_DEVELOPER_URL,
-} from "@streamlit/lib/src/urls"
-import { ensureError } from "@streamlit/lib/src/util/ErrorHandling"
-import {
-  isNullOrUndefined,
-  notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
+} from "~lib/util/IFrameUtil"
+import { logWarning } from "~lib/util/log"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
+import { COMMUNITY_URL, COMPONENT_DEVELOPER_URL } from "~lib/urls"
+import { ensureError } from "~lib/util/ErrorHandling"
+import { isNullOrUndefined, notNullOrUndefined } from "~lib/util/utils"
 
 import { ComponentRegistry } from "./ComponentRegistry"
 import {

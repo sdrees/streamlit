@@ -28,26 +28,25 @@ import RecordPlugin from "wavesurfer.js/dist/plugins/record"
 import { Delete, FileDownload } from "@emotion-icons/material-outlined"
 import isEqual from "lodash/isEqual"
 
-import { FormClearHelper } from "@streamlit/lib/src/components/widgets/Form"
-import { FileUploadClient } from "@streamlit/lib/src/FileUploadClient"
-import { WidgetStateManager } from "@streamlit/lib/src/WidgetStateManager"
-import { AudioInput as AudioInputProto } from "@streamlit/lib/src/proto"
-import Toolbar, {
-  ToolbarAction,
-} from "@streamlit/lib/src/components/shared/Toolbar"
+import { AudioInput as AudioInputProto } from "@streamlit/protobuf"
+
+import { FormClearHelper } from "~lib/components/widgets/Form"
+import { FileUploadClient } from "~lib/FileUploadClient"
+import { WidgetStateManager } from "~lib/WidgetStateManager"
+import Toolbar, { ToolbarAction } from "~lib/components/shared/Toolbar"
 import {
   isNullOrUndefined,
   labelVisibilityProtoValueToEnum,
   notNullOrUndefined,
-} from "@streamlit/lib/src/util/utils"
-import { blend, convertRemToPx } from "@streamlit/lib/src/theme/utils"
-import { uploadFiles } from "@streamlit/lib/src/util/uploadFiles"
-import TooltipIcon from "@streamlit/lib/src/components/shared/TooltipIcon"
-import { Placement } from "@streamlit/lib/src/components/shared/Tooltip"
-import { WidgetLabel } from "@streamlit/lib/src/components/widgets/BaseWidget"
-import { usePrevious } from "@streamlit/lib/src/util/Hooks"
-import useWidgetManagerElementState from "@streamlit/lib/src/hooks/useWidgetManagerElementState"
-import useDownloadUrl from "@streamlit/lib/src/hooks/useDownloadUrl"
+} from "~lib/util/utils"
+import { blend, convertRemToPx } from "~lib/theme/utils"
+import { uploadFiles } from "~lib/util/uploadFiles"
+import TooltipIcon from "~lib/components/shared/TooltipIcon"
+import { Placement } from "~lib/components/shared/Tooltip"
+import { WidgetLabel } from "~lib/components/widgets/BaseWidget"
+import { usePrevious } from "~lib/util/Hooks"
+import useWidgetManagerElementState from "~lib/hooks/useWidgetManagerElementState"
+import useDownloadUrl from "~lib/hooks/useDownloadUrl"
 
 import {
   StyledAudioInputContainerDiv,

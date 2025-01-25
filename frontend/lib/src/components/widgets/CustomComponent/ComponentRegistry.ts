@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { isNullOrUndefined } from "@streamlit/lib/src/util/utils"
-import { logWarning } from "@streamlit/lib/src/util/log"
-import { StreamlitEndpoints } from "@streamlit/lib/src/StreamlitEndpoints"
+import { isNullOrUndefined } from "~lib/util/utils"
+import { logWarning } from "~lib/util/log"
+import { StreamlitEndpoints } from "~lib/StreamlitEndpoints"
 
 import { ComponentMessageType } from "./enums"
 

@@ -25,10 +25,8 @@ import {
 } from "@emotion-icons/material-rounded"
 import { EmotionIcon } from "@emotion-icons/emotion-icon"
 
-import BaseButton, {
-  BaseButtonKind,
-} from "@streamlit/lib/src/components/shared/BaseButton"
-import Icon from "@streamlit/lib/src/components/shared/Icon"
+import BaseButton, { BaseButtonKind } from "~lib/components/shared/BaseButton"
+import Icon from "~lib/components/shared/Icon"
 
 import {
   StyledActionButtonContainerDiv,

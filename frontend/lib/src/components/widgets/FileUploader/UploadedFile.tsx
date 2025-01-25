@@ -22,15 +22,11 @@ import {
   InsertDriveFile,
 } from "@emotion-icons/material-outlined"
 
-import BaseButton, {
-  BaseButtonKind,
-} from "@streamlit/lib/src/components/shared/BaseButton"
-import Icon from "@streamlit/lib/src/components/shared/Icon"
-import ProgressBar, {
-  Size,
-} from "@streamlit/lib/src/components/shared/ProgressBar"
-import { Small } from "@streamlit/lib/src/components/shared/TextElements"
-import { FileSize, getSizeDisplay } from "@streamlit/lib/src/util/FileHelper"
+import BaseButton, { BaseButtonKind } from "~lib/components/shared/BaseButton"
+import Icon from "~lib/components/shared/Icon"
+import ProgressBar, { Size } from "~lib/components/shared/ProgressBar"
+import { Small } from "~lib/components/shared/TextElements"
+import { FileSize, getSizeDisplay } from "~lib/util/FileHelper"
 
 import {
   StyledErrorMessage,

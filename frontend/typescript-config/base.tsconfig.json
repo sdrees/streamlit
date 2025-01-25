@@ -1,4 +1,6 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
@@ -18,12 +20,5 @@
     "strict": true,
     "target": "es5",
     "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
-  },
-  "include": ["lib", "app"],
-  "exclude": [
-    "*/proto.js",
-    "*/proto.d.ts",
-    "eslint-plugin-streamlit-custom",
-    "./vitest.setup.ts"
-  ]
+  }
 }

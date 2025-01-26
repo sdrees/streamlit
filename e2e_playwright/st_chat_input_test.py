@@ -57,7 +57,7 @@ def test_embedded_app_with_bottom_chat_input(
 ):
     """Test that an embedded app with bottom chat input renders correctly."""
     page.goto(f"http://localhost:{app_port}/?embed=true")
-    wait_for_app_loaded(page, embedded=True)
+    wait_for_app_loaded(page)
 
     app_view_block = page.get_by_test_id("stMainBlockContainer")
     # Bottom padding should be 16px (1rem):

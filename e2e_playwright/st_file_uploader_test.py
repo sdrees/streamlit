@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from playwright.sync_api import Page, expect
+from playwright.sync_api import FilePayload, Page, expect
 
 from e2e_playwright.conftest import ImageCompareFunction, rerun_app, wait_for_app_run
 from e2e_playwright.shared.app_utils import check_top_level_class, get_element_by_key
@@ -49,11 +49,11 @@ def test_file_uploader_error_message_disallowed_files(
     file_chooser = fc_info.value
     file_chooser.set_files(
         files=[
-            {
-                "name": file_name1,
-                "mimeType": "application/json",
-                "buffer": file_content1,
-            }
+            FilePayload(
+                name=file_name1,
+                mimeType="application/json",
+                buffer=file_content1,
+            )
         ]
     )
 
@@ -87,7 +87,9 @@ def test_uploads_and_deletes_single_file_only(
 
     file_chooser = fc_info.value
     file_chooser.set_files(
-        files=[{"name": file_name1, "mimeType": "text/plain", "buffer": file_content1}]
+        files=[
+            FilePayload(name=file_name1, mimeType="text/plain", buffer=file_content1)
+        ]
     )
     wait_for_app_run(app)
 
@@ -117,7 +119,9 @@ def test_uploads_and_deletes_single_file_only(
 
     file_chooser = fc_info.value
     file_chooser.set_files(
-        files=[{"name": file_name2, "mimeType": "text/plain", "buffer": file_content2}]
+        files=[
+            FilePayload(name=file_name2, mimeType="text/plain", buffer=file_content2)
+        ]
     )
 
     wait_for_app_run(app)
@@ -160,8 +164,8 @@ def test_uploads_and_deletes_multiple_files(
     file_content2 = b"file2content"
 
     files = [
-        {"name": file_name1, "mimeType": "text/plain", "buffer": file_content1},
-        {"name": file_name2, "mimeType": "text/plain", "buffer": file_content2},
+        FilePayload(name=file_name1, mimeType="text/plain", buffer=file_content1),
+        FilePayload(name=file_name2, mimeType="text/plain", buffer=file_content2),
     ]
 
     uploader_index = 2
@@ -221,8 +225,8 @@ def test_uploads_multiple_files_one_by_one_quickly(app: Page):
     file_content2 = b"file2content"
 
     files = [
-        {"name": file_name1, "mimeType": "text/plain", "buffer": file_content1},
-        {"name": file_name2, "mimeType": "text/plain", "buffer": file_content2},
+        FilePayload(name=file_name1, mimeType="text/plain", buffer=file_content1),
+        FilePayload(name=file_name2, mimeType="text/plain", buffer=file_content2),
     ]
 
     uploader_index = 2
@@ -293,8 +297,8 @@ def test_uploads_multiple_files_one_by_one_slowly(app: Page):
     file_content2 = b"file2content"
 
     files = [
-        {"name": file_name1, "mimeType": "text/plain", "buffer": file_content1},
-        {"name": file_name2, "mimeType": "text/plain", "buffer": file_content2},
+        FilePayload(name=file_name1, mimeType="text/plain", buffer=file_content1),
+        FilePayload(name=file_name2, mimeType="text/plain", buffer=file_content2),
     ]
 
     uploader_index = 2
@@ -376,11 +380,11 @@ def test_does_not_call_callback_when_not_changed(app: Page):
     file_chooser = fc_info.value
     file_chooser.set_files(
         files=[
-            {
-                "name": file_name1,
-                "mimeType": "application/json",
-                "buffer": file_content1,
-            }
+            FilePayload(
+                name=file_name1,
+                mimeType="application/json",
+                buffer=file_content1,
+            )
         ]
     )
 
@@ -410,7 +414,9 @@ def test_works_inside_form(app: Page):
 
     file_chooser = fc_info.value
     file_chooser.set_files(
-        files=[{"name": file_name1, "mimeType": "text/plain", "buffer": file_content1}]
+        files=[
+            FilePayload(name=file_name1, mimeType="text/plain", buffer=file_content1)
+        ]
     )
     wait_for_app_run(app)
 
@@ -473,7 +479,9 @@ def test_file_uploader_works_with_fragments(app: Page):
 
     file_chooser = fc_info.value
     file_chooser.set_files(
-        files=[{"name": file_name1, "mimeType": "text/plain", "buffer": file_content1}]
+        files=[
+            FilePayload(name=file_name1, mimeType="text/plain", buffer=file_content1)
+        ]
     )
     wait_for_app_run(app)
 

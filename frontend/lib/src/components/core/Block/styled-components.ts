@@ -141,7 +141,7 @@ export const StyledColumn = styled.div<StyledColumnProps>(
       ...(verticalAlignment === VerticalAlignment.TOP && {
         // Add margin to the first checkbox/toggle within the column to align it
         // better with other input widgets.
-        [`& ${StyledElementContainer}:last-of-type > ${StyledCheckbox}`]: {
+        [`& ${StyledElementContainer}:first-of-type > ${StyledCheckbox}`]: {
           marginTop: theme.spacing.sm,
         },
       }),

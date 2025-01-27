@@ -88,7 +88,8 @@ with st.expander("Vertical alignment - top", expanded=True):
     col1, col2, col3 = st.columns(3, vertical_alignment="top")
     col1.text_input("Text input (top)")
     col2.button("Button (top)", use_container_width=True)
-    col3.checkbox("Checkbox (top)")
+    col3.checkbox("Checkbox 1 (top)")
+    col3.checkbox("Checkbox 2 (top)")
 
 with st.expander("Vertical alignment - center", expanded=True):
     col1, col2, col3 = st.columns(3, vertical_alignment="center")
@@ -96,11 +97,13 @@ with st.expander("Vertical alignment - center", expanded=True):
     col2.button("Button (center)", use_container_width=True)
     col3.checkbox("Checkbox (center)")
 
+
 with st.expander("Vertical alignment - bottom", expanded=True):
     col1, col2, col3 = st.columns(3, vertical_alignment="bottom")
     col1.text_input("Text input (bottom)")
     col2.button("Button (bottom)", use_container_width=True)
-    col3.checkbox("Checkbox (bottom)")
+    col3.checkbox("Checkbox 1 (bottom)")
+    col3.checkbox("Checkbox 2 (bottom)")
 
 if st.button("Nested columns - two levels (raises exception)"):
     col1, col2 = st.columns(2)

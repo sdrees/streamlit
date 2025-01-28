@@ -117,37 +117,41 @@ def test_column_variable_relative_width(
     app: Page, assert_snapshot: ImageCompareFunction
 ):
     """Test that a variable relative width works correctly."""
-    column_gap_small = (
+    column = (
         get_expander(app, "Variable-width columns (relative numbers)")
         .get_by_test_id("stHorizontalBlock")
         .nth(0)
     )
-    assert_snapshot(column_gap_small, name="st_columns-variable_width_relative")
+    assert_snapshot(column, name="st_columns-variable_width_relative")
 
 
 def test_column_variable_absolute_width(
     app: Page, assert_snapshot: ImageCompareFunction
 ):
     """Test that a variable absolute width works correctly."""
-    column_gap_small = (
+    column = (
         get_expander(app, "Variable-width columns (absolute numbers)")
         .get_by_test_id("stHorizontalBlock")
         .nth(0)
     )
-    assert_snapshot(column_gap_small, name="st_columns-variable_width_absolute")
+    assert_snapshot(column, name="st_columns-variable_width_absolute")
 
 
 def test_column_vertical_alignment_top(
     app: Page, assert_snapshot: ImageCompareFunction
 ):
     """Test that vertical alignment top works correctly."""
-    column_gap_small = (
+    column = (
         get_expander(app, "Vertical alignment - top")
         .get_by_test_id("stHorizontalBlock")
         .nth(0)
     )
+    # Should apply a top margin to the first checkbox for
+    # simpler visual alignment with other elements.
+    expect(column.get_by_test_id("stCheckbox").first).to_have_css("margin-top", "8px")
+
     assert_snapshot(
-        column_gap_small,
+        column,
         name="st_columns-vertical_alignment_top",
     )
 
@@ -156,13 +160,14 @@ def test_column_vertical_alignment_center(
     app: Page, assert_snapshot: ImageCompareFunction
 ):
     """Test that vertical alignment center works correctly."""
-    column_gap_small = (
+    column = (
         get_expander(app, "Vertical alignment - center")
         .get_by_test_id("stHorizontalBlock")
         .nth(0)
     )
+
     assert_snapshot(
-        column_gap_small,
+        column,
         name="st_columns-vertical_alignment_center",
     )
 
@@ -171,13 +176,16 @@ def test_column_vertical_alignment_bottom(
     app: Page, assert_snapshot: ImageCompareFunction
 ):
     """Test that vertical alignment center works correctly."""
-    column_gap_small = (
+    column = (
         get_expander(app, "Vertical alignment - bottom")
         .get_by_test_id("stHorizontalBlock")
         .nth(0)
     )
+    # Should apply a bottom margin to the last checkbox for
+    # simpler visual alignment with other elements.
+    expect(column.get_by_test_id("stCheckbox").last).to_have_css("margin-bottom", "8px")
     assert_snapshot(
-        column_gap_small,
+        column,
         name="st_columns-vertical_alignment_bottom",
     )
 
@@ -201,6 +209,7 @@ def test_nested_columns_in_sidebar_shows_exception(app: Page):
     expect_exception(
         app,
         re.compile(
-            "Columns cannot be placed inside other columns in the sidebar. This is only possible in the main area of the app."
+            "Columns cannot be placed inside other columns in the sidebar. This is "
+            "only possible in the main area of the app."
         ),
     )

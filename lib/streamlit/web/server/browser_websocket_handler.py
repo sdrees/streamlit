@@ -14,8 +14,6 @@
 
 from __future__ import annotations
 
-import base64
-import binascii
 import hmac
 import json
 from typing import TYPE_CHECKING, Any, Awaitable, Final
@@ -94,7 +92,7 @@ class BrowserWebSocketHandler(WebSocketHandler, SessionClient):
             return False
         return hmac.compare_digest(decoded_token, decoded_expected_token)
 
-    def _parse_user_cookie(self, raw_cookie_value: bytes, email: str) -> dict[str, Any]:
+    def _parse_user_cookie(self, raw_cookie_value: bytes) -> dict[str, Any]:
         """Process the user cookie and extract the user info after
         validating the origin. Origin is validated for security reasons.
         """
@@ -148,23 +146,7 @@ class BrowserWebSocketHandler(WebSocketHandler, SessionClient):
         return None
 
     def open(self, *args, **kwargs) -> Awaitable[None] | None:
-        # Extract user info from the X-Streamlit-User header
-        is_public_cloud_app = False
-
-        try:
-            header_content = self.request.headers["X-Streamlit-User"]
-            payload = base64.b64decode(header_content)
-            user_obj = json.loads(payload)
-            email = user_obj["email"]
-            is_public_cloud_app = user_obj["isPublicCloudApp"]
-        except (KeyError, binascii.Error, json.decoder.JSONDecodeError):
-            email = "test@example.com"
-        user_info: dict[str, str | bool | None] = {
-            "email": None if is_public_cloud_app else email,
-        }
-
-        if is_public_cloud_app or email == "test@example.com":
-            user_info.pop("email", None)
+        user_info: dict[str, str | bool | None] = {}
 
         existing_session_id = None
         try:
@@ -178,7 +160,7 @@ class BrowserWebSocketHandler(WebSocketHandler, SessionClient):
                 csrf_protocol_value = ws_protocols[1]
 
                 if self._validate_xsrf_token(csrf_protocol_value):
-                    user_info.update(self._parse_user_cookie(raw_cookie_value, email))
+                    user_info.update(self._parse_user_cookie(raw_cookie_value))
 
             if len(ws_protocols) >= 3:
                 # See the NOTE in the docstring of the `select_subprotocol` method above

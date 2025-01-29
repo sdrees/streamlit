@@ -26,6 +26,13 @@ export type FileUploadClientConfig = {
 /** Exposes non-websocket endpoints used by the frontend. */
 export interface StreamlitEndpoints {
   /**
+   * Set the static config url for static connection media assets.
+   *
+   * @param url The URL to set.
+   */
+  setStaticConfigUrl(url: string): void
+
+  /**
    * Return a URL to fetch data for the given custom component.
    * @param componentName The registered name of the component.
    * @param path The path of the component resource to fetch, e.g. "index.html".

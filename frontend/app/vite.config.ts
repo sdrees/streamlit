@@ -15,6 +15,7 @@
  */
 
 import { defineConfig } from "vite"
+import { version } from "./package.json"
 import react from "@vitejs/plugin-react-swc"
 import viteTsconfigPaths from "vite-tsconfig-paths"
 import { default as checker } from "vite-plugin-checker"
@@ -50,6 +51,11 @@ const profilerAliases = IS_PROFILER_BUILD
 // https://vitejs.dev/config/
 export default defineConfig({
   base: BASE,
+  define: {
+    PACKAGE_METADATA: {
+      version,
+    },
+  },
   plugins: [
     react({
       jsxImportSource: "@emotion/react",

@@ -20,11 +20,7 @@ import axios from "axios"
 import { default as WS } from "vitest-websocket-mock"
 import zip from "lodash/zip"
 
-import {
-  mockEndpoints,
-  mockSessionInfoProps,
-  SessionInfo,
-} from "@streamlit/lib"
+import { mockEndpoints } from "@streamlit/lib"
 import { BackMsg } from "@streamlit/protobuf"
 import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
 import {
@@ -48,7 +44,7 @@ const MOCK_HEALTH_RESPONSE = { status: "ok" }
 /** Create mock WebsocketConnection arguments */
 function createMockArgs(overrides?: Partial<Args>): Args {
   return {
-    sessionInfo: new SessionInfo(),
+    getLastSessionId: () => undefined,
     endpoints: mockEndpoints(),
     baseUriPartsList: [
       {
@@ -717,15 +713,9 @@ describe("WebsocketConnection auth token handling", () => {
   })
 
   it("sets third Sec-WebSocket-Protocol option to lastSessionId if available", async () => {
-    // Create a mock SessionInfo with sessionInfo.last.sessionId == "lastSessionId"
-    const sessionInfo = new SessionInfo()
-    sessionInfo.setCurrent(
-      mockSessionInfoProps({ sessionId: "lastSessionId" })
+    const ws = new WebsocketConnection(
+      createMockArgs({ getLastSessionId: () => "lastSessionId" })
     )
-    sessionInfo.setCurrent(mockSessionInfoProps())
-    expect(sessionInfo.last?.sessionId).toBe("lastSessionId")
-
-    const ws = new WebsocketConnection(createMockArgs({ sessionInfo }))
 
     // Set correct state for this action
     // @ts-expect-error
@@ -741,18 +731,10 @@ describe("WebsocketConnection auth token handling", () => {
   })
 
   it("sets both host provided auth token and lastSessionId if both set", async () => {
-    // Create a mock SessionInfo with sessionInfo.last.sessionId == "lastSessionId"
-    const sessionInfo = new SessionInfo()
-    sessionInfo.setCurrent(
-      mockSessionInfoProps({ sessionId: "lastSessionId" })
-    )
-    sessionInfo.setCurrent(mockSessionInfoProps())
-    expect(sessionInfo.last?.sessionId).toBe("lastSessionId")
-
     const resetHostAuthToken = vi.fn()
     const ws = new WebsocketConnection(
       createMockArgs({
-        sessionInfo,
+        getLastSessionId: () => "lastSessionId",
         claimHostAuthToken: () => Promise.resolve("iAmAnAuthToken"),
         resetHostAuthToken,
       })

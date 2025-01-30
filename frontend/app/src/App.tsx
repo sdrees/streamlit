@@ -415,7 +415,7 @@ export class App extends PureComponent<Props, State> {
 
   initializeConnectionManager(): void {
     this.connectionManager = new ConnectionManager({
-      sessionInfo: this.sessionInfo,
+      getLastSessionId: () => this.sessionInfo.last?.sessionId,
       endpoints: this.endpoints,
       onMessage: this.handleMessage,
       onConnectionError: this.handleConnectionError,

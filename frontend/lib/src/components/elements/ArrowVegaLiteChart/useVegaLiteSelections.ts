@@ -18,9 +18,9 @@ import { useCallback } from "react"
 
 import { SignalValue, View as VegaView } from "vega"
 import isEqual from "lodash/isEqual"
+import { getLogger } from "loglevel"
 
 import { WidgetInfo, WidgetStateManager } from "~lib/WidgetStateManager"
-import { logWarning } from "~lib/util/log"
 import { debounce, notNullOrUndefined } from "~lib/util/utils"
 
 import { VegaLiteChartElement } from "./arrowUtils"
@@ -43,6 +43,8 @@ export interface UseVegaLiteSelectionsOutput {
   maybeConfigureSelections: (view: VegaView) => VegaView
   onFormCleared: () => void
 }
+
+const log = getLogger("useVegaLiteSelections")
 
 /**
  * Hook that returns a function that can be used to configure the selection
@@ -140,7 +142,7 @@ export const useVegaLiteSelections = (
         try {
           return vegaView.setState(viewState)
         } catch (e) {
-          logWarning("Failed to restore view state", e)
+          log.warn("Failed to restore view state", e)
         }
       }
 

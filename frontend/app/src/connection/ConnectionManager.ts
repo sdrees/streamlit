@@ -15,12 +15,13 @@
  */
 import { ReactNode } from "react"
 
+import { getLogger } from "loglevel"
+
 import {
   BaseUriParts,
   ensureError,
   getPossibleBaseUris,
   IHostConfigResponse,
-  logError,
   SessionInfo,
   StreamlitEndpoints,
 } from "@streamlit/lib"
@@ -38,6 +39,7 @@ import { WebsocketConnection } from "./WebsocketConnection"
  * due to jitter).
  */
 const RETRY_COUNT_FOR_WARNING = 6
+const log = getLogger("ConnectionManager")
 
 interface Props {
   /** The app's SessionInfo instance */
@@ -124,7 +126,7 @@ export class ConnectionManager {
       this.websocketConnection.sendMessage(obj)
     } else {
       // Don't need to make a big deal out of this. Just print to console.
-      logError(`Cannot send message when server is disconnected: ${obj}`)
+      log.error(`Cannot send message when server is disconnected: ${obj}`)
     }
   }
 
@@ -173,7 +175,7 @@ export class ConnectionManager {
         this.websocketConnection = await this.connectToRunningServer()
       } catch (e) {
         const err = ensureError(e)
-        logError(err.message)
+        log.error(err.message)
         this.setConnectionState(
           ConnectionState.DISCONNECTED_FOREVER,
           err.message

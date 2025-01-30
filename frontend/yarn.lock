@@ -2607,6 +2607,7 @@ __metadata:
     jsdom: "npm:24.0.0"
     lighthouse: "npm:^12.2.2"
     lodash: "npm:^4.17.21"
+    loglevel: "npm:^1.9.2"
     moment: "npm:^2.29.4"
     moment-timezone: "npm:^0.5.40"
     polyfill-pseudoclass-has: "npm:^1.0.0"
@@ -2712,6 +2713,7 @@ __metadata:
     json5: "npm:^2.2.3"
     katex: "npm:^0.16.21"
     lodash: "npm:^4.17.21"
+    loglevel: "npm:^1.9.2"
     mapbox-gl: "npm:^1.13.2"
     marked: "npm:^4.2.12"
     mdast-util-find-and-replace: "npm:^2.2.2"
@@ -11675,6 +11677,13 @@ __metadata:
     chalk: "npm:^5.3.0"
     is-unicode-supported: "npm:^1.3.0"
   checksum: 10c0/36636cacedba8f067d2deb4aad44e91a89d9efb3ead27e1846e7b82c9a10ea2e3a7bd6ce28a7ca616bebc60954ff25c67b0f92d20a6a746bb3cc52c3701891f6
+  languageName: node
+  linkType: hard
+
+"loglevel@npm:^1.9.2":
+  version: 1.9.2
+  resolution: "loglevel@npm:1.9.2"
+  checksum: 10c0/1e317fa4648fe0b4a4cffef6de037340592cee8547b07d4ce97a487abe9153e704b98451100c799b032c72bb89c9366d71c9fb8192ada8703269263ae77acdc7
   languageName: node
   linkType: hard
 

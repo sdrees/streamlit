@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-import { logWarning, notNullOrUndefined } from "@streamlit/lib"
+import { getLogger } from "loglevel"
+
+import { notNullOrUndefined } from "@streamlit/lib"
 
 const BLOB_TYPE = "video/webm"
+const log = getLogger("ScreenCastRecorder")
 
 interface ScreenCastRecorderOptions {
   recordAudio: boolean
@@ -105,12 +108,12 @@ class ScreenCastRecorder {
    */
   public start(): boolean {
     if (!this.mediaRecorder) {
-      logWarning(`ScreenCastRecorder.start: mediaRecorder is null`)
+      log.warn(`ScreenCastRecorder.start: mediaRecorder is null`)
       return false
     }
 
     const logRecorderError = (e: any): void => {
-      logWarning(`mediaRecorder.start threw an error: ${e}`)
+      log.warn(`mediaRecorder.start threw an error: ${e}`)
     }
 
     this.mediaRecorder.onerror = (e: any): void => {

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { getLogger } from "loglevel"
+
 import {
   ArrowDataframe,
   ComponentInstance as ComponentInstanceProto,
@@ -22,7 +24,6 @@ import {
 } from "@streamlit/protobuf"
 
 import { isNullOrUndefined } from "~lib/util/utils"
-import { logWarning } from "~lib/util/log"
 import { EmotionTheme, toExportedTheme } from "~lib/theme"
 import { Source, WidgetStateManager } from "~lib/WidgetStateManager"
 
@@ -76,6 +77,7 @@ export interface DataframeArg {
  * version in the COMPONENT_READY call.
  */
 export const CUSTOM_COMPONENT_API_VERSION = 1
+export const log = getLogger("componentUtils")
 
 /**
  * Create a callback to be passed to  {@link ComponentRegistry#registerListener}.
@@ -132,7 +134,7 @@ export function createIframeMessageHandler(
 
       case ComponentMessageType.SET_COMPONENT_VALUE:
         if (!isReady) {
-          logWarning(
+          log.warn(
             `Got ${type} before ${ComponentMessageType.COMPONENT_READY}!`
           )
         } else {
@@ -149,7 +151,7 @@ export function createIframeMessageHandler(
 
       case ComponentMessageType.SET_FRAME_HEIGHT:
         if (!isReady) {
-          logWarning(
+          log.warn(
             `Got ${type} before ${ComponentMessageType.COMPONENT_READY}!`
           )
         } else {
@@ -160,7 +162,7 @@ export function createIframeMessageHandler(
         break
 
       default:
-        logWarning(`Unrecognized ComponentBackMsgType: ${type}`)
+        log.warn(`Unrecognized ComponentBackMsgType: ${type}`)
     }
   }
 }
@@ -241,13 +243,13 @@ export function sendRenderMessage(
 ): void {
   if (!iframe) {
     // This should never happen!
-    logWarning("Can't send ForwardMsg; missing our iframe!")
+    log.warn("Can't send ForwardMsg; missing our iframe!")
     return
   }
 
   if (isNullOrUndefined(iframe.contentWindow)) {
     // Nor should this!
-    logWarning("Can't send ForwardMsg; iframe has no contentWindow!")
+    log.warn("Can't send ForwardMsg; iframe has no contentWindow!")
     return
   }
 
@@ -284,7 +286,7 @@ function handleSetComponentValue(
   fragmentId?: string
 ): void {
   if (value === undefined) {
-    logWarning(`handleSetComponentValue: missing 'value' prop`)
+    log.warn(`handleSetComponentValue: missing 'value' prop`)
     return
   }
 

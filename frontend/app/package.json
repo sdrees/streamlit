@@ -38,6 +38,7 @@
     "iframe-resizer": "4.3.11",
     "immer": "^9.0.19",
     "lodash": "^4.17.21",
+    "loglevel": "^1.9.2",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.40",
     "re-resizable": "^6.10.1",

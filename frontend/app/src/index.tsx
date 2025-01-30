@@ -19,6 +19,7 @@ const streamlitExecutionStartedAt = Date.now()
 
 import React from "react"
 
+import log from "loglevel"
 import ReactDOM from "react-dom"
 import { Client as Styletron } from "styletron-engine-atomic"
 import { Provider as StyletronProvider } from "styletron-react"
@@ -26,6 +27,10 @@ import { Provider as StyletronProvider } from "styletron-react"
 import ThemedApp from "./ThemedApp"
 
 const engine = new Styletron({ prefix: "st-" })
+if (process.env.NODE_ENV === "development") {
+  // By default, loglevel only shows warnings and errors.
+  log.setLevel(log.levels.DEBUG)
+}
 
 // TODO: Deprecated in React 18 - Need to revise to new API
 // react-18-upgrade

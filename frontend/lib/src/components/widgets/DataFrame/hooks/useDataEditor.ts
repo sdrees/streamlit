@@ -24,8 +24,8 @@ import {
   Item,
   ValidatedGridCell,
 } from "@glideapps/glide-data-grid"
+import { getLogger } from "loglevel"
 
-import { logWarning } from "~lib/util/log"
 import { notNullOrUndefined } from "~lib/util/utils"
 import {
   BaseColumn,
@@ -40,6 +40,8 @@ type DataEditorReturn = Pick<
   DataEditorProps,
   "onCellEdited" | "onPaste" | "onRowAppended" | "onDelete" | "validateCell"
 >
+
+const log = getLogger("useDataEditor")
 
 /**
  * Custom hook to handle all aspects related to data editing. This includes editing cells,
@@ -110,7 +112,7 @@ function useDataEditor(
 
         syncEditState()
       } else {
-        logWarning(
+        log.warn(
           `Not applying the cell edit since it causes this error:\n ${newCell.data}`
         )
       }

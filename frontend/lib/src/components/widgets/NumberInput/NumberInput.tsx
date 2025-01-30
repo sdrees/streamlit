@@ -27,6 +27,7 @@ import { withTheme } from "@emotion/react"
 import { sprintf } from "sprintf-js"
 import { Input as UIInput } from "baseui/input"
 import uniqueId from "lodash/uniqueId"
+import { getLogger } from "loglevel"
 
 import { NumberInput as NumberInputProto } from "@streamlit/protobuf"
 
@@ -37,7 +38,6 @@ import {
   notNullOrUndefined,
 } from "~lib/util/utils"
 import { useFormClearHelper } from "~lib/components/widgets/Form"
-import { logWarning } from "~lib/util/log"
 import { Source, WidgetStateManager } from "~lib/WidgetStateManager"
 import TooltipIcon from "~lib/components/shared/TooltipIcon"
 import { Placement } from "~lib/components/shared/Tooltip"
@@ -55,6 +55,8 @@ import {
   StyledInputControls,
   StyledInstructionsContainer,
 } from "./styled-components"
+
+const log = getLogger("NumberInput")
 
 /**
  * Return a string property from an element. If the string is
@@ -133,7 +135,7 @@ export const formatValue = ({
   try {
     return sprintf(formatString, value)
   } catch (e) {
-    logWarning(`Error in sprintf(${formatString}, ${value}): ${e}`)
+    log.warn(`Error in sprintf(${formatString}, ${value}): ${e}`)
     return String(value)
   }
 }

@@ -17,6 +17,7 @@
 import React from "react"
 
 import { DataEditorProps } from "@glideapps/glide-data-grid"
+import { getLogger } from "loglevel"
 
 import createDownloadLinkElement from "~lib/util/createDownloadLinkElement"
 import {
@@ -24,7 +25,6 @@ import {
   toSafeString,
 } from "~lib/components/widgets/DataFrame/columns"
 import { isNullOrUndefined } from "~lib/util/utils"
-import { logError, logWarning } from "~lib/util/log"
 
 // Delimiter between cells
 const CSV_DELIMITER = ","
@@ -40,6 +40,7 @@ const CSV_UTF8_BOM = "\ufeff"
 const CSV_SPECIAL_CHARS_REGEX = new RegExp(
   `[${[CSV_DELIMITER, CSV_QUOTE_CHAR, CSV_ROW_DELIMITER].join("")}]`
 )
+const log = getLogger("useDataExporter")
 
 export function toCsvRow(rowValues: any[]): string {
   return (
@@ -159,7 +160,7 @@ function useDataExporter(
       }
 
       try {
-        logWarning(
+        log.warn(
           "Failed to export data as CSV with FileSystem API, trying fallback method",
           error
         )
@@ -199,7 +200,7 @@ function useDataExporter(
         document.body.removeChild(link) // Clean up
         URL.revokeObjectURL(url) // Free up memory
       } catch (error) {
-        logError("Failed to export data as CSV", error)
+        log.error("Failed to export data as CSV", error)
       }
     }
   }, [columns, numRows, getCellContent, enforceDownloadInNewTab])

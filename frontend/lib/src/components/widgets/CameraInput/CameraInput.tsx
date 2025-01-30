@@ -19,6 +19,7 @@ import React from "react"
 import { X } from "@emotion-icons/open-iconic"
 import axios from "axios"
 import isEqual from "lodash/isEqual"
+import { getLogger } from "loglevel"
 
 import {
   CameraInput as CameraInputProto,
@@ -37,7 +38,6 @@ import {
 } from "~lib/components/widgets/BaseWidget"
 import { FormClearHelper } from "~lib/components/widgets/Form"
 import { FileUploadClient } from "~lib/FileUploadClient"
-import { logError } from "~lib/util/log"
 import { WidgetStateManager } from "~lib/WidgetStateManager"
 import {
   isNullOrUndefined,
@@ -104,6 +104,7 @@ export interface State {
 }
 
 const MIN_SHUTTER_EFFECT_TIME_MS = 150
+const log = getLogger("CameraInput")
 
 class CameraInput extends React.PureComponent<Props, State> {
   private localFileIdCounter = 1
@@ -177,7 +178,7 @@ class CameraInput extends React.PureComponent<Props, State> {
         })
       })
       .catch(err => {
-        logError(err)
+        log.error(err)
       })
   }
 

@@ -33,7 +33,6 @@ import {
 } from "@streamlit/app/src/connection/constants"
 import { OnRetry } from "@streamlit/app/src/connection/types"
 import {
-  BaseUriParts,
   buildHttpUri,
   IHostConfigResponse,
   Resolver,
@@ -43,7 +42,7 @@ import {
 const log = getLogger("DoInitPings")
 
 export function doInitPings(
-  uriPartsList: BaseUriParts[],
+  uriPartsList: URL[],
   minimumTimeoutMs: number,
   maximumTimeoutMs: number,
   retryCallback: OnRetry,

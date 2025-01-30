@@ -26,7 +26,6 @@ import { getLogger } from "loglevel"
 import {
   AppConfig,
   AppRoot,
-  BaseUriParts,
   CircularBuffer,
   ComponentRegistry,
   createFormsData,
@@ -964,11 +963,11 @@ export class App extends PureComponent<Props, State> {
   ): void => {
     const baseUriParts = this.getBaseUriParts()
     if (baseUriParts) {
-      const { basePath } = baseUriParts
+      const { pathname } = baseUriParts
 
       const prevPageNameInPath = extractPageNameFromPathName(
         document.location.pathname,
-        basePath
+        pathname
       )
       const prevPageName =
         prevPageNameInPath === "" ? mainPageName : prevPageNameInPath
@@ -981,7 +980,7 @@ export class App extends PureComponent<Props, State> {
         const queryString = preserveEmbedQueryParams()
         const qs = queryString ? `?${queryString}` : ""
 
-        const basePathPrefix = basePath ? `/${basePath}` : ""
+        const basePathPrefix = pathname === "/" ? "" : pathname
 
         const pageUrl = `${basePathPrefix}/${pagePath}${qs}`
 
@@ -1510,7 +1509,7 @@ export class App extends PureComponent<Props, State> {
     }
 
     const { currentPageScriptHash } = this.state
-    const { basePath } = baseUriParts
+    const { pathname } = baseUriParts
     let queryString = this.getQueryString()
     let pageName = ""
 
@@ -1538,7 +1537,7 @@ export class App extends PureComponent<Props, State> {
       // document.location.pathname.
       pageName = extractPageNameFromPathName(
         document.location.pathname,
-        basePath
+        pathname
       )
       pageScriptHash = ""
     }
@@ -1787,7 +1786,7 @@ export class App extends PureComponent<Props, State> {
     })
   }
 
-  getBaseUriParts = (): BaseUriParts | undefined =>
+  getBaseUriParts = (): URL | undefined =>
     this.connectionManager
       ? this.connectionManager.getBaseUriParts()
       : undefined

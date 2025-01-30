@@ -48,10 +48,10 @@ function createMockArgs(overrides?: Partial<Args>): Args {
     endpoints: mockEndpoints(),
     baseUriPartsList: [
       {
-        host: "localhost",
-        port: 1234,
-        basePath: "/",
-      },
+        hostname: "localhost",
+        port: "1234",
+        pathname: "/",
+      } as URL,
     ],
     onMessage: vi.fn(),
     onConnectionStateChange: vi.fn(),
@@ -66,9 +66,9 @@ function createMockArgs(overrides?: Partial<Args>): Args {
 describe("doInitPings", () => {
   const MOCK_PING_DATA = {
     uri: [
-      { host: "not.a.real.host", port: 3000, basePath: "/" },
-      { host: "not.a.real.host", port: 3001, basePath: "/" },
-    ],
+      { hostname: "not.a.real.host", port: "3000", pathname: "/" },
+      { hostname: "not.a.real.host", port: "3001", pathname: "/" },
+    ] as URL[],
     timeoutMs: 10,
     maxTimeoutMs: 100,
     retryCallback: vi.fn(),
@@ -266,9 +266,9 @@ describe("doInitPings", () => {
     const MOCK_PING_DATA_LOCALHOST = {
       ...MOCK_PING_DATA,
       uri: [
-        { host: "localhost", port: 3000, basePath: "/" },
-        { host: "localhost", port: 3001, basePath: "/" },
-      ],
+        { hostname: "localhost", port: "3000", pathname: "/" },
+        { hostname: "localhost", port: "3001", pathname: "/" },
+      ] as URL[],
     }
 
     const TEST_ERROR = {
@@ -444,7 +444,13 @@ describe("doInitPings", () => {
     }
 
     await doInitPings(
-      [{ host: "not.a.real.host", port: 3000, basePath: "/" }],
+      [
+        {
+          hostname: "not.a.real.host",
+          port: "3000",
+          pathname: "/",
+        } as URL,
+      ],
       MOCK_PING_DATA.timeoutMs,
       MOCK_PING_DATA.maxTimeoutMs,
       callback,
@@ -545,7 +551,13 @@ describe("doInitPings", () => {
     }
 
     await doInitPings(
-      [{ host: "not.a.real.host", port: 3000, basePath: "/" }],
+      [
+        {
+          hostname: "not.a.real.host",
+          port: "3000",
+          pathname: "/",
+        } as URL,
+      ],
       MOCK_PING_DATA.timeoutMs,
       MOCK_PING_DATA.maxTimeoutMs,
       callback,
@@ -562,7 +574,13 @@ describe("doInitPings", () => {
     }
 
     await doInitPings(
-      [{ host: "not.a.real.host", port: 3000, basePath: "/" }],
+      [
+        {
+          hostname: "not.a.real.host",
+          port: "3000",
+          pathname: "/",
+        } as URL,
+      ],
       MOCK_PING_DATA.timeoutMs,
       MOCK_PING_DATA.maxTimeoutMs,
       callback2,

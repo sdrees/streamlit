@@ -22,41 +22,29 @@ import take from "lodash/take"
 
 import { IS_DEV_ENV, WEBSOCKET_PORT_DEV } from "~lib/baseconsts"
 
-/**
- * host:port tuple
- */
-export interface BaseUriParts {
-  host: string
-  port: number
-  basePath: string
-}
-
 const FINAL_SLASH_RE = /\/+$/
 const INITIAL_SLASH_RE = /^\/+/
 
 /**
  * Return the BaseUriParts for the global window
  */
-export function getWindowBaseUriParts(): BaseUriParts {
+export function getWindowBaseUriParts(): URL {
+  const currentUrl = new URL(window.location.href)
   // If dev, always connect to 8501, since window.location.port is the Node
   // server's port 3000.
   // If changed, also change config.py
-  const host = window.location.hostname
 
-  let port
   if (IS_DEV_ENV) {
-    port = WEBSOCKET_PORT_DEV
-  } else if (window.location.port) {
-    port = Number(window.location.port)
-  } else {
-    port = isHttps() ? 443 : 80
+    currentUrl.port = WEBSOCKET_PORT_DEV
+  } else if (!currentUrl.port) {
+    currentUrl.port = isHttps() ? "443" : "80"
   }
 
-  const basePath = window.location.pathname
+  currentUrl.pathname = currentUrl.pathname
     .replace(FINAL_SLASH_RE, "")
     .replace(INITIAL_SLASH_RE, "")
 
-  return { host, port, basePath }
+  return currentUrl
 }
 
 // NOTE: In the multipage apps world, there is some ambiguity around whether a
@@ -71,29 +59,23 @@ export function getWindowBaseUriParts(): BaseUriParts {
 // We'll want to improve this situation in the near future, but figuring out
 // the best path forward may be tricky as I wasn't able to come up with an
 // easy solution covering every deployment scenario.
-export function getPossibleBaseUris(): Array<BaseUriParts> {
+export function getPossibleBaseUris(): Array<URL> {
   const baseUriParts = getWindowBaseUriParts()
-  const { basePath } = baseUriParts
+  const { pathname } = baseUriParts
 
-  if (!basePath) {
+  if (pathname === "/") {
     return [baseUriParts]
   }
 
-  const parts = basePath.split("/")
-  const possibleBaseUris: Array<BaseUriParts> = []
+  const parts = pathname.split("/")
+  const possibleBaseUris: Array<URL> = []
 
   while (parts.length > 0) {
-    possibleBaseUris.push({
-      ...baseUriParts,
-      basePath: parts.join("/"),
-    })
+    const newURL = new URL(baseUriParts)
+    newURL.pathname = parts.join("/")
+    possibleBaseUris.push(newURL)
     parts.pop()
   }
-
-  possibleBaseUris.push({
-    ...baseUriParts,
-    basePath: "",
-  })
 
   return take(possibleBaseUris, 2)
 }
@@ -102,24 +84,24 @@ export function getPossibleBaseUris(): Array<BaseUriParts> {
  * Create a ws:// or wss:// URI for the given path.
  */
 export function buildWsUri(
-  { host, port, basePath }: BaseUriParts,
+  { hostname, port, pathname }: URL,
   path: string
 ): string {
   const protocol = isHttps() ? "wss" : "ws"
-  const fullPath = makePath(basePath, path)
-  return `${protocol}://${host}:${port}/${fullPath}`
+  const fullPath = makePath(pathname, path)
+  return `${protocol}://${hostname}:${port}/${fullPath}`
 }
 
 /**
  * Create an HTTP URI for the given path.
  */
 export function buildHttpUri(
-  { host, port, basePath }: BaseUriParts,
+  { hostname, port, pathname }: URL,
   path: string
 ): string {
   const protocol = isHttps() ? "https" : "http"
-  const fullPath = makePath(basePath, path)
-  return `${protocol}://${host}:${port}/${fullPath}`
+  const fullPath = makePath(pathname, path)
+  return `${protocol}://${hostname}:${port}/${fullPath}`
 }
 
 export function makePath(basePath: string, subPath: string): string {

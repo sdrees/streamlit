@@ -31,7 +31,6 @@ import {
   OnRetry,
 } from "@streamlit/app/src/connection/types"
 import {
-  BaseUriParts,
   buildWsUri,
   ForwardMsgCache,
   getCookie,
@@ -56,7 +55,7 @@ export interface Args {
    * all fail, we'll retry from the top. The number of retries depends on
    * whether this is a local connection.
    */
-  baseUriPartsList: BaseUriParts[]
+  baseUriPartsList: URL[]
 
   /**
    * Function called when our ConnectionState changes.
@@ -185,7 +184,7 @@ export class WebsocketConnection {
    * Return the BaseUriParts for the server we're connected to,
    * if we are connected to a server.
    */
-  public getBaseUriParts(): BaseUriParts | undefined {
+  public getBaseUriParts(): URL | undefined {
     if (this.state === ConnectionState.CONNECTED) {
       return this.args.baseUriPartsList[this.uriIndex]
     }

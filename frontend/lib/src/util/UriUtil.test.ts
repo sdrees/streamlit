@@ -28,65 +28,51 @@ global.window = Object.create(window)
 Object.defineProperty(window, "location", { value: location })
 
 test("gets all window URI parts", () => {
-  location.hostname = "the_host"
-  location.port = "9988"
-  location.pathname = "foo"
+  location.href = "https://the_host:9988/foo"
 
-  const parts = getWindowBaseUriParts()
-  expect(parts).toStrictEqual({
-    host: "the_host",
-    port: 9988,
-    basePath: "foo",
-  })
+  const { hostname, port, pathname } = getWindowBaseUriParts()
+  expect(hostname).toBe("the_host")
+  expect(port).toBe("9988")
+  expect(pathname).toBe("/foo")
 })
 
 test("gets window URI parts without basePath", () => {
-  location.hostname = "the_host"
-  location.port = "9988"
-  location.pathname = ""
+  location.href = "https://the_host:9988"
 
   const parts = getWindowBaseUriParts()
-  expect(parts).toStrictEqual({
-    host: "the_host",
-    port: 9988,
-    basePath: "",
+  expect(parts).toMatchObject({
+    hostname: "the_host",
+    port: "9988",
+    pathname: "/",
   })
 })
 
 test("gets window URI parts with long basePath", () => {
-  location.hostname = "the_host"
-  location.port = "9988"
-  location.pathname = "/foo/bar"
+  location.href = "https://the_host:9988/foo/bar"
 
-  const parts = getWindowBaseUriParts()
-  expect(parts).toStrictEqual({
-    host: "the_host",
-    port: 9988,
-    basePath: "foo/bar",
-  })
+  const { hostname, port, pathname } = getWindowBaseUriParts()
+  expect(hostname).toBe("the_host")
+  expect(port).toBe("9988")
+  expect(pathname).toBe("/foo/bar")
 })
 
 test("gets window URI parts with weird basePath", () => {
-  location.hostname = "the_host"
-  location.port = "9988"
-  location.pathname = "///foo/bar//"
+  location.href = "https://the_host:9988///foo/bar//"
 
-  const parts = getWindowBaseUriParts()
-  expect(parts).toStrictEqual({
-    host: "the_host",
-    port: 9988,
-    basePath: "foo/bar",
-  })
+  const { hostname, port, pathname } = getWindowBaseUriParts()
+  expect(hostname).toBe("the_host")
+  expect(port).toBe("9988")
+  expect(pathname).toBe("/foo/bar")
 })
 
 test("builds HTTP URI correctly", () => {
   location.href = "http://something"
   const uri = buildHttpUri(
     {
-      host: "the_host",
-      port: 9988,
-      basePath: "foo/bar",
-    },
+      hostname: "the_host",
+      port: "9988",
+      pathname: "foo/bar",
+    } as URL,
     "baz"
   )
   expect(uri).toBe("http://the_host:9988/foo/bar/baz")
@@ -96,10 +82,10 @@ test("builds HTTPS URI correctly", () => {
   location.href = "https://something"
   const uri = buildHttpUri(
     {
-      host: "the_host",
-      port: 9988,
-      basePath: "foo/bar",
-    },
+      hostname: "the_host",
+      port: "9988",
+      pathname: "foo/bar",
+    } as URL,
     "baz"
   )
   expect(uri).toBe("https://the_host:9988/foo/bar/baz")
@@ -109,10 +95,10 @@ test("builds HTTP URI with no base path", () => {
   location.href = "http://something"
   const uri = buildHttpUri(
     {
-      host: "the_host",
-      port: 9988,
-      basePath: "",
-    },
+      hostname: "the_host",
+      port: "9988",
+      pathname: "",
+    } as URL,
     "baz"
   )
   expect(uri).toBe("http://the_host:9988/baz")
@@ -122,10 +108,10 @@ test("builds WS URI correctly", () => {
   location.href = "http://something"
   const uri = buildWsUri(
     {
-      host: "the_host",
-      port: 9988,
-      basePath: "foo/bar",
-    },
+      hostname: "the_host",
+      port: "9988",
+      pathname: "foo/bar",
+    } as URL,
     "baz"
   )
   expect(uri).toBe("ws://the_host:9988/foo/bar/baz")
@@ -135,10 +121,10 @@ test("builds WSS URI correctly", () => {
   location.href = "https://something"
   const uri = buildWsUri(
     {
-      host: "the_host",
-      port: 9988,
-      basePath: "foo/bar",
-    },
+      hostname: "the_host",
+      port: "9988",
+      pathname: "foo/bar",
+    } as URL,
     "baz"
   )
   expect(uri).toBe("wss://the_host:9988/foo/bar/baz")
@@ -148,10 +134,10 @@ test("builds WS URI with no base path", () => {
   location.href = "http://something"
   const uri = buildWsUri(
     {
-      host: "the_host",
-      port: 9988,
-      basePath: "",
-    },
+      hostname: "the_host",
+      port: "9988",
+      pathname: "",
+    } as URL,
     "baz"
   )
   expect(uri).toBe("ws://the_host:9988/baz")
@@ -473,31 +459,31 @@ describe("getPossibleBaseUris", () => {
   const testCases = [
     {
       description: "empty pathnames",
-      pathname: "",
-      expectedBasePaths: [""],
+      pathname: "/",
+      expectedBasePaths: ["/"],
     },
     {
       description: "pathnames with a single part",
-      pathname: "foo",
-      expectedBasePaths: ["foo", ""],
+      pathname: "/foo",
+      expectedBasePaths: ["/foo", "/"],
     },
     {
       description: "pathnames with two parts",
-      pathname: "foo/bar",
-      expectedBasePaths: ["foo/bar", "foo"],
+      pathname: "/foo/bar",
+      expectedBasePaths: ["/foo/bar", "/foo"],
     },
     {
       description: "pathnames with more than two parts",
-      pathname: "foo/bar/baz/qux",
-      expectedBasePaths: ["foo/bar/baz/qux", "foo/bar/baz"],
+      pathname: "/foo/bar/baz/qux",
+      expectedBasePaths: ["/foo/bar/baz/qux", "/foo/bar/baz"],
     },
   ]
 
   testCases.forEach(({ description, pathname, expectedBasePaths }) => {
     it(`handles ${description}`, () => {
-      window.location.pathname = pathname
+      window.location.href = `https://not_a_host:80${pathname}`
 
-      expect(getPossibleBaseUris().map(b => b.basePath)).toEqual(
+      expect(getPossibleBaseUris().map(b => b.pathname)).toEqual(
         expectedBasePaths
       )
     })

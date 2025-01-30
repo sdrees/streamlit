@@ -98,10 +98,10 @@ vi.mock("@streamlit/app/src/connection/ConnectionManager", async () => {
       incrementMessageCacheRunCount: vi.fn(),
       getBaseUriParts() {
         return {
-          basePath: "",
-          host: "",
-          port: 8501,
-        }
+          pathname: "/",
+          hostname: "",
+          port: "8501",
+        } as URL
       },
     }
   })
@@ -1268,10 +1268,10 @@ describe("App", () => {
           getMockConnectionManager(),
           "getBaseUriParts"
         ).mockReturnValue({
-          basePath: "foo",
-          host: "",
-          port: 8501,
-        })
+          pathname: "/foo",
+          hostname: "",
+          port: "8501",
+        } as URL)
 
         sendForwardMessage("newSession", {
           ...NEW_SESSION_JSON,
@@ -1791,10 +1791,10 @@ describe("App", () => {
       const connectionManager = getMockConnectionManager()
 
       vi.spyOn(connectionManager, "getBaseUriParts").mockReturnValue({
-        basePath: "foo/bar",
-        host: "",
-        port: 8501,
-      })
+        pathname: "/foo/bar",
+        hostname: "",
+        port: "8501",
+      } as URL)
 
       window.history.pushState({}, "", "/foo/bar/baz")
       widgetStateManager.sendUpdateWidgetsMessage(undefined)

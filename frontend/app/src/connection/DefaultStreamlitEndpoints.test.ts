@@ -17,16 +17,16 @@
 import axios from "axios"
 import MockAdapter from "axios-mock-adapter"
 
-import { BaseUriParts, buildHttpUri } from "@streamlit/lib"
+import { buildHttpUri } from "@streamlit/lib"
 import { ForwardMsg } from "@streamlit/protobuf"
 
 import { DefaultStreamlitEndpoints } from "./DefaultStreamlitEndpoints"
 
 const MOCK_SERVER_URI = {
-  host: "streamlit.mock",
-  port: 80,
-  basePath: "mock/base/path",
-}
+  hostname: "streamlit.mock",
+  port: "80",
+  pathname: "/mock/base/path",
+} as URL
 
 function createMockForwardMsg(hash: string, cacheable = true): ForwardMsg {
   return ForwardMsg.fromObject({
@@ -55,7 +55,7 @@ describe("DefaultStreamlitEndpoints", () => {
   describe("buildComponentURL()", () => {
     it("errors if no serverURI", () => {
       // If we never connect to a server, getComponentURL will fail:
-      let serverURI: BaseUriParts | undefined
+      let serverURI: URL | undefined
       const endpoint = new DefaultStreamlitEndpoints({
         getServerUri: () => serverURI,
         csrfEnabled: true,
@@ -64,7 +64,7 @@ describe("DefaultStreamlitEndpoints", () => {
     })
 
     it("uses current or cached serverURI if present", () => {
-      let serverURI: BaseUriParts | undefined
+      let serverURI: URL | undefined
       const endpoint = new DefaultStreamlitEndpoints({
         getServerUri: () => serverURI,
         csrfEnabled: true,

@@ -18,7 +18,6 @@ import { ReactNode } from "react"
 import { getLogger } from "loglevel"
 
 import {
-  BaseUriParts,
   getPossibleBaseUris,
   IHostConfigResponse,
   StreamlitEndpoints,
@@ -109,7 +108,7 @@ export class ConnectionManager {
    * Return the BaseUriParts for the server we're connected to,
    * if we are connected to a server.
    */
-  public getBaseUriParts(): BaseUriParts | undefined {
+  public getBaseUriParts(): URL | undefined {
     if (this.websocketConnection instanceof WebsocketConnection) {
       return this.websocketConnection.getBaseUriParts()
     }

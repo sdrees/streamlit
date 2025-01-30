@@ -122,7 +122,6 @@ export {
   getPossibleBaseUris,
   makePath,
 } from "./util/UriUtil"
-export type { BaseUriParts } from "./util/UriUtil"
 export {
   extractPageNameFromPathName,
   generateUID,

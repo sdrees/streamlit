@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import {
-  ForwardMsgList,
-  localStorageAvailable,
-  logError,
-  StreamlitEndpoints,
-} from "@streamlit/lib"
+import { getLogger } from "loglevel"
+
+import { localStorageAvailable, StreamlitEndpoints } from "@streamlit/lib"
+import { ForwardMsgList } from "@streamlit/protobuf"
 
 import { ConnectionState } from "./ConnectionState"
 
 // TODO: Change this to a stable location and eventually make it configurable
 // Holds url for static asset location
 export const STATIC_ASSET_CONFIG = "https://data.streamlit.io/static.json"
+export const log = getLogger("StaticConnection")
 
 type OnMessage = (ForwardMsg: any) => void
 type OnConnectionStateChange = (
@@ -54,7 +53,7 @@ export async function getStaticConfig(): Promise<string> {
     })
 
     if (!response.ok) {
-      logError("Failed to fetch static config url: ", response.status)
+      log.error("Failed to fetch static config url: ", response.status)
     } else {
       const config = await response.json()
       staticConfigUrl = config.static_url ?? undefined
@@ -65,7 +64,7 @@ export async function getStaticConfig(): Promise<string> {
       }
     }
   } catch (err) {
-    logError("Failed to fetch static config url:", err)
+    log.error("Failed to fetch static config url:", err)
   }
 
   return staticConfigUrl
@@ -85,7 +84,7 @@ export async function getProtoResponse(
   })
 
   if (!response.ok) {
-    logError(
+    log.error(
       `Failed to fetch static app protos for id: ${staticAppId}`,
       response.status
     )
@@ -107,7 +106,7 @@ export async function dispatchAppForwardMessages(
   const arrayBuffer = await getProtoResponse(staticAppId, staticConfigUrl)
 
   if (!arrayBuffer) {
-    logError("Failed to retrieve static app protos")
+    log.error("Failed to retrieve static app protos")
     onConnectionError(
       `Failed to retrieve static app protos. Please confirm the id is correct and try again. Given static app id: ${staticAppId}`
     )

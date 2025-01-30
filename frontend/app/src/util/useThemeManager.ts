@@ -22,15 +22,14 @@ import {
   createPresetThemes,
   createTheme,
   CUSTOM_THEME_NAME,
-  CustomThemeConfig,
   getDefaultTheme,
   getHostSpecifiedTheme,
-  ICustomThemeConfig,
   isPresetTheme,
   removeCachedTheme,
   setCachedTheme,
   ThemeConfig,
 } from "@streamlit/lib"
+import { CustomThemeConfig, ICustomThemeConfig } from "@streamlit/protobuf"
 
 export interface ThemeManager {
   activeTheme: ThemeConfig

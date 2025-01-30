@@ -18,7 +18,6 @@ import React, { CSSProperties, ReactElement, ReactNode } from "react"
 
 import {
   BaseButtonKind,
-  IException,
   Modal,
   ModalBody,
   ModalButton,
@@ -28,6 +27,7 @@ import {
   StreamlitMarkdown,
   StreamlitSyntaxHighlighter,
 } from "@streamlit/lib"
+import { IException } from "@streamlit/protobuf"
 import { STREAMLIT_HOME_URL } from "@streamlit/app/src/urls"
 import { DialogType } from "@streamlit/app/src/components/StreamlitDialog/constants"
 

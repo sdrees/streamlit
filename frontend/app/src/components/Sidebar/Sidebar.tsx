@@ -24,16 +24,14 @@ import {
   BaseButton,
   BaseButtonKind,
   EmotionTheme,
-  IAppPage,
   Icon,
   isColoredLineDisplayed,
   isEmbed,
   IsSidebarContext,
   localStorageAvailable,
-  Logo,
-  PageConfig,
   StreamlitEndpoints,
 } from "@streamlit/lib"
+import { IAppPage, Logo, PageConfig } from "@streamlit/protobuf"
 
 import {
   RESIZE_HANDLE_WIDTH,

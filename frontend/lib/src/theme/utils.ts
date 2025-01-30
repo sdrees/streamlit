@@ -21,6 +21,7 @@ import cloneDeep from "lodash/cloneDeep"
 import isObject from "lodash/isObject"
 import merge from "lodash/merge"
 import once from "lodash/once"
+import { getLogger } from "loglevel"
 
 import { CustomThemeConfig, ICustomThemeConfig } from "@streamlit/protobuf"
 
@@ -33,7 +34,6 @@ import {
   ThemeConfig,
   ThemeSpacing,
 } from "~lib/theme"
-import { logError } from "~lib/util/log"
 import { localStorageAvailable, LocalStore } from "~lib/util/storageUtils"
 import {
   isDarkThemeInQueryParams,
@@ -71,6 +71,7 @@ declare global {
     >
   }
 }
+const log = getLogger("theme:utils")
 
 function mergeTheme(
   theme: ThemeConfig,
@@ -466,7 +467,7 @@ export function computeSpacingStyle(
       }
 
       if (!(marginValue in theme.spacing)) {
-        logError(`Invalid spacing value: ${marginValue}`)
+        log.error(`Invalid spacing value: ${marginValue}`)
         return theme.spacing.none
       }
 

@@ -457,6 +457,11 @@ describe("getLoadingScreenType", () => {
 
   describe("preserveEmbedQueryParams", () => {
     let prevWindowLocation: Location
+
+    beforeEach(() => {
+      prevWindowLocation = window.location
+    })
+
     afterEach(() => {
       window.location = prevWindowLocation
     })

@@ -16,7 +16,7 @@
 
 import React from "react"
 
-import { Mock } from "vitest"
+import { Mock, MockInstance } from "vitest"
 import { act, fireEvent, screen } from "@testing-library/react"
 
 import {
@@ -28,7 +28,6 @@ import {
   DEFAULT_IFRAME_FEATURE_POLICY,
   DEFAULT_IFRAME_SANDBOX_POLICY,
 } from "~lib/util/IFrameUtil"
-import { logWarning } from "~lib/util/log"
 import { buildHttpUri } from "~lib/util/UriUtil"
 import { WidgetStateManager } from "~lib/WidgetStateManager"
 import { bgColorToBaseString, toExportedTheme } from "~lib/theme"
@@ -40,12 +39,12 @@ import { render } from "~lib/test_util"
 import ComponentInstance, {
   COMPONENT_READY_WARNING_TIME_MS,
 } from "./ComponentInstance"
-import { CUSTOM_COMPONENT_API_VERSION } from "./componentUtils"
+import {
+  log as componentUtilsLog,
+  CUSTOM_COMPONENT_API_VERSION,
+} from "./componentUtils"
 import { ComponentRegistry } from "./ComponentRegistry"
 import { ComponentMessageType, StreamlitMessageType } from "./enums"
-
-// Mock log functions.
-vi.mock("~lib/util/log")
 
 // We have some timeouts that we want to use fake timers for.
 vi.useFakeTimers()
@@ -63,6 +62,7 @@ const MOCK_WIDGET_ID = "mock_widget_id"
 const MOCK_COMPONENT_NAME = "mock_component_name"
 
 describe("ComponentInstance", () => {
+  let logWarnSpy: MockInstance
   const getComponentRegistry = (): ComponentRegistry => {
     return new ComponentRegistry(mockEndpoints())
   }
@@ -72,8 +72,9 @@ describe("ComponentInstance", () => {
     const mockWidgetStateManager = WidgetStateManager as unknown as Mock
     mockWidgetStateManager.mockClear()
 
-    const mockLog = logWarning as Mock
-    mockLog.mockClear()
+    logWarnSpy = vi
+      .spyOn(componentUtilsLog, "warn")
+      .mockImplementation(() => {})
   })
 
   it("registers a message listener on render", () => {
@@ -720,7 +721,7 @@ describe("ComponentInstance", () => {
       const widgetMgr = (WidgetStateManager as any).mock.instances[0]
       expect(widgetMgr.setJsonValue).not.toHaveBeenCalled()
 
-      expect(logWarning).toHaveBeenCalledWith(
+      expect(logWarnSpy).toHaveBeenCalledWith(
         `Got ${ComponentMessageType.SET_COMPONENT_VALUE} before ${ComponentMessageType.COMPONENT_READY}!`
       )
     })
@@ -822,7 +823,7 @@ describe("ComponentInstance", () => {
         const widgetMgr = (WidgetStateManager as any).mock.instances[0]
         expect(widgetMgr.setJsonValue).not.toHaveBeenCalled()
 
-        expect(logWarning).toHaveBeenCalledWith(
+        expect(logWarnSpy).toHaveBeenCalledWith(
           `Got ${ComponentMessageType.SET_FRAME_HEIGHT} before ${ComponentMessageType.COMPONENT_READY}!`
         )
       })

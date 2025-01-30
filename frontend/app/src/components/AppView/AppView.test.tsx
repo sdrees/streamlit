@@ -21,22 +21,24 @@ import { screen, within } from "@testing-library/react"
 import {
   AppRoot,
   BlockNode,
-  Block as BlockProto,
   ComponentRegistry,
   createFormsData,
-  Element,
   ElementNode,
   FileUploadClient,
-  ForwardMsgMetadata,
-  Logo as LogoProto,
   makeElementWithInfoText,
   mockEndpoints,
   mockSessionInfo,
-  PageConfig,
   render,
   ScriptRunState,
   WidgetStateManager,
 } from "@streamlit/lib"
+import {
+  Block as BlockProto,
+  Element,
+  ForwardMsgMetadata,
+  Logo as LogoProto,
+  PageConfig,
+} from "@streamlit/protobuf"
 import {
   AppContext,
   Props as AppContextProps,

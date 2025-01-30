@@ -17,6 +17,7 @@
 import React, { ReactElement, useEffect, useRef, useState } from "react"
 
 import { withTheme } from "@emotion/react"
+import { getLogger } from "loglevel"
 import queryString from "query-string"
 
 import {
@@ -35,7 +36,6 @@ import {
   DEFAULT_IFRAME_FEATURE_POLICY,
   DEFAULT_IFRAME_SANDBOX_POLICY,
 } from "~lib/util/IFrameUtil"
-import { logWarning } from "~lib/util/log"
 import { WidgetStateManager } from "~lib/WidgetStateManager"
 import { COMMUNITY_URL, COMPONENT_DEVELOPER_URL } from "~lib/urls"
 import { ensureError } from "~lib/util/ErrorHandling"
@@ -52,6 +52,7 @@ import {
 } from "./componentUtils"
 import { StyledComponentIframe } from "./styled-components"
 
+const log = getLogger("ComponentInstance")
 /**
  * If we haven't received a COMPONENT_READY message this many seconds
  * after the component has been created, explain to the user that there
@@ -220,7 +221,7 @@ function ComponentInstance(props: Props): ReactElement {
 
   // Show a log in the console as a soft-warning to the developer before showing the more disrupting warning element
   const clearTimeoutLog = useTimeout(
-    () => logWarning(getWarnMessage(componentName, url)),
+    () => log.warn(getWarnMessage(componentName, url)),
     COMPONENT_READY_WARNING_TIME_MS / 4
   )
   const clearTimeoutWarningElement = useTimeout(
@@ -246,7 +247,7 @@ function ComponentInstance(props: Props): ReactElement {
   useEffect(() => {
     const handleSetFrameHeight = (height: number | undefined): void => {
       if (height === undefined) {
-        logWarning(`handleSetFrameHeight: missing 'height' prop`)
+        log.warn(`handleSetFrameHeight: missing 'height' prop`)
         return
       }
 
@@ -257,7 +258,7 @@ function ComponentInstance(props: Props): ReactElement {
 
       if (isNullOrUndefined(iframeRef.current)) {
         // This should not be possible.
-        logWarning(`handleSetFrameHeight: missing our iframeRef!`)
+        log.warn(`handleSetFrameHeight: missing our iframeRef!`)
         return
       }
 

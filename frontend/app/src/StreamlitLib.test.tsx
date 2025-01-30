@@ -24,19 +24,21 @@ import {
   AppRoot,
   ComponentRegistry,
   createFormsData,
-  Delta as DeltaProto,
-  Element as ElementProto,
   FileUploadClient,
   FormsData,
-  ForwardMsgMetadata as ForwardMsgMetadataProto,
   render,
   ScriptRunState,
   SessionInfo,
   StreamlitEndpoints,
-  Text as TextProto,
   VerticalBlock,
   WidgetStateManager,
 } from "@streamlit/lib"
+import {
+  Delta as DeltaProto,
+  Element as ElementProto,
+  ForwardMsgMetadata as ForwardMsgMetadataProto,
+  Text as TextProto,
+} from "@streamlit/protobuf"
 
 /**
  * Example StreamlitEndpoints implementation.

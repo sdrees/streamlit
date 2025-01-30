@@ -17,15 +17,15 @@
 
 import { MockInstance } from "vitest"
 
+import { HostCommunicationManager } from "@streamlit/lib"
 import {
   AppPage,
-  HostCommunicationManager,
   Navigation,
   NewSession,
   PageConfig,
   PageNotFound,
   PagesChanged,
-} from "@streamlit/lib"
+} from "@streamlit/protobuf"
 
 import {
   AppNavigation,

@@ -17,8 +17,9 @@
 import React, { ComponentType, PureComponent, ReactNode } from "react"
 
 import hoistNonReactStatics from "hoist-non-react-statics"
+import { getLogger } from "loglevel"
 
-import { isNullOrUndefined, logWarning } from "@streamlit/lib"
+import { isNullOrUndefined } from "@streamlit/lib"
 import ScreenCastRecorder from "@streamlit/app/src/util/ScreenCastRecorder"
 import {
   ScreencastDialog,
@@ -56,6 +57,8 @@ interface InjectedProps {
 
 type WrappedProps<P extends InjectedProps> = Omit<P, "screenCast">
 
+const log = getLogger("withScreencast")
+
 function withScreencast<P extends InjectedProps>(
   WrappedComponent: ComponentType<React.PropsWithChildren<P>>
 ): ComponentType<React.PropsWithChildren<WrappedProps<P>>> {
@@ -92,7 +95,7 @@ function withScreencast<P extends InjectedProps>(
         })
       } else {
         this.stopRecording().catch(err =>
-          logWarning(`withScreencast.stopRecording threw an error: ${err}`)
+          log.warn(`withScreencast.stopRecording threw an error: ${err}`)
         )
       }
     }
@@ -108,7 +111,7 @@ function withScreencast<P extends InjectedProps>(
       try {
         await this.recorder.initialize()
       } catch (e) {
-        logWarning(`ScreenCastRecorder.initialize error: ${e}`)
+        log.warn(`ScreenCastRecorder.initialize error: ${e}`)
         this.setState({ currentState: "UNSUPPORTED" })
         return
       }
@@ -160,7 +163,7 @@ function withScreencast<P extends InjectedProps>(
         })
       } else {
         this.stopRecording().catch(err =>
-          logWarning(`withScreencast.stopRecording threw an error: ${err}`)
+          log.warn(`withScreencast.stopRecording threw an error: ${err}`)
         )
       }
     }

@@ -21,47 +21,34 @@ import Hotkeys from "react-hot-keys"
 import { enableAllPlugins as enableImmerPlugins } from "immer"
 import classNames from "classnames"
 import without from "lodash/without"
+import { getLogger } from "loglevel"
 
 import {
   AppConfig,
   AppRoot,
-  AuthRedirect,
-  AutoRerun,
-  BackMsg,
   BaseUriParts,
   CircularBuffer,
   ComponentRegistry,
-  Config,
   createFormsData,
   createPresetThemes,
   createTheme,
   CUSTOM_THEME_NAME,
-  CustomThemeConfig,
-  Delta,
   DeployedAppMetadata,
   ensureError,
   extractPageNameFromPathName,
   FileUploadClient,
-  FileURLsResponse,
   FormsData,
-  ForwardMsg,
-  ForwardMsgMetadata,
   generateUID,
   getCachedTheme,
   getElementId,
   getEmbeddingIdClassName,
   getHostSpecifiedTheme,
   getIFrameEnclosingApp,
-  GitInfo,
   handleFavicon,
   hashString,
   HostCommunicationManager,
-  IAppPage,
-  ICustomThemeConfig,
-  IGitInfo,
   IHostConfigResponse,
   IMenuItem,
-  Initialize,
   isColoredLineDisplayed,
   isEmbed,
   isInChildFrame,
@@ -73,35 +60,49 @@ import {
   IToolbarItem,
   LibConfig,
   LibContext,
-  logError,
-  logMessage,
-  Logo,
   mark,
   measure,
-  Navigation,
-  NewSession,
   notNullOrUndefined,
   notUndefined,
+  PerformanceEvents,
+  preserveEmbedQueryParams,
+  PresetThemeName,
+  ScriptRunState,
+  SessionInfo,
+  StreamlitEndpoints,
+  ThemeConfig,
+  toExportedTheme,
+  toThemeInput,
+  WidgetStateManager,
+} from "@streamlit/lib"
+import {
+  AuthRedirect,
+  AutoRerun,
+  BackMsg,
+  Config,
+  CustomThemeConfig,
+  Delta,
+  FileURLsResponse,
+  ForwardMsg,
+  ForwardMsgMetadata,
+  GitInfo,
+  IAppPage,
+  ICustomThemeConfig,
+  IGitInfo,
+  Initialize,
+  Logo,
+  Navigation,
+  NewSession,
   PageConfig,
   PageInfo,
   PageNotFound,
   PageProfile,
   PagesChanged,
   ParentMessage,
-  PerformanceEvents,
-  preserveEmbedQueryParams,
-  PresetThemeName,
-  ScriptRunState,
   SessionEvent,
-  SessionInfo,
   SessionStatus,
-  StreamlitEndpoints,
-  ThemeConfig,
-  toExportedTheme,
-  toThemeInput,
-  WidgetStateManager,
   WidgetStates,
-} from "@streamlit/lib"
+} from "@streamlit/protobuf"
 import getBrowserInfo from "@streamlit/app/src/util/getBrowserInfo"
 import { isLocalhost } from "@streamlit/app/src/util/deploymentInfo"
 import { AppContext } from "@streamlit/app/src/components/AppContext"
@@ -195,6 +196,8 @@ interface State {
 const ELEMENT_LIST_BUFFER_TIMEOUT_MS = 10
 
 const INITIAL_SCRIPT_RUN_ID = "<null>"
+
+export const log = getLogger("App")
 
 // eslint-disable-next-line
 declare global {
@@ -549,7 +552,7 @@ export class App extends PureComponent<Props, State> {
   }
 
   showError(title: string, errorNode: ReactNode): void {
-    logError(errorNode)
+    log.error(errorNode)
     const newDialog: DialogProps = {
       type: DialogType.WARNING,
       title,
@@ -622,12 +625,12 @@ export class App extends PureComponent<Props, State> {
    * Called by ConnectionManager when our connection state changes
    */
   handleConnectionStateChanged = (newState: ConnectionState): void => {
-    logMessage(
+    log.info(
       `Connection state changed from ${this.state.connectionState} to ${newState}`
     )
 
     if (newState === ConnectionState.CONNECTED) {
-      logMessage("Reconnected to server.")
+      log.info("Reconnected to server.")
 
       const lastRunWasInterrupted =
         this.state.scriptRunState === ScriptRunState.RERUN_REQUESTED ||
@@ -639,7 +642,7 @@ export class App extends PureComponent<Props, State> {
       //   2. our last script run attempt was interrupted by the websocket
       //      connection dropping.
       if (!this.sessionInfo.last || lastRunWasInterrupted) {
-        logMessage("Requesting a script run.")
+        log.info("Requesting a script run.")
         this.widgetMgr.sendUpdateWidgetsMessage(undefined)
         this.setState({ dialog: null })
       }
@@ -679,7 +682,7 @@ export class App extends PureComponent<Props, State> {
         message: parentMessage.message,
       })
     } else {
-      logError(
+      log.error(
         "Sending messages to the host is disabled in line with the platform policy."
       )
     }
@@ -748,7 +751,7 @@ export class App extends PureComponent<Props, State> {
       })
     } catch (e) {
       const err = ensureError(e)
-      logError(err)
+      log.error(err)
       this.showError("Bad message format", err.message)
     }
   }
@@ -1412,7 +1415,7 @@ export class App extends PureComponent<Props, State> {
     this.closeDialog()
 
     if (!this.isServerConnected()) {
-      logError("Cannot rerun script when disconnected from server.")
+      log.error("Cannot rerun script when disconnected from server.")
       return
     }
 
@@ -1441,7 +1444,7 @@ export class App extends PureComponent<Props, State> {
 
   sendLoadGitInfoBackMsg = (): void => {
     if (!this.isServerConnected()) {
-      logError("Cannot load git information when disconnected from server.")
+      log.error("Cannot load git information when disconnected from server.")
       return
     }
 
@@ -1502,7 +1505,7 @@ export class App extends PureComponent<Props, State> {
       // websocket connection to the server (in which case
       // connectionManager.getBaseUriParts() returns undefined), we can't send a
       // rerun backMessage so just return early.
-      logError("Cannot send rerun backMessage when disconnected from server.")
+      log.error("Cannot send rerun backMessage when disconnected from server.")
       return
     }
 
@@ -1562,7 +1565,7 @@ export class App extends PureComponent<Props, State> {
   /** Requests that the server stop running the script */
   stopScript = (): void => {
     if (!this.isServerConnected()) {
-      logError("Cannot stop app when disconnected from server.")
+      log.error("Cannot stop app when disconnected from server.")
       return
     }
 
@@ -1594,7 +1597,7 @@ export class App extends PureComponent<Props, State> {
       // This will be called if enter is pressed.
       this.openDialog(newDialog)
     } else {
-      logError("Cannot clear cache: disconnected from server")
+      log.error("Cannot clear cache: disconnected from server")
     }
   }
 
@@ -1636,7 +1639,7 @@ export class App extends PureComponent<Props, State> {
       backMsg.type = "clearCache"
       this.sendBackMsg(backMsg)
     } else {
-      logError("Cannot clear cache: disconnected from server")
+      log.error("Cannot clear cache: disconnected from server")
     }
   }
 
@@ -1649,7 +1652,7 @@ export class App extends PureComponent<Props, State> {
       backMsg.type = "appHeartbeat"
       this.sendBackMsg(backMsg)
     } else {
-      logError("Cannot send app heartbeat: disconnected from server")
+      log.error("Cannot send app heartbeat: disconnected from server")
     }
   }
 
@@ -1658,10 +1661,10 @@ export class App extends PureComponent<Props, State> {
    */
   private sendBackMsg = (msg: BackMsg): void => {
     if (this.connectionManager) {
-      logMessage(msg)
+      log.info(msg)
       this.connectionManager.sendMessage(msg)
     } else {
-      logError(`Not connected. Cannot send back message: ${msg}`)
+      log.error(`Not connected. Cannot send back message: ${msg}`)
     }
   }
 

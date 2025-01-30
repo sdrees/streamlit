@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Config } from "@streamlit/lib"
+import { Config } from "@streamlit/protobuf"
 import { isLocalhost } from "@streamlit/app/src/util/deploymentInfo"
 
 export const showDevelopmentOptions = (

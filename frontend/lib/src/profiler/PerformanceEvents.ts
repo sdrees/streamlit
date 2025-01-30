@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { logMessage } from "~lib/util/log"
+import { getLogger } from "loglevel"
+
 import { getRerunAnalysis } from "~lib/profiler/RerunAnalyzer"
 import { ScriptRunState } from "~lib/ScriptRunState"
 
@@ -58,6 +59,8 @@ export type HandleMessageEvent =
 
 export type PerformanceEvent = RequestedRerunEvent | HandleMessageEvent
 
+const log = getLogger("PerformanceEvents")
+
 /** Simple utility for capturing time samples. */
 export class PerformanceEvents {
   /** Set this to true to capture PerformanceEvents. */
@@ -77,7 +80,7 @@ export class PerformanceEvents {
       event.name === "DispatchedMessage" &&
       event.messageType === "scriptFinished"
     ) {
-      logMessage("Rerun results", getRerunAnalysis(this.events))
+      log.info("Rerun results", getRerunAnalysis(this.events))
       this.events = []
     }
   }

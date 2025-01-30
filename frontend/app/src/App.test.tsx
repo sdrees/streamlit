@@ -27,18 +27,30 @@ import {
 import cloneDeep from "lodash/cloneDeep"
 
 import {
-  Config,
   CUSTOM_THEME_NAME,
-  CustomThemeConfig,
-  Delta,
-  Element,
   FileUploadClient,
-  ForwardMsg,
-  ForwardMsgMetadata,
   getDefaultTheme,
   getHostSpecifiedTheme,
   HOST_COMM_VERSION,
   HostCommunicationManager,
+  lightTheme,
+  LocalStore,
+  mockEndpoints,
+  mockSessionInfoProps,
+  mockWindowLocation,
+  RootStyleProvider,
+  ScriptRunState,
+  SessionInfo,
+  toExportedTheme,
+  WidgetStateManager,
+} from "@streamlit/lib"
+import {
+  Config,
+  CustomThemeConfig,
+  Delta,
+  Element,
+  ForwardMsg,
+  ForwardMsgMetadata,
   IAuthRedirect,
   IAutoRerun,
   ILogo,
@@ -49,21 +61,11 @@ import {
   IPageNotFound,
   IPagesChanged,
   IParentMessage,
-  lightTheme,
-  LocalStore,
-  mockEndpoints,
-  mockSessionInfoProps,
-  mockWindowLocation,
   PagesChanged,
-  RootStyleProvider,
-  ScriptRunState,
   SessionEvent,
-  SessionInfo,
   SessionStatus,
   TextInput,
-  toExportedTheme,
-  WidgetStateManager,
-} from "@streamlit/lib"
+} from "@streamlit/protobuf"
 import { MetricsManager } from "@streamlit/app/src/MetricsManager"
 import { ConnectionManager } from "@streamlit/app/src/connection/ConnectionManager"
 import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
@@ -73,7 +75,7 @@ import {
 } from "@streamlit/app/src/components/MainMenu/mainMenuTestHelpers"
 
 import { showDevelopmentOptions } from "./showDevelopmentOptions"
-import { App, Props } from "./App"
+import { App, log, Props } from "./App"
 
 vi.mock("~lib/baseconsts", async () => {
   return {
@@ -3230,9 +3232,7 @@ describe("App", () => {
     it("does not relay custom parent messages by default", () => {
       const hostCommunicationMgr = prepareHostCommunicationManager()
 
-      const logErrorSpy = vi
-        .spyOn(global.console, "error")
-        .mockImplementation(() => {})
+      const logErrorSpy = vi.spyOn(log, "error").mockImplementation(() => {})
 
       sendForwardMessage("parentMessage", {
         message: "random string",

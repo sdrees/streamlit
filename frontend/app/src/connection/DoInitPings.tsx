@@ -23,11 +23,11 @@
 import React, { Fragment } from "react"
 
 import axios from "axios"
+import { getLogger } from "loglevel"
 
 import {
   CORS_ERROR_MESSAGE_DOCUMENTATION_LINK,
   HOST_CONFIG_PATH,
-  LOG,
   PING_TIMEOUT_MS,
   SERVER_PING_PATH,
 } from "@streamlit/app/src/connection/constants"
@@ -36,10 +36,11 @@ import {
   BaseUriParts,
   buildHttpUri,
   IHostConfigResponse,
-  logMessage,
   Resolver,
   StreamlitMarkdown,
 } from "@streamlit/lib"
+
+const log = getLogger("DoInitPings")
 
 export function doInitPings(
   uriPartsList: BaseUriParts[],
@@ -116,7 +117,7 @@ streamlit run yourscript.py
     const healthzUri = buildHttpUri(uriParts, SERVER_PING_PATH)
     const hostConfigUri = buildHttpUri(uriParts, HOST_CONFIG_PATH)
 
-    logMessage(LOG, `Attempting to connect to ${healthzUri}.`)
+    log.info(`Attempting to connect to ${healthzUri}.`)
 
     if (uriNumber === 0) {
       totalTries++

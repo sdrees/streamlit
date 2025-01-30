@@ -15,7 +15,9 @@
  */
 // code in this file was adapted from recorder.js library
 
-import { logError } from "~lib/util/log"
+import { getLogger } from "loglevel"
+
+const log = getLogger("convertAudioToWav")
 
 /**
  * Converts a file Blob (audio/video) to a WAV Blob.
@@ -30,7 +32,7 @@ async function convertFileToWav(fileBlob: Blob): Promise<Blob | undefined> {
   try {
     audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
   } catch (error) {
-    logError(error)
+    log.error(error)
     return undefined // Return undefined if decoding fails
   }
 

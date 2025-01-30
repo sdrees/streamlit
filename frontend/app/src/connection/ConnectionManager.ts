@@ -162,7 +162,8 @@ export class ConnectionManager {
         staticAppId,
         this.setConnectionState,
         this.props.onMessage,
-        this.props.onConnectionError
+        this.props.onConnectionError,
+        this.props.endpoints
       )
       // Static apps are not connected to server, so saving the
       // connection is unnecessary.

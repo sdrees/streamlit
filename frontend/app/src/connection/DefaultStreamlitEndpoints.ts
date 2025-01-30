@@ -47,9 +47,16 @@ export class DefaultStreamlitEndpoints implements StreamlitEndpoints {
 
   private fileUploadClientConfig?: FileUploadClientConfig
 
+  private staticConfigUrl: string | null
+
   public constructor(props: Props) {
     this.getServerUri = props.getServerUri
     this.csrfEnabled = props.csrfEnabled
+    this.staticConfigUrl = null
+  }
+
+  public setStaticConfigUrl(url: string | null): void {
+    this.staticConfigUrl = url
   }
 
   public buildComponentURL(componentName: string, path: string): string {
@@ -70,14 +77,28 @@ export class DefaultStreamlitEndpoints implements StreamlitEndpoints {
   }
 
   /**
-   * Construct a URL for a media file. If the url is relative and starts with
-   * "/media", assume it's being served from Streamlit and construct it
-   * appropriately. Otherwise leave it alone.
+   * If we are using a static connection, return S3 URL for that file. Otherwise, return null.
+   */
+  private buildStaticUrl(file: string): string {
+    const queryParams = new URLSearchParams(document.location.search)
+    const staticAppId = queryParams.get("staticAppId")
+    return `${this.staticConfigUrl}/${staticAppId}${file}`
+  }
+
+  /**
+   * Construct a URL for a media file. If the `staticConfigUrl` is set, we have a static app
+   * and will serve media from S3. If the url is relative and starts with  "/media",
+   * assume it's being served from Streamlit and construct it appropriately.
+   * Otherwise leave it alone.
    */
   public buildMediaURL(url: string): string {
-    return url.startsWith(MEDIA_ENDPOINT)
-      ? buildHttpUri(this.requireServerUri(), url)
-      : url
+    if (this.staticConfigUrl && url.startsWith(MEDIA_ENDPOINT)) {
+      return this.buildStaticUrl(url)
+    }
+    if (url.startsWith(MEDIA_ENDPOINT)) {
+      return buildHttpUri(this.requireServerUri(), url)
+    }
+    return url
   }
 
   /**

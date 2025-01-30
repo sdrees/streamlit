@@ -57,6 +57,7 @@ declare global {
     __streamlit?: {
       LIGHT_THEME: ICustomThemeConfig
       DARK_THEME: ICustomThemeConfig
+      ENABLE_RELOAD_BASED_ON_HARDCODED_STREAMLIT_VERSION?: boolean
     }
     __streamlit_profiles__?: Record<
       string,

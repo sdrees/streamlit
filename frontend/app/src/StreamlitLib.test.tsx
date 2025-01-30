@@ -42,6 +42,10 @@ import {
  * Example StreamlitEndpoints implementation.
  */
 class Endpoints implements StreamlitEndpoints {
+  public setStaticConfigUrl(url: string | null): void {
+    throw new Error("Unimplemented")
+  }
+
   public buildComponentURL(): string {
     throw new Error("Unimplemented")
   }

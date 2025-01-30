@@ -92,7 +92,7 @@
     "react-color": "^2.18.1",
     "react-debounce-render": "^8.0.2",
     "react-device-detect": "^2.2.2",
-    "react-dropzone": "^12.1.0",
+    "react-dropzone": "^14.3.5",
     "react-feather": "^2.0.10",
     "react-json-view": "^1.19.1",
     "react-map-gl": "^5.3.21",

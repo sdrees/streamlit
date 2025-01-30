@@ -18,6 +18,7 @@ import {
   ForwardMsgList,
   localStorageAvailable,
   logError,
+  StreamlitEndpoints,
 } from "@streamlit/lib"
 
 import { ConnectionState } from "./ConnectionState"
@@ -35,14 +36,14 @@ type OnConnectionStateChange = (
 // Fetches the static asset url from the config file
 export async function getStaticConfig(): Promise<string> {
   const isLocalStoreAvailable = localStorageAvailable()
-  let staticAssetUrl = ""
+  let staticConfigUrl = ""
 
   // Pull static asset url from localStorage if available
   if (isLocalStoreAvailable) {
-    const cachedStaticAssetUrl =
+    const cachedStaticConfigUrl =
       window.localStorage.getItem("stStaticAssetUrl")
-    if (cachedStaticAssetUrl) {
-      return cachedStaticAssetUrl
+    if (cachedStaticConfigUrl) {
+      return cachedStaticConfigUrl
     }
   }
 
@@ -56,43 +57,40 @@ export async function getStaticConfig(): Promise<string> {
       logError("Failed to fetch static config url: ", response.status)
     } else {
       const config = await response.json()
-      staticAssetUrl = config.static_url ?? undefined
+      staticConfigUrl = config.static_url ?? undefined
 
       // Set in localStorage
-      if (isLocalStoreAvailable && staticAssetUrl) {
-        window.localStorage.setItem("stStaticAssetUrl", staticAssetUrl)
+      if (isLocalStoreAvailable && staticConfigUrl) {
+        window.localStorage.setItem("stStaticAssetUrl", staticConfigUrl)
       }
     }
   } catch (err) {
     logError("Failed to fetch static config url:", err)
   }
 
-  return staticAssetUrl
+  return staticConfigUrl
 }
 
 // Fetches FowardMsg protos from S3 for static streamlit apps
 // First, gets the location of the static assets from url in the config
 // Then fetches the protos from that location
 export async function getProtoResponse(
-  staticAppId: string
+  staticAppId: string,
+  staticConfigUrl: string
 ): Promise<null | ArrayBuffer> {
-  const staticAssetURL = await getStaticConfig()
+  // Fetch the static app's protos with the given url
+  const path = `${staticConfigUrl}/${staticAppId}/protos.pb`
+  const response = await fetch(path, {
+    signal: AbortSignal.timeout(5000),
+  })
 
-  // Next, fetch the static app's protos (if we have a url)
-  if (staticAssetURL) {
-    const path = `${staticAssetURL}/${staticAppId}/protos.pb`
-    const response = await fetch(path, {
-      signal: AbortSignal.timeout(5000),
-    })
-
-    if (!response.ok) {
-      logError(
-        `Failed to fetch static app protos for id: ${staticAppId}`,
-        response.status
-      )
-    } else {
-      return response.arrayBuffer()
-    }
+  if (!response.ok) {
+    logError(
+      `Failed to fetch static app protos for id: ${staticAppId}`,
+      response.status
+    )
+  } else {
+    return response.arrayBuffer()
   }
 
   return null
@@ -102,10 +100,11 @@ export async function getProtoResponse(
 // by App.tsx's handleMessage, replicating the app
 export async function dispatchAppForwardMessages(
   staticAppId: string,
+  staticConfigUrl: string,
   onMessage: OnMessage,
   onConnectionError: (message: string) => void
 ): Promise<void> {
-  const arrayBuffer = await getProtoResponse(staticAppId)
+  const arrayBuffer = await getProtoResponse(staticAppId, staticConfigUrl)
 
   if (!arrayBuffer) {
     logError("Failed to retrieve static app protos")
@@ -124,17 +123,27 @@ export async function dispatchAppForwardMessages(
   })
 }
 
-export function establishStaticConnection(
+export async function establishStaticConnection(
   staticAppId: string,
   onConnectionStateChange: OnConnectionStateChange,
   onMessage: OnMessage,
-  onConnectionError: (message: string) => void
-): void {
+  onConnectionError: (message: string) => void,
+  endpoints: StreamlitEndpoints
+): Promise<void> {
   // Static notebooks are not connected to a server - put into connecting
   // state until assets fetched/loaded from S3
   onConnectionStateChange(ConnectionState.STATIC_CONNECTING)
 
-  dispatchAppForwardMessages(staticAppId, onMessage, onConnectionError)
+  // Fetch and set the static config url used for media
+  const staticConfigUrl = await getStaticConfig()
+  endpoints.setStaticConfigUrl(staticConfigUrl)
+
+  dispatchAppForwardMessages(
+    staticAppId,
+    staticConfigUrl,
+    onMessage,
+    onConnectionError
+  )
 
   // Once protos are fetched & dispatched, we are connected
   onConnectionStateChange(ConnectionState.STATIC_CONNECTED)

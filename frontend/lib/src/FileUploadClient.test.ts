@@ -36,6 +36,7 @@ describe("FileUploadClient Upload", () => {
     uploader = new FileUploadClient({
       sessionInfo: mockSessionInfo(),
       endpoints: {
+        setStaticConfigUrl: vi.fn(),
         buildComponentURL: vi.fn(),
         buildMediaURL: vi.fn(),
         buildFileUploadURL: vi.fn(),

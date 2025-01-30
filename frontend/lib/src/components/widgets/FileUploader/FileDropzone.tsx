@@ -16,7 +16,7 @@
 
 import React from "react"
 
-import Dropzone, { FileRejection } from "react-dropzone"
+import Dropzone, { Accept, FileRejection } from "react-dropzone"
 
 import BaseButton, {
   BaseButtonKind,
@@ -35,6 +35,17 @@ export interface Props {
   label: string
 }
 
+// Before we support official MIME types, using the custom "application/streamlit" as a wild card
+// to allow file types defined in acceptedExtensions.
+export const STREAMLIT_MIME_TYPE = "application/streamlit"
+
+function getAccept(acceptedExtensions: string[]): Accept | undefined {
+  // Remove mimetype when this component moves to functional
+  return acceptedExtensions.length
+    ? { STREAMLIT_MIME_TYPE: acceptedExtensions }
+    : undefined
+}
+
 const FileDropzone = ({
   onDrop,
   multiple,
@@ -46,7 +57,7 @@ const FileDropzone = ({
   <Dropzone
     onDrop={onDrop}
     multiple={multiple}
-    accept={acceptedExtensions.length ? acceptedExtensions : undefined}
+    accept={getAccept(acceptedExtensions)}
     maxSize={maxSizeBytes}
     disabled={disabled}
     // react-dropzone v12+ uses the File System Access API by default,

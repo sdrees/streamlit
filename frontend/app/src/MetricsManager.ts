@@ -317,8 +317,13 @@ export class MetricsManager {
         window.localStorage.setItem(anonymousIdKey, anonymousIdCookie)
       }
     } else if (anonymousIdLocalStorage) {
-      // Removes excess quotes from localStorage string value
-      this.anonymousId = JSON.parse(anonymousIdLocalStorage)
+      try {
+        // parse handles legacy anonymousId logic with excess quotes
+        this.anonymousId = JSON.parse(anonymousIdLocalStorage)
+      } catch {
+        // if parse fails, anonymousId is not legacy and we can use as is
+        this.anonymousId = anonymousIdLocalStorage
+      }
 
       setCookie(anonymousIdKey, this.anonymousId, expiration)
     } else {

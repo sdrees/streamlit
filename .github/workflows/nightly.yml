@@ -185,7 +185,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.CORE_PREVIEWS_S3_SECRET_KEY }}
         run: |
           # Install awscli via pip/uv:
-          uv pip install awscli
+          uv pip install awscli==1.37.6
 
           cd lib/dist
           export WHEELFILE="$(ls -t *.whl | head -n 1)"

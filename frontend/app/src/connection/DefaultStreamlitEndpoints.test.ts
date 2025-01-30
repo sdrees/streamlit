@@ -90,11 +90,24 @@ describe("DefaultStreamlitEndpoints", () => {
       csrfEnabled: false,
     })
 
+    afterEach(() => {
+      endpoints.setStaticConfigUrl(null)
+    })
+
     it("builds URL correctly for streamlit-served media", () => {
       const url = endpoints.buildMediaURL("/media/1234567890.png")
       expect(url).toBe(
         "http://streamlit.mock:80/mock/base/path/media/1234567890.png"
       )
+    })
+
+    it("builds URL correctly for static-served media", () => {
+      // Set staticConfigUrl & staticAppId in query params to replicate static connection
+      endpoints.setStaticConfigUrl("www.example.com")
+      vi.spyOn(URLSearchParams.prototype, "get").mockReturnValue("staticAppId")
+
+      const url = endpoints.buildMediaURL("/media/1234567890.png")
+      expect(url).toBe("www.example.com/staticAppId/media/1234567890.png")
     })
 
     it("passes through other media uris", () => {

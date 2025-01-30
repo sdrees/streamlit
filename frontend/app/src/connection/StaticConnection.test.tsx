@@ -17,6 +17,7 @@
 import { ForwardMsgList, logError } from "@streamlit/lib"
 
 import { ConnectionState } from "./ConnectionState"
+import { DefaultStreamlitEndpoints } from "./DefaultStreamlitEndpoints"
 import {
   dispatchAppForwardMessages,
   establishStaticConnection,
@@ -97,15 +98,9 @@ describe("StaticConnection", () => {
   })
 
   describe("getProtoResponse", () => {
-    beforeEach(() => {
-      // Handles getStaticConfig
-      vi.spyOn(window.localStorage.__proto__, "getItem").mockReturnValue(
-        "www.example.com"
-      )
-    })
-
     it("fetches proto response from correct URL", async () => {
       const staticAppId = "123"
+      const staticConfigUrl = "www.example.com"
 
       // Mock fetch for our protos
       // @ts-expect-error
@@ -116,7 +111,7 @@ describe("StaticConnection", () => {
         })
       )
 
-      const result = await getProtoResponse(staticAppId)
+      const result = await getProtoResponse(staticAppId, staticConfigUrl)
 
       expect(fetch).toHaveBeenCalledWith(
         "www.example.com/123/protos.pb",
@@ -127,6 +122,7 @@ describe("StaticConnection", () => {
 
     it("logs error if fetch fails", async () => {
       const staticAppId = "123"
+      const staticConfigUrl = "www.example.com"
 
       // Mock fetch for our protos
       // @ts-expect-error
@@ -137,7 +133,7 @@ describe("StaticConnection", () => {
         })
       )
 
-      const result = await getProtoResponse(staticAppId)
+      const result = await getProtoResponse(staticAppId, staticConfigUrl)
 
       expect(result).toBeNull()
       expect(logError).toHaveBeenCalledWith(
@@ -148,18 +144,12 @@ describe("StaticConnection", () => {
   })
 
   describe("dispatchAppForwardMessages", () => {
-    beforeEach(() => {
-      // Handles getStaticConfig
-      vi.spyOn(window.localStorage.__proto__, "getItem").mockReturnValue(
-        "www.example.com"
-      )
-    })
+    const staticAppId = "123"
+    const staticConfigUrl = "www.example.com"
+    const onMessage = vi.fn()
+    const onConnectionError = vi.fn()
 
     it("decodes and dispatches messages", async () => {
-      const staticAppId = "123"
-      const onMessage = vi.fn()
-      const onConnectionError = vi.fn()
-
       // Handles getProtoResponse
       // @ts-expect-error
       global.fetch = vi.fn(() =>
@@ -178,6 +168,7 @@ describe("StaticConnection", () => {
 
       await dispatchAppForwardMessages(
         staticAppId,
+        staticConfigUrl,
         onMessage,
         onConnectionError
       )
@@ -187,10 +178,6 @@ describe("StaticConnection", () => {
     })
 
     it("logs error if arrayBuffer is undefined", async () => {
-      const staticAppId = "123"
-      const onMessage = vi.fn()
-      const onConnectionError = vi.fn()
-
       // Handles getProtoResponse
       // @ts-expect-error
       global.fetch = vi.fn(() =>
@@ -202,6 +189,7 @@ describe("StaticConnection", () => {
 
       await dispatchAppForwardMessages(
         staticAppId,
+        staticConfigUrl,
         onMessage,
         onConnectionError
       )
@@ -213,6 +201,16 @@ describe("StaticConnection", () => {
   })
 
   describe("StaticConnection", () => {
+    const MOCK_SERVER_URI = {
+      host: "streamlit.mock",
+      port: 80,
+      basePath: "mock/base/path",
+    }
+    const endpoints = new DefaultStreamlitEndpoints({
+      getServerUri: () => MOCK_SERVER_URI,
+      csrfEnabled: false,
+    })
+
     beforeEach(() => {
       // Handles getStaticConfig
       vi.spyOn(window.localStorage.__proto__, "getItem").mockReturnValue(
@@ -231,6 +229,7 @@ describe("StaticConnection", () => {
 
     it("handles connection state changes and message dispatch", async () => {
       const staticAppId = "123"
+      const staticConfigUrl = "www.example.com"
       const onConnectionStateChange = vi.fn()
       const onMessage = vi.fn()
       const onConnectionError = vi.fn()
@@ -239,7 +238,8 @@ describe("StaticConnection", () => {
         staticAppId,
         onConnectionStateChange,
         onMessage,
-        onConnectionError
+        onConnectionError,
+        endpoints
       )
 
       expect(onConnectionStateChange).toHaveBeenCalledWith(
@@ -247,6 +247,7 @@ describe("StaticConnection", () => {
       )
       await dispatchAppForwardMessages(
         staticAppId,
+        staticConfigUrl,
         onMessage,
         onConnectionError
       )

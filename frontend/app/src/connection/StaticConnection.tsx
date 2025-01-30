@@ -15,11 +15,11 @@
  */
 
 import {
-  ForwardMsgList,
   localStorageAvailable,
   logError,
   StreamlitEndpoints,
 } from "@streamlit/lib"
+import { ForwardMsgList } from "@streamlit/protobuf"
 
 import { ConnectionState } from "./ConnectionState"
 

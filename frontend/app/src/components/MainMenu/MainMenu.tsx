@@ -24,14 +24,13 @@ import { useTheme } from "@emotion/react"
 import {
   BaseButton,
   BaseButtonKind,
-  Config,
   EmotionTheme,
   Icon,
   IGuestToHostMessage,
   IMenuItem,
   notNullOrUndefined,
-  PageConfig,
 } from "@streamlit/lib"
+import { Config, PageConfig } from "@streamlit/protobuf"
 import ScreenCastRecorder from "@streamlit/app/src/util/ScreenCastRecorder"
 import { MetricsManager } from "@streamlit/app/src/MetricsManager"
 

@@ -18,7 +18,8 @@ import React, { ReactElement, ReactNode, useCallback, useContext } from "react"
 
 import { StyledAction, StyledBody } from "baseui/card"
 
-import { BaseButton, BaseButtonKind, GitInfo, IGitInfo } from "@streamlit/lib"
+import { BaseButton, BaseButtonKind } from "@streamlit/lib"
+import { GitInfo, IGitInfo } from "@streamlit/protobuf"
 import { MetricsManager } from "@streamlit/app/src/MetricsManager"
 import { PlainEventHandler } from "@streamlit/app/src/components/StreamlitDialog/StreamlitDialog"
 import { DialogType } from "@streamlit/app/src/components/StreamlitDialog/constants"

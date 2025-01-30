@@ -20,13 +20,13 @@ import { toHex } from "color2k"
 
 import {
   BaseColorPicker,
-  CustomThemeConfig,
   darkTheme,
   EmotionTheme,
   lightTheme,
   toThemeInput,
   UISelectbox,
 } from "@streamlit/lib"
+import { CustomThemeConfig } from "@streamlit/protobuf"
 
 interface ThemeOptionBuilder {
   help: string

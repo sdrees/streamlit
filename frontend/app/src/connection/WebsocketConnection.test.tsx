@@ -21,11 +21,11 @@ import { default as WS } from "vitest-websocket-mock"
 import zip from "lodash/zip"
 
 import {
-  BackMsg,
   mockEndpoints,
   mockSessionInfoProps,
   SessionInfo,
 } from "@streamlit/lib"
+import { BackMsg } from "@streamlit/protobuf"
 import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
 import {
   Args,

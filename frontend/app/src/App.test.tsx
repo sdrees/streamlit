@@ -27,18 +27,30 @@ import {
 import cloneDeep from "lodash/cloneDeep"
 
 import {
-  Config,
   CUSTOM_THEME_NAME,
-  CustomThemeConfig,
-  Delta,
-  Element,
   FileUploadClient,
-  ForwardMsg,
-  ForwardMsgMetadata,
   getDefaultTheme,
   getHostSpecifiedTheme,
   HOST_COMM_VERSION,
   HostCommunicationManager,
+  lightTheme,
+  LocalStore,
+  mockEndpoints,
+  mockSessionInfoProps,
+  mockWindowLocation,
+  RootStyleProvider,
+  ScriptRunState,
+  SessionInfo,
+  toExportedTheme,
+  WidgetStateManager,
+} from "@streamlit/lib"
+import {
+  Config,
+  CustomThemeConfig,
+  Delta,
+  Element,
+  ForwardMsg,
+  ForwardMsgMetadata,
   IAuthRedirect,
   IAutoRerun,
   ILogo,
@@ -49,21 +61,11 @@ import {
   IPageNotFound,
   IPagesChanged,
   IParentMessage,
-  lightTheme,
-  LocalStore,
-  mockEndpoints,
-  mockSessionInfoProps,
-  mockWindowLocation,
   PagesChanged,
-  RootStyleProvider,
-  ScriptRunState,
   SessionEvent,
-  SessionInfo,
   SessionStatus,
   TextInput,
-  toExportedTheme,
-  WidgetStateManager,
-} from "@streamlit/lib"
+} from "@streamlit/protobuf"
 import { MetricsManager } from "@streamlit/app/src/MetricsManager"
 import { ConnectionManager } from "@streamlit/app/src/connection/ConnectionManager"
 import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"

@@ -23,13 +23,8 @@ import {
   within,
 } from "@testing-library/react"
 
-import {
-  emotionLightTheme,
-  Logo,
-  mockEndpoints,
-  PageConfig,
-  render,
-} from "@streamlit/lib"
+import { emotionLightTheme, mockEndpoints, render } from "@streamlit/lib"
+import { Logo, PageConfig } from "@streamlit/protobuf"
 
 import Sidebar, { SidebarProps } from "./Sidebar"
 

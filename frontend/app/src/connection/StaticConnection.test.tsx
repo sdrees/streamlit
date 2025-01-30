@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { ForwardMsgList, logError } from "@streamlit/lib"
+import { logError } from "@streamlit/lib"
+import { ForwardMsgList } from "@streamlit/protobuf"
 
 import { ConnectionState } from "./ConnectionState"
 import { DefaultStreamlitEndpoints } from "./DefaultStreamlitEndpoints"

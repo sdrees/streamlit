@@ -20,7 +20,8 @@ import * as reactDeviceDetect from "react-device-detect"
 import { screen } from "@testing-library/react"
 import { userEvent } from "@testing-library/user-event"
 
-import { IAppPage, mockEndpoints, render } from "@streamlit/lib"
+import { mockEndpoints, render } from "@streamlit/lib"
+import { IAppPage } from "@streamlit/protobuf"
 
 import SidebarNav, { Props } from "./SidebarNav"
 

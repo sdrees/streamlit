@@ -30,13 +30,10 @@ import {
   OnRetry,
 } from "@streamlit/app/src/connection/types"
 import {
-  BackMsg,
   BaseUriParts,
   buildWsUri,
-  ForwardMsg,
   ForwardMsgCache,
   getCookie,
-  IBackMsg,
   IHostConfigResponse,
   isNullOrUndefined,
   logError,
@@ -47,6 +44,7 @@ import {
   SessionInfo,
   StreamlitEndpoints,
 } from "@streamlit/lib"
+import { BackMsg, ForwardMsg, IBackMsg } from "@streamlit/protobuf"
 import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
 import { doInitPings } from "@streamlit/app/src/connection/DoInitPings"
 

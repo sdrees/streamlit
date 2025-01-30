@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-import {
-  CustomThemeConfig,
-  darkTheme,
-  lightTheme,
-  toThemeInput,
-} from "@streamlit/lib"
+import { darkTheme, lightTheme, toThemeInput } from "@streamlit/lib"
+import { CustomThemeConfig } from "@streamlit/protobuf"
 
 import { toMinimalToml } from "./themeUtils"
 

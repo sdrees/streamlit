@@ -21,15 +21,14 @@ import {
   DeployedAppMetadata,
   getCookie,
   IGuestToHostMessage,
-  IMetricsEvent,
   IS_DEV_ENV,
   localStorageAvailable,
   logAlways,
   logError,
-  MetricsEvent,
   SessionInfo,
   setCookie,
 } from "@streamlit/lib"
+import { IMetricsEvent, MetricsEvent } from "@streamlit/protobuf"
 
 // Default metrics config fetched when none provided by host config endpoint
 export const DEFAULT_METRICS_CONFIG = "https://data.streamlit.io/metrics.json"

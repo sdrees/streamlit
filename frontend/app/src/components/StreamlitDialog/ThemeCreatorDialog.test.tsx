@@ -20,13 +20,13 @@ import { fireEvent, screen, within } from "@testing-library/react"
 
 import {
   customRenderLibContext,
-  CustomThemeConfig,
   darkTheme,
   fonts,
   LibContextProps,
   lightTheme,
   mockSessionInfo,
 } from "@streamlit/lib"
+import { CustomThemeConfig } from "@streamlit/protobuf"
 import { MetricsManager } from "@streamlit/app/src/MetricsManager"
 
 import ThemeCreatorDialog, {

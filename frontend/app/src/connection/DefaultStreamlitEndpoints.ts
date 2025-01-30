@@ -21,11 +21,11 @@ import {
   buildHttpUri,
   FileUploadClientConfig,
   getCookie,
-  IAppPage,
   makePath,
   notNullOrUndefined,
   StreamlitEndpoints,
 } from "@streamlit/lib"
+import { IAppPage } from "@streamlit/protobuf"
 
 interface Props {
   getServerUri: () => BaseUriParts | undefined

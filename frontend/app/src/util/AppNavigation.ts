@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
+import { AppRoot, BlockNode, HostCommunicationManager } from "@streamlit/lib"
 import {
-  AppRoot,
-  BlockNode,
-  HostCommunicationManager,
   IAppPage,
   Navigation,
   NewSession,
   PageConfig,
   PageNotFound,
   PagesChanged,
-} from "@streamlit/lib"
+} from "@streamlit/protobuf"
 
 interface AppNavigationState {
   expandSidebarNav: boolean

@@ -37,7 +37,6 @@ import {
   IHostConfigResponse,
   isNullOrUndefined,
   notNullOrUndefined,
-  PerformanceEvents,
   StreamlitEndpoints,
 } from "@streamlit/lib"
 import { BackMsg, ForwardMsg, IBackMsg } from "@streamlit/protobuf"
@@ -500,24 +499,13 @@ export class WebsocketConnection {
     const messageIndex = this.nextMessageIndex
     this.nextMessageIndex += 1
 
-    PerformanceEvents.record({ name: "BeginHandleMessage", messageIndex })
-
     const encodedMsg = new Uint8Array(data)
     const msg = ForwardMsg.decode(encodedMsg)
-
-    PerformanceEvents.record({
-      name: "DecodedMessage",
-      messageIndex,
-      messageType: msg.type,
-      len: data.byteLength,
-    })
 
     this.messageQueue[messageIndex] = await this.cache.processMessagePayload(
       msg,
       encodedMsg
     )
-
-    PerformanceEvents.record({ name: "GotCachedPayload", messageIndex })
 
     // Dispatch any pending messages in the queue. This may *not* result
     // in our just-decoded message being dispatched: if there are other
@@ -526,11 +514,7 @@ export class WebsocketConnection {
     while (this.lastDispatchedMessageIndex + 1 in this.messageQueue) {
       const dispatchMessageIndex = this.lastDispatchedMessageIndex + 1
       this.args.onMessage(this.messageQueue[dispatchMessageIndex])
-      PerformanceEvents.record({
-        name: "DispatchedMessage",
-        messageIndex: dispatchMessageIndex,
-        messageType: this.messageQueue[dispatchMessageIndex].type,
-      })
+
       delete this.messageQueue[dispatchMessageIndex]
       this.lastDispatchedMessageIndex = dispatchMessageIndex
     }

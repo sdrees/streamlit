@@ -61,4 +61,5 @@ export const sizes = {
   defaultChartWidth: "25rem",
   // The minimum width of the menu (used for the dataframe column menu)
   minMenuWidth: "8rem",
+  minChatInputFileListHeight: "3rem",
 }

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import React, { Fragment } from "react"
-
 import axios from "axios"
 import { default as WS } from "vitest-websocket-mock"
 import zip from "lodash/zip"
@@ -308,16 +306,9 @@ describe("doInitPings", () => {
       },
     }
 
-    const Forbidden = (
-      <Fragment>
-        <p>Cannot connect to Streamlit (HTTP status: 403).</p>
-        <p>
-          If you are trying to access a Streamlit app running on another
-          server, this could be due to the app's{" "}
-          <a href={CORS_ERROR_MESSAGE_DOCUMENTATION_LINK}>CORS</a> settings.
-        </p>
-      </Fragment>
-    )
+    const forbiddenMarkdown = `Cannot connect to Streamlit (HTTP status: 403).
+
+If you are trying to access a Streamlit app running on another server, this could be due to the app's [CORS](${CORS_ERROR_MESSAGE_DOCUMENTATION_LINK}) settings.`
 
     axios.get = vi
       .fn()
@@ -338,7 +329,7 @@ describe("doInitPings", () => {
 
     expect(MOCK_PING_DATA.retryCallback).toHaveBeenCalledWith(
       1,
-      Forbidden,
+      forbiddenMarkdown,
       expect.anything()
     )
   })

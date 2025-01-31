@@ -31,7 +31,7 @@ export type OnConnectionStateChange = (
 
 export type OnRetry = (
   totalTries: number,
-  errorNode: React.ReactNode,
+  errorMarkdown: string,
   retryTimeout: number
 ) => void
 

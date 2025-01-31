@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ReactNode } from "react"
 
 import { getLogger } from "loglevel"
 
@@ -53,7 +52,7 @@ interface Props {
   /**
    * Function to be called when the connection errors out.
    */
-  onConnectionError: (errNode: ReactNode) => void
+  onConnectionError: (errNode: string) => void
 
   /**
    * Called when our ConnectionState is changed.
@@ -201,7 +200,7 @@ export class ConnectionManager {
 
   private showRetryError = (
     totalRetries: number,
-    latestError: ReactNode,
+    latestError: string,
     // The last argument of this function is unused and exists because the
     // WebsocketConnection.OnRetry type allows a third argument to be set to be
     // used in tests.

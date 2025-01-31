@@ -20,8 +20,6 @@
  * Returns a promise with the index of the URI that worked.
  */
 
-import React, { Fragment } from "react"
-
 import axios from "axios"
 import { getLogger } from "loglevel"
 
@@ -32,12 +30,7 @@ import {
   SERVER_PING_PATH,
 } from "@streamlit/app/src/connection/constants"
 import { OnRetry } from "@streamlit/app/src/connection/types"
-import {
-  buildHttpUri,
-  IHostConfigResponse,
-  Resolver,
-  StreamlitMarkdown,
-} from "@streamlit/lib"
+import { buildHttpUri, IHostConfigResponse, Resolver } from "@streamlit/lib"
 
 const log = getLogger("DoInitPings")
 
@@ -64,7 +57,7 @@ export function doInitPings(
     connect()
   }
 
-  const retry = (errorNode: React.ReactNode): void => {
+  const retry = (errorMarkdown: string): void => {
     // Adjust retry time by +- 20% to spread out load
     const jitter = Math.random() * 0.4 - 0.2
     // Exponential backoff to reduce load from health pings when experiencing
@@ -75,7 +68,7 @@ export function doInitPings(
         : minimumTimeoutMs * 2 ** (totalTries - 1) * (1 + jitter)
     const retryTimeout = Math.min(maximumTimeoutMs, timeoutMs)
 
-    retryCallback(totalTries, errorNode, retryTimeout)
+    retryCallback(totalTries, errorMarkdown, retryTimeout)
 
     window.setTimeout(retryImmediately, retryTimeout)
   }
@@ -92,23 +85,18 @@ Is Streamlit still running? If you accidentally stopped Streamlit, just restart 
 streamlit run yourscript.py
 \`\`\`
       `
-      retry(<StreamlitMarkdown source={markdownMessage} allowHTML={false} />)
+      retry(markdownMessage)
     } else {
       retry("Connection failed with status 0.")
     }
   }
 
   const retryWhenIsForbidden = (): void => {
-    retry(
-      <Fragment>
-        <p>Cannot connect to Streamlit (HTTP status: 403).</p>
-        <p>
-          If you are trying to access a Streamlit app running on another
-          server, this could be due to the app's{" "}
-          <a href={CORS_ERROR_MESSAGE_DOCUMENTATION_LINK}>CORS</a> settings.
-        </p>
-      </Fragment>
-    )
+    const forbiddenMessage = `Cannot connect to Streamlit (HTTP status: 403).
+
+If you are trying to access a Streamlit app running on another server, this could be due to the app's [CORS](${CORS_ERROR_MESSAGE_DOCUMENTATION_LINK}) settings.`
+
+    retry(forbiddenMessage)
   }
 
   connect = () => {

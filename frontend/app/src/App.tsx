@@ -68,6 +68,7 @@ import {
   ScriptRunState,
   SessionInfo,
   StreamlitEndpoints,
+  StreamlitMarkdown,
   ThemeConfig,
   toExportedTheme,
   toThemeInput,
@@ -549,12 +550,12 @@ export class App extends PureComponent<Props, State> {
     window.removeEventListener("popstate", this.onHistoryChange, false)
   }
 
-  showError(title: string, errorNode: ReactNode): void {
-    log.error(errorNode)
+  showError(title: string, errorMarkdown: string): void {
+    log.error(errorMarkdown)
     const newDialog: DialogProps = {
       type: DialogType.WARNING,
       title,
-      msg: errorNode,
+      msg: <StreamlitMarkdown source={errorMarkdown} allowHTML={false} />,
       onClose: () => {},
     }
     this.openDialog(newDialog)
@@ -1664,8 +1665,8 @@ export class App extends PureComponent<Props, State> {
   /**
    * Updates the app body when there's a connection error.
    */
-  handleConnectionError = (errNode: ReactNode): void => {
-    this.showError("Connection error", errNode)
+  handleConnectionError = (errMarkdown: string): void => {
+    this.showError("Connection error", errMarkdown)
   }
 
   /**

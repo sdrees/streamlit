@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-import styled from "@emotion/styled"
 import { getLogger } from "loglevel"
 
 import {
-  LOG,
   PING_MAXIMUM_RETRY_PERIOD_MS,
   PING_MINIMUM_RETRY_PERIOD_MS,
   WEBSOCKET_STREAM_PATH,
@@ -196,7 +194,7 @@ export class WebsocketConnection {
 
   // This should only be called inside stepFsm().
   private setFsmState(state: ConnectionState, errMsg?: string): void {
-    log.info(LOG, `New state: ${state}`)
+    log.info(`New state: ${state}`)
     this.state = state
 
     // Perform pre-callback actions when entering certain states.
@@ -235,7 +233,7 @@ export class WebsocketConnection {
    * will be displayed to the user in a "Connection Error" dialog.
    */
   private stepFsm(event: Event, errMsg?: string): void {
-    log.info(LOG, `State: ${this.state}; Event: ${event}`)
+    log.info(`State: ${this.state}; Event: ${event}`)
 
     if (
       event === "FATAL_ERROR" &&
@@ -293,7 +291,6 @@ export class WebsocketConnection {
         // of a fatal error. Just log these events rather than throwing more
         // exceptions.
         log.warn(
-          LOG,
           `Discarding ${event} while in ${ConnectionState.DISCONNECTED_FOREVER}`
         )
         return
@@ -358,7 +355,7 @@ export class WebsocketConnection {
       throw new Error("Websocket already exists")
     }
 
-    log.info(LOG, "creating WebSocket")
+    log.info("creating WebSocket")
 
     // NOTE: We repurpose the Sec-WebSocket-Protocol header (set via the second
     // parameter to the WebSocket constructor) here in a slightly unfortunate
@@ -385,7 +382,7 @@ export class WebsocketConnection {
       if (checkWebsocket()) {
         this.handleMessage(event.data).catch(reason => {
           const err = `Failed to process a Websocket message (${reason})`
-          log.error(LOG, err)
+          log.error(err)
           this.stepFsm("FATAL_ERROR", err)
         })
       }
@@ -393,14 +390,14 @@ export class WebsocketConnection {
 
     this.websocket.addEventListener("open", () => {
       if (checkWebsocket()) {
-        log.info(LOG, "WebSocket onopen")
+        log.info("WebSocket onopen")
         this.stepFsm("CONNECTION_SUCCEEDED")
       }
     })
 
     this.websocket.addEventListener("close", () => {
       if (checkWebsocket()) {
-        log.warn(LOG, "WebSocket onclose")
+        log.warn("WebSocket onclose")
         this.closeConnection()
         this.stepFsm("CONNECTION_CLOSED")
       }
@@ -408,7 +405,7 @@ export class WebsocketConnection {
 
     this.websocket.addEventListener("error", () => {
       if (checkWebsocket()) {
-        log.error(LOG, "WebSocket onerror")
+        log.error("WebSocket onerror")
         this.closeConnection()
         this.stepFsm("CONNECTION_ERROR")
       }
@@ -431,7 +428,7 @@ export class WebsocketConnection {
 
       if (isNullOrUndefined(this.wsConnectionTimeoutId)) {
         // Sometimes the clearTimeout doesn't work. No idea why :-/
-        log.warn(LOG, "Timeout fired after cancellation")
+        log.warn("Timeout fired after cancellation")
         return
       }
 
@@ -445,12 +442,12 @@ export class WebsocketConnection {
       }
 
       if (this.websocket.readyState === 0 /* CONNECTING */) {
-        log.info(LOG, `${uri} timed out`)
+        log.info(`${uri} timed out`)
         this.closeConnection()
         this.stepFsm("CONNECTION_TIMED_OUT")
       }
     }, WEBSOCKET_TIMEOUT_MS)
-    log.info(LOG, `Set WS timeout ${this.wsConnectionTimeoutId}`)
+    log.info(`Set WS timeout ${this.wsConnectionTimeoutId}`)
   }
 
   private closeConnection(): void {
@@ -466,7 +463,7 @@ export class WebsocketConnection {
     }
 
     if (notNullOrUndefined(this.wsConnectionTimeoutId)) {
-      log.info(LOG, `Clearing WS timeout ${this.wsConnectionTimeoutId}`)
+      log.info(`Clearing WS timeout ${this.wsConnectionTimeoutId}`)
       window.clearTimeout(this.wsConnectionTimeoutId)
       this.wsConnectionTimeoutId = undefined
     }
@@ -520,13 +517,3 @@ export class WebsocketConnection {
     }
   }
 }
-
-export const StyledBashCode = styled.code(({ theme }) => ({
-  fontFamily: theme.genericFonts.codeFont,
-  fontSize: theme.fontSizes.sm,
-  "&::before": {
-    content: '"$"',
-    // eslint-disable-next-line streamlit-custom/no-hardcoded-theme-values
-    marginRight: "1ex",
-  },
-}))

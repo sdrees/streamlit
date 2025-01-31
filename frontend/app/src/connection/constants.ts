@@ -22,11 +22,6 @@ export const CORS_ERROR_MESSAGE_DOCUMENTATION_LINK =
   "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
 
 /**
- * Name of the logger.
- */
-export const LOG = "WebsocketConnection"
-
-/**
  * The path of the server's websocket endpoint.
  */
 export const WEBSOCKET_STREAM_PATH = "_stcore/stream"

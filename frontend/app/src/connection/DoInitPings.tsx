@@ -30,7 +30,9 @@ import {
   SERVER_PING_PATH,
 } from "@streamlit/app/src/connection/constants"
 import { OnRetry } from "@streamlit/app/src/connection/types"
-import { buildHttpUri, IHostConfigResponse, Resolver } from "@streamlit/lib"
+import { buildHttpUri, IHostConfigResponse } from "@streamlit/lib"
+
+import "./promiseWithResolversPolyfill"
 
 const log = getLogger("DoInitPings")
 
@@ -41,7 +43,7 @@ export function doInitPings(
   retryCallback: OnRetry,
   onHostConfigResp: (resp: IHostConfigResponse) => void
 ): Promise<number> {
-  const resolver = new Resolver<number>()
+  const { promise, resolve } = Promise.withResolvers<number>()
   let totalTries = 0
   let uriNumber = 0
 
@@ -123,7 +125,7 @@ If you are trying to access a Streamlit app running on another server, this coul
     ])
       .then(([_, hostConfigResp]) => {
         onHostConfigResp(hostConfigResp.data)
-        resolver.resolve(uriNumber)
+        resolve(uriNumber)
       })
       .catch(error => {
         if (error.code === "ECONNABORTED") {
@@ -160,5 +162,5 @@ If you are trying to access a Streamlit app running on another server, this coul
 
   connect()
 
-  return resolver.promise
+  return promise
 }

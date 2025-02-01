@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ReactNode } from "react"
 
 import { getLogger } from "loglevel"
 
 import {
-  BaseUriParts,
-  ensureError,
   getPossibleBaseUris,
   IHostConfigResponse,
-  SessionInfo,
   StreamlitEndpoints,
 } from "@streamlit/lib"
 import { BackMsg, ForwardMsg } from "@streamlit/protobuf"
@@ -43,7 +39,7 @@ const log = getLogger("ConnectionManager")
 
 interface Props {
   /** The app's SessionInfo instance */
-  sessionInfo: SessionInfo
+  getLastSessionId: () => string | undefined
 
   /** The app's StreamlitEndpoints instance */
   endpoints: StreamlitEndpoints
@@ -56,7 +52,7 @@ interface Props {
   /**
    * Function to be called when the connection errors out.
    */
-  onConnectionError: (errNode: ReactNode) => void
+  onConnectionError: (errNode: string) => void
 
   /**
    * Called when our ConnectionState is changed.
@@ -111,7 +107,7 @@ export class ConnectionManager {
    * Return the BaseUriParts for the server we're connected to,
    * if we are connected to a server.
    */
-  public getBaseUriParts(): BaseUriParts | undefined {
+  public getBaseUriParts(): URL | undefined {
     if (this.websocketConnection instanceof WebsocketConnection) {
       return this.websocketConnection.getBaseUriParts()
     }
@@ -174,7 +170,7 @@ export class ConnectionManager {
       try {
         this.websocketConnection = await this.connectToRunningServer()
       } catch (e) {
-        const err = ensureError(e)
+        const err = e instanceof Error ? e : new Error(`${e}`)
         log.error(err.message)
         this.setConnectionState(
           ConnectionState.DISCONNECTED_FOREVER,
@@ -204,7 +200,7 @@ export class ConnectionManager {
 
   private showRetryError = (
     totalRetries: number,
-    latestError: ReactNode,
+    latestError: string,
     // The last argument of this function is unused and exists because the
     // WebsocketConnection.OnRetry type allows a third argument to be set to be
     // used in tests.
@@ -219,7 +215,7 @@ export class ConnectionManager {
     const baseUriPartsList = getPossibleBaseUris()
 
     return new WebsocketConnection({
-      sessionInfo: this.props.sessionInfo,
+      getLastSessionId: this.props.getLastSessionId,
       endpoints: this.props.endpoints,
       baseUriPartsList,
       onMessage: this.props.onMessage,

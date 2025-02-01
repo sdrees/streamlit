@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// We add some polyfills in order to support older browsers for the exports below
+import "./promiseWithResolversPolyfill"
 // These imports are each exported specifically in order to minimize public apis.
 export { AppRoot, BlockNode, ElementNode } from "./AppNode"
 export { IS_DEV_ENV, WEBSOCKET_PORT_DEV } from "./baseconsts"
@@ -74,8 +76,6 @@ export {
   mockSessionInfoProps,
 } from "./mocks/mocks"
 export { mockTheme } from "./mocks/mockTheme"
-export { PerformanceEvents } from "./profiler/PerformanceEvents"
-// export * from "@streamlit/protobuf"
 export { RootStyleProvider } from "./RootStyleProvider"
 export { ScriptRunState } from "./ScriptRunState"
 export { SessionInfo } from "./SessionInfo"
@@ -113,7 +113,6 @@ export { default as emotionLightTheme } from "./theme/emotionLightTheme"
 export { fonts, spacing } from "./theme/primitives"
 export { ensureError } from "./util/ErrorHandling"
 export { useIsOverflowing } from "./util/Hooks"
-export { default as Resolver } from "./util/Resolver"
 export { LocalStore, localStorageAvailable } from "./util/storageUtils"
 export { Timer } from "./util/Timer"
 export {
@@ -122,7 +121,6 @@ export {
   getPossibleBaseUris,
   makePath,
 } from "./util/UriUtil"
-export type { BaseUriParts } from "./util/UriUtil"
 export {
   extractPageNameFromPathName,
   generateUID,

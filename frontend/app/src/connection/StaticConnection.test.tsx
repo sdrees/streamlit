@@ -210,10 +210,10 @@ describe("StaticConnection", () => {
 
   describe("StaticConnection", () => {
     const MOCK_SERVER_URI = {
-      host: "streamlit.mock",
-      port: 80,
-      basePath: "mock/base/path",
-    }
+      hostname: "streamlit.mock",
+      port: "80",
+      pathname: "/mock/base/path",
+    } as URL
     const endpoints = new DefaultStreamlitEndpoints({
       getServerUri: () => MOCK_SERVER_URI,
       csrfEnabled: false,

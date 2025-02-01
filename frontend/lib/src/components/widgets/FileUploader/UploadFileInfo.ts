@@ -26,7 +26,6 @@ export interface UploadingStatus {
 
 export interface UploadedStatus {
   type: "uploaded"
-
   fileId: string
   fileUrls: IFileURLs
 }

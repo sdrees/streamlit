@@ -26,7 +26,6 @@ import { getLogger } from "loglevel"
 import {
   AppConfig,
   AppRoot,
-  BaseUriParts,
   CircularBuffer,
   ComponentRegistry,
   createFormsData,
@@ -64,12 +63,12 @@ import {
   measure,
   notNullOrUndefined,
   notUndefined,
-  PerformanceEvents,
   preserveEmbedQueryParams,
   PresetThemeName,
   ScriptRunState,
   SessionInfo,
   StreamlitEndpoints,
+  StreamlitMarkdown,
   ThemeConfig,
   toExportedTheme,
   toThemeInput,
@@ -415,7 +414,7 @@ export class App extends PureComponent<Props, State> {
 
   initializeConnectionManager(): void {
     this.connectionManager = new ConnectionManager({
-      sessionInfo: this.sessionInfo,
+      getLastSessionId: () => this.sessionInfo.last?.sessionId,
       endpoints: this.endpoints,
       onMessage: this.handleMessage,
       onConnectionError: this.handleConnectionError,
@@ -551,12 +550,12 @@ export class App extends PureComponent<Props, State> {
     window.removeEventListener("popstate", this.onHistoryChange, false)
   }
 
-  showError(title: string, errorNode: ReactNode): void {
-    log.error(errorNode)
+  showError(title: string, errorMarkdown: string): void {
+    log.error(errorMarkdown)
     const newDialog: DialogProps = {
       type: DialogType.WARNING,
       title,
-      msg: errorNode,
+      msg: <StreamlitMarkdown source={errorMarkdown} allowHTML={false} />,
       onClose: () => {},
     }
     this.openDialog(newDialog)
@@ -964,11 +963,11 @@ export class App extends PureComponent<Props, State> {
   ): void => {
     const baseUriParts = this.getBaseUriParts()
     if (baseUriParts) {
-      const { basePath } = baseUriParts
+      const { pathname } = baseUriParts
 
       const prevPageNameInPath = extractPageNameFromPathName(
         document.location.pathname,
-        basePath
+        pathname
       )
       const prevPageName =
         prevPageNameInPath === "" ? mainPageName : prevPageNameInPath
@@ -981,7 +980,7 @@ export class App extends PureComponent<Props, State> {
         const queryString = preserveEmbedQueryParams()
         const qs = queryString ? `?${queryString}` : ""
 
-        const basePathPrefix = basePath ? `/${basePath}` : ""
+        const basePathPrefix = pathname === "/" ? "" : pathname
 
         const pageUrl = `${basePathPrefix}/${pagePath}${qs}`
 
@@ -1510,7 +1509,7 @@ export class App extends PureComponent<Props, State> {
     }
 
     const { currentPageScriptHash } = this.state
-    const { basePath } = baseUriParts
+    const { pathname } = baseUriParts
     let queryString = this.getQueryString()
     let pageName = ""
 
@@ -1538,7 +1537,7 @@ export class App extends PureComponent<Props, State> {
       // document.location.pathname.
       pageName = extractPageNameFromPathName(
         document.location.pathname,
-        basePath
+        pathname
       )
       pageScriptHash = ""
     }
@@ -1555,11 +1554,6 @@ export class App extends PureComponent<Props, State> {
         },
       })
     )
-
-    PerformanceEvents.record({
-      name: "RequestedRerun",
-      scriptRunState: this.state.scriptRunState,
-    })
   }
 
   /** Requests that the server stop running the script */
@@ -1671,8 +1665,8 @@ export class App extends PureComponent<Props, State> {
   /**
    * Updates the app body when there's a connection error.
    */
-  handleConnectionError = (errNode: ReactNode): void => {
-    this.showError("Connection error", errNode)
+  handleConnectionError = (errMarkdown: string): void => {
+    this.showError("Connection error", errMarkdown)
   }
 
   /**
@@ -1787,7 +1781,7 @@ export class App extends PureComponent<Props, State> {
     })
   }
 
-  getBaseUriParts = (): BaseUriParts | undefined =>
+  getBaseUriParts = (): URL | undefined =>
     this.connectionManager
       ? this.connectionManager.getBaseUriParts()
       : undefined

@@ -17,7 +17,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse, CancelToken } from "axios"
 
 import {
-  BaseUriParts,
   buildHttpUri,
   FileUploadClientConfig,
   getCookie,
@@ -28,7 +27,7 @@ import {
 import { IAppPage } from "@streamlit/protobuf"
 
 interface Props {
-  getServerUri: () => BaseUriParts | undefined
+  getServerUri: () => URL | undefined
   csrfEnabled: boolean
 }
 
@@ -39,11 +38,11 @@ const FORWARD_MSG_CACHE_ENDPOINT = "/_stcore/message"
 
 /** Default Streamlit server implementation of the StreamlitEndpoints interface. */
 export class DefaultStreamlitEndpoints implements StreamlitEndpoints {
-  private readonly getServerUri: () => BaseUriParts | undefined
+  private readonly getServerUri: () => URL | undefined
 
   private readonly csrfEnabled: boolean
 
-  private cachedServerUri?: BaseUriParts
+  private cachedServerUri?: URL
 
   private fileUploadClientConfig?: FileUploadClientConfig
 
@@ -137,11 +136,12 @@ export class DefaultStreamlitEndpoints implements StreamlitEndpoints {
     // the frontend is served by the react dev server and not the
     // streamlit server).
     const { port, protocol } = window.location
-    const { basePath, host } = this.requireServerUri()
+    const { pathname, hostname } = this.requireServerUri()
     const portSection = port ? `:${port}` : ""
-    const basePathSection = basePath ? `${basePath}/` : ""
+    // Empty path names are simply "/" Anything else must have more to it
+    const basePathSection = pathname === "/" ? "/" : `${pathname}/`
 
-    return `${protocol}//${host}${portSection}/${basePathSection}${navigateTo}`
+    return `${protocol}//${hostname}${portSection}${basePathSection}${navigateTo}`
   }
 
   public async uploadFileUploaderFile(
@@ -212,7 +212,7 @@ export class DefaultStreamlitEndpoints implements StreamlitEndpoints {
    * recent cached value of the URI. If we're disconnected and have no cached
    * value, throw an Error.
    */
-  private requireServerUri(): BaseUriParts {
+  private requireServerUri(): URL {
     const serverUri = this.getServerUri()
     if (notNullOrUndefined(serverUri)) {
       this.cachedServerUri = serverUri

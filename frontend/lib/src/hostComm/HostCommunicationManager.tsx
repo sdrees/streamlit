@@ -18,7 +18,6 @@ import { ICustomThemeConfig, WidgetStates } from "@streamlit/protobuf"
 
 import { isValidOrigin } from "~lib/util/UriUtil"
 import { PresetThemeName } from "~lib/theme/types"
-import Resolver from "~lib/util/Resolver"
 
 import {
   AppConfig,
@@ -77,13 +76,13 @@ export default class HostCommunicationManager {
 
   private allowedOrigins: string[]
 
-  private deferredAuthToken: Resolver<string | undefined>
+  private deferredAuthToken: PromiseWithResolvers<string | undefined>
 
   constructor(props: HostCommunicationProps) {
     this.props = props
 
     this.allowedOrigins = []
-    this.deferredAuthToken = new Resolver()
+    this.deferredAuthToken = Promise.withResolvers<string | undefined>()
   }
 
   /**
@@ -113,7 +112,7 @@ export default class HostCommunicationManager {
    * This should be called in a .then() handler attached to deferredAuthToken.promise.
    */
   public resetAuthToken = (): void => {
-    this.deferredAuthToken = new Resolver()
+    this.deferredAuthToken = Promise.withResolvers<string | undefined>()
   }
 
   /**

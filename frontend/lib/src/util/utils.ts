@@ -20,10 +20,13 @@ import xxhash from "xxhashjs"
 
 import {
   Alert as AlertProto,
+  ChatInput as ChatInputProto,
   Element,
   LabelVisibilityMessage as LabelVisibilityMessageProto,
   Skeleton as SkeletonProto,
 } from "@streamlit/protobuf"
+
+import { assertNever } from "./assertNever"
 
 // This prefix should be in sync with the value on the python side:
 const GENERATED_ELEMENT_ID_PREFIX = "$$ID"
@@ -402,6 +405,28 @@ export function labelVisibilityProtoValueToEnum(
   }
 }
 
+export enum AcceptFileValue {
+  None,
+  Single,
+  Multiple,
+}
+
+export function chatInputAcceptFileProtoValueToEnum(
+  value: ChatInputProto.AcceptFile
+): AcceptFileValue {
+  switch (value) {
+    case ChatInputProto.AcceptFile.NONE:
+      return AcceptFileValue.None
+    case ChatInputProto.AcceptFile.SINGLE:
+      return AcceptFileValue.Single
+    case ChatInputProto.AcceptFile.MULTIPLE:
+      return AcceptFileValue.Multiple
+    default:
+      assertNever(value)
+      return AcceptFileValue.None
+  }
+}
+
 /**
  * Looks for an IFrame with given className inside given querySet
  */
@@ -521,7 +546,7 @@ export function extractPageNameFromPathName(
   // weird-looking triple `replace()`.
   return decodeURIComponent(
     document.location.pathname
-      .replace(`/${basePath}`, "")
+      .replace(basePath, "")
       .replace(new RegExp("^/?"), "")
       .replace(new RegExp("/$"), "")
   )

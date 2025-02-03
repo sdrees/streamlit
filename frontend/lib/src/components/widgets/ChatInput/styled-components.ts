@@ -25,7 +25,7 @@ export const StyledChatInputContainer =
   styled.div<StyledChatInputContainerProps>(({ theme, width }) => {
     return {
       border: `${theme.sizes.borderWidth} solid`,
-      borderColor: theme.colors.transparent,
+      borderColor: theme.colors.widgetBorderColor ?? theme.colors.transparent,
       borderRadius: theme.radii.chatInput,
       display: "flex",
       backgroundColor:

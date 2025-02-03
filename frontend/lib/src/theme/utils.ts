@@ -15,7 +15,7 @@
  */
 
 import camelcase from "camelcase"
-import { getLuminance, parseToRgba, toHex } from "color2k"
+import { getLuminance, parseToRgba, toHex, transparentize } from "color2k"
 import decamelize from "decamelize"
 import cloneDeep from "lodash/cloneDeep"
 import isObject from "lodash/isObject"
@@ -163,8 +163,13 @@ export const createEmotionTheme = (
   baseThemeConfig = baseTheme
 ): EmotionTheme => {
   const { colors, genericFonts } = baseThemeConfig.emotion
-  const { font, fontSizes, roundness, ...customColors } = themeInput
-
+  const {
+    font,
+    fontSizes,
+    roundness,
+    showBorderAroundInputs,
+    ...customColors
+  } = themeInput
   const parsedFont = fontEnumToString(font)
 
   const parsedColors = Object.entries(customColors).reduce(
@@ -192,6 +197,7 @@ export const createEmotionTheme = (
     skeletonBackgroundColor,
     widgetBackgroundColor,
     widgetBorderColor,
+    borderColor,
   } = parsedColors
 
   const newGenericColors = { ...colors }
@@ -202,11 +208,29 @@ export const createEmotionTheme = (
   if (bgColor) newGenericColors.bgColor = bgColor
   if (widgetBackgroundColor)
     newGenericColors.widgetBackgroundColor = widgetBackgroundColor
-  if (widgetBorderColor) newGenericColors.widgetBorderColor = widgetBorderColor
   if (skeletonBackgroundColor)
     newGenericColors.skeletonBackgroundColor = skeletonBackgroundColor
 
   const conditionalOverrides: any = {}
+
+  conditionalOverrides.colors = createEmotionColors(newGenericColors)
+
+  if (notNullOrUndefined(borderColor)) {
+    conditionalOverrides.colors.borderColor = borderColor
+    conditionalOverrides.colors.borderColorLight = transparentize(
+      borderColor,
+      0.55
+    )
+  }
+
+  if (showBorderAroundInputs || widgetBorderColor) {
+    // widgetBorderColor from the themeInput is deprecated. For compatibility
+    // with older SiS theming, we still activate the border around inputs if
+    // it is provided, but we are not using widgetBorderColor from theme input
+    // as color value.
+    conditionalOverrides.colors.widgetBorderColor =
+      conditionalOverrides.colors.borderColor
+  }
 
   if (notNullOrUndefined(roundness)) {
     conditionalOverrides.radii = {
@@ -370,6 +394,7 @@ export const createTheme = (
     name: themeName,
     emotion,
     basewebTheme: createBaseUiTheme(emotion, startingTheme.primitives),
+    themeInput,
   }
 }
 

@@ -1034,6 +1034,21 @@ _create_option(
     type_=float,
 )
 
+_create_option(
+    "theme.borderColor",
+    description="""
+        The color of the border around elements.
+    """,
+)
+
+_create_option(
+    "theme.showBorderAroundInputs",
+    description="""
+        Whether to show a border around input elements (e.g. text_input, number_input,
+        file_uploader, etc).
+    """,
+    type_=bool,
+)
 
 # Config Section: Secrets #
 

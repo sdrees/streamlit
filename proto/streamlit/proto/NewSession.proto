@@ -152,6 +152,7 @@ message CustomThemeConfig {
   FontFamily font = 5;
   BaseTheme base = 6;
   string widget_background_color = 7;
+  // DEPRECATED: Use the border_color and show_border_around_inputs instead:
   string widget_border_color = 8;
   // DEPRECATED: Please use the roundness theme config instead:
   Radii radii = 9;
@@ -161,6 +162,8 @@ message CustomThemeConfig {
   FontSizes font_sizes = 16;
   string skeleton_background_color = 17;
   optional float roundness = 18;
+  optional string border_color = 19;
+  optional bool show_border_around_inputs = 20;
 }
 
 message FontFace {

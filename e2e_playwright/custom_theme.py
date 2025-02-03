@@ -87,6 +87,7 @@ with col2:
         )
         st.slider("Slider", min_value=0, max_value=100, value=50)
 
+
 with col3:
     tab1, _, _ = st.tabs(["Tab 1", "Tab 2", "Tab 3"])
     with tab1:

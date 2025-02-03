@@ -39,7 +39,7 @@ jobs:
 
       - name: Check new Material Icons
         id: check-material-icons
-        run: python scripts/check_new_material_icons.py
+        run: python scripts/check_new_material_symbols.py
 
       - name: New Material Icons Release Slack Message
         if: steps.check-material-icons.outcome == 'failure'

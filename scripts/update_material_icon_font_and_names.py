@@ -36,6 +36,11 @@ NAMES_SET_REGEX = re.compile(
     r"### MATERIAL ICON NAMES START ###(.+?)### MATERIAL ICON NAMES END ###", re.DOTALL
 )
 
+PLAYWRIGHT_TEST_REGEX = re.compile(
+    r"### LATEST MATERIAL ICON TEST START ###(.+?)### LATEST MATERIAL ICON TEST END ###",
+    re.DOTALL,
+)
+
 FONT_FILE_URL_REGEX = (
     r"url\((https://fonts\.gstatic\.com/s/materialsymbolsrounded/[^\)]+)\)"
 )
@@ -51,6 +56,7 @@ FONT_FILE_PATH = os.path.join(
     "MaterialSymbols",
     "MaterialSymbols-Rounded.woff2",
 )
+PLAYWRIGHT_TEST_MODULE_PATH = os.path.join(BASE_DIR, "e2e_playwright", "st_alert.py")
 
 
 # Fetch the content from the URL
@@ -68,10 +74,16 @@ for line in lines:
     name = line.split()[0]
     icon_names.add(name)
 
+new_icon_names = icon_names.difference(ALL_MATERIAL_ICONS)
+
 print(f"Existing number of icon names: {len(ALL_MATERIAL_ICONS)}")
 print(f"New number of icon names:  {len(icon_names)}")
-print(f"New icon names:  {icon_names.difference(ALL_MATERIAL_ICONS)}")
+print(f"New icon names:  {new_icon_names}")
 
+
+if len(icon_names) == len(ALL_MATERIAL_ICONS):
+    print("No new icon names found. Exiting.")
+    sys.exit(0)
 
 generated_code = f"""### MATERIAL ICON NAMES START ###
 ALL_MATERIAL_ICONS = {{{", ".join([f'"{icon_name}"' for icon_name in sorted(icon_names)])}}}
@@ -116,3 +128,20 @@ if font_url is not None:
 else:
     print("Font file not downloaded")
     sys.exit(1)
+
+
+icon_from_latest_font = list(new_icon_names)[0]
+
+generated_code = f"""### LATEST MATERIAL ICON TEST START ###
+st.success(
+    "Success message to test material icon from latest material symbols font",
+    icon=":material/{icon_from_latest_font}:",
+)
+### LATEST MATERIAL ICON TEST END ###"""
+
+with open(PLAYWRIGHT_TEST_MODULE_PATH, "r") as file:
+    script_content = file.read()
+
+updated_script_content = re.sub(PLAYWRIGHT_TEST_REGEX, generated_code, script_content)
+with open(PLAYWRIGHT_TEST_MODULE_PATH, "w") as file:
+    file.write(updated_script_content)

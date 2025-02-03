@@ -26,7 +26,7 @@ from streamlit.runtime.secrets import AttrDict
 from tests.testutil import create_mock_script_run_ctx
 
 
-class TestError(Exception):
+class SomeError(Exception):
     def __init__(self, message, **kwargs):
         self.__dict__.update(kwargs)
         super().__init__(self, message)
@@ -148,14 +148,14 @@ class SnowflakeConnectionTest(unittest.TestCase):
     def test_retry_behavior(self):
         mock_cursor = MagicMock()
         mock_cursor.fetch_pandas_all = MagicMock(
-            side_effect=TestError("oh noes :(", sqlstate="08001")
+            side_effect=SomeError("oh noes :(", sqlstate="08001")
         )
 
         conn = SnowflakeConnection("my_snowflake_connection")
         conn._instance.cursor.return_value = mock_cursor
 
         with patch.object(conn, "reset", wraps=conn.reset) as wrapped_reset:
-            with pytest.raises(TestError):
+            with pytest.raises(SomeError):
                 conn.query("SELECT 1;")
 
             # Our connection should have been reset after each failed attempt to call
@@ -174,13 +174,13 @@ class SnowflakeConnectionTest(unittest.TestCase):
     def test_retry_fails_fast_for_programming_errors_with_wrong_sqlstate(self):
         mock_cursor = MagicMock()
         mock_cursor.fetch_pandas_all = MagicMock(
-            side_effect=TestError("oh noes :(", sqlstate="42")
+            side_effect=SomeError("oh noes :(", sqlstate="42")
         )
 
         conn = SnowflakeConnection("my_snowflake_connection")
         conn._instance.cursor.return_value = mock_cursor
 
-        with pytest.raises(TestError):
+        with pytest.raises(SomeError):
             conn.query("SELECT 1;")
 
         # conn._connect should have just been called once when first creating the

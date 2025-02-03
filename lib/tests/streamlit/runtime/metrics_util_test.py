@@ -117,7 +117,7 @@ class PageTelemetryTest(DeltaGeneratorTestCase):
             (datetime.date.today(), "datetime.date"),
             (datetime.datetime.today().time(), "datetime.time"),
             (pd.DataFrame(), "DataFrame"),
-            (pd.Series(), "PandasSeries"),
+            (pd.Series(dtype="float64"), "PandasSeries"),
             # Also support classes as input
             (datetime.date, "datetime.date"),
             (pd.DataFrame, "DataFrame"),

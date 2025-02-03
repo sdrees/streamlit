@@ -33,7 +33,7 @@ from io import BytesIO
 from pathlib import Path
 from random import randint
 from tempfile import TemporaryFile
-from typing import TYPE_CHECKING, Any, Callable, Generator, Literal, Protocol
+from typing import TYPE_CHECKING, Any, Callable, Literal, Protocol
 from urllib import parse
 
 import pytest
@@ -57,6 +57,7 @@ from e2e_playwright.shared.performance import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Generator
     from types import ModuleType
 
 
@@ -397,9 +398,11 @@ def iframed_app(page: Page, app_port: int) -> IframedPage:
                 <body style="height: 100%;">
                     <iframe
                         src={src}
-                        id={_iframe_element_attrs.element_id
-                            if _iframe_element_attrs.element_id
-                            else ""}
+                        id={
+                _iframe_element_attrs.element_id
+                if _iframe_element_attrs.element_id
+                else ""
+            }
                         title="Iframed Streamlit App"
                         allow="clipboard-write; microphone;"
                         sandbox="allow-popups allow-same-origin allow-scripts allow-downloads"
@@ -754,7 +757,7 @@ def assert_snapshot(
 
         test_failure_messages.append(
             f"Snapshot mismatch for {snapshot_file_name} ({mismatch} pixels difference;"
-            f" {mismatch/total_pixels * 100:.2f}%)"
+            f" {mismatch / total_pixels * 100:.2f}%)"
         )
 
     yield compare

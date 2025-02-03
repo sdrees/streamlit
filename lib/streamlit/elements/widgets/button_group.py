@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -21,7 +22,6 @@ from typing import (
     Final,
     Generic,
     Literal,
-    Sequence,
     TypeVar,
     cast,
     overload,
@@ -471,7 +471,9 @@ class ButtonGroupMixin:
             Labels for the select options in an ``Iterable``. This can be a
             ``list``, ``set``, or anything supported by ``st.dataframe``. If
             ``options`` is dataframe-like, the first column will be used. Each
-            label will be cast to ``str`` internally by default.
+            label will be cast to ``str`` internally by default and can
+            optionally contain GitHub-flavored Markdown, including the Markdown
+            directives described in the ``body`` parameter of ``st.markdown``.
 
         selection_mode: "single" or "multi"
             The selection mode for the widget. If this is ``"single"``
@@ -488,7 +490,9 @@ class ButtonGroupMixin:
             Function to modify the display of the options. It receives
             the raw option as an argument and should output the label to be
             shown for that option. This has no impact on the return value of
-            the command.
+            the command. The output can optionally contain GitHub-flavored
+            Markdown, including the Markdown directives described in the
+            ``body`` parameter of ``st.markdown``.
 
         key: str or int
             An optional string or integer to use as the unique key for the widget.
@@ -496,10 +500,14 @@ class ButtonGroupMixin:
             based on its content. Multiple widgets of the same type may
             not share the same key.
 
-        help: str
-            An optional tooltip that gets displayed next to the widget label.
-            Streamlit only displays the tooltip when
-            ``label_visibility="visible"``.
+        help: str or None
+            A tooltip that gets displayed next to the widget label. Streamlit
+            only displays the tooltip when ``label_visibility="visible"``. If
+            this is ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         on_change: callable
             An optional callback invoked when this widget's value changes.
@@ -673,7 +681,9 @@ class ButtonGroupMixin:
             Labels for the select options in an ``Iterable``. This can be a
             ``list``, ``set``, or anything supported by ``st.dataframe``. If
             ``options`` is dataframe-like, the first column will be used. Each
-            label will be cast to ``str`` internally by default.
+            label will be cast to ``str`` internally by default and can
+            optionally contain GitHub-flavored Markdown, including the Markdown
+            directives described in the ``body`` parameter of ``st.markdown``.
 
         selection_mode: "single" or "multi"
             The selection mode for the widget. If this is ``"single"``
@@ -690,7 +700,9 @@ class ButtonGroupMixin:
             Function to modify the display of the options. It receives
             the raw option as an argument and should output the label to be
             shown for that option. This has no impact on the return value of
-            the command.
+            the command. The output can optionally contain GitHub-flavored
+            Markdown, including the Markdown directives described in the
+            ``body`` parameter of ``st.markdown``.
 
         key: str or int
             An optional string or integer to use as the unique key for the widget.
@@ -698,10 +710,14 @@ class ButtonGroupMixin:
             based on its content. Multiple widgets of the same type may
             not share the same key.
 
-        help: str
-            An optional tooltip that gets displayed next to the widget label.
-            Streamlit only displays the tooltip when
-            ``label_visibility="visible"``.
+        help: str or None
+            A tooltip that gets displayed next to the widget label. Streamlit
+            only displays the tooltip when ``label_visibility="visible"``. If
+            this is ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         on_change: callable
             An optional callback invoked when this widget's value changes.

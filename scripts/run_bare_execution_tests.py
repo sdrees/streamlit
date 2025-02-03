@@ -110,7 +110,7 @@ def main():
         click.secho(
             "\n".join(_command_to_string(command) for command in failed), fg="red"
         )
-        click.secho(f"\n{ len(failed)} failed scripts", fg="red", bold=True)
+        click.secho(f"\n{len(failed)} failed scripts", fg="red", bold=True)
         sys.exit(-1)
 
 

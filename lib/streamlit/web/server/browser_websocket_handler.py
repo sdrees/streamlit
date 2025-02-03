@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import hmac
 import json
-from typing import TYPE_CHECKING, Any, Awaitable, Final
+from typing import TYPE_CHECKING, Any, Final
 from urllib.parse import urlparse
 
 import tornado.concurrent
@@ -39,6 +39,8 @@ from streamlit.web.server.server_util import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable
+
     from streamlit.proto.ForwardMsg_pb2 import ForwardMsg
 
 _LOGGER: Final = get_logger(__name__)

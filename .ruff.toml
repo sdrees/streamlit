@@ -20,7 +20,7 @@ include = [
   "e2e_playwright/**/*.py",
   "scripts/**/*.py",
 ]
-target-version = 'py38'
+target-version = 'py39'
 line-length = 88
 
 [format]

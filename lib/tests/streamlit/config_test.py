@@ -392,7 +392,11 @@ class ConfigTest(unittest.TestCase):
                 "theme.backgroundColor",
                 "theme.secondaryBackgroundColor",
                 "theme.textColor",
+                "theme.roundness",
                 "theme.font",
+                "theme.borderColor",
+                "theme.showBorderAroundInputs",
+                "theme.linkColor",
                 "global.appTest",
                 "global.developmentMode",
                 "global.disableWidgetStateDuplicationWarning",
@@ -541,17 +545,46 @@ class ConfigTest(unittest.TestCase):
             config.get_option("doesnt.exist")
         self.assertEqual(str(e.value), 'Config key "doesnt.exist" not defined.')
 
-    def test_get_options_for_section(self):
-        config._set_option("theme.primaryColor", "000000", "test")
-        config._set_option("theme.font", "serif", "test")
-
+    def test_with_no_theme_options(self):
+        """Test that all theme options are None when no theme options are set."""
         expected = {
             "base": None,
-            "primaryColor": "000000",
+            "primaryColor": None,
+            "roundness": None,
             "secondaryBackgroundColor": None,
             "backgroundColor": None,
             "textColor": None,
+            "font": None,
+            "borderColor": None,
+            "showBorderAroundInputs": None,
+            "linkColor": None,
+        }
+        self.assertEqual(config.get_options_for_section("theme"), expected)
+
+    def test_with_theme_options(self):
+        """Test that the theme options are correctly set."""
+
+        config._set_option("theme.primaryColor", "#1BD760", "test")
+        config._set_option("theme.font", "serif", "test")
+        config._set_option("theme.base", "dark", "test")
+        config._set_option("theme.textColor", "#DFFDE0", "test")
+        config._set_option("theme.roundness", 0.85, "test")
+        config._set_option("theme.secondaryBackgroundColor", "#021A09", "test")
+        config._set_option("theme.backgroundColor", "#001200", "test")
+        config._set_option("theme.borderColor", "#0B4C0B", "test")
+        config._set_option("theme.showBorderAroundInputs", True, "test")
+        config._set_option("theme.linkColor", "#2EC163", "test")
+        expected = {
+            "base": "dark",
+            "primaryColor": "#1BD760",
+            "roundness": 0.85,
+            "secondaryBackgroundColor": "#021A09",
+            "backgroundColor": "#001200",
+            "textColor": "#DFFDE0",
             "font": "serif",
+            "borderColor": "#0B4C0B",
+            "showBorderAroundInputs": True,
+            "linkColor": "#2EC163",
         }
         self.assertEqual(config.get_options_for_section("theme"), expected)
 
@@ -560,13 +593,6 @@ class ConfigTest(unittest.TestCase):
         config.set_option("global.developmentMode", False)
         config.set_option("server.port", 1234)
         self.assertEqual(1234, config.get_option("browser.serverPort"))
-
-    def test_server_headless_via_atom_plugin(self):
-        os.environ["IS_RUNNING_IN_STREAMLIT_EDITOR_PLUGIN"] = "True"
-
-        self.assertEqual(True, config.get_option("server.headless"))
-
-        del os.environ["IS_RUNNING_IN_STREAMLIT_EDITOR_PLUGIN"]
 
     def test_server_headless(self):
         orig_display = None
@@ -609,11 +635,11 @@ class ConfigTest(unittest.TestCase):
 
         mock_callback = MagicMock(return_value=None)
 
-        with patch.object(config, "_config_options", new=config_options), patch.object(
-            config._on_config_parsed, "connect"
-        ) as patched_connect, patch.object(
-            config._on_config_parsed, "disconnect"
-        ) as patched_disconnect:
+        with (
+            patch.object(config, "_config_options", new=config_options),
+            patch.object(config._on_config_parsed, "connect") as patched_connect,
+            patch.object(config._on_config_parsed, "disconnect") as patched_disconnect,
+        ):
             mock_callback.reset_mock()
             disconnect_callback = config.on_config_parsed(mock_callback, connect_signal)
 

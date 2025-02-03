@@ -49,8 +49,10 @@ const requiredThemeColors = {
   info: colors.blue100,
   danger: colors.red100,
   dangerBg: transparentize(colors.red70, 0.8),
+  link: colors.blue80,
 
   primary: colors.red70,
+  secondary: colors.blue70,
   disabled: colors.gray40,
   lightestGray: colors.gray20,
   lightGray: colors.gray30,

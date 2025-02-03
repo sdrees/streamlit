@@ -16,7 +16,7 @@
 
 import styled, { CSSObject } from "@emotion/styled"
 
-import { EmotionTheme } from "~lib/theme"
+import { convertRemToPx, EmotionTheme } from "~lib/theme"
 
 export interface StyledFileDropzone {
   isDisabled: boolean
@@ -170,13 +170,13 @@ const compactFileUploader = (theme: EmotionTheme): CSSObject => ({
   },
 })
 
-export const StyledFileUploader = styled.div(({ theme }) => {
-  if (theme.inSidebar) {
-    return compactFileUploader(theme)
+interface StyledFileUploaderProps {
+  width: number
+}
+export const StyledFileUploader = styled.div<StyledFileUploaderProps>(
+  ({ theme, width }) => {
+    if (width < convertRemToPx("23rem")) {
+      return compactFileUploader(theme)
+    }
   }
-
-  return {
-    [`@media (max-width: ${theme.breakpoints.sm})`]:
-      compactFileUploader(theme),
-  }
-})
+)

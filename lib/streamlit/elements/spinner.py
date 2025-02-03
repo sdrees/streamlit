@@ -16,10 +16,13 @@ from __future__ import annotations
 
 import contextlib
 import threading
-from typing import Iterator
+from typing import TYPE_CHECKING
 
 import streamlit as st
 from streamlit.runtime.scriptrunner import add_script_run_ctx
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 @contextlib.contextmanager
@@ -34,9 +37,23 @@ def spinner(
     Parameters
     ----------
     text : str
-        The text to display next to the spinner. Defaults to "In progress...".
+        The text to display next to the spinner. This defaults to
+        ``"In progress..."``.
+
+        The text can optionally contain GitHub-flavored Markdown. Syntax
+        information can be found at: https://github.github.com/gfm.
+
+        See the ``body`` parameter of |st.markdown|_ for additional, supported
+        Markdown directives.
+
+        .. |st.markdown| replace:: ``st.markdown``
+        .. _st.markdown: https://docs.streamlit.io/develop/api-reference/text/st.markdown
+
     show_time : bool
-        Whether to show the elapsed time next to the spinner text. Defaults to False.
+        Whether to show the elapsed time next to the spinner text. If this is
+        ``False`` (default), no time is displayed. If this is ``True``,
+        elapsed time is displayed with a precision of 0.1 seconds. The time
+        format is not configurable.
 
     Example
     -------
@@ -46,6 +63,11 @@ def spinner(
     >>> with st.spinner("Wait for it...", show_time=True):
     >>>     time.sleep(5)
     >>> st.success("Done!")
+    >>> st.button("Rerun")
+
+    .. output ::
+        https://doc-spinner.streamlit.app/
+        height: 210px
 
     """
     from streamlit.proto.Spinner_pb2 import Spinner as SpinnerProto

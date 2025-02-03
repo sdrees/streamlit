@@ -232,13 +232,17 @@ class RuntimeTest(RuntimeTestCase):
         )
         session = self.runtime._session_mgr.get_session_info(session_id).session
 
-        with patch.object(
-            self.runtime._session_mgr, "disconnect_session", new=MagicMock()
-        ) as patched_disconnect_session, patch.object(
-            self.runtime, "_on_session_disconnected", new=MagicMock()
-        ) as patched_on_session_disconnected, patch.object(
-            self.runtime._message_cache, "remove_refs_for_session", new=MagicMock()
-        ) as patched_remove_refs_for_session:
+        with (
+            patch.object(
+                self.runtime._session_mgr, "disconnect_session", new=MagicMock()
+            ) as patched_disconnect_session,
+            patch.object(
+                self.runtime, "_on_session_disconnected", new=MagicMock()
+            ) as patched_on_session_disconnected,
+            patch.object(
+                self.runtime._message_cache, "remove_refs_for_session", new=MagicMock()
+            ) as patched_remove_refs_for_session,
+        ):
             self.runtime.disconnect_session(session_id)
             patched_disconnect_session.assert_called_once_with(session_id)
             patched_on_session_disconnected.assert_called_once()
@@ -252,13 +256,17 @@ class RuntimeTest(RuntimeTestCase):
         )
         session = self.runtime._session_mgr.get_session_info(session_id).session
 
-        with patch.object(
-            self.runtime._session_mgr, "close_session", new=MagicMock()
-        ) as patched_close_session, patch.object(
-            self.runtime, "_on_session_disconnected", new=MagicMock()
-        ) as patched_on_session_disconnected, patch.object(
-            self.runtime._message_cache, "remove_refs_for_session", new=MagicMock()
-        ) as patched_remove_refs_for_session:
+        with (
+            patch.object(
+                self.runtime._session_mgr, "close_session", new=MagicMock()
+            ) as patched_close_session,
+            patch.object(
+                self.runtime, "_on_session_disconnected", new=MagicMock()
+            ) as patched_on_session_disconnected,
+            patch.object(
+                self.runtime._message_cache, "remove_refs_for_session", new=MagicMock()
+            ) as patched_remove_refs_for_session,
+        ):
             self.runtime.close_session(session_id)
             patched_close_session.assert_called_once_with(session_id)
             patched_on_session_disconnected.assert_called_once()

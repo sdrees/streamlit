@@ -31,25 +31,21 @@ interface StyledSpinnerIconProps {
 export const StyledSpinnerIcon = styled(Spinner, {
   shouldForwardProp: (prop: string) =>
     isPropValid(prop) && !["size"].includes(prop),
-})<StyledSpinnerIconProps>(
-  ({ usingCustomTheme, size, margin, padding, theme }) => {
-    return {
-      width: theme.iconSizes[size],
-      height: theme.iconSizes[size],
-      fontSize: theme.iconSizes[size],
-      justifyContents: "center",
-      margin: computeSpacingStyle(margin, theme),
-      padding: computeSpacingStyle(padding, theme),
-      borderColor: theme.colors.borderColor,
-      borderTopColor: usingCustomTheme
-        ? theme.colors.primary
-        : theme.colors.blue70,
-      borderWidth: theme.sizes.spinnerThickness,
-      flexGrow: 0,
-      flexShrink: 0,
-    }
+})<StyledSpinnerIconProps>(({ size, margin, padding, theme }) => {
+  return {
+    width: theme.iconSizes[size],
+    height: theme.iconSizes[size],
+    fontSize: theme.iconSizes[size],
+    justifyContents: "center",
+    margin: computeSpacingStyle(margin, theme),
+    padding: computeSpacingStyle(padding, theme),
+    borderColor: theme.colors.borderColor,
+    borderTopColor: theme.colors.secondary,
+    borderWidth: theme.sizes.spinnerThickness,
+    flexGrow: 0,
+    flexShrink: 0,
   }
-)
+})
 
 interface StyledIconProps {
   as?: EmotionIcon

@@ -14,9 +14,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Iterator, Mapping
 from functools import lru_cache
 from types import MappingProxyType
-from typing import TYPE_CHECKING, Any, Iterable, Iterator, Mapping, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from streamlit import runtime
 from streamlit.runtime.metrics_util import gather_metrics

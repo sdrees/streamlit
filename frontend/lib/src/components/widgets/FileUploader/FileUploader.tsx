@@ -509,7 +509,7 @@ class FileUploader extends React.PureComponent<Props, State> {
 
   public render(): React.ReactNode {
     const { files } = this.state
-    const { element, disabled, widgetMgr } = this.props
+    const { element, disabled, widgetMgr, width } = this.props
     const acceptedExtensions = element.type
 
     // Manage our form-clear event handler.
@@ -528,6 +528,7 @@ class FileUploader extends React.PureComponent<Props, State> {
       <StyledFileUploader
         className="stFileUploader"
         data-testid="stFileUploader"
+        width={width}
       >
         <WidgetLabel
           label={element.label}

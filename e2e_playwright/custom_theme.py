@@ -39,23 +39,76 @@ st.navigation(
 )
 
 
+@st.dialog("My Dialog")
+def my_dialog():
+    st.write("Hello World")
+
+
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.button("Button")
+    if st.button("Open Dialog", use_container_width=True):
+        my_dialog()
+    st.segmented_control(
+        "Segmented Control",
+        options=["Option 1", "Option 2"],
+        default="Option 1",
+        label_visibility="collapsed",
+    )
     st.button("Primary Button", type="primary")
+    st.divider()
     st.code("# st.code\na = 1234")
     st.chat_input("Chat Input")
+    st.multiselect(
+        "Multiselect",
+        options=["Option 1", "Option 2", "Option 3"],
+        default=["Option 1"],
+        label_visibility="collapsed",
+    )
 with col2:
     with st.expander("Expander", expanded=True):
-        st.text_input("Text Input", placeholder="Placeholder")
-        st.checkbox("Checkbox", value=True)
+        st.text_area(
+            "Text Area",
+            placeholder="Placeholder",
+            height=68,
+            label_visibility="collapsed",
+        )
+        checkbox_col, toggle_col = st.columns(2)
+        with checkbox_col:
+            st.checkbox("Checkbox", value=True)
+        with toggle_col:
+            st.toggle("Toggle", value=True)
+        st.radio(
+            "Radio",
+            options=["Option 1", "Option 2"],
+            index=0,
+            horizontal=True,
+            label_visibility="collapsed",
+        )
         st.slider("Slider", min_value=0, max_value=100, value=50)
+
 
 with col3:
     tab1, _, _ = st.tabs(["Tab 1", "Tab 2", "Tab 3"])
     with tab1:
-        st.dataframe(pd.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6]}))
+        st.caption("Dataframe :primary[&] Table:")
+        st.progress(0.6, "Processing data...")
+        st.dataframe(
+            pd.DataFrame({"A": [1, 2], "B": ["streamlit.io", "snowflake.com"]}),
+            column_config={"B": st.column_config.LinkColumn()},
+            use_container_width=True,
+        )
+        st.table(
+            pd.DataFrame(
+                {
+                    "A": [1, 2],
+                    "B": [
+                        "[streamlit](streamlit.io)",
+                        "[snowflake](snowflake.com)",
+                    ],
+                }
+            )
+        )
 
 with st.sidebar:
     st.markdown(
@@ -64,4 +117,8 @@ with st.sidebar:
         help="Tooltip",
     )
     st.success("Wohooo!")
-    st.text_input("Text Input in Sidebar", placeholder="Placeholder")
+    st.divider()
+    st.text_input(
+        "Text Input in Sidebar", value="Some Text", help="Tooltip", max_chars=10
+    )
+    st.file_uploader("File :primary[Uploader]", type=["png", "gif"])

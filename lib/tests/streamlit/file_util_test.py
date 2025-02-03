@@ -67,9 +67,11 @@ class FileUtilTest(unittest.TestCase):
 
         dirname = os.path.dirname(file_util.get_streamlit_file_path(FILENAME))
         # patch streamlit.*.os.makedirs instead of os.makedirs for py35 compat
-        with patch("streamlit.file_util.open", mock_open()) as open, patch(
-            "streamlit.file_util.os.makedirs"
-        ) as makedirs, file_util.streamlit_write(FILENAME) as output:
+        with (
+            patch("streamlit.file_util.open", mock_open()) as open,
+            patch("streamlit.file_util.os.makedirs") as makedirs,
+            file_util.streamlit_write(FILENAME) as output,
+        ):
             output.write("some data")
             open().write.assert_called_once_with("some data")
             makedirs.assert_called_once_with(dirname, exist_ok=True)
@@ -78,13 +80,15 @@ class FileUtilTest(unittest.TestCase):
     @patch("streamlit.env_util.IS_DARWIN", True)
     def test_streamlit_write_exception(self):
         """Test streamlitfile_util.streamlit_write."""
-        with patch("streamlit.file_util.open", mock_open()) as p, patch(
-            "streamlit.file_util.os.makedirs"
+        with (
+            patch("streamlit.file_util.open", mock_open()) as p,
+            patch("streamlit.file_util.os.makedirs"),
         ):
             p.side_effect = OSError(errno.EINVAL, "[Errno 22] Invalid argument")
-            with pytest.raises(errors.Error) as e, file_util.streamlit_write(
-                FILENAME
-            ) as output:
+            with (
+                pytest.raises(errors.Error) as e,
+                file_util.streamlit_write(FILENAME) as output,
+            ):
                 output.write("some data")
             error_msg = (
                 "Unable to write file: /some/cache/file\n"

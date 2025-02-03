@@ -25,9 +25,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Final,
-    Iterable,
     Literal,
-    Sequence,
     TypedDict,
     Union,
     cast,
@@ -59,6 +57,8 @@ from streamlit.runtime.state import WidgetCallback, register_widget
 from streamlit.util import HASHLIB_KWARGS
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
+
     import altair as alt
 
     from streamlit.dataframe_util import Data
@@ -1523,16 +1523,18 @@ class VegaChartsMixin:
             descriptions.
 
         use_container_width : bool or None
-            Whether to override the figure's native width with the width of
-            the parent container. If ``use_container_width`` is None (default),
-            Streamlit will set it to True for all charts except for facet,
-            horizontal concatenation, and repeat charts (note that for these chart
-            types, ``use_container_width=True`` doesn't work properly). If
-            ``use_container_width`` is ``True``, Streamlit sets the width of the
-            figure to match the width of the parent container. If ``use_container_width``
-            is ``False``, Streamlit sets the width of the chart to fit its contents
-            according to the plotting library, up to the width of the parent
-            container.
+            Whether to override the chart's native width with the width of
+            the parent container. This can be one of the following:
+
+            - ``None`` (default): Streamlit will use the parent container's
+              width for all charts except those with known incompatibility
+              (``altair.Facet``, ``altair.HConcatChart``, and
+              ``altair.RepeatChart``).
+            - ``True``: Streamlit sets the width of the chart to match the
+              width of the parent container.
+            - ``False``: Streamlit sets the width of the chart to fit its
+              contents according to the plotting library, up to the width of
+              the parent container.
 
         theme : "streamlit" or None
             The theme of the chart. If ``theme`` is ``"streamlit"`` (default),
@@ -1689,16 +1691,18 @@ class VegaChartsMixin:
             https://vega.github.io/vega-lite/docs/ for more info.
 
         use_container_width : bool or None
-            Whether to override the figure's native width with the width of
-            the parent container. If ``use_container_width`` is None (default),
-            Streamlit will set it to True for all charts except for facet,
-            horizontal concatenation, and repeat charts (note that for these chart
-            types, ``use_container_width=True`` doesn't work properly). If
-            ``use_container_width`` is ``True``, Streamlit sets the width of the
-            figure to match the width of the parent container. If ``use_container_width``
-            is ``False``, Streamlit sets the width of the chart to fit its contents
-            according to the plotting library, up to the width of the parent
-            container.
+            Whether to override the chart's native width with the width of
+            the parent container. This can be one of the following:
+
+            - ``None`` (default): Streamlit will use the parent container's
+              width for all charts except those with known incompatibility
+              (``altair.Facet``, ``altair.HConcatChart``, and
+              ``altair.RepeatChart``).
+            - ``True``: Streamlit sets the width of the chart to match the
+              width of the parent container.
+            - ``False``: Streamlit sets the width of the chart to fit its
+              contents according to the plotting library, up to the width of
+              the parent container.
 
         theme : "streamlit" or None
             The theme of the chart. If ``theme`` is ``"streamlit"`` (default),

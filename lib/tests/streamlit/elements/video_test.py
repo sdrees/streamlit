@@ -150,7 +150,7 @@ class VideoTest(DeltaGeneratorTestCase):
         expected_subtitle_url = _calculate_file_id(
             fake_subtitle_data,
             "text/vtt",
-            filename=f'{hashlib.md5(b"default").hexdigest()}.vtt',
+            filename=f"{hashlib.md5(b'default').hexdigest()}.vtt",
         )
         self.assertIn(expected_subtitle_url, el.video.subtitles[0].url)
 
@@ -173,12 +173,12 @@ class VideoTest(DeltaGeneratorTestCase):
         expected_empty_subtitle_url = _calculate_file_id(
             b"",
             "text/vtt",
-            filename=f'{hashlib.md5(b"").hexdigest()}.vtt',
+            filename=f"{hashlib.md5(b'').hexdigest()}.vtt",
         )
         expected_english_subtitle_url = _calculate_file_id(
             fake_subtitle_data,
             "text/vtt",
-            filename=f'{hashlib.md5(b"English").hexdigest()}.vtt',
+            filename=f"{hashlib.md5(b'English').hexdigest()}.vtt",
         )
         self.assertIn(expected_empty_subtitle_url, el.video.subtitles[0].url)
         self.assertIn(expected_english_subtitle_url, el.video.subtitles[1].url)
@@ -197,7 +197,7 @@ class VideoTest(DeltaGeneratorTestCase):
         expected_english_subtitle_url = _calculate_file_id(
             fake_sub_content,
             "text/vtt",
-            filename=f'{hashlib.md5(b"default").hexdigest()}.vtt',
+            filename=f"{hashlib.md5(b'default').hexdigest()}.vtt",
         )
 
         el = self.get_delta_from_queue().new_element

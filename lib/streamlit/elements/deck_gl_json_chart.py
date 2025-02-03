@@ -19,11 +19,8 @@ from dataclasses import dataclass
 from typing import (
     TYPE_CHECKING,
     Any,
-    Dict,
     Final,
-    Iterable,
     Literal,
-    Mapping,
     TypedDict,
     cast,
     overload,
@@ -46,6 +43,8 @@ from streamlit.runtime.state import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
+
     from pydeck import Deck
 
     from streamlit.delta_generator import DeltaGenerator
@@ -542,6 +541,6 @@ def _get_pydeck_tooltip(pydeck_obj: Deck | None) -> dict[str, str] | None:
     # For details, see: https://github.com/visgl/deck.gl/pull/7125/files
     tooltip = getattr(pydeck_obj, "_tooltip", None)
     if tooltip is not None and isinstance(tooltip, dict):
-        return cast(Dict[str, str], tooltip)
+        return cast(dict[str, str], tooltip)
 
     return None

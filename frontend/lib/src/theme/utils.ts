@@ -15,7 +15,7 @@
  */
 
 import camelcase from "camelcase"
-import { getLuminance, parseToRgba, toHex } from "color2k"
+import { getLuminance, parseToRgba, toHex, transparentize } from "color2k"
 import decamelize from "decamelize"
 import cloneDeep from "lodash/cloneDeep"
 import isObject from "lodash/isObject"
@@ -25,6 +25,7 @@ import { getLogger } from "loglevel"
 
 import { CustomThemeConfig, ICustomThemeConfig } from "@streamlit/protobuf"
 
+import { CircularBuffer } from "~lib/components/shared/Profiler/CircularBuffer"
 import {
   baseTheme,
   CachedTheme,
@@ -38,8 +39,8 @@ import { localStorageAvailable, LocalStore } from "~lib/util/storageUtils"
 import {
   isDarkThemeInQueryParams,
   isLightThemeInQueryParams,
+  notNullOrUndefined,
 } from "~lib/util/utils"
-import { CircularBuffer } from "~lib/components/shared/Profiler/CircularBuffer"
 
 import { createBaseUiTheme } from "./createThemeUtil"
 import {
@@ -162,8 +163,13 @@ export const createEmotionTheme = (
   baseThemeConfig = baseTheme
 ): EmotionTheme => {
   const { colors, genericFonts } = baseThemeConfig.emotion
-  const { font, radii, fontSizes, ...customColors } = themeInput
-
+  const {
+    font,
+    fontSizes,
+    roundness,
+    showBorderAroundInputs,
+    ...customColors
+  } = themeInput
   const parsedFont = fontEnumToString(font)
 
   const parsedColors = Object.entries(customColors).reduce(
@@ -191,6 +197,8 @@ export const createEmotionTheme = (
     skeletonBackgroundColor,
     widgetBackgroundColor,
     widgetBorderColor,
+    borderColor,
+    linkColor,
   } = parsedColors
 
   const newGenericColors = { ...colors }
@@ -201,21 +209,62 @@ export const createEmotionTheme = (
   if (bgColor) newGenericColors.bgColor = bgColor
   if (widgetBackgroundColor)
     newGenericColors.widgetBackgroundColor = widgetBackgroundColor
-  if (widgetBorderColor) newGenericColors.widgetBorderColor = widgetBorderColor
   if (skeletonBackgroundColor)
     newGenericColors.skeletonBackgroundColor = skeletonBackgroundColor
+  if (linkColor) newGenericColors.link = linkColor
+
+  // Secondary color is not yet configurable. Set secondary color to primary color
+  // by default for all custom themes.
+  newGenericColors.secondary = newGenericColors.primary
 
   const conditionalOverrides: any = {}
 
-  if (radii) {
+  conditionalOverrides.colors = createEmotionColors(newGenericColors)
+
+  if (notNullOrUndefined(borderColor)) {
+    conditionalOverrides.colors.borderColor = borderColor
+    conditionalOverrides.colors.borderColorLight = transparentize(
+      borderColor,
+      0.55
+    )
+  }
+
+  if (showBorderAroundInputs || widgetBorderColor) {
+    // widgetBorderColor from the themeInput is deprecated. For compatibility
+    // with older SiS theming, we still activate the border around inputs if
+    // it is provided, but we are not using widgetBorderColor from theme input
+    // as color value.
+    conditionalOverrides.colors.widgetBorderColor =
+      conditionalOverrides.colors.borderColor
+  }
+
+  if (notNullOrUndefined(roundness)) {
     conditionalOverrides.radii = {
       ...baseThemeConfig.emotion.radii,
     }
 
-    if (radii.checkboxRadius)
-      conditionalOverrides.radii.md = addPxUnit(radii.checkboxRadius)
-    if (radii.baseWidgetRadius)
-      conditionalOverrides.radii.default = addPxUnit(radii.baseWidgetRadius)
+    // Normalize the roundness to be between 0 and 1.6rem base radii.
+    // 1.6rem is chosen based on having our base widgets fully rounded (at 1.25rem)
+    // and some additional roundness for which other elements still look good.
+    // Also enforces that roundness is 0-1. Bigger values are capped at 1.
+    // Smaller values are capped at 0.
+    // We make sure that the value is rounded to 2 decimal places to avoid
+    // floating point precision issues.
+    const baseRadii = roundToTwoDecimals(
+      Math.max(0, Math.min(roundness, 1)) * 1.6
+    )
+    conditionalOverrides.radii.default = addRemUnit(baseRadii)
+    // Adapt all the other radii sizes based on the base radii:
+    // But use some upper limits to prevent elements from looking weird:
+    conditionalOverrides.radii.md = addRemUnit(
+      roundToTwoDecimals(baseRadii * 0.5)
+    )
+    conditionalOverrides.radii.xl = addRemUnit(
+      roundToTwoDecimals(baseRadii * 1.5)
+    )
+    conditionalOverrides.radii.xxl = addRemUnit(
+      roundToTwoDecimals(baseRadii * 2)
+    )
   }
 
   if (fontSizes) {
@@ -314,12 +363,14 @@ export const createTheme = (
   baseThemeConfig?: ThemeConfig,
   inSidebar = false
 ): ThemeConfig => {
+  let completedThemeInput: CustomThemeConfig
+
   if (baseThemeConfig) {
-    themeInput = completeThemeInput(themeInput, baseThemeConfig)
+    completedThemeInput = completeThemeInput(themeInput, baseThemeConfig)
   } else if (themeInput.base === CustomThemeConfig.BaseTheme.DARK) {
-    themeInput = completeThemeInput(themeInput, darkTheme)
+    completedThemeInput = completeThemeInput(themeInput, darkTheme)
   } else {
-    themeInput = completeThemeInput(themeInput, lightTheme)
+    completedThemeInput = completeThemeInput(themeInput, lightTheme)
   }
 
   // We use startingTheme to pick a set of "auxiliary colors" for widgets like
@@ -330,7 +381,7 @@ export const createTheme = (
   // theme's backgroundColor instead of picking them using themeInput.base.
   // This way, things will look good even if a user sets
   // themeInput.base === LIGHT and themeInput.backgroundColor === "black".
-  const bgColor = themeInput.backgroundColor as string
+  const bgColor = completedThemeInput.backgroundColor as string
   const startingTheme = merge(
     cloneDeep(
       baseThemeConfig
@@ -342,13 +393,14 @@ export const createTheme = (
     { emotion: { inSidebar } }
   )
 
-  const emotion = createEmotionTheme(themeInput, startingTheme)
+  const emotion = createEmotionTheme(completedThemeInput, startingTheme)
 
   return {
     ...startingTheme,
     name: themeName,
     emotion,
     basewebTheme: createBaseUiTheme(emotion, startingTheme.primitives),
+    themeInput,
   }
 }
 
@@ -478,6 +530,14 @@ export function computeSpacingStyle(
 
 function addPxUnit(n: number): string {
   return `${n}px`
+}
+
+function addRemUnit(n: number): string {
+  return `${n}rem`
+}
+
+function roundToTwoDecimals(n: number): number {
+  return parseFloat(n.toFixed(2))
 }
 
 export function blend(color: string, background: string | undefined): string {

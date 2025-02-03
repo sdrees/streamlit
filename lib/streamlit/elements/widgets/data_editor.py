@@ -20,14 +20,8 @@ from decimal import Decimal
 from typing import (
     TYPE_CHECKING,
     Any,
-    Dict,
     Final,
-    Iterable,
-    List,
     Literal,
-    Mapping,
-    Set,
-    Tuple,
     TypedDict,
     TypeVar,
     Union,
@@ -70,6 +64,8 @@ from streamlit.type_util import is_type
 from streamlit.util import calc_md5
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
+
     import numpy as np
     import pandas as pd
     import pyarrow as pa
@@ -85,10 +81,10 @@ EditableData = TypeVar(
     "EditableData",
     bound=Union[
         dataframe_util.DataFrameGenericAlias[Any],  # covers DataFrame and Series
-        Tuple[Any],
-        List[Any],
-        Set[Any],
-        Dict[str, Any],
+        tuple[Any],
+        list[Any],
+        set[Any],
+        dict[str, Any],
         # TODO(lukasmasuch): Add support for np.ndarray
         # but it is not possible with np.ndarray.
         # NDArray[Any] works, but is only available in numpy>1.20.
@@ -106,10 +102,10 @@ DataTypes: TypeAlias = Union[
     "Styler",
     "pa.Table",
     "np.ndarray[Any, np.dtype[np.float64]]",
-    Tuple[Any],
-    List[Any],
-    Set[Any],
-    Dict[str, Any],
+    tuple[Any],
+    list[Any],
+    set[Any],
+    dict[str, Any],
 ]
 
 

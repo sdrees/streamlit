@@ -154,8 +154,7 @@ class StreamlitModuleNotFoundError(StreamlitAPIWarning):
 
     def __init__(self, module_name, *args):
         message = (
-            f'This Streamlit command requires module "{module_name}" '
-            "to be installed."
+            f'This Streamlit command requires module "{module_name}" to be installed.'
         )
         super().__init__(message, *args)
 

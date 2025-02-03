@@ -14,7 +14,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Final, Iterator, MutableMapping
+from collections.abc import Iterator, MutableMapping
+from typing import Any, Final
 
 from streamlit import logger as _logger
 from streamlit import runtime

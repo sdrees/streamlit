@@ -14,8 +14,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import datetime, timedelta, timezone
-from typing import TYPE_CHECKING, Any, Mapping, TypedDict, cast
+from typing import TYPE_CHECKING, Any, TypedDict, cast
 
 from streamlit import config
 from streamlit.errors import StreamlitAuthError

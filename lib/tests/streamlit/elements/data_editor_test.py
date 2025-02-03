@@ -20,7 +20,7 @@ import datetime
 import json
 import unittest
 from decimal import Decimal
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any
 from unittest.mock import MagicMock, patch
 
 import numpy as np
@@ -52,6 +52,9 @@ from streamlit.errors import StreamlitAPIException
 from streamlit.proto.Arrow_pb2 import Arrow as ArrowProto
 from tests.delta_generator_test_case import DeltaGeneratorTestCase
 from tests.streamlit.data_test_cases import SHARED_TEST_CASES, CaseMetadata
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 
 def _get_arrow_schema(df: pd.DataFrame) -> pa.Schema:

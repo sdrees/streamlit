@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 import os
-from typing import Final, Sequence
+from typing import TYPE_CHECKING, Final
 
 import tornado.web
 
@@ -26,6 +26,9 @@ from streamlit.web.server.server_util import (
     emit_endpoint_deprecation_notice,
     is_xsrf_enabled,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 _LOGGER: Final = get_logger(__name__)
 

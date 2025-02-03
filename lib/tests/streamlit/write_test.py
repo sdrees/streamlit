@@ -89,9 +89,10 @@ class StreamlitWriteTest(unittest.TestCase):
             def _repr_html_(self):
                 return "hello **world**"
 
-        with patch("streamlit.delta_generator.DeltaGenerator.html") as p1, patch(
-            "streamlit.delta_generator.DeltaGenerator.help"
-        ) as p2:
+        with (
+            patch("streamlit.delta_generator.DeltaGenerator.html") as p1,
+            patch("streamlit.delta_generator.DeltaGenerator.help") as p2,
+        ):
             obj = FakeHTMLable()
             st.write(obj)
 
@@ -396,9 +397,12 @@ class StreamlitWriteTest(unittest.TestCase):
         # We patch streamlit.exception to observe it, but we also make sure
         # it's still called (via side_effect). This ensures that it's called
         # with the proper arguments.
-        with patch("streamlit.delta_generator.DeltaGenerator.markdown") as m, patch(
-            "streamlit.delta_generator.DeltaGenerator.exception",
-            side_effect=handle_uncaught_app_exception,
+        with (
+            patch("streamlit.delta_generator.DeltaGenerator.markdown") as m,
+            patch(
+                "streamlit.delta_generator.DeltaGenerator.exception",
+                side_effect=handle_uncaught_app_exception,
+            ),
         ):
             m.side_effect = Exception("some exception")
 
@@ -425,9 +429,10 @@ class StreamlitWriteTest(unittest.TestCase):
 
     def test_sidebar(self):
         """Test st.write in the sidebar."""
-        with patch("streamlit.delta_generator.DeltaGenerator.markdown") as m, patch(
-            "streamlit.delta_generator.DeltaGenerator.help"
-        ) as h:
+        with (
+            patch("streamlit.delta_generator.DeltaGenerator.markdown") as m,
+            patch("streamlit.delta_generator.DeltaGenerator.help") as h,
+        ):
             st.sidebar.write("markdown", st.help)
 
             m.assert_called_once()

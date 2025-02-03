@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import uuid
 from collections import defaultdict
-from typing import Sequence
+from typing import TYPE_CHECKING
 
 from streamlit import util
 from streamlit.runtime.stats import CacheStat, group_stats
@@ -25,6 +25,9 @@ from streamlit.runtime.uploaded_file_manager import (
     UploadedFileRec,
     UploadFileUrlInfo,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 class MemoryUploadedFileManager(UploadedFileManager):

@@ -14,11 +14,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator, Mapping
 from typing import (
     TYPE_CHECKING,
     Final,
-    Iterator,
-    Mapping,
     NoReturn,
     Union,
 )
@@ -370,7 +369,7 @@ def _get_user_info() -> UserInfo:
 
 class UserInfoProxy(Mapping[str, Union[str, bool, None]]):
     """
-    A read-only, dict-like object for accessing information about the current
+    A read-only, dict-like object for accessing information about the current\
     user.
 
     ``st.experimental_user`` is dependent on the host platform running your

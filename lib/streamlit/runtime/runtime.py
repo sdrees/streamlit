@@ -19,7 +19,7 @@ import time
 import traceback
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import TYPE_CHECKING, Awaitable, Final, NamedTuple
+from typing import TYPE_CHECKING, Final, NamedTuple
 
 from streamlit import config
 from streamlit.components.lib.local_component_registry import LocalComponentRegistry
@@ -58,6 +58,8 @@ from streamlit.runtime.stats import StatsManager
 from streamlit.runtime.websocket_session_manager import WebsocketSessionManager
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable
+
     from streamlit.components.types.base_component_registry import BaseComponentRegistry
     from streamlit.proto.BackMsg_pb2 import BackMsg
     from streamlit.runtime.caching.storage import CacheStorageManager
@@ -385,9 +387,9 @@ class Runtime:
         -----
         Threading: UNSAFE. Must be called on the eventloop thread.
         """
-        assert not (
-            existing_session_id and session_id_override
-        ), "Only one of existing_session_id and session_id_override should be set!"
+        assert not (existing_session_id and session_id_override), (
+            "Only one of existing_session_id and session_id_override should be set!"
+        )
 
         if self._state in (RuntimeState.STOPPING, RuntimeState.STOPPED):
             raise RuntimeStoppedError(f"Can't connect_session (state={self._state})")

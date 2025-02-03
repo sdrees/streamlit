@@ -73,12 +73,15 @@ def _create_test_session(
     if event_loop is None:
         event_loop = MagicMock()
 
-    with patch(
-        "streamlit.runtime.app_session.asyncio.get_running_loop",
-        return_value=event_loop,
-    ), patch(
-        "streamlit.runtime.app_session.LocalSourcesWatcher",
-        MagicMock(spec=LocalSourcesWatcher),
+    with (
+        patch(
+            "streamlit.runtime.app_session.asyncio.get_running_loop",
+            return_value=event_loop,
+        ),
+        patch(
+            "streamlit.runtime.app_session.LocalSourcesWatcher",
+            MagicMock(spec=LocalSourcesWatcher),
+        ),
     ):
         return AppSession(
             script_data=ScriptData("/fake/script_path.py", is_hello=False),
@@ -568,13 +571,17 @@ class AppSessionTest(unittest.TestCase):
     def test_disconnect_file_watchers(self, patched_secrets_disconnect):
         session = _create_test_session()
 
-        with patch.object(
-            session._local_sources_watcher, "close"
-        ) as patched_close_local_sources_watcher, patch.object(
-            session, "_stop_config_listener"
-        ) as patched_stop_config_listener, patch.object(
-            session, "_stop_pages_listener"
-        ) as patched_stop_pages_listener:
+        with (
+            patch.object(
+                session._local_sources_watcher, "close"
+            ) as patched_close_local_sources_watcher,
+            patch.object(
+                session, "_stop_config_listener"
+            ) as patched_stop_config_listener,
+            patch.object(
+                session, "_stop_pages_listener"
+            ) as patched_stop_pages_listener,
+        ):
             session.disconnect_file_watchers()
 
             patched_close_local_sources_watcher.assert_called_once()
@@ -676,6 +683,10 @@ def _mock_get_options_for_section(overrides=None) -> Callable[..., Any]:
         "secondaryBackgroundColor": "blue",
         "textColor": "black",
         "font": "serif",
+        "roundness": 0.75,
+        "borderColor": "#ff0000",
+        "showBorderAroundInputs": True,
+        "linkColor": "#2EC163",
     }
 
     for k, v in overrides.items():
@@ -982,11 +993,14 @@ class AppSessionScriptEventTest(IsolatedAsyncioTestCase):
         handle_backmsg_exception.
         """
         session = _create_test_session(asyncio.get_running_loop())
-        with patch.object(
-            session, "handle_backmsg_exception"
-        ) as handle_backmsg_exception, patch.object(
-            session, "_handle_clear_cache_request"
-        ) as handle_clear_cache_request:
+        with (
+            patch.object(
+                session, "handle_backmsg_exception"
+            ) as handle_backmsg_exception,
+            patch.object(
+                session, "_handle_clear_cache_request"
+            ) as handle_clear_cache_request,
+        ):
             error = Exception("explode!")
             handle_clear_cache_request.side_effect = error
 
@@ -1009,11 +1023,14 @@ class AppSessionScriptEventTest(IsolatedAsyncioTestCase):
     @patch("streamlit.runtime.app_session._LOGGER")
     async def test_handles_app_heartbeat_backmsg(self, patched_logger):
         session = _create_test_session(asyncio.get_running_loop())
-        with patch.object(
-            session, "handle_backmsg_exception"
-        ) as handle_backmsg_exception, patch.object(
-            session, "_handle_app_heartbeat_request"
-        ) as handle_app_heartbeat_request:
+        with (
+            patch.object(
+                session, "handle_backmsg_exception"
+            ) as handle_backmsg_exception,
+            patch.object(
+                session, "_handle_app_heartbeat_request"
+            ) as handle_app_heartbeat_request,
+        ):
             msg = BackMsg()
             msg.app_heartbeat = True
             session.handle_backmsg(msg)
@@ -1035,6 +1052,10 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
                     "secondaryBackgroundColor": None,
                     "textColor": None,
                     "font": None,
+                    "roundness": None,
+                    "borderColor": None,
+                    "showBorderAroundInputs": None,
+                    "linkColor": None,
                 }
             )
         )
@@ -1054,6 +1075,10 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
                     "backgroundColor": None,
                     "secondaryBackgroundColor": None,
                     "textColor": None,
+                    "roundness": None,
+                    "borderColor": None,
+                    "showBorderAroundInputs": None,
+                    "linkColor": None,
                 }
             )
         )
@@ -1067,6 +1092,10 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
         # In proto3, primitive fields are technically always required and are
         # set to the type's zero value when undefined.
         assert new_session_msg.custom_theme.background_color == ""
+        assert not new_session_msg.custom_theme.HasField("roundness")
+        assert not new_session_msg.custom_theme.HasField("border_color")
+        assert not new_session_msg.custom_theme.HasField("show_border_around_inputs")
+        assert not new_session_msg.custom_theme.HasField("link_color")
 
     @patch("streamlit.runtime.app_session.config")
     def test_can_specify_all_options(self, patched_config):
@@ -1082,6 +1111,12 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
         assert new_session_msg.HasField("custom_theme")
         assert new_session_msg.custom_theme.primary_color == "coral"
         assert new_session_msg.custom_theme.background_color == "white"
+        assert new_session_msg.custom_theme.text_color == "black"
+        assert new_session_msg.custom_theme.secondary_background_color == "blue"
+        assert new_session_msg.custom_theme.roundness == 0.75
+        assert new_session_msg.custom_theme.border_color == "#ff0000"
+        assert new_session_msg.custom_theme.show_border_around_inputs is True
+        assert new_session_msg.custom_theme.link_color == "#2EC163"
 
     @patch("streamlit.runtime.app_session._LOGGER")
     @patch("streamlit.runtime.app_session.config")

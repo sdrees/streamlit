@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// md, default, xl, xxl can be changed based on the roundness theme config.
+// chatInput, full, and maxCheckboxRadius are not impacted by this config.
 export const radii = {
   md: "0.25rem",
   // This is the default radius used in most elements:
@@ -24,4 +26,6 @@ export const radii = {
   chatInput: "1.25rem",
   // Ensures that the element is fully rounded:
   full: "9999px",
+  // The maximum radius for checkboxes to still be recognizable as a checkbox:
+  maxCheckbox: "0.35rem",
 }

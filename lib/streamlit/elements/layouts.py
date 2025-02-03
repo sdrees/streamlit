@@ -14,7 +14,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Sequence, Union, cast
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Literal, Union, cast
 
 from typing_extensions import TypeAlias
 
@@ -647,9 +648,13 @@ class LayoutsMixin:
             .. |st.markdown| replace:: ``st.markdown``
             .. _st.markdown: https://docs.streamlit.io/develop/api-reference/text/st.markdown
 
-        help : str
-            An optional tooltip that gets displayed when the popover button is
-            hovered over.
+        help : str or None
+            A tooltip that gets displayed when the popover button is hovered
+            over. If this is ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         icon : str
             An optional emoji or icon to display next to the button label. If ``icon``

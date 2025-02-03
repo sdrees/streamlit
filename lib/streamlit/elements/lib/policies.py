@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Final, Sequence
+from typing import TYPE_CHECKING, Any, Final
 
 from streamlit import config, errors, logger, runtime
 from streamlit.elements.lib.form_utils import is_in_form
@@ -31,6 +31,8 @@ from streamlit.runtime.scriptrunner_utils.script_run_context import (
 from streamlit.runtime.state import WidgetCallback, get_session_state
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from streamlit.delta_generator import DeltaGenerator
 
 

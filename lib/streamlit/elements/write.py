@@ -18,17 +18,20 @@ import dataclasses
 import inspect
 import types
 from collections import ChainMap, UserDict, UserList
-from collections.abc import ItemsView, KeysView, ValuesView
+from collections.abc import (
+    AsyncGenerator,
+    Generator,
+    ItemsView,
+    Iterable,
+    KeysView,
+    ValuesView,
+)
 from io import StringIO
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncGenerator,
     Callable,
     Final,
-    Generator,
-    Iterable,
-    List,
     cast,
 )
 
@@ -58,7 +61,7 @@ _LOGGER: Final = get_logger(__name__)
 _TEXT_CURSOR: Final = " ▏"
 
 
-class StreamingOutput(List[Any]):
+class StreamingOutput(list[Any]):
     pass
 
 
@@ -251,48 +254,59 @@ class WriteMixin:
 
     @gather_metrics("write")
     def write(self, *args: Any, unsafe_allow_html: bool = False, **kwargs) -> None:
-        """Write arguments to the app.
+        """Displays arguments in the app.
 
         This is the Swiss Army knife of Streamlit commands: it does different
-        things depending on what you throw at it. Unlike other Streamlit commands,
-        write() has some unique properties:
+        things depending on what you throw at it. Unlike other Streamlit
+        commands, ``st.write()`` has some unique properties:
 
-        1. You can pass in multiple arguments, all of which will be written.
-        2. Its behavior depends on the input types as follows.
-        3. It returns None, so its "slot" in the App cannot be reused.
+        - You can pass in multiple arguments, all of which will be displayed.
+        - Its behavior depends on the input type(s).
 
         Parameters
         ----------
         *args : any
-            One or many objects to print to the App.
+            One or many objects to display in the app.
 
-            Arguments are handled as follows:
+            .. list-table:: Each type of argument is handled as follows:
+                :header-rows: 1
 
-            - write(string)         : Prints the formatted Markdown string, with
-                support for LaTeX expression, emoji shortcodes, and colored text.
-                See docs for st.markdown for more.
-            - write(dataframe)      : Displays any dataframe-like object in an interactive table.
-            - write(dict)           : Displays dict-like in an interactive viewer.
-            - write(list)           : Displays list-like in an interactive viewer.
-            - write(error)          : Prints an exception specially.
-            - write(func)           : Displays information about a function.
-            - write(module)         : Displays information about a module.
-            - write(class)          : Displays information about a class.
-            - write(DeltaGenerator) : Displays information about a DeltaGenerator.
-            - write(mpl_fig)        : Displays a Matplotlib figure.
-            - write(generator)      : Streams the output of a generator.
-            - write(openai.Stream)  : Streams the output of an OpenAI stream.
-            - write(altair)         : Displays an Altair chart.
-            - write(PIL.Image)      : Displays an image.
-            - write(keras)          : Displays a Keras model.
-            - write(graphviz)       : Displays a Graphviz graph.
-            - write(plotly_fig)     : Displays a Plotly figure.
-            - write(bokeh_fig)      : Displays a Bokeh figure.
-            - write(sympy_expr)     : Prints SymPy expression using LaTeX.
-            - write(htmlable)       : Prints _repr_html_() for the object if available.
-            - write(db_cursor)      : Displays DB API 2.0 cursor results in a table.
-            - write(obj)            : Prints str(obj) if otherwise unknown.
-
+                * - Type
+                  - Handling
+                * - ``str``
+                  - Uses ``st.markdown()``.
+                * - dataframe-like, ``dict``, or ``list``
+                  - Uses ``st.dataframe()``.
+                * - ``Exception``
+                  - Uses ``st.exception()``.
+                * - function, module, or class
+                  - Uses ``st.help()``.
+                * - ``DeltaGenerator``
+                  - Uses ``st.help()``.
+                * - Altair chart
+                  - Uses ``st.altair_chart()``.
+                * - Bokeh figure
+                  - Uses ``st.bokeh_chart()``.
+                * - Graphviz graph
+                  - Uses ``st.graphviz_chart()``.
+                * - Keras model
+                  - Converts model and uses ``st.graphviz_chart()``.
+                * - Matplotlib figure
+                  - Uses ``st.pyplot()``.
+                * - Plotly figure
+                  - Uses ``st.plotly_chart()``.
+                * - ``PIL.Image``
+                  - Uses ``st.image()``.
+                * - generator or stream (like ``openai.Stream``)
+                  - Uses ``st.write_stream()``.
+                * - SymPy expression
+                  - Uses ``st.latex()``.
+                * - An object with ``._repr_html()``
+                  - Uses ``st.html()``.
+                * - Database cursor
+                  - Displays DB API 2.0 cursor results in a table.
+                * - Any
+                  - Displays ``str(arg)`` as inline code.
 
         unsafe_allow_html : bool
             Whether to render HTML within ``*args``. This only applies to
@@ -316,9 +330,12 @@ class WriteMixin:
             Use other, more specific Streamlit commands to pass additional
             keyword arguments.
 
-
-        Example
+        Returns
         -------
+        None
+
+        Examples
+        --------
 
         Its basic use case is to draw Markdown-formatted text, whenever the
         input is a string:

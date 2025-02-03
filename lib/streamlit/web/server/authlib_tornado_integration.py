@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from authlib.integrations.base_client import (  # type: ignore[import-untyped]
     FrameworkIntegration,
@@ -23,6 +23,8 @@ from authlib.integrations.base_client import (  # type: ignore[import-untyped]
 from streamlit.runtime.secrets import AttrDict
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from streamlit.web.server.oidc_mixin import TornadoOAuth
 
 

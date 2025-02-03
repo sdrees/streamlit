@@ -14,7 +14,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterable, Iterator, MutableMapping, overload
+from collections.abc import Iterable, Iterator, MutableMapping
+from typing import TYPE_CHECKING, overload
 
 from streamlit.runtime.metrics_util import gather_metrics
 from streamlit.runtime.state.session_state_proxy import get_session_state

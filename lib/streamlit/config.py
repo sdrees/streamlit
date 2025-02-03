@@ -215,9 +215,9 @@ def get_options_for_section(section: str) -> dict[str, Any]:
 
 def _create_section(section: str, description: str) -> None:
     """Create a config section and store it globally in this module."""
-    assert (
-        section not in _section_descriptions
-    ), f'Cannot define section "{section}" twice.'
+    assert section not in _section_descriptions, (
+        f'Cannot define section "{section}" twice.'
+    )
     _section_descriptions[section] = description
 
 
@@ -282,11 +282,11 @@ def _create_option(
         type_=type_,
         sensitive=sensitive,
     )
-    assert (
-        option.section in _section_descriptions
-    ), 'Section "{}" must be one of {}.'.format(
-        option.section,
-        ", ".join(_section_descriptions.keys()),
+    assert option.section in _section_descriptions, (
+        'Section "{}" must be one of {}.'.format(
+            option.section,
+            ", ".join(_section_descriptions.keys()),
+        )
     )
     assert key not in _config_options_template, f'Cannot define option "{key}" twice.'
     _config_options_template[key] = option
@@ -300,9 +300,9 @@ def _delete_option(key: str) -> None:
     """
     try:
         del _config_options_template[key]
-        assert (
-            _config_options is not None
-        ), "_config_options should always be populated here."
+        assert _config_options is not None, (
+            "_config_options should always be populated here."
+        )
         del _config_options[key]
     except Exception:
         # We don't care if the option already doesn't exist.
@@ -1018,11 +1018,41 @@ _create_option(
 )
 
 _create_option(
+    "theme.linkColor",
+    description="Color used for all links.",
+)
+
+_create_option(
     "theme.font",
     description="""
         Font family for all text in the app, except code blocks. One of "sans serif",
         "serif", or "monospace".
     """,
+)
+
+_create_option(
+    "theme.roundness",
+    description="""
+        The roundness of the corners for most UI elements. Can be between 0 and 1,
+        where 0 is no-roundness and 1 is maximum roundness.
+    """,
+    type_=float,
+)
+
+_create_option(
+    "theme.borderColor",
+    description="""
+        The color of the border around elements.
+    """,
+)
+
+_create_option(
+    "theme.showBorderAroundInputs",
+    description="""
+        Whether to show a border around input elements (e.g. text_input, number_input,
+        file_uploader, etc).
+    """,
+    type_=bool,
 )
 
 # Config Section: Secrets #
@@ -1105,9 +1135,9 @@ def is_manually_set(option_name: str) -> bool:
 def show_config() -> None:
     """Print all config options to the terminal."""
     with _config_lock:
-        assert (
-            _config_options is not None
-        ), "_config_options should always be populated here."
+        assert _config_options is not None, (
+            "_config_options should always be populated here."
+        )
         config_util.show_config(_section_descriptions, _config_options)
 
 
@@ -1130,9 +1160,9 @@ def _set_option(key: str, value: Any, where_defined: str) -> None:
         Tells the config system where this was set.
 
     """
-    assert (
-        _config_options is not None
-    ), "_config_options should always be populated here."
+    assert _config_options is not None, (
+        "_config_options should always be populated here."
+    )
     if key not in _config_options:
         # Import logger locally to prevent circular references
         from streamlit.logger import get_logger
@@ -1336,13 +1366,13 @@ def _check_conflicts() -> None:
     LOGGER = get_logger(__name__)
 
     if get_option("global.developmentMode"):
-        assert _is_unset(
-            "server.port"
-        ), "server.port does not work when global.developmentMode is true."
+        assert _is_unset("server.port"), (
+            "server.port does not work when global.developmentMode is true."
+        )
 
-        assert _is_unset(
-            "browser.serverPort"
-        ), "browser.serverPort does not work when global.developmentMode is true."
+        assert _is_unset("browser.serverPort"), (
+            "browser.serverPort does not work when global.developmentMode is true."
+        )
 
     # XSRF conflicts
     if get_option("server.enableXsrfProtection"):

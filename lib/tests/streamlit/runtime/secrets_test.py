@@ -19,9 +19,9 @@ from __future__ import annotations
 import os
 import tempfile
 import unittest
+from collections.abc import Mapping, MutableMapping
 from collections.abc import Mapping as MappingABC
 from collections.abc import MutableMapping as MutableMappingABC
-from typing import Mapping, MutableMapping
 from unittest.mock import MagicMock, mock_open, patch
 
 from parameterized import parameterized

@@ -16,17 +16,13 @@ from __future__ import annotations
 
 import os
 import threading
+from collections.abc import ItemsView, Iterator, KeysView, Mapping, ValuesView
 from copy import deepcopy
 from typing import (
     Any,
     Callable,
     Final,
-    ItemsView,
-    Iterator,
-    KeysView,
-    Mapping,
     NoReturn,
-    ValuesView,
 )
 
 from blinker import Signal

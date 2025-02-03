@@ -164,6 +164,7 @@ message CustomThemeConfig {
   optional float roundness = 18;
   optional string border_color = 19;
   optional bool show_border_around_inputs = 20;
+  optional string link_color = 21;
 }
 
 message FontFace {

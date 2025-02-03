@@ -24,8 +24,7 @@ import {
 import { mergeOverrides } from "baseui"
 import { Overrides } from "baseui/overrides"
 
-import { EmotionTheme, isPresetTheme } from "~lib/theme"
-import { LibContext } from "~lib/components/core/LibContext"
+import { EmotionTheme } from "~lib/theme"
 
 export enum Size {
   EXTRASMALL = "xs",
@@ -56,8 +55,6 @@ function ProgressBar({
     lg: theme.spacing.xl,
     xl: theme.spacing.twoXL,
   }
-  const { activeTheme } = React.useContext(LibContext)
-  const usingCustomTheme = !isPresetTheme(activeTheme)
   const defaultOverrides: Overrides<ProgressBarOverrides> = {
     BarContainer: {
       style: {
@@ -84,9 +81,7 @@ function ProgressBar({
     },
     BarProgress: {
       style: () => ({
-        backgroundColor: usingCustomTheme
-          ? theme.colors.primary
-          : theme.colors.blue70,
+        backgroundColor: theme.colors.secondary,
         borderTopLeftRadius: theme.spacing.twoXS,
         borderTopRightRadius: theme.spacing.twoXS,
         borderBottomLeftRadius: theme.spacing.twoXS,

@@ -109,6 +109,7 @@ FD = FieldDescriptor
                 ("roundness", FD.LABEL_OPTIONAL, FD.TYPE_FLOAT),
                 ("border_color", FD.LABEL_OPTIONAL, FD.TYPE_STRING),
                 ("show_border_around_inputs", FD.LABEL_OPTIONAL, FD.TYPE_BOOL),
+                ("link_color", FD.LABEL_OPTIONAL, FD.TYPE_STRING),
             },
         ),
         (

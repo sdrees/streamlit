@@ -98,7 +98,7 @@ function useCustomTheme(): Readonly<CustomGridTheme> {
       // Special cells:
       bgBubble: theme.colors.secondaryBg,
       bgBubbleSelected: theme.colors.secondaryBg,
-      linkColor: theme.colors.linkText,
+      linkColor: theme.colors.link,
       drilldownBorder: theme.colors.darkenedBgMix25,
       // Unused settings:
       // lineHeight

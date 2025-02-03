@@ -1018,6 +1018,11 @@ _create_option(
 )
 
 _create_option(
+    "theme.linkColor",
+    description="Color used for all links.",
+)
+
+_create_option(
     "theme.font",
     description="""
         Font family for all text in the app, except code blocks. One of "sans serif",

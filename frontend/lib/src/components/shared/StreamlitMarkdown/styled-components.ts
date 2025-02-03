@@ -33,7 +33,7 @@ function convertRemToEm(s: string): string {
 function sharedMarkdownStyle(theme: Theme): any {
   return {
     a: {
-      color: theme.colors.linkText,
+      color: theme.colors.link,
       textDecoration: "underline",
     },
   }

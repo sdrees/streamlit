@@ -131,9 +131,9 @@ export const StyledAboutInfo = styled.div(({ theme }) => ({
 }))
 
 export const StyledAboutLink = styled.a(({ theme }) => ({
-  color: `${theme.colors.linkText} !important`,
+  color: `${theme.colors.link} !important`,
 
   "&:hover": {
-    color: `${darken(theme.colors.linkText, 0.15)} !important`,
+    color: `${darken(theme.colors.link, 0.15)} !important`,
   },
 }))

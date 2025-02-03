@@ -396,6 +396,7 @@ class ConfigTest(unittest.TestCase):
                 "theme.font",
                 "theme.borderColor",
                 "theme.showBorderAroundInputs",
+                "theme.linkColor",
                 "global.appTest",
                 "global.developmentMode",
                 "global.disableWidgetStateDuplicationWarning",
@@ -556,6 +557,7 @@ class ConfigTest(unittest.TestCase):
             "font": None,
             "borderColor": None,
             "showBorderAroundInputs": None,
+            "linkColor": None,
         }
         self.assertEqual(config.get_options_for_section("theme"), expected)
 
@@ -571,7 +573,7 @@ class ConfigTest(unittest.TestCase):
         config._set_option("theme.backgroundColor", "#001200", "test")
         config._set_option("theme.borderColor", "#0B4C0B", "test")
         config._set_option("theme.showBorderAroundInputs", True, "test")
-
+        config._set_option("theme.linkColor", "#2EC163", "test")
         expected = {
             "base": "dark",
             "primaryColor": "#1BD760",
@@ -582,6 +584,7 @@ class ConfigTest(unittest.TestCase):
             "font": "serif",
             "borderColor": "#0B4C0B",
             "showBorderAroundInputs": True,
+            "linkColor": "#2EC163",
         }
         self.assertEqual(config.get_options_for_section("theme"), expected)
 

@@ -92,11 +92,23 @@ with col3:
     tab1, _, _ = st.tabs(["Tab 1", "Tab 2", "Tab 3"])
     with tab1:
         st.caption("Dataframe :primary[&] Table:")
+        st.progress(0.6, "Processing data...")
         st.dataframe(
-            pd.DataFrame({"A": [1, 2], "B": ["Hello", "World"]}),
+            pd.DataFrame({"A": [1, 2], "B": ["streamlit.io", "snowflake.com"]}),
+            column_config={"B": st.column_config.LinkColumn()},
             use_container_width=True,
         )
-        st.table(pd.DataFrame({"A": [1, 2], "B": ["Hello", "World"]}))
+        st.table(
+            pd.DataFrame(
+                {
+                    "A": [1, 2],
+                    "B": [
+                        "[streamlit](streamlit.io)",
+                        "[snowflake](snowflake.com)",
+                    ],
+                }
+            )
+        )
 
 with st.sidebar:
     st.markdown(

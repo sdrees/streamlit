@@ -17,13 +17,10 @@
 import isPropValid from "@emotion/is-prop-valid"
 import styled from "@emotion/styled"
 import { Spinner } from "baseui/spinner"
-interface ThemedStyledSpinnerProps {
-  usingCustomTheme: boolean
-}
 
 export const ThemedStyledSpinner = styled(Spinner, {
   shouldForwardProp: isPropValid,
-})<ThemedStyledSpinnerProps>(({ theme, usingCustomTheme }) => {
+})(({ theme }) => {
   return {
     fontSize: theme.fontSizes.sm,
     width: theme.sizes.spinnerSize,
@@ -33,9 +30,7 @@ export const ThemedStyledSpinner = styled(Spinner, {
     padding: theme.spacing.none,
     margin: theme.spacing.none,
     borderColor: theme.colors.borderColor,
-    borderTopColor: usingCustomTheme
-      ? theme.colors.primary
-      : theme.colors.blue70,
+    borderTopColor: theme.colors.secondary,
     flexGrow: 0,
     flexShrink: 0,
   }

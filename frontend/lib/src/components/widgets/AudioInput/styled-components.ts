@@ -68,7 +68,7 @@ export const StyledErrorTextSpan = styled.span(({ theme }) => ({
 }))
 
 export const StyledNoMicInputLearnMoreLink = styled.a(({ theme }) => ({
-  color: theme.colors.linkText,
+  color: theme.colors.link,
   textDecoration: "underline",
 }))
 
@@ -149,7 +149,7 @@ export const StyledSpinner = styled(Spinner)(({ theme }) => {
     padding: theme.spacing.none,
     margin: theme.spacing.none,
     borderColor: theme.colors.borderColor,
-    borderTopColor: theme.colors.primary,
+    borderTopColor: theme.colors.secondary,
     flexGrow: 0,
     flexShrink: 0,
   }

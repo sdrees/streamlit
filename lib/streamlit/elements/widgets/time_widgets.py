@@ -404,10 +404,14 @@ class TimeWidgetsMixin:
             If this is omitted, a key will be generated for the widget
             based on its content. No two widgets may have the same key.
 
-        help : str
-            An optional tooltip that gets displayed next to the widget label.
-            Streamlit only displays the tooltip when
-            ``label_visibility="visible"``.
+        help : str or None
+            A tooltip that gets displayed next to the widget label. Streamlit
+            only displays the tooltip when ``label_visibility="visible"``. If
+            this is ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         on_change : callable
             An optional callback invoked when this time_input's value changes.
@@ -714,10 +718,14 @@ class TimeWidgetsMixin:
             If this is omitted, a key will be generated for the widget
             based on its content. No two widgets may have the same key.
 
-        help : str
-            An optional tooltip that gets displayed next to the widget label.
-            Streamlit only displays the tooltip when
-            ``label_visibility="visible"``.
+        help : str or None
+            A tooltip that gets displayed next to the widget label. Streamlit
+            only displays the tooltip when ``label_visibility="visible"``. If
+            this is ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         on_change : callable
             An optional callback invoked when this date_input's value changes.

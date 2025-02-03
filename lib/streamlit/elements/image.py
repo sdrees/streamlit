@@ -79,9 +79,18 @@ class ImageMixin:
               row of images that overflow to additional rows as needed.
         caption : str or list of str
             Image caption(s). If this is ``None`` (default), no caption is
-            displayed. If ``image`` is a list of multiple images,
-            ``caption`` must be a list of captions (one caption for each
-            image) or ``None``.
+            displayed. If ``image`` is a list of multiple images, ``caption``
+            must be a list of captions (one caption for each image) or
+            ``None``.
+
+            Captions can optionally contain GitHub-flavored Markdown. Syntax
+            information can be found at: https://github.github.com/gfm.
+
+            See the ``body`` parameter of |st.markdown|_ for additional,
+            supported Markdown directives.
+
+            .. |st.markdown| replace:: ``st.markdown``
+            .. _st.markdown: https://docs.streamlit.io/develop/api-reference/text/st.markdown
         width : int or None
             Image width. If this is ``None`` (default), Streamlit will use the
             image's native width, up to the width of the parent container.

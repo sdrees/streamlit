@@ -634,24 +634,30 @@ class ArrowMixin:
         """Display a static table.
 
         While ``st.dataframe`` is geared towards large datasets and interactive
-        data exploration, ``st.table`` is useful to display a small table without
-        scrolling – e.g. a confusion matrix or a leaderboard. For this reason, it also
-        supports Markdown formatting.
+        data exploration, ``st.table`` is useful for displaying small, styled
+        tables without sorting or scrolling. For example, ``st.table`` may be
+        the preferred way to display a confusion matrix or leaderboard.
+        Additionally, ``st.table`` supports Markdown.
 
         Parameters
         ----------
         data : Anything supported by st.dataframe
             The table data.
 
-            All cells including the index and column headers can optionally contain
-            GitHub-flavored Markdown. See the ``body`` parameter of
-            |st.markdown|_ for additional, supported Markdown directives.
+            All cells including the index and column headers can optionally
+            contain GitHub-flavored Markdown. Syntax information can be found
+            at: https://github.github.com/gfm.
+
+            See the ``body`` parameter of |st.markdown|_ for additional,
+            supported Markdown directives.
 
             .. |st.markdown| replace:: ``st.markdown``
             .. _st.markdown: https://docs.streamlit.io/develop/api-reference/text/st.markdown
 
-        Example
-        -------
+        Examples
+        --------
+        **Example 1: Display a simple dataframe as a static table**
+
         >>> import streamlit as st
         >>> import pandas as pd
         >>> import numpy as np
@@ -666,19 +672,26 @@ class ArrowMixin:
            https://doc-table.streamlit.app/
            height: 480px
 
+        **Example 2: Display a table of Markdown strings**
 
+        >>> import streamlit as st
+        >>> import pandas as pd
+        >>>
         >>> df = pd.DataFrame(
         ...     {
         ...         "Command": ["**st.table**", "*st.dataframe*"],
         ...         "Type": ["`static`", "`interactive`"],
-        ...         "URL": ["[docs](https://docs.streamlit.io)", "🔗"],
+        ...         "Docs": [
+        ...             "[:rainbow[docs]](https://docs.streamlit.io/develop/api-reference/data/st.dataframe)",
+        ...             "[:book:](https://docs.streamlit.io/develop/api-reference/data/st.table)",
+        ...         ],
         ...     }
         ... )
         >>> st.table(df)
 
         .. output::
            https://doc-table-markdown.streamlit.app/
-           height: 480px
+           height: 200px
         """
 
         # Check if data is uncollected, and collect it but with 100 rows max, instead of

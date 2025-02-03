@@ -125,9 +125,14 @@ class ButtonMixin:
             An optional string or integer to use as the unique key for the widget.
             If this is omitted, a key will be generated for the widget
             based on its content. No two widgets may have the same key.
-        help : str
-            An optional tooltip that gets displayed when the button is
-            hovered over.
+
+        help : str or None
+            A tooltip that gets displayed when the button is hovered over. If
+            this is ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         on_click : callable
             An optional callback invoked when this button is clicked.
@@ -321,9 +326,13 @@ class ButtonMixin:
             If this is omitted, a key will be generated for the widget
             based on its content. No two widgets may have the same key.
 
-        help : str
-            An optional tooltip that gets displayed when the button is
-            hovered over.
+        help : str or None
+            A tooltip that gets displayed when the button is hovered over. If
+            this is ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         on_click : callable
             An optional callback invoked when this button is clicked.
@@ -498,9 +507,13 @@ class ButtonMixin:
         url : str
             The url to be opened on user click
 
-        help : str
-            An optional tooltip that gets displayed when the button is
-            hovered over.
+        help : str or None
+            A tooltip that gets displayed when the button is hovered over. If
+            this is ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         type : "primary", "secondary", or "tertiary"
             An optional string that specifies the button type. This can be one
@@ -634,9 +647,13 @@ class ButtonMixin:
               <https://fonts.google.com/icons?icon.set=Material+Symbols&icon.style=Rounded>`_
               font library.
 
-        help : str
-            An optional tooltip that gets displayed when the link is
-            hovered over.
+        help : str or None
+            A tooltip that gets displayed when the link is hovered over. If
+            this is ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         disabled : bool
             An optional boolean that disables the page link if set to ``True``.

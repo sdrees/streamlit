@@ -45,8 +45,13 @@ class TextMixin:
         body : str
             The string to display.
 
-        help : str
-            An optional tooltip that gets displayed next to the text.
+        help : str or None
+            A tooltip that gets displayed next to the text. If this is ``None``
+            (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         Example
         -------

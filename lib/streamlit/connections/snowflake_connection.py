@@ -108,14 +108,26 @@ class SnowflakeConnection(BaseConnection["InternalSnowflakeConnection"]):
 
     **Example 2: Configuration with keyword arguments and external authentication**
 
-    You can configure your Snowflake connection with keyword arguments (with or
-    without ``secrets.toml``). For example, if your Snowflake account supports
-    SSO, you can set up a quick local connection for development using `browser-based SSO
+    You can configure your Snowflake connection with keyword arguments. The
+    keyword arguments are merged with (and take precedence over) the values in
+    ``secrets.toml``. However, if you name your connection ``"snowflake"`` and
+    don't have a ``[connections.snowflake]`` dictionary in your
+    ``secrets.toml`` file, Streamlit will ignore any keyword arguments and use
+    the default Snowflake connection as described in Example 5 and Example 6.
+    To configure your connection using only keyword arguments, declare a name
+    for the connection other than ``"snowflake"``.
+
+    For example, if your Snowflake account supports SSO, you can set up a quick
+    local connection for development using `browser-based SSO
     <https://docs.snowflake.com/en/user-guide/admin-security-fed-auth-use#how-browser-based-sso-works>`_.
+    Because there is nothing configured in ``secrets.toml``, the name is an
+    empty string and the type is set to ``"snowflake"``. This prevents
+    Streamlit from ignoring the keyword arguments and using a default
+    Snowflake connection.
 
     >>> import streamlit as st
     >>> conn = st.connection(
-    ...     connection_name,
+    ...     "",
     ...     type="snowflake",
     ...     account="xxx-xxx",
     ...     user="xxx",
@@ -164,12 +176,12 @@ class SnowflakeConnection(BaseConnection["InternalSnowflakeConnection"]):
     >>> conn = st.connection("snowflake")
     >>> df = conn.query("SELECT * FROM my_table")
 
-    **Snowflake Default Connection**
-    If you don't have Streamlit secret `[connections.snowflake]` and just use
-    `st.connection("snowflake")`, Streamlit will use the default connection behavior as documented in
-    https://docs.snowflake.cn/en/developer-guide/python-connector/python-connector-connect#setting-a-default-connection
+    **Example 5: Default connection with an environment variable**
 
-    ***Example 5: Default connection with an environment variable***
+    If you don't have a ``[connections.snowflake]`` dictionary in your
+    ``secrets.toml`` file and use ``st.connection("snowflake")``, Streamlit
+    will use the default connection for the `Snowflake Python Connector
+    <https://docs.snowflake.cn/en/developer-guide/python-connector/python-connector-connect#setting-a-default-connection>`_.
 
     If you have a Snowflake configuration file with a connection named
     ``my_connection`` as in Example 3, you can set an environment variable to
@@ -183,7 +195,7 @@ class SnowflakeConnection(BaseConnection["InternalSnowflakeConnection"]):
     >>> conn = st.connection("snowflake")
     >>> df = conn.query("SELECT * FROM my_table")
 
-    ***Example 6: Default connection in Snowflake's connection configuration file***
+    **Example 6: Default connection in Snowflake's connection configuration file**
 
     If you have a Snowflake configuration file that defines your ``default``
     connection, Streamlit will automatically use it if no other connection is

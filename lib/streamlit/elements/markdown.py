@@ -93,8 +93,13 @@ class MarkdownMixin:
                 If you only want to insert HTML or CSS without Markdown text,
                 we recommend using ``st.html`` instead.
 
-        help : str
-            An optional tooltip that gets displayed next to the Markdown.
+        help : str or None
+            A tooltip that gets displayed next to the Markdown. If this is
+            ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         Examples
         --------
@@ -205,8 +210,13 @@ class MarkdownMixin:
                 If you only want to insert HTML or CSS without Markdown text,
                 we recommend using ``st.html`` instead.
 
-        help : str
-            An optional tooltip that gets displayed next to the caption.
+        help : str or None
+            A tooltip that gets displayed next to the caption. If this is
+            ``None`` (default), no tooltip is displayed.
+
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         Examples
         --------
@@ -246,9 +256,13 @@ class MarkdownMixin:
             a good idea to use raw Python strings since LaTeX uses backslashes
             a lot.
 
-        help : str
-            An optional tooltip that gets displayed next to the LaTeX expression.
+        help : str or None
+            A tooltip that gets displayed next to the LaTeX expression. If
+            this is ``None`` (default), no tooltip is displayed.
 
+            The tooltip can optionally contain GitHub-flavored Markdown,
+            including the Markdown directives described in the ``body``
+            parameter of ``st.markdown``.
 
         Example
         -------

@@ -153,12 +153,14 @@ message CustomThemeConfig {
   BaseTheme base = 6;
   string widget_background_color = 7;
   string widget_border_color = 8;
+  // DEPRECATED: Please use the roundness theme config instead:
   Radii radii = 9;
   string body_font = 13;
   string code_font = 14;
   repeated FontFace font_faces = 15;
   FontSizes font_sizes = 16;
   string skeleton_background_color = 17;
+  optional float roundness = 18;
 }
 
 message FontFace {
@@ -168,6 +170,7 @@ message FontFace {
   string style = 4;
 }
 
+// DEPRECATED: Please use the roundness theme config instead.
 message Radii {
   // In pixels.
   int32 base_widget_radius = 1;

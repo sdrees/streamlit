@@ -145,7 +145,6 @@ export const StyledSpinner = styled(Spinner)(({ theme }) => {
     width: theme.sizes.spinnerSize,
     height: theme.sizes.spinnerSize,
     borderWidth: theme.sizes.spinnerThickness,
-    radius: theme.radii.md,
     justifyContents: "center",
     padding: theme.spacing.none,
     margin: theme.spacing.none,

@@ -676,6 +676,7 @@ def _mock_get_options_for_section(overrides=None) -> Callable[..., Any]:
         "secondaryBackgroundColor": "blue",
         "textColor": "black",
         "font": "serif",
+        "roundness": 0.75,
     }
 
     for k, v in overrides.items():
@@ -1035,6 +1036,7 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
                     "secondaryBackgroundColor": None,
                     "textColor": None,
                     "font": None,
+                    "roundness": None,
                 }
             )
         )
@@ -1054,6 +1056,7 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
                     "backgroundColor": None,
                     "secondaryBackgroundColor": None,
                     "textColor": None,
+                    "roundness": None,
                 }
             )
         )
@@ -1067,6 +1070,7 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
         # In proto3, primitive fields are technically always required and are
         # set to the type's zero value when undefined.
         assert new_session_msg.custom_theme.background_color == ""
+        assert not new_session_msg.custom_theme.HasField("roundness")
 
     @patch("streamlit.runtime.app_session.config")
     def test_can_specify_all_options(self, patched_config):
@@ -1082,6 +1086,7 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
         assert new_session_msg.HasField("custom_theme")
         assert new_session_msg.custom_theme.primary_color == "coral"
         assert new_session_msg.custom_theme.background_color == "white"
+        assert new_session_msg.custom_theme.roundness == 0.75
 
     @patch("streamlit.runtime.app_session._LOGGER")
     @patch("streamlit.runtime.app_session.config")

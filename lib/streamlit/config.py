@@ -1025,6 +1025,16 @@ _create_option(
     """,
 )
 
+_create_option(
+    "theme.roundness",
+    description="""
+        The roundness of the corners for most UI elements. Can be between 0 and 1,
+        where 0 is no-roundness and 1 is maximum roundness.
+    """,
+    type_=float,
+)
+
+
 # Config Section: Secrets #
 
 _create_section("secrets", "Secrets configuration.")

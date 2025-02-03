@@ -23,7 +23,7 @@ def test_file_uploader_render_correctly(
 ):
     """Test that the file uploader render as expected via screenshot matching."""
     file_uploaders = themed_app.get_by_test_id("stFileUploader")
-    expect(file_uploaders).to_have_count(9)
+    expect(file_uploaders).to_have_count(10)
 
     assert_snapshot(file_uploaders.nth(0), name="st_file_uploader-single_file")
     assert_snapshot(file_uploaders.nth(1), name="st_file_uploader-disabled")
@@ -32,6 +32,7 @@ def test_file_uploader_render_correctly(
     assert_snapshot(file_uploaders.nth(5), name="st_file_uploader-collapsed_label")
     # The other file uploaders do not need to be snapshot tested.
     assert_snapshot(file_uploaders.nth(8), name="st_file_uploader-markdown_label")
+    assert_snapshot(file_uploaders.nth(9), name="st_file_uploader-compact")
 
 
 def test_file_uploader_error_message_disallowed_files(

@@ -16,17 +16,15 @@
 
 from __future__ import annotations
 
+from collections.abc import Collection, Hashable, Sequence
 from dataclasses import dataclass
 from datetime import date
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
-    Collection,
     Final,
-    Hashable,
     Literal,
-    Sequence,
     TypedDict,
     cast,
 )

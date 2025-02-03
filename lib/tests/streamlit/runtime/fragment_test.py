@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 import unittest
-from typing import Callable, Tuple
+from typing import Callable
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -569,7 +569,7 @@ inside_container_writing_apps: list[APP_FUNCTION] = [
     _run_fragment_writes_to_nested_inside_container_app,
 ]
 
-TEST_TUPLE = Tuple[str, APP_FUNCTION, ELEMENT_PRODUCER]
+TEST_TUPLE = tuple[str, APP_FUNCTION, ELEMENT_PRODUCER]
 
 
 def get_test_tuples(

@@ -162,7 +162,7 @@ class MarkdownMixin:
 
         """
         code_proto = MarkdownProto()
-        markdown = f'```{language or ""}\n{body}\n```'
+        markdown = f"```{language or ''}\n{body}\n```"
         code_proto.body = clean_text(markdown)
         code_proto.element_type = MarkdownProto.Type.CODE
         return self.dg._enqueue("markdown", code_proto)

@@ -18,7 +18,7 @@ import io
 import re
 from datetime import timedelta
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Final, Union, cast
+from typing import TYPE_CHECKING, Final, Union, cast
 
 from typing_extensions import TypeAlias
 
@@ -54,7 +54,7 @@ MediaData: TypeAlias = Union[
 ]
 
 SubtitleData: TypeAlias = Union[
-    str, Path, bytes, io.BytesIO, Dict[str, Union[str, Path, bytes, io.BytesIO]], None
+    str, Path, bytes, io.BytesIO, dict[str, Union[str, Path, bytes, io.BytesIO]], None
 ]
 
 MediaTime: TypeAlias = Union[int, float, timedelta, str]

@@ -20,21 +20,24 @@ import dataclasses
 import re
 import types
 from collections import UserList, deque
-from collections.abc import ItemsView, KeysView, ValuesView
+from collections.abc import (
+    AsyncGenerator,
+    Generator,
+    ItemsView,
+    Iterable,
+    KeysView,
+    Mapping,
+    Sequence,
+    ValuesView,
+)
 from enum import EnumMeta
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncGenerator,
     Final,
-    Generator,
-    Iterable,
     Literal,
-    Mapping,
     NamedTuple,
     Protocol,
-    Sequence,
-    Tuple,
     TypeVar,
     Union,
     overload,
@@ -56,7 +59,7 @@ T = TypeVar("T")
 
 # we define our own type here because mypy doesn't seem to support the shape type and
 # reports unreachable code. When mypy supports it, we can remove this custom type.
-NumpyShape: TypeAlias = Tuple[int, ...]
+NumpyShape: TypeAlias = tuple[int, ...]
 
 
 class SupportsStr(Protocol):

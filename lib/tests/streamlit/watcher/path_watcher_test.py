@@ -32,12 +32,14 @@ from tests.testutil import patch_config_options
 class FileWatcherTest(unittest.TestCase):
     @patch_config_options({"server.fileWatcherType": "watchdog"})
     def test_report_watchdog_availability_mac(self):
-        with patch(
-            "streamlit.watcher.path_watcher._is_watchdog_available",
-            return_value=False,
-        ), patch("streamlit.env_util.IS_DARWIN", new=True), patch(
-            "click.secho"
-        ) as mock_echo:
+        with (
+            patch(
+                "streamlit.watcher.path_watcher._is_watchdog_available",
+                return_value=False,
+            ),
+            patch("streamlit.env_util.IS_DARWIN", new=True),
+            patch("click.secho") as mock_echo,
+        ):
             streamlit.watcher.path_watcher.report_watchdog_availability()
 
         msg = "\n  $ xcode-select --install"
@@ -58,30 +60,39 @@ class FileWatcherTest(unittest.TestCase):
 
     @patch_config_options({"server.fileWatcherType": "poll"})
     def test_no_watchdog_suggestion_for_poll_type(self):
-        with patch(
-            "streamlit.watcher.path_watcher._is_watchdog_available", return_value=False
-        ), patch("streamlit.env_util.IS_DARWIN", new=False), patch(
-            "click.secho"
-        ) as mock_echo:
+        with (
+            patch(
+                "streamlit.watcher.path_watcher._is_watchdog_available",
+                return_value=False,
+            ),
+            patch("streamlit.env_util.IS_DARWIN", new=False),
+            patch("click.secho") as mock_echo,
+        ):
             streamlit.watcher.path_watcher.report_watchdog_availability()
         mock_echo.assert_not_called()
 
     @patch_config_options({"server.fileWatcherType": "none"})
     def test_no_watchdog_suggestion_for_none_type(self):
-        with patch(
-            "streamlit.watcher.path_watcher._is_watchdog_available", return_value=False
-        ), patch("streamlit.env_util.IS_DARWIN", new=False), patch(
-            "click.secho"
-        ) as mock_echo:
+        with (
+            patch(
+                "streamlit.watcher.path_watcher._is_watchdog_available",
+                return_value=False,
+            ),
+            patch("streamlit.env_util.IS_DARWIN", new=False),
+            patch("click.secho") as mock_echo,
+        ):
             streamlit.watcher.path_watcher.report_watchdog_availability()
         mock_echo.assert_not_called()
 
     def test_report_watchdog_availability_nonmac(self):
-        with patch(
-            "streamlit.watcher.path_watcher._is_watchdog_available", return_value=False
-        ), patch("streamlit.env_util.IS_DARWIN", new=False), patch(
-            "click.secho"
-        ) as mock_echo:
+        with (
+            patch(
+                "streamlit.watcher.path_watcher._is_watchdog_available",
+                return_value=False,
+            ),
+            patch("streamlit.env_util.IS_DARWIN", new=False),
+            patch("click.secho") as mock_echo,
+        ):
             streamlit.watcher.path_watcher.report_watchdog_availability()
 
         msg = ""
@@ -120,11 +131,12 @@ class FileWatcherTest(unittest.TestCase):
         for watcher_config, watchdog_available, path_watcher_class in subtest_params:
             test_name = f"config.fileWatcherType={watcher_config}, watcher_available={watchdog_available}"
             with self.subTest(test_name):
-                with patch_config_options(
-                    {"server.fileWatcherType": watcher_config}
-                ), patch(
-                    "streamlit.watcher.path_watcher._is_watchdog_available",
-                    return_value=watchdog_available,
+                with (
+                    patch_config_options({"server.fileWatcherType": watcher_config}),
+                    patch(
+                        "streamlit.watcher.path_watcher._is_watchdog_available",
+                        return_value=watchdog_available,
+                    ),
                 ):
                     # Test get_default_path_watcher_class() result
                     self.assertEqual(

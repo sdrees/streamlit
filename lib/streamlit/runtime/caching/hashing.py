@@ -32,8 +32,9 @@ import threading
 import uuid
 import weakref
 from enum import Enum
+from re import Pattern
 from types import MappingProxyType
-from typing import Any, Callable, Dict, Final, Pattern, Type, Union, cast
+from typing import Any, Callable, Final, Union, cast
 
 from typing_extensions import TypeAlias
 
@@ -52,7 +53,7 @@ _PANDAS_SAMPLE_SIZE: Final = 10000
 _NP_SIZE_LARGE: Final = 1000000
 _NP_SAMPLE_SIZE: Final = 100000
 
-HashFuncsDict: TypeAlias = Dict[Union[str, Type[Any]], Callable[[Any], Any]]
+HashFuncsDict: TypeAlias = dict[Union[str, type[Any]], Callable[[Any], Any]]
 
 # Arbitrary item to denote where we found a cycle in a hashed object.
 # This allows us to hash self-referencing lists, dictionaries, etc.

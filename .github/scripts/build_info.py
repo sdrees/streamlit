@@ -173,7 +173,7 @@ def check_if_pr_has_label(label: str, action: str) -> bool:
         pr_labels = get_current_pr_labels()
         if label in pr_labels:
             print(f"PR has the following labels: {pr_labels}")
-            print(f"{action}, because PR has {label !r} label.")
+            print(f"{action}, because PR has {label!r} label.")
             return True
     return False
 
@@ -293,11 +293,12 @@ def save_output_variables(variables: dict[str, str]) -> None:
     Saves build variables
     """
     print("Saving output variables")
-    with open(
-        os.environ.get(GITHUB_ENV_ENV_VAR, "/dev/null"), "w+"
-    ) as github_env_file, open(
-        os.environ.get(GITHUB_OUTPUT_ENV_VAR, "/dev/null"), "w+"
-    ) as github_output_file:
+    with (
+        open(os.environ.get(GITHUB_ENV_ENV_VAR, "/dev/null"), "w+") as github_env_file,
+        open(
+            os.environ.get(GITHUB_OUTPUT_ENV_VAR, "/dev/null"), "w+"
+        ) as github_output_file,
+    ):
         for target_file in [sys.stdout, github_env_file, github_output_file]:
             for name, value in variables.items():
                 target_file.write(f"{name}={value}\n")

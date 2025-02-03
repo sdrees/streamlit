@@ -77,9 +77,9 @@ class LocalScriptRunner(ScriptRunner):
         ) -> None:
             # Assert that we're not getting unexpected `sender` params
             # from ScriptRunner.on_event
-            assert (
-                sender is None or sender == self
-            ), "Unexpected ScriptRunnerEvent sender!"
+            assert sender is None or sender == self, (
+                "Unexpected ScriptRunnerEvent sender!"
+            )
 
             self.events.append(event)
             self.event_data.append(kwargs)

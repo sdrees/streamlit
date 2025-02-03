@@ -435,15 +435,15 @@ class ComputeElementIdTests(DeltaGeneratorTestCase):
 
         # Get call kwargs from patched_compute_element_id
         call_kwargs = patched_compute_element_id.call_args[1]
-        assert (
-            "active_script_hash" in call_kwargs
-        ), "active_script_hash is expected to always be included "
+        assert "active_script_hash" in call_kwargs, (
+            "active_script_hash is expected to always be included "
+        )
         "in element ID calculation."
 
         # Elements that don't set a form ID
-        assert (
-            call_kwargs.get("form_id") == expected_form_id
-        ), "form_id is expected to be included in element ID calculation."
+        assert call_kwargs.get("form_id") == expected_form_id, (
+            "form_id is expected to be included in element ID calculation."
+        )
 
     @parameterized.expand(WIDGET_ELEMENTS)
     def test_triggers_duplicate_id_error(self, _element_name: str, widget_func):

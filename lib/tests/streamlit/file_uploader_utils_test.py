@@ -14,11 +14,14 @@
 from __future__ import annotations
 
 import unittest
-from typing import Sequence
+from typing import TYPE_CHECKING
 
 from parameterized import parameterized
 
 from streamlit.elements.lib.file_uploader_utils import normalize_upload_file_type
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 class FileUploaderUtilsTest(unittest.TestCase):

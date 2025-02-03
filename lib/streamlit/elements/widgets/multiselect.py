@@ -14,9 +14,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from textwrap import dedent
-from typing import TYPE_CHECKING, Any, Callable, Generic, Sequence, cast
+from typing import TYPE_CHECKING, Any, Callable, Generic, cast
 
 from streamlit.dataframe_util import OptionSequence
 from streamlit.elements.lib.form_utils import current_form_id

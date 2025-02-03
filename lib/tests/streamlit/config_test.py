@@ -635,11 +635,11 @@ class ConfigTest(unittest.TestCase):
 
         mock_callback = MagicMock(return_value=None)
 
-        with patch.object(config, "_config_options", new=config_options), patch.object(
-            config._on_config_parsed, "connect"
-        ) as patched_connect, patch.object(
-            config._on_config_parsed, "disconnect"
-        ) as patched_disconnect:
+        with (
+            patch.object(config, "_config_options", new=config_options),
+            patch.object(config._on_config_parsed, "connect") as patched_connect,
+            patch.object(config._on_config_parsed, "disconnect") as patched_disconnect,
+        ):
             mock_callback.reset_mock()
             disconnect_callback = config.on_config_parsed(mock_callback, connect_signal)
 

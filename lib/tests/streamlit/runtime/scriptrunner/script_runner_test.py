@@ -269,7 +269,7 @@ class ScriptRunnerTest(AsyncTestCase):
         self.assertEqual(
             os.path.realpath(scriptrunner._main_script_path),
             os.path.realpath(sys.modules["__main__"].__file__),
-            (" ScriptRunner should set the __main__.__file__" "attribute correctly"),
+            (" ScriptRunner should set the __main__.__file__ attribute correctly"),
         )
 
         Runtime._instance.media_file_mgr.clear_session_refs.assert_called_once()
@@ -994,7 +994,7 @@ class ScriptRunnerTest(AsyncTestCase):
         self.assertEqual(
             os.path.join(os.path.dirname(__file__), "test_data", "good_script2.py"),
             sys.modules["__main__"].__file__,
-            (" ScriptRunner should set the __main__.__file__" "attribute correctly"),
+            (" ScriptRunner should set the __main__.__file__ attribute correctly"),
         )
 
         shutdown_data = scriptrunner.event_data[-1]
@@ -1033,7 +1033,7 @@ class ScriptRunnerTest(AsyncTestCase):
         self.assertEqual(
             scriptrunner._main_script_path,
             sys.modules["__main__"].__file__,
-            (" ScriptRunner should set the __main__.__file__" "attribute correctly"),
+            (" ScriptRunner should set the __main__.__file__ attribute correctly"),
         )
 
     @patch(
@@ -1073,7 +1073,7 @@ class ScriptRunnerTest(AsyncTestCase):
         self.assertEqual(
             scriptrunner._main_script_path,
             sys.modules["__main__"].__file__,
-            (" ScriptRunner should set the __main__.__file__" "attribute correctly"),
+            (" ScriptRunner should set the __main__.__file__ attribute correctly"),
         )
 
     def _assert_no_exceptions(self, scriptrunner: TestScriptRunner) -> None:
@@ -1175,9 +1175,9 @@ class TestScriptRunner(ScriptRunner):
         ) -> None:
             # Assert that we're not getting unexpected `sender` params
             # from ScriptRunner.on_event
-            assert (
-                sender is None or sender == self
-            ), "Unexpected ScriptRunnerEvent sender!"
+            assert sender is None or sender == self, (
+                "Unexpected ScriptRunnerEvent sender!"
+            )
 
             self.events.append(event)
             self.event_data.append(kwargs)

@@ -16,7 +16,8 @@ from __future__ import annotations
 
 import platform
 import re
-from typing import Literal, Pattern
+from re import Pattern
+from typing import Literal
 
 from playwright.sync_api import Frame, Locator, Page, expect
 

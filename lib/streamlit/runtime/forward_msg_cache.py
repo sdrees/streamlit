@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 import hashlib
-from typing import TYPE_CHECKING, Final, MutableMapping
+from typing import TYPE_CHECKING, Final
 from weakref import WeakKeyDictionary
 
 from streamlit import config, util
@@ -25,6 +25,8 @@ from streamlit.runtime.stats import CacheStat, CacheStatsProvider, group_stats
 from streamlit.util import HASHLIB_KWARGS
 
 if TYPE_CHECKING:
+    from collections.abc import MutableMapping
+
     from streamlit.runtime.app_session import AppSession
 
 _LOGGER: Final = get_logger(__name__)

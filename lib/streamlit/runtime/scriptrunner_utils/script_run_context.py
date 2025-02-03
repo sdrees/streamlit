@@ -18,12 +18,11 @@ import collections
 import contextlib
 import contextvars
 import threading
+from collections import Counter
 from dataclasses import dataclass, field
 from typing import (
     TYPE_CHECKING,
     Callable,
-    Counter,
-    Dict,
     Final,
     Union,
 )
@@ -51,7 +50,7 @@ if TYPE_CHECKING:
     from streamlit.runtime.uploaded_file_manager import UploadedFileManager
 _LOGGER: Final = get_logger(__name__)
 
-UserInfo: TypeAlias = Dict[str, Union[str, bool, None]]
+UserInfo: TypeAlias = dict[str, Union[str, bool, None]]
 
 
 # If true, it indicates that we are in a cached function that disallows the usage of

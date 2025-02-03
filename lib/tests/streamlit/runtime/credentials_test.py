@@ -197,9 +197,10 @@ class CredentialsClassTest(unittest.TestCase):
         """Test Credentials.check_activated() has an error."""
         c = Credentials.get_current()
         c.activation = _Activation("some_email", True)
-        with patch.object(c, "load", side_effect=Exception("Some error")), patch(
-            "streamlit.runtime.credentials._exit"
-        ) as p:
+        with (
+            patch.object(c, "load", side_effect=Exception("Some error")),
+            patch("streamlit.runtime.credentials._exit") as p,
+        ):
             c._check_activated(auto_resolve=False)
             p.assert_called_once_with("Some error")
 
@@ -222,9 +223,12 @@ class CredentialsClassTest(unittest.TestCase):
         )
 
         # patch streamlit.*.os.makedirs instead of os.makedirs for py35 compat
-        with patch(
-            "streamlit.runtime.credentials.open", mock_open(), create=True
-        ) as open, patch("streamlit.runtime.credentials.os.makedirs") as make_dirs:
+        with (
+            patch(
+                "streamlit.runtime.credentials.open", mock_open(), create=True
+            ) as open,
+            patch("streamlit.runtime.credentials.os.makedirs") as make_dirs,
+        ):
             c.save()
 
             make_dirs.assert_called_once_with(streamlit_root_path, exist_ok=True)
@@ -266,9 +270,11 @@ class CredentialsClassTest(unittest.TestCase):
         c = Credentials.get_current()
         c.activation = None
 
-        with patch.object(
-            c, "load", side_effect=RuntimeError("Some error")
-        ), patch.object(c, "save") as patched_save, patch(PROMPT) as patched_prompt:
+        with (
+            patch.object(c, "load", side_effect=RuntimeError("Some error")),
+            patch.object(c, "save") as patched_save,
+            patch(PROMPT) as patched_prompt,
+        ):
             patched_prompt.side_effect = ["user@domain.com"]
             c.activate()
             patched_save.assert_called_once()
@@ -294,9 +300,13 @@ class CredentialsClassTest(unittest.TestCase):
     )
     def test_Credentials_reset_error(self):
         """Test Credentials.reset() with error."""
-        with patch(
-            "streamlit.runtime.credentials.os.remove", side_effect=OSError("some error")
-        ), patch("streamlit.runtime.credentials._LOGGER") as p:
+        with (
+            patch(
+                "streamlit.runtime.credentials.os.remove",
+                side_effect=OSError("some error"),
+            ),
+            patch("streamlit.runtime.credentials._LOGGER") as p,
+        ):
             Credentials.reset()
             p.exception.assert_called_once_with("Error removing credentials file.")
 

@@ -36,9 +36,12 @@ unitTest = true
 gatherUsageStats = false
 """
 
-with patch(
-    "streamlit.config.open", mock_open(read_data=CONFIG_FILE_CONTENTS), create=True
-), patch("streamlit.config.os.path.exists") as path_exists:
+with (
+    patch(
+        "streamlit.config.open", mock_open(read_data=CONFIG_FILE_CONTENTS), create=True
+    ),
+    patch("streamlit.config.os.path.exists") as path_exists,
+):
     # Import streamlit even if we don't do anything with it below as we want to
     # be sure to catch any instances of calling config.get_option() when
     # first importing a file. We disallow this because doing so means that we
@@ -46,9 +49,9 @@ with patch(
     import streamlit as st  # noqa: F401
     from streamlit import config, file_util, source_util
 
-    assert (
-        not config._config_options
-    ), "config.get_option() should not be called on file import!"
+    assert not config._config_options, (
+        "config.get_option() should not be called on file import!"
+    )
 
     config_path = file_util.get_streamlit_file_path("config.toml")
     path_exists.side_effect = lambda path: path == config_path

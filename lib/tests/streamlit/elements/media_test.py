@@ -59,9 +59,12 @@ class MediaTest(DeltaGeneratorTestCase):
         """st.audio + st.video should register bytes and filenames with the
         MediaFileManager. URL-based media does not go through the MediaFileManager.
         """
-        with mock.patch(
-            "streamlit.runtime.media_file_manager.MediaFileManager.add"
-        ) as mock_mfm_add, mock.patch("streamlit.runtime.caching.save_media_data"):
+        with (
+            mock.patch(
+                "streamlit.runtime.media_file_manager.MediaFileManager.add"
+            ) as mock_mfm_add,
+            mock.patch("streamlit.runtime.caching.save_media_data"),
+        ):
             mock_mfm_add.return_value = "https://mockoutputurl.com"
 
             if media_kind is MockMediaKind.AUDIO:

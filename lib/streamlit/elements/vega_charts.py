@@ -25,9 +25,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Final,
-    Iterable,
     Literal,
-    Sequence,
     TypedDict,
     Union,
     cast,
@@ -59,6 +57,8 @@ from streamlit.runtime.state import WidgetCallback, register_widget
 from streamlit.util import HASHLIB_KWARGS
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
+
     import altair as alt
 
     from streamlit.dataframe_util import Data

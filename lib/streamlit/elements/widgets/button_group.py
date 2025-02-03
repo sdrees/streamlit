@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -21,7 +22,6 @@ from typing import (
     Final,
     Generic,
     Literal,
-    Sequence,
     TypeVar,
     cast,
     overload,

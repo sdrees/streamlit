@@ -18,17 +18,20 @@ import dataclasses
 import inspect
 import types
 from collections import ChainMap, UserDict, UserList
-from collections.abc import ItemsView, KeysView, ValuesView
+from collections.abc import (
+    AsyncGenerator,
+    Generator,
+    ItemsView,
+    Iterable,
+    KeysView,
+    ValuesView,
+)
 from io import StringIO
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncGenerator,
     Callable,
     Final,
-    Generator,
-    Iterable,
-    List,
     cast,
 )
 
@@ -58,7 +61,7 @@ _LOGGER: Final = get_logger(__name__)
 _TEXT_CURSOR: Final = " ▏"
 
 
-class StreamingOutput(List[Any]):
+class StreamingOutput(list[Any]):
     pass
 
 

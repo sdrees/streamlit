@@ -73,12 +73,15 @@ def _create_test_session(
     if event_loop is None:
         event_loop = MagicMock()
 
-    with patch(
-        "streamlit.runtime.app_session.asyncio.get_running_loop",
-        return_value=event_loop,
-    ), patch(
-        "streamlit.runtime.app_session.LocalSourcesWatcher",
-        MagicMock(spec=LocalSourcesWatcher),
+    with (
+        patch(
+            "streamlit.runtime.app_session.asyncio.get_running_loop",
+            return_value=event_loop,
+        ),
+        patch(
+            "streamlit.runtime.app_session.LocalSourcesWatcher",
+            MagicMock(spec=LocalSourcesWatcher),
+        ),
     ):
         return AppSession(
             script_data=ScriptData("/fake/script_path.py", is_hello=False),
@@ -568,13 +571,17 @@ class AppSessionTest(unittest.TestCase):
     def test_disconnect_file_watchers(self, patched_secrets_disconnect):
         session = _create_test_session()
 
-        with patch.object(
-            session._local_sources_watcher, "close"
-        ) as patched_close_local_sources_watcher, patch.object(
-            session, "_stop_config_listener"
-        ) as patched_stop_config_listener, patch.object(
-            session, "_stop_pages_listener"
-        ) as patched_stop_pages_listener:
+        with (
+            patch.object(
+                session._local_sources_watcher, "close"
+            ) as patched_close_local_sources_watcher,
+            patch.object(
+                session, "_stop_config_listener"
+            ) as patched_stop_config_listener,
+            patch.object(
+                session, "_stop_pages_listener"
+            ) as patched_stop_pages_listener,
+        ):
             session.disconnect_file_watchers()
 
             patched_close_local_sources_watcher.assert_called_once()
@@ -986,11 +993,14 @@ class AppSessionScriptEventTest(IsolatedAsyncioTestCase):
         handle_backmsg_exception.
         """
         session = _create_test_session(asyncio.get_running_loop())
-        with patch.object(
-            session, "handle_backmsg_exception"
-        ) as handle_backmsg_exception, patch.object(
-            session, "_handle_clear_cache_request"
-        ) as handle_clear_cache_request:
+        with (
+            patch.object(
+                session, "handle_backmsg_exception"
+            ) as handle_backmsg_exception,
+            patch.object(
+                session, "_handle_clear_cache_request"
+            ) as handle_clear_cache_request,
+        ):
             error = Exception("explode!")
             handle_clear_cache_request.side_effect = error
 
@@ -1013,11 +1023,14 @@ class AppSessionScriptEventTest(IsolatedAsyncioTestCase):
     @patch("streamlit.runtime.app_session._LOGGER")
     async def test_handles_app_heartbeat_backmsg(self, patched_logger):
         session = _create_test_session(asyncio.get_running_loop())
-        with patch.object(
-            session, "handle_backmsg_exception"
-        ) as handle_backmsg_exception, patch.object(
-            session, "_handle_app_heartbeat_request"
-        ) as handle_app_heartbeat_request:
+        with (
+            patch.object(
+                session, "handle_backmsg_exception"
+            ) as handle_backmsg_exception,
+            patch.object(
+                session, "_handle_app_heartbeat_request"
+            ) as handle_app_heartbeat_request,
+        ):
             msg = BackMsg()
             msg.app_heartbeat = True
             session.handle_backmsg(msg)

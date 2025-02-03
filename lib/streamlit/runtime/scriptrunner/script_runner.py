@@ -535,9 +535,10 @@ class ScriptRunner:
             module.__dict__["__file__"] = script_path
 
             def code_to_exec(code=code, module=module, ctx=ctx, rerun_data=rerun_data):
-                with modified_sys_path(
-                    self._main_script_path
-                ), self._set_execing_flag():
+                with (
+                    modified_sys_path(self._main_script_path),
+                    self._set_execing_flag(),
+                ):
                     # Run callbacks for widgets whose values have changed.
                     if rerun_data.widget_states is not None:
                         self._session_state.on_script_will_rerun(

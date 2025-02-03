@@ -14,8 +14,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Iterator, MutableMapping
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Final, Iterable, Iterator, MutableMapping
+from typing import TYPE_CHECKING, Final
 from urllib import parse
 
 from streamlit.errors import StreamlitAPIException

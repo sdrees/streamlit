@@ -435,9 +435,10 @@ class CacheDataPersistTest(DeltaGeneratorTestCase):
 
         mock_os_remove.assert_not_called()
 
-        with patch(
-            "os.listdir", MagicMock(return_value=created_files_base_names)
-        ), patch("os.path.isdir", MagicMock(return_value=True)):
+        with (
+            patch("os.listdir", MagicMock(return_value=created_files_base_names)),
+            patch("os.path.isdir", MagicMock(return_value=True)),
+        ):
             # Clear foo's cache
             foo.clear()
 
@@ -632,9 +633,12 @@ class CacheDataValidateParamsTest(DeltaGeneratorTestCase):
         Runtime._instance = mock_runtime
 
     def test_error_logged_and_raised_on_improperly_configured_cache_data(self):
-        with self.assertRaises(InvalidCacheStorageContext) as e, self.assertLogs(
-            "streamlit.runtime.caching.cache_data_api", level=logging.ERROR
-        ) as logs:
+        with (
+            self.assertRaises(InvalidCacheStorageContext) as e,
+            self.assertLogs(
+                "streamlit.runtime.caching.cache_data_api", level=logging.ERROR
+            ) as logs,
+        ):
 
             @st.cache_data(persist="disk")
             def foo():

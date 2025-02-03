@@ -20,11 +20,9 @@ from dataclasses import dataclass, field
 from typing import (
     Any,
     Callable,
-    Dict,
     Final,
     Generic,
     Literal,
-    Tuple,
     TypeVar,
     cast,
     get_args,
@@ -45,8 +43,8 @@ T = TypeVar("T")
 T_co = TypeVar("T_co", covariant=True)
 
 
-WidgetArgs: TypeAlias = Tuple[Any, ...]
-WidgetKwargs: TypeAlias = Dict[str, Any]
+WidgetArgs: TypeAlias = tuple[Any, ...]
+WidgetKwargs: TypeAlias = dict[str, Any]
 WidgetCallback: TypeAlias = Callable[..., None]
 
 # A deserializer receives the value from whatever field is set on the

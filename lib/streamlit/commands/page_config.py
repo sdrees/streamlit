@@ -15,9 +15,10 @@
 from __future__ import annotations
 
 import random
+from collections.abc import Mapping
 from pathlib import Path
 from textwrap import dedent
-from typing import TYPE_CHECKING, Any, Final, Literal, Mapping, Union, cast
+from typing import TYPE_CHECKING, Any, Final, Literal, Union, cast
 
 from typing_extensions import TypeAlias
 

@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 import os
-from typing import Callable, Type, Union
+from typing import Callable, Union
 
 import streamlit.watcher
 from streamlit import cli_util, config, env_util
@@ -46,9 +46,9 @@ class NoOpPathWatcher:
 # implementation if its import failed (due to missing watchdog module),
 # so we can't reference it directly in this type.
 PathWatcherType = Union[
-    Type["streamlit.watcher.event_based_path_watcher.EventBasedPathWatcher"],
-    Type[PollingPathWatcher],
-    Type[NoOpPathWatcher],
+    type["streamlit.watcher.event_based_path_watcher.EventBasedPathWatcher"],
+    type[PollingPathWatcher],
+    type[NoOpPathWatcher],
 ]
 
 

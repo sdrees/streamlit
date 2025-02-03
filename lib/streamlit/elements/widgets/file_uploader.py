@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from textwrap import dedent
-from typing import TYPE_CHECKING, List, Literal, Sequence, Union, cast, overload
+from typing import TYPE_CHECKING, Literal, Union, cast, overload
 
 from typing_extensions import TypeAlias
 
@@ -48,12 +48,14 @@ from streamlit.runtime.state import (
 from streamlit.runtime.uploaded_file_manager import DeletedFile, UploadedFile
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from streamlit.delta_generator import DeltaGenerator
 
 SomeUploadedFiles: TypeAlias = Union[
     UploadedFile,
     DeletedFile,
-    List[Union[UploadedFile, DeletedFile]],
+    list[Union[UploadedFile, DeletedFile]],
     None,
 ]
 

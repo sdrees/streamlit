@@ -15,6 +15,7 @@
  */
 
 import styled from "@emotion/styled"
+import { transparentize } from "color2k"
 
 export const StyledDocSummary = styled.span(({ theme }) => ({
   "& > *": {
@@ -27,7 +28,7 @@ export const StyledDocName = styled.span(({ theme }) => ({
 }))
 
 export const StyledDocType = styled.span(({ theme }) => ({
-  color: theme.colors.docStringTypeText,
+  color: theme.colors.codeTextColor,
 }))
 
 export const StyledDocValue = styled.span()
@@ -49,7 +50,7 @@ export const StyledDocContainer = styled.span<StyledDocContainerProps>(
 
 export const StyledDocHeader = styled.div(({ theme }) => ({
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
-  backgroundColor: theme.colors.docStringContainerBackground,
+  backgroundColor: transparentize(theme.colors.secondaryBg, 0.6),
   borderBottom: `${theme.sizes.borderWidth} solid ${theme.colors.borderColorLight}`,
   // Add rounded corners to the top of the container to prevent the background
   // color from bleeding into the surrounding area.
@@ -74,7 +75,7 @@ export const StyledDocString = styled.div(({ theme }) => ({
 export const StyledMembersTable = styled.table(({ theme }) => ({
   width: "100%",
   fontSize: theme.fontSizes.twoSm,
-  backgroundColor: theme.colors.docStringContainerBackground,
+  backgroundColor: transparentize(theme.colors.secondaryBg, 0.6),
   tableLayout: "fixed", // Fix table to container's boundaries.
   borderCollapse: "collapse",
 }))

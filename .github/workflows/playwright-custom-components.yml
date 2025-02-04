@@ -46,7 +46,9 @@ jobs:
       - name: Run make frontend
         run: make frontend
       - name: Run make playwright-custom-components
-        run: make playwright-custom-components
+        run: |
+          source venv/bin/activate
+          make playwright-custom-components
       - name: Upload failed test results
         uses: actions/upload-artifact@v4
         if: always()

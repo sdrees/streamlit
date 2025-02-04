@@ -164,6 +164,7 @@ interface State {
   gitInfo: IGitInfo | null
   formsData: FormsData
   hideTopBar: boolean
+  hideColoredLine: boolean
   hideSidebarNav: boolean
   expandSidebarNav: boolean
   appPages: IAppPage[]
@@ -300,6 +301,7 @@ export class App extends PureComponent<Props, State> {
       // true as well for consistency.
       hideTopBar: true,
       hideSidebarNav: true,
+      hideColoredLine: false,
       expandSidebarNav: false,
       toolbarMode: Config.ToolbarMode.MINIMAL,
       latestRunTime: performance.now(),
@@ -1127,6 +1129,8 @@ export class App extends PureComponent<Props, State> {
    */
   setAndSendTheme = (themeConfig: ThemeConfig): void => {
     this.props.theme.setTheme(themeConfig)
+    // Hide the colored line if a custom theme is selected:
+    this.setState({ hideColoredLine: !isPresetTheme(themeConfig) })
     this.hostCommunicationMgr.sendMessageToHost({
       type: "SET_THEME_CONFIG",
       themeInfo: toExportedTheme(themeConfig.emotion),
@@ -1158,7 +1162,6 @@ export class App extends PureComponent<Props, State> {
     this.setState({ themeHash })
 
     const usingCustomTheme = !isPresetTheme(this.props.theme.activeTheme)
-
     if (themeInput) {
       const customTheme = createTheme(CUSTOM_THEME_NAME, themeInput)
       // For now, users can only add one custom theme.
@@ -1870,6 +1873,7 @@ export class App extends PureComponent<Props, State> {
       userSettings,
       hideTopBar,
       hideSidebarNav,
+      hideColoredLine,
       expandSidebarNav,
       currentPageScriptHash,
       hostHideSidebarNav,
@@ -1916,7 +1920,8 @@ export class App extends PureComponent<Props, State> {
           showPadding: !isEmbed() || isPaddingDisplayed(),
           disableScrolling: isScrollingHidden(),
           showToolbar: !isEmbed() || isToolbarDisplayed(),
-          showColoredLine: !isEmbed() || isColoredLineDisplayed(),
+          showColoredLine:
+            (!hideColoredLine && !isEmbed()) || isColoredLineDisplayed(),
           // host communication manager elements
           pageLinkBaseUrl,
           sidebarChevronDownshift,

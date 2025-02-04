@@ -105,7 +105,9 @@ jobs:
       - name: Setup virtual env
         uses: ./.github/actions/make_init
       - name: Run make develop
-        run: make develop
+        run: |
+          source venv/bin/activate
+          make develop
       - name: Run Linters
         run: make pylint
         env:
@@ -238,9 +240,13 @@ jobs:
           # which might cause some unexpected issues with dependencies.
           use_cached_venv: false
       - name: Run make develop
-        run: make develop
+        run: |
+          source venv/bin/activate
+          make develop
       - name: Install integration dependencies
-        run: uv pip install -r lib/integration-requirements.txt --force-reinstall
+        run: |
+          source venv/bin/activate
+          uv pip install -r lib/integration-requirements.txt --force-reinstall
       - name: Run Python integration tests
         run: make pytest-integration
         env:

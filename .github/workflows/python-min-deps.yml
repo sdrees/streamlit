@@ -56,11 +56,15 @@ jobs:
         with:
           use_cached_venv: false
       - name: Install min dependencies (force reinstall)
-        run: uv pip install -r lib/min-constraints-gen.txt --force-reinstall
+        run: |
+          source venv/bin/activate
+          uv pip install -r lib/min-constraints-gen.txt --force-reinstall
       - name: Generate Protobufs
         run: make protobuf
       - name: Make local modules visible
-        run: uv pip install --editable ./lib --no-deps
+        run: |
+          source venv/bin/activate
+          uv pip install --editable ./lib --no-deps
       - name: Run Python Tests
         run: make pytest
       - name: CLI Smoke Tests

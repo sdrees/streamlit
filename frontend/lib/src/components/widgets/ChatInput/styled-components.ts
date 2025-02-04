@@ -28,8 +28,7 @@ export const StyledChatInputContainer =
       borderColor: theme.colors.widgetBorderColor ?? theme.colors.transparent,
       borderRadius: theme.radii.chatInput,
       display: "flex",
-      backgroundColor:
-        theme.colors.widgetBackgroundColor ?? theme.colors.secondaryBg,
+      backgroundColor: theme.colors.secondaryBg,
       width: `${width}px`,
       overflow: "hidden",
 

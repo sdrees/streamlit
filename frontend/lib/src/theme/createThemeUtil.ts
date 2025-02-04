@@ -83,9 +83,7 @@ export const createThemeOverrides = (
     lineHeightTight: lineHeights.tight,
   }
 
-  const widgetBackgroundColor = colors.widgetBackgroundColor
-    ? colors.widgetBackgroundColor
-    : colors.secondaryBg
+  const widgetBackgroundColor = colors.secondaryBg
 
   // We want menuFill to always use bgColor. But when in sidebar, bgColor and secondaryBg are
   // swapped! So here we unswap them.

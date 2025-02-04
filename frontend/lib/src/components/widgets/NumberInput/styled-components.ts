@@ -26,11 +26,8 @@ export const StyledInputContainer = styled.div(({ theme }) => ({
   // to the entire container and not only the input itself
   borderWidth: theme.sizes.borderWidth,
   borderStyle: "solid",
-  // Mimic the logic from createThemeOverrides.
-  borderColor:
-    theme.colors.widgetBorderColor ||
-    theme.colors.widgetBackgroundColor ||
-    theme.colors.bgColor,
+  // TODO(lukasmasuch): fix this to use secondaryBg instead of bgColor here:
+  borderColor: theme.colors.widgetBorderColor ?? theme.colors.bgColor,
   transitionDuration: "200ms",
   transitionProperty: "border",
   transitionTimingFunction: "cubic-bezier(0.2, 0.8, 0.4, 1)",
@@ -66,9 +63,7 @@ export const StyledInputControl = styled.button(({ theme }) => ({
   justifyContent: "center",
   color: theme.colors.bodyText,
   transition: "color 300ms, backgroundColor 300ms",
-  // Mimic the logic from createThemeOverrides.
-  backgroundColor:
-    theme.colors.widgetBackgroundColor || theme.colors.secondaryBg,
+  backgroundColor: theme.colors.secondaryBg,
   "&:hover:enabled, &:focus:enabled": {
     color: theme.colors.white,
     backgroundColor: theme.colors.primary,

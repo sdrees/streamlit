@@ -194,8 +194,6 @@ export const createEmotionTheme = (
     backgroundColor: bgColor,
     primaryColor: primary,
     textColor: bodyText,
-    skeletonBackgroundColor,
-    widgetBackgroundColor,
     widgetBorderColor,
     borderColor,
     linkColor,
@@ -207,10 +205,6 @@ export const createEmotionTheme = (
   if (bodyText) newGenericColors.bodyText = bodyText
   if (secondaryBg) newGenericColors.secondaryBg = secondaryBg
   if (bgColor) newGenericColors.bgColor = bgColor
-  if (widgetBackgroundColor)
-    newGenericColors.widgetBackgroundColor = widgetBackgroundColor
-  if (skeletonBackgroundColor)
-    newGenericColors.skeletonBackgroundColor = skeletonBackgroundColor
   if (linkColor) newGenericColors.link = linkColor
 
   // Secondary color is not yet configurable. Set secondary color to primary color
@@ -231,11 +225,10 @@ export const createEmotionTheme = (
 
   if (showBorderAroundInputs || widgetBorderColor) {
     // widgetBorderColor from the themeInput is deprecated. For compatibility
-    // with older SiS theming, we still activate the border around inputs if
-    // it is provided, but we are not using widgetBorderColor from theme input
-    // as color value.
+    // with older SiS theming, we still apply it here if provided, but we should
+    // consider full removing it at some point.
     conditionalOverrides.colors.widgetBorderColor =
-      conditionalOverrides.colors.borderColor
+      widgetBorderColor || conditionalOverrides.colors.borderColor
   }
 
   if (notNullOrUndefined(roundness)) {

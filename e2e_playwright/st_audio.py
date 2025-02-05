@@ -38,7 +38,7 @@ CAT_AUDIO = TEST_ASSETS_DIR / "cat-purr.mp3"
 st.audio(str(CAT_AUDIO))
 st.audio(CAT_AUDIO)
 
-st.header("Autoplay)")
+st.header("Audio with Autoplay")
 autoplay = st.checkbox("Autoplay", value=False)
 if st.button("Create some elements to unmount component"):
     for _ in range(3):

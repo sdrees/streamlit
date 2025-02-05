@@ -16,15 +16,15 @@
 
 import axios, { AxiosRequestConfig, AxiosResponse, CancelToken } from "axios"
 
+import { IAppPage } from "@streamlit/protobuf"
 import {
   buildHttpUri,
-  FileUploadClientConfig,
   getCookie,
   makePath,
   notNullOrUndefined,
-  StreamlitEndpoints,
-} from "@streamlit/lib"
-import { IAppPage } from "@streamlit/protobuf"
+} from "@streamlit/utils"
+
+import { FileUploadClientConfig, StreamlitEndpoints } from "./types"
 
 interface Props {
   getServerUri: () => URL | undefined
@@ -127,7 +127,7 @@ export class DefaultStreamlitEndpoints implements StreamlitEndpoints {
     const urlPath = page.urlPathname as string
     const navigateTo = page.isDefault ? "" : urlPath
 
-    if (notNullOrUndefined(pageLinkBaseURL) && pageLinkBaseURL.length > 0) {
+    if (typeof pageLinkBaseURL === "string" && pageLinkBaseURL.length > 0) {
       return `${pageLinkBaseURL}/${navigateTo}`
     }
 

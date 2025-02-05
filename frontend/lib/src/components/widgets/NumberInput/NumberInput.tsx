@@ -516,7 +516,7 @@ export const NumberInput: React.FC<Props> = ({
               <Icon
                 content={Minus}
                 size="xs"
-                color={canDec ? "inherit" : "disabled"}
+                color={canDec ? "inherit" : theme.colors.disabled}
               />
             </StyledInputControl>
             <StyledInputControl
@@ -528,7 +528,7 @@ export const NumberInput: React.FC<Props> = ({
               <Icon
                 content={Plus}
                 size="xs"
-                color={canInc ? "inherit" : "disabled"}
+                color={canInc ? "inherit" : theme.colors.disabled}
               />
             </StyledInputControl>
           </StyledInputControls>

@@ -65,8 +65,6 @@ const requiredThemeColors = {
 }
 
 interface OptionalThemeColors {
-  skeletonBackgroundColor?: string
-  widgetBackgroundColor?: string
   widgetBorderColor?: string
 }
 

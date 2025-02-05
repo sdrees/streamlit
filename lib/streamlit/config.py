@@ -474,8 +474,9 @@ _create_option(
     description="""
         Controls whether uncaught app exceptions are logged via the rich library.
 
-        If True and if rich is installed, exception tracebacks will be logged with syntax highlighting and formatting.
-        Rich tracebacks are easier to read and show more code than standard Python tracebacks.
+        If True and if rich is installed, exception tracebacks will be logged with
+        syntax highlighting and formatting. Rich tracebacks are easier to read and
+        show more code than standard Python tracebacks.
 
         If set to False, the default Python traceback formatting will be used.
     """,

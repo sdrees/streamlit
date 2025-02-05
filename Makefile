@@ -47,7 +47,7 @@ all: init frontend install
 
 .PHONY: all-devel
 # Get dependencies and install Streamlit into Python environment -- but do not build the frontend.
-all-devel: init develop pre-commit-install
+all-devel: init develop pre-commit-install frontend-dependencies
 	@echo ""
 	@echo "    The frontend has *not* been rebuilt."
 	@echo "    If you need to make a wheel file or test S3 sharing, run:"
@@ -57,7 +57,7 @@ all-devel: init develop pre-commit-install
 
 .PHONY: mini-devel
 # Get minimal dependencies for development and install Streamlit into Python environment -- but do not build the frontend.
-mini-devel: mini-init develop pre-commit-install
+mini-devel: mini-init develop pre-commit-install frontend-dependencies
 
 .PHONY: build-deps
 # An even smaller installation than mini-devel. Installs the bare minimum necessary to build Streamlit (by leaving out some dependencies necessary for the development process). Does not build the frontend.
@@ -74,6 +74,11 @@ mini-init: python-init-dev-only react-init protobuf
 .PHONY: frontend
 # Build frontend into static files.
 frontend: react-build
+
+.PHONY: frontend-dependencies
+# Build frontend dependent libraries (excluding app and lib)
+frontend-dependencies:
+	cd frontend/ ; yarn workspaces foreach --all --exclude @streamlit/app --exclude @streamlit/lib --topological run build
 
 .PHONY: install
 # Install Streamlit into your Python environment.
@@ -242,11 +247,13 @@ clean:
 	rm -rf frontend/app/performance/lighthouse/reports
 	rm -rf frontend/app/node_modules
 	rm -rf frontend/lib/node_modules
+	rm -rf frontend/connection/node_modules
 	rm -rf frontend/test_results
-	rm -f frontend/lib/src/proto.js
-	rm -f frontend/lib/src/proto.d.ts
+	rm -f frontend/protobuf/src/proto.js
+	rm -f frontend/protobuf/src/proto.d.ts
 	rm -rf frontend/public/reports
 	rm -rf frontend/lib/dist
+	rm -rf frontend/connection/dist
 	rm -rf ~/.cache/pre-commit
 	rm -rf e2e_playwright/test-results
 	rm -rf e2e_playwright/performance-results
@@ -291,41 +298,42 @@ react-init:
 .PHONY: react-build
 # React build.
 react-build:
-	cd frontend/ ; yarn workspaces foreach --all run build
+	cd frontend/ ; yarn workspaces foreach --all --topological run build
 	rsync -av --delete --delete-excluded --exclude=reports \
 		frontend/app/build/ lib/streamlit/static/
 
 .PHONY: frontend-build-with-profiler
-frontend-build-with-profiler:
-	cd frontend/ ; yarn run buildWithProfiler
+frontend-build-with-profiler: frontend-dependencies
+	cd frontend/ ; yarn workspace @streamlit/app buildWithProfiler
 	rsync -av --delete --delete-excluded --exclude=reports \
 		frontend/app/build/ lib/streamlit/static/
 
 .PHONY: frontend-fast
 frontend-fast:
-	cd frontend/ ; yarn workspace @streamlit/app build
+	cd frontend/ ; yarn workspaces foreach --recursive --topological --from @streamlit/app --exclude @streamlit/lib run build
 	rsync -av --delete --delete-excluded --exclude=reports \
 		frontend/app/build/ lib/streamlit/static/
 
+.PHONY: frontend-dev
+frontend-dev: frontend-dependencies
+	cd frontend/ ; yarn dev
+
+
 .PHONY: frontend-lib
 # Build the frontend library.
-frontend-lib:
-	cd frontend/ ; yarn workspace @streamlit/lib build;
-
-.PHONY: frontend-app
-# Build the frontend app. One must build the frontend lib first before building the app.
-frontend-app:
-	cd frontend/ ; yarn workspace @streamlit/app build
+frontend-lib: frontend-dependencies
+	cd frontend/ ; yarn workspaces foreach --recursive --topological --from @streamlit/lib run build;
 
 .PHONY: jslint
 # Verify that our JS/TS code is formatted and that there are no lint errors.
-jslint:
+jslint: frontend-dependencies
 	cd frontend/ ; yarn workspaces foreach --all run formatCheck
 	cd frontend/ ; yarn workspaces foreach --all run lint
 
 .PHONY: tstypecheck
 # Typecheck the JS/TS code.
-tstypecheck:
+tstypecheck: frontend-dependencies
+	cd frontend/ ; yarn workspaces foreach --all --exclude @streamlit/lib --exclude @streamlit/app run typecheck
 	cd frontend/ ; yarn workspaces foreach --all run typecheck
 
 .PHONY: jsformat
@@ -335,12 +343,12 @@ jsformat:
 
 .PHONY: jstest
 # Run JS unit tests.
-jstest:
+jstest: frontend-dependencies
 	cd frontend; TESTPATH=$(TESTPATH) yarn workspaces foreach --all run test
 
 .PHONY: jstestcoverage
 # Run JS unit tests and generate a coverage report.
-jstestcoverage:
+jstestcoverage: frontend-dependencies
 	cd frontend; TESTPATH=$(TESTPATH) yarn workspaces foreach --all run test --coverage
 
 .PHONY: playwright
@@ -447,7 +455,7 @@ performance-lighthouse:
 
 .PHONY frontend-lib-prod:
 # Build the production version for @streamlit/lib.
-frontend-lib-prod:
+frontend-lib-prod: frontend-dependencies
 	cd frontend/ ; yarn workspace @streamlit/lib build;
 
 .PHONY streamlit-lib-prod:

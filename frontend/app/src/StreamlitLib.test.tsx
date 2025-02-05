@@ -21,15 +21,21 @@ import React, { PureComponent, ReactElement } from "react"
 import { screen, waitFor } from "@testing-library/react"
 
 import {
+  AppConfig as ConnectionAppConfig,
+  LibConfig as ConnectionLibConfig,
+  StreamlitEndpoints,
+} from "@streamlit/connection"
+import {
   AppRoot,
   ComponentRegistry,
   createFormsData,
   FileUploadClient,
   FormsData,
+  AppConfig as LibAppConfig,
+  LibConfig as LibLibConfig,
   render,
   ScriptRunState,
   SessionInfo,
-  StreamlitEndpoints,
   VerticalBlock,
   WidgetStateManager,
 } from "@streamlit/lib"
@@ -265,5 +271,14 @@ describe("StreamlitLibExample", () => {
 
     // And we should have the single Text element we created
     expect(screen.getByText("Hello, world!")).toBeInTheDocument()
+  })
+
+  it("sees app config as the same structure", () => {
+    const appConfig: ConnectionAppConfig = {} as LibAppConfig
+    const libConfig: ConnectionLibConfig = {} as LibLibConfig
+
+    // Creating a test to ensure this just passes. The above will break
+    // the typechecker if the structures are not the same.
+    expect(true).toBe(true)
   })
 })

@@ -151,6 +151,7 @@ message CustomThemeConfig {
   string text_color = 4;
   FontFamily font = 5;
   BaseTheme base = 6;
+  // DEPRECATED: This color is not applied anymore:
   string widget_background_color = 7;
   // DEPRECATED: Use the border_color and show_border_around_inputs instead:
   string widget_border_color = 8;
@@ -160,6 +161,7 @@ message CustomThemeConfig {
   string code_font = 14;
   repeated FontFace font_faces = 15;
   FontSizes font_sizes = 16;
+  // DEPRECATED: This color is not applied anymore:
   string skeleton_background_color = 17;
   optional float roundness = 18;
   optional string border_color = 19;

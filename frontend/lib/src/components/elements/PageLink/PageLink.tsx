@@ -100,7 +100,7 @@ function PageLink(props: Readonly<Props>): ReactElement {
             {element.icon && (
               <DynamicIcon
                 size="lg"
-                color={colors.bodyText}
+                color={disabled ? colors.fadedText40 : colors.bodyText}
                 iconValue={element.icon}
               />
             )}

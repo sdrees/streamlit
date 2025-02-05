@@ -25,6 +25,7 @@ import {
   LabelVisibilityMessage as LabelVisibilityMessageProto,
   Skeleton as SkeletonProto,
 } from "@streamlit/protobuf"
+import { isNullOrUndefined, notNullOrUndefined } from "@streamlit/utils"
 
 import { assertNever } from "./assertNever"
 
@@ -278,33 +279,6 @@ export function notUndefined<T>(value: T | undefined): value is T {
 }
 
 /**
- * A type predicate that is true if the given value is not null.
- */
-export function notNull<T>(value: T | null): value is T {
-  return notNullOrUndefined(value)
-}
-
-/**
- * A type predicate that is true if the given value is neither undefined
- * nor null.
- */
-export function notNullOrUndefined<T>(
-  value: T | null | undefined
-): value is T {
-  return <T>value !== null && <T>value !== undefined
-}
-
-/**
- * A type predicate that is true if the given value is either undefined
- * or null.
- */
-export function isNullOrUndefined<T>(
-  value: T | null | undefined
-): value is null | undefined {
-  return <T>value === null || <T>value === undefined
-}
-
-/**
  * A promise that would be resolved after certain time
  * @param ms number
  */
@@ -324,14 +298,6 @@ export function isFromMac(): boolean {
  */
 export function isFromWindows(): boolean {
   return /^Win/i.test(navigator.platform)
-}
-
-/**
- * Returns cookie value
- */
-export function getCookie(name: string): string | undefined {
-  const r = document.cookie.match(`\\b${name}=([^;]*)\\b`)
-  return r ? r[1] : undefined
 }
 
 /**
@@ -595,3 +561,6 @@ export function keysToSnakeCase(
     return acc
   }, {} as Record<string, any>)
 }
+
+// TODO: Update all imports to use @streamlit/utils and remove this line.
+export { isNullOrUndefined, notNullOrUndefined } from "@streamlit/utils"

@@ -32,7 +32,7 @@ describe("StaticConnection", () => {
   let logErrorSpy: MockInstance
 
   beforeAll(() => {
-    vi.mock(import("@streamlit/lib"), async importOriginal => {
+    vi.mock(import("./utils"), async importOriginal => {
       const actual = await importOriginal()
       return {
         ...actual,

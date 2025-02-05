@@ -54,6 +54,24 @@ repos:
         exclude: /vendor/
         language: node
         pass_filenames: true
+      - id: prettier-connection
+        name: Prettier Connection
+        # NOTE: This hook currently does not work on Windows due to "yarn" not being an executable and win32api.CreateProcess
+        # turning `subprocess.run(["yarn", "prettier", "--write"])` into a call to `yarn.exe prettier --write` which does not exist
+        entry: ./scripts/run_in_subdirectory.py frontend/connection yarn run format
+        files: ^frontend/connection/.*\.(js|jsx|ts|tsx)$
+        exclude: /vendor/
+        language: node
+        pass_filenames: true
+      - id: prettier-utils
+        name: Prettier Utils
+        # NOTE: This hook currently does not work on Windows due to "yarn" not being an executable and win32api.CreateProcess
+        # turning `subprocess.run(["yarn", "prettier", "--write"])` into a call to `yarn.exe prettier --write` which does not exist
+        entry: ./scripts/run_in_subdirectory.py frontend/utils yarn run format
+        files: ^frontend/utils/.*\.(js|jsx|ts|tsx)$
+        exclude: /vendor/
+        language: node
+        pass_filenames: true
       - id: prettier-yaml
         name: Prettier-yaml
         # NOTE: This hook currently does not work on Windows due to "yarn" not being an executable and win32api.CreateProcess

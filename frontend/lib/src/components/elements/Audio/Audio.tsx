@@ -21,6 +21,8 @@ import { Audio as AudioProto } from "@streamlit/protobuf"
 import { StreamlitEndpoints } from "~lib/StreamlitEndpoints"
 import { WidgetStateManager as ElementStateManager } from "~lib/WidgetStateManager"
 
+import { StyledAudio, StyledAudioContainer } from "./styled-components"
+
 export interface AudioProps {
   endpoints: StreamlitEndpoints
   width: number
@@ -30,7 +32,6 @@ export interface AudioProps {
 
 export default function Audio({
   element,
-  width,
   endpoints,
   elementMgr,
 }: Readonly<AudioProps>): ReactElement {
@@ -148,14 +149,15 @@ export default function Audio({
   const uri = endpoints.buildMediaURL(element.url)
 
   return (
-    <audio
-      className="stAudio"
-      data-testid="stAudio"
-      ref={audioRef}
-      controls
-      autoPlay={autoplay && !preventAutoplay}
-      src={uri}
-      style={{ width }}
-    />
+    <StyledAudioContainer>
+      <StyledAudio
+        className="stAudio"
+        data-testid="stAudio"
+        ref={audioRef}
+        controls
+        autoPlay={autoplay && !preventAutoplay}
+        src={uri}
+      />
+    </StyledAudioContainer>
   )
 }

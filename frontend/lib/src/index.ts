@@ -43,6 +43,7 @@ export {
   DynamicIcon,
   EmojiIcon,
   default as Icon,
+  isMaterialIcon,
 } from "./components/shared/Icon"
 export {
   default as Modal,
@@ -90,11 +91,11 @@ export {
 } from "./test_util"
 export {
   AUTO_THEME_NAME,
-  CUSTOM_THEME_NAME,
   baseTheme,
   createAutoTheme,
   createPresetThemes,
   createTheme,
+  CUSTOM_THEME_NAME,
   darkTheme,
   getCachedTheme,
   getDefaultTheme,
@@ -113,7 +114,13 @@ export { default as emotionLightTheme } from "./theme/emotionLightTheme"
 export { fonts, spacing } from "./theme/primitives"
 export { ensureError } from "./util/ErrorHandling"
 export { useIsOverflowing } from "./util/Hooks"
-export { LocalStore, localStorageAvailable } from "./util/storageUtils"
+export {
+  mark,
+  measure,
+  type StPerformanceMark,
+  type StPerformanceMetric,
+} from "./util/performance"
+export { localStorageAvailable, LocalStore } from "./util/storageUtils"
 export { Timer } from "./util/Timer"
 export {
   buildHttpUri,
@@ -144,11 +151,5 @@ export {
   preserveEmbedQueryParams,
   setCookie,
 } from "./util/utils"
-export { WidgetStateManager, createFormsData } from "./WidgetStateManager"
+export { createFormsData, WidgetStateManager } from "./WidgetStateManager"
 export type { FormsData } from "./WidgetStateManager"
-export {
-  mark,
-  measure,
-  type StPerformanceMetric,
-  type StPerformanceMark,
-} from "./util/performance"

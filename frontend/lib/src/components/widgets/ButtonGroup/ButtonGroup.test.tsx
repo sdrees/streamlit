@@ -575,6 +575,7 @@ describe("ButtonGroup getContentElement", () => {
       label: "foo",
       icon: "bar",
       iconSize: "lg",
+      useSmallerFont: false,
     })
     expect(kind).toBe(BaseButtonKind.BORDERLESS_ICON)
     expect(size).toBe(BaseButtonSize.XSMALL)
@@ -592,6 +593,7 @@ describe("ButtonGroup getContentElement", () => {
       label: "foo",
       icon: undefined,
       iconSize: "lg",
+      useSmallerFont: false,
     })
     expect(kind).toBe(BaseButtonKind.BORDERLESS_ICON)
     expect(size).toBe(BaseButtonSize.XSMALL)
@@ -609,6 +611,7 @@ describe("ButtonGroup getContentElement", () => {
       label: "",
       icon: "foo",
       iconSize: "lg",
+      useSmallerFont: false,
     })
     expect(kind).toBe(BaseButtonKind.BORDERLESS_ICON)
     expect(size).toBe(BaseButtonSize.XSMALL)
@@ -626,6 +629,7 @@ describe("ButtonGroup getContentElement", () => {
       label: "foo",
       icon: "bar",
       iconSize: "base",
+      useSmallerFont: true,
     })
     expect(kind).toBe(BaseButtonKind.PILLS)
     expect(size).toBe(BaseButtonSize.MEDIUM)

@@ -117,11 +117,20 @@ export function getContentElement(
       ? BaseButtonSize.XSMALL
       : BaseButtonSize.MEDIUM
 
+  // Use smaller font if kind is pills or segmented control
+  const useSmallerFont =
+    kind === BaseButtonKind.PILLS || kind === BaseButtonKind.SEGMENTED_CONTROL
+
   const iconSize = style === ButtonGroupProto.Style.BORDERLESS ? "lg" : "base"
 
   return {
     element: (
-      <DynamicButtonLabel icon={icon} label={content} iconSize={iconSize} />
+      <DynamicButtonLabel
+        icon={icon}
+        label={content}
+        iconSize={iconSize}
+        useSmallerFont={useSmallerFont}
+      />
     ),
     kind: kind,
     size: size,

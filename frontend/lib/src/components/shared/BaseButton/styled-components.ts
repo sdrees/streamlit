@@ -345,7 +345,6 @@ const StyledButtonGroupBaseButton = styled(
       overflow: "hidden",
     },
     "& p": {
-      fontSize: theme.fontSizes.sm,
       textOverflow: "ellipsis",
       overflow: "hidden",
     },

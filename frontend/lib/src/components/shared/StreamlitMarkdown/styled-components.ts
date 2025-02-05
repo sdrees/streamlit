@@ -162,7 +162,7 @@ export const StyledStreamlitMarkdown =
       isToast,
     }) => {
       // Widget Labels have smaller font size with exception of Button/Checkbox/Radio Button labels
-      // Toasts also have smaller font size
+      // Toasts also have smaller font size as well as pills and segmented controls.
       const useSmallerFontSize =
         (isLabel && !largerLabel) || isToast || isCaption
 

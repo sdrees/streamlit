@@ -15,7 +15,6 @@
  */
 
 import { defineConfig } from "vite"
-import react from "@vitejs/plugin-react-swc"
 import dts from "vite-plugin-dts"
 import viteTsconfigPaths from "vite-tsconfig-paths"
 
@@ -24,15 +23,14 @@ import path from "path"
 // We do not explicitly set the DEV_BUILD in any of our processes
 // This is a convenience for developers for debugging purposes
 const DEV_BUILD = Boolean(process.env.DEV_BUILD)
+// DEV_WATCH is used to simplify development of the library
+// to speed up rebuilds for development of Streamlit
+const DEV_WATCH = Boolean(process.env.DEV_WATCH)
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "./",
   plugins: [
-    react({
-      jsxImportSource: "@emotion/react",
-      plugins: [["@swc/plugin-emotion", {}]],
-    }),
     viteTsconfigPaths(),
     dts({
       insertTypesEntry: true,
@@ -40,29 +38,16 @@ export default defineConfig({
   ],
   build: {
     outDir: "dist",
-    sourcemap: DEV_BUILD,
+    sourcemap: DEV_BUILD || DEV_WATCH,
     lib: {
-      // Specify the entry point of your library
       entry: path.resolve(__dirname, "src/index.ts"),
-      name: "@streamlit/lib", // Replace with your library's name
-      fileName: format => `streamlit-lib.${format}.js`,
-      formats: ["es", "umd", "cjs"], // Output formats
+      name: "@streamlit/connection",
+      fileName: format => `streamlit-connection.${format}.js`,
+      // For development, only build es format since that is what Streamlit uses
+      formats: DEV_WATCH ? ["es"] : ["es", "umd", "cjs"],
     },
     rollupOptions: {
       input: "src/index.ts",
-      // Externalize dependencies that shouldn't be bundled into your library
-      external: ["react", "react-dom"],
-      output: {
-        globals: {
-          react: "React",
-          "react-dom": "ReactDOM",
-        },
-      },
-    },
-  },
-  resolve: {
-    alias: {
-      "~lib": path.resolve(__dirname, "../lib/src"),
     },
   },
   test: {

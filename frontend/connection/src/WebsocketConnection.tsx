@@ -16,30 +16,31 @@
 
 import { getLogger } from "loglevel"
 
+import { BackMsg, ForwardMsg, IBackMsg } from "@streamlit/protobuf"
+import {
+  getCookie,
+  isNullOrUndefined,
+  notNullOrUndefined,
+} from "@streamlit/utils"
+
+import { ForwardMsgCache } from "./ForwardMessageCache"
+import { buildWsUri } from "./utils"
 import {
   PING_MAXIMUM_RETRY_PERIOD_MS,
   PING_MINIMUM_RETRY_PERIOD_MS,
   WEBSOCKET_STREAM_PATH,
   WEBSOCKET_TIMEOUT_MS,
-} from "@streamlit/app/src/connection/constants"
+} from "./constants"
 import {
   Event,
+  IHostConfigResponse,
   OnConnectionStateChange,
   OnMessage,
   OnRetry,
-} from "@streamlit/app/src/connection/types"
-import {
-  buildWsUri,
-  ForwardMsgCache,
-  getCookie,
-  IHostConfigResponse,
-  isNullOrUndefined,
-  notNullOrUndefined,
   StreamlitEndpoints,
-} from "@streamlit/lib"
-import { BackMsg, ForwardMsg, IBackMsg } from "@streamlit/protobuf"
-import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
-import { doInitPings } from "@streamlit/app/src/connection/DoInitPings"
+} from "./types"
+import { ConnectionState } from "./ConnectionState"
+import { doInitPings } from "./DoInitPings"
 
 export interface Args {
   /** The application's SessionInfo instance */

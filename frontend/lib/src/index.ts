@@ -15,10 +15,9 @@
  */
 
 // We add some polyfills in order to support older browsers for the exports below
-import "./promiseWithResolversPolyfill"
+import "@streamlit/utils"
 // These imports are each exported specifically in order to minimize public apis.
 export { AppRoot, BlockNode, ElementNode } from "./AppNode"
-export { IS_DEV_ENV, WEBSOCKET_PORT_DEV } from "./baseconsts"
 export { default as VerticalBlock } from "./components/core/Block"
 export type { BlockPropsWithoutWidth } from "./components/core/Block"
 export { default as ElementNodeRenderer } from "./components/core/Block/ElementNodeRenderer"
@@ -59,7 +58,6 @@ export { WindowDimensionsProvider } from "./components/shared/WindowDimensions/P
 export { ComponentRegistry } from "./components/widgets/CustomComponent"
 export { Quiver } from "./dataframes/Quiver"
 export { FileUploadClient } from "./FileUploadClient"
-export { ForwardMsgCache } from "./ForwardMessageCache"
 export { default as useScrollToBottom } from "./hooks/useScrollToBottom"
 export { default as HostCommunicationManager } from "./hostComm"
 export { HOST_COMM_VERSION } from "./hostComm/HostCommunicationManager"
@@ -67,7 +65,6 @@ export type {
   AppConfig,
   DeployedAppMetadata,
   IGuestToHostMessage,
-  IHostConfigResponse,
   IMenuItem,
   IToolbarItem,
 } from "./hostComm/types"
@@ -80,10 +77,6 @@ export { mockTheme } from "./mocks/mockTheme"
 export { RootStyleProvider } from "./RootStyleProvider"
 export { ScriptRunState } from "./ScriptRunState"
 export { SessionInfo } from "./SessionInfo"
-export type {
-  FileUploadClientConfig,
-  StreamlitEndpoints,
-} from "./StreamlitEndpoints"
 export {
   customRenderLibContext,
   mockWindowLocation,
@@ -120,18 +113,11 @@ export {
   type StPerformanceMark,
   type StPerformanceMetric,
 } from "./util/performance"
-export { localStorageAvailable, LocalStore } from "./util/storageUtils"
+export { LocalStore } from "./util/storageUtils"
 export { Timer } from "./util/Timer"
-export {
-  buildHttpUri,
-  buildWsUri,
-  getPossibleBaseUris,
-  makePath,
-} from "./util/UriUtil"
 export {
   extractPageNameFromPathName,
   generateUID,
-  getCookie,
   getElementId,
   getEmbeddingIdClassName,
   getIFrameEnclosingApp,
@@ -141,12 +127,10 @@ export {
   isEmbed,
   isInChildFrame,
   isLightThemeInQueryParams,
-  isNullOrUndefined,
   isPaddingDisplayed,
   isScrollingHidden,
   isToolbarDisplayed,
   makeElementWithInfoText,
-  notNullOrUndefined,
   notUndefined,
   preserveEmbedQueryParams,
   setCookie,

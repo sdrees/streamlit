@@ -32,17 +32,16 @@ import {
   BaseButton,
   BaseButtonKind,
   Icon,
-  isNullOrUndefined,
-  notNullOrUndefined,
   Placement,
   ScriptRunState,
   Timer,
   Tooltip,
 } from "@streamlit/lib"
 import { SessionEvent } from "@streamlit/protobuf"
+import { isNullOrUndefined, notNullOrUndefined } from "@streamlit/utils"
 import iconRunning from "@streamlit/app/src/assets/img/icon_running.gif"
 import newYearsRunning from "@streamlit/app/src/assets/img/fireworks.gif"
-import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
+import { ConnectionState } from "@streamlit/connection"
 import { SessionEventDispatcher } from "@streamlit/app/src/SessionEventDispatcher"
 
 import {

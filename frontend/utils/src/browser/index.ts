@@ -15,10 +15,25 @@
  */
 
 /**
- * Parameters for our fetch() requests.
+ * Returns cookie value
  */
-export const FETCH_PARAMS: RequestInit = {
-  redirect: "follow",
-  credentials: "same-origin",
-  mode: "cors",
+export function getCookie(name: string): string | undefined {
+  const r = document.cookie.match(`\\b${name}=([^;]*)\\b`)
+  return r ? r[1] : undefined
+}
+
+// Method taken from
+// https://stackoverflow.com/questions/16427636/check-if-localstorage-is-available
+export function localStorageAvailable(): boolean {
+  const testData = "testData"
+
+  try {
+    const { localStorage } = window
+    localStorage.setItem(testData, testData)
+    localStorage.getItem(testData)
+    localStorage.removeItem(testData)
+  } catch (e) {
+    return false
+  }
+  return true
 }

@@ -29,7 +29,8 @@ import groupBy from "lodash/groupBy"
 // isMobile field sanely.
 import * as reactDeviceDetect from "react-device-detect"
 
-import { localStorageAvailable, StreamlitEndpoints } from "@streamlit/lib"
+import { localStorageAvailable } from "@streamlit/utils"
+import { StreamlitEndpoints } from "@streamlit/connection"
 import { IAppPage } from "@streamlit/protobuf"
 import { AppContext } from "@streamlit/app/src/components/AppContext"
 

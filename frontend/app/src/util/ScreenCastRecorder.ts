@@ -16,7 +16,7 @@
 
 import { getLogger } from "loglevel"
 
-import { notNullOrUndefined } from "@streamlit/lib"
+import { notNullOrUndefined } from "@streamlit/utils"
 
 const BLOB_TYPE = "video/webm"
 const log = getLogger("ScreenCastRecorder")

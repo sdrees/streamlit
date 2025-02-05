@@ -28,9 +28,9 @@ import {
   Icon,
   IGuestToHostMessage,
   IMenuItem,
-  notNullOrUndefined,
 } from "@streamlit/lib"
 import { Config, PageConfig } from "@streamlit/protobuf"
+import { notNullOrUndefined } from "@streamlit/utils"
 import ScreenCastRecorder from "@streamlit/app/src/util/ScreenCastRecorder"
 import { MetricsManager } from "@streamlit/app/src/MetricsManager"
 

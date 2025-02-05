@@ -18,16 +18,15 @@ import pick from "lodash/pick"
 import { getLogger } from "loglevel"
 import { v4 as uuidv4 } from "uuid"
 
+import { IS_DEV_ENV } from "@streamlit/connection"
 import {
   DeployedAppMetadata,
-  getCookie,
   IGuestToHostMessage,
-  IS_DEV_ENV,
-  localStorageAvailable,
   SessionInfo,
   setCookie,
 } from "@streamlit/lib"
 import { IMetricsEvent, MetricsEvent } from "@streamlit/protobuf"
+import { getCookie, localStorageAvailable } from "@streamlit/utils"
 
 // Default metrics config fetched when none provided by host config endpoint
 export const DEFAULT_METRICS_CONFIG = "https://data.streamlit.io/metrics.json"

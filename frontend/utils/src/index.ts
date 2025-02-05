@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * Parameters for our fetch() requests.
- */
-export const FETCH_PARAMS: RequestInit = {
-  redirect: "follow",
-  credentials: "same-origin",
-  mode: "cors",
-}
+import "./polyfills"
+
+export * from "./browser"
+export * from "./types"
+export * from "./uri"

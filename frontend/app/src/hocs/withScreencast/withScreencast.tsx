@@ -26,7 +26,7 @@ import React, {
 import hoistNonReactStatics from "hoist-non-react-statics"
 import { getLogger } from "loglevel"
 
-import { isNullOrUndefined } from "@streamlit/lib"
+import { isNullOrUndefined } from "@streamlit/utils"
 import ScreenCastRecorder from "@streamlit/app/src/util/ScreenCastRecorder"
 import {
   ScreencastDialog,

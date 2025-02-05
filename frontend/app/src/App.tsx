@@ -24,7 +24,6 @@ import without from "lodash/without"
 import { getLogger } from "loglevel"
 
 import {
-  AppConfig,
   AppRoot,
   CircularBuffer,
   ComponentRegistry,
@@ -46,28 +45,23 @@ import {
   handleFavicon,
   hashString,
   HostCommunicationManager,
-  IHostConfigResponse,
   IMenuItem,
   isColoredLineDisplayed,
   isEmbed,
   isInChildFrame,
-  isNullOrUndefined,
   isPaddingDisplayed,
   isPresetTheme,
   isScrollingHidden,
   isToolbarDisplayed,
   IToolbarItem,
-  LibConfig,
   LibContext,
   mark,
   measure,
-  notNullOrUndefined,
   notUndefined,
   preserveEmbedQueryParams,
   PresetThemeName,
   ScriptRunState,
   SessionInfo,
-  StreamlitEndpoints,
   StreamlitMarkdown,
   ThemeConfig,
   toExportedTheme,
@@ -102,6 +96,7 @@ import {
   SessionStatus,
   WidgetStates,
 } from "@streamlit/protobuf"
+import { isNullOrUndefined, notNullOrUndefined } from "@streamlit/utils"
 import getBrowserInfo from "@streamlit/app/src/util/getBrowserInfo"
 import { isLocalhost } from "@streamlit/app/src/util/deploymentInfo"
 import { AppContext } from "@streamlit/app/src/components/AppContext"
@@ -116,11 +111,17 @@ import {
   StreamlitDialog,
 } from "@streamlit/app/src/components/StreamlitDialog"
 import { DialogType } from "@streamlit/app/src/components/StreamlitDialog/constants"
-import { ConnectionManager } from "@streamlit/app/src/connection/ConnectionManager"
-import { ConnectionState } from "@streamlit/app/src/connection/ConnectionState"
+import {
+  AppConfig,
+  ConnectionManager,
+  ConnectionState,
+  DefaultStreamlitEndpoints,
+  IHostConfigResponse,
+  LibConfig,
+  StreamlitEndpoints,
+} from "@streamlit/connection"
 import { SessionEventDispatcher } from "@streamlit/app/src/SessionEventDispatcher"
 import { UserSettings } from "@streamlit/app/src/components/StreamlitDialog/UserSettings"
-import { DefaultStreamlitEndpoints } from "@streamlit/app/src/connection/DefaultStreamlitEndpoints"
 import { MetricsManager } from "@streamlit/app/src/MetricsManager"
 import { StyledApp } from "@streamlit/app/src/styled-components"
 import withScreencast, {

@@ -16,15 +16,12 @@
 
 import { getLogger } from "loglevel"
 
-import {
-  getPossibleBaseUris,
-  IHostConfigResponse,
-  StreamlitEndpoints,
-} from "@streamlit/lib"
 import { BackMsg, ForwardMsg } from "@streamlit/protobuf"
 
 import { ConnectionState } from "./ConnectionState"
 import { establishStaticConnection } from "./StaticConnection"
+import { IHostConfigResponse, StreamlitEndpoints } from "./types"
+import { getPossibleBaseUris } from "./utils"
 import { WebsocketConnection } from "./WebsocketConnection"
 
 /**

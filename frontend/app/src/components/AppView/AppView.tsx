@@ -16,6 +16,7 @@
 
 import React, { ReactElement } from "react"
 
+import { StreamlitEndpoints } from "@streamlit/connection"
 import {
   AppRoot,
   BlockNode,
@@ -26,7 +27,6 @@ import {
   LibContext,
   Profiler,
   ScriptRunState,
-  StreamlitEndpoints,
   VerticalBlock,
   WidgetStateManager,
 } from "@streamlit/lib"

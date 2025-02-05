@@ -17,11 +17,9 @@
 import { getLogger } from "loglevel"
 
 import { ForwardMsg } from "@streamlit/protobuf"
+import { isNullOrUndefined, notNullOrUndefined } from "@streamlit/utils"
 
-import { isNullOrUndefined, notNullOrUndefined } from "~lib/util/utils"
-
-import { ensureError } from "./util/ErrorHandling"
-import { StreamlitEndpoints } from "./StreamlitEndpoints"
+import { StreamlitEndpoints } from "./types"
 
 const log = getLogger("ForwardMessageCache")
 
@@ -116,7 +114,7 @@ export class ForwardMsgCache {
       } catch (e) {
         throw new Error(
           `Failed to decode ForwardMsg (hash=${msg.refHash}): ${
-            ensureError(e).message
+            (e instanceof Error ? e : new Error(`${e}`)).message
           }`
         )
       }

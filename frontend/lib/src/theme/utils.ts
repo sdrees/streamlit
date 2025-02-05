@@ -24,6 +24,7 @@ import once from "lodash/once"
 import { getLogger } from "loglevel"
 
 import { CustomThemeConfig, ICustomThemeConfig } from "@streamlit/protobuf"
+import { localStorageAvailable } from "@streamlit/utils"
 
 import { CircularBuffer } from "~lib/components/shared/Profiler/CircularBuffer"
 import {
@@ -35,7 +36,7 @@ import {
   ThemeConfig,
   ThemeSpacing,
 } from "~lib/theme"
-import { localStorageAvailable, LocalStore } from "~lib/util/storageUtils"
+import { LocalStore } from "~lib/util/storageUtils"
 import {
   isDarkThemeInQueryParams,
   isLightThemeInQueryParams,

@@ -54,6 +54,7 @@
     "@loaders.gl/csv": "^4.2.5",
     "@loaders.gl/gltf": "^4.2.5",
     "@streamlit/protobuf": "workspace:^",
+    "@streamlit/utils": "workspace:^",
     "@swc/plugin-emotion": "^3.0.9",
     "@wavesurfer/react": "^1.0.7",
     "apache-arrow": "^18.0.0",

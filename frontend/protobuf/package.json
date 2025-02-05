@@ -12,6 +12,7 @@
     "proto.d.ts"
   ],
   "scripts": {
+    "build": "node ./scripts/generate-proto.js",
     "generate-protobuf": "node ./scripts/generate-proto.js"
   },
   "browserslist": [

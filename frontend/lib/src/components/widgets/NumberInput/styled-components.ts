@@ -26,8 +26,7 @@ export const StyledInputContainer = styled.div(({ theme }) => ({
   // to the entire container and not only the input itself
   borderWidth: theme.sizes.borderWidth,
   borderStyle: "solid",
-  // TODO(lukasmasuch): fix this to use secondaryBg instead of bgColor here:
-  borderColor: theme.colors.widgetBorderColor ?? theme.colors.bgColor,
+  borderColor: theme.colors.widgetBorderColor ?? theme.colors.secondaryBg,
   transitionDuration: "200ms",
   transitionProperty: "border",
   transitionTimingFunction: "cubic-bezier(0.2, 0.8, 0.4, 1)",

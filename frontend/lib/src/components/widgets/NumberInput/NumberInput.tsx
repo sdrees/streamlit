@@ -495,6 +495,8 @@ export const NumberInput: React.FC<Props> = ({
                 // Baseweb requires long-hand props, short-hand leads to weird bugs & warnings.
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0,
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
                 borderLeftWidth: 0,
                 borderRightWidth: 0,
                 borderTopWidth: 0,

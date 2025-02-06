@@ -24,14 +24,22 @@ import { transparentize } from "color2k"
 
 import { EmotionTheme } from "./types"
 
-// Theme primitives. See lightThemePrimitives for what's available. These are
-// used to create a large JSON-style structure with theme values for all
-// widgets.
-// - See node_modules/baseui/themes/light-theme-primitives.js for an example
-// of primitives we can use here.
-// - See node_modules/baseui/themes/creator.js for the mapping of values from
-// this file to output values.
-export const createBaseThemePrimitives = (
+/**
+ * Creates theme primitives for the BaseUI theme.
+ *
+ * See lightThemePrimitives for what's available. These are used to create a
+ * large JSON-style structure with theme values for all widgets.
+ * - See node_modules/baseui/themes/light-theme-primitives.js for an example
+ * of primitives we can use here.
+ *
+ * - See node_modules/baseui/themes/creator.js for the mapping of values from
+ * this file to output values.
+ *
+ * @param baseTheme: The base theme primitives.
+ * @param theme: The emotion theme to use.
+ * @returns the theme primitives
+ */
+const createBaseUiThemePrimitives = (
   baseTheme: ThemePrimitives,
   theme: EmotionTheme
 ): ThemePrimitives => {
@@ -65,10 +73,16 @@ export const createBaseThemePrimitives = (
   }
 }
 
-// Theme overrides.
-// NOTE: A lot of the properties we can override here don't seem to actually
-// be used anywhere in BaseWeb's source. Will report a bug about it.
-export const createThemeOverrides = (
+/**
+ * Creates theme overrides for the BaseUI theme.
+ *
+ * NOTE: A lot of the properties we can override here don't seem to actually
+ * be used anywhere in BaseWeb's source.
+ *
+ * @param theme: The emotion theme to use.
+ * @returns the theme overrides
+ */
+const createBaseUiThemeOverrides = (
   theme: EmotionTheme
 ): Record<string, any> => {
   const { inSidebar, colors, genericFonts, fontSizes, lineHeights, radii } =
@@ -222,11 +236,18 @@ export const createThemeOverrides = (
   }
 }
 
+/**
+ * Creates the BaseUI theme based on an emotion theme.
+ *
+ * @param theme: The emotion theme to use.
+ * @param primitives: The primitives to use.
+ * @returns the BaseUI theme
+ */
 export const createBaseUiTheme = (
   theme: EmotionTheme,
   primitives = lightBaseThemePrimitives
 ): BaseTheme & Record<string, any> =>
   createBaseTheme(
-    createBaseThemePrimitives(primitives, theme),
-    createThemeOverrides(theme)
+    createBaseUiThemePrimitives(primitives, theme),
+    createBaseUiThemeOverrides(theme)
   )

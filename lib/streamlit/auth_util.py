@@ -172,6 +172,14 @@ def validate_auth_credentials(provider: str) -> None:
 
     provider_section = auth_section.get(provider)
 
+    # TODO[kajarenc]: Revisit this check later when investigating the ability
+    # TODO[kajarenc] to add "_" to the provider name.
+    if "_" in provider:
+        raise StreamlitAuthError(
+            f'Auth provider name "{provider}" contains an underscore. '
+            f"Please use a provider name without underscores."
+        )
+
     if provider_section is None and provider == "default":
         provider_section = generate_default_provider_section(auth_section)
 

@@ -434,7 +434,10 @@ function ChatInput({
                     style: {
                       minHeight: theme.sizes.minElementHeight,
                       outline: "none",
-                      border: "none",
+                      borderLeftWidth: "0",
+                      borderRightWidth: "0",
+                      borderTopWidth: "0",
+                      borderBottomWidth: "0",
                     },
                   },
                   Input: {

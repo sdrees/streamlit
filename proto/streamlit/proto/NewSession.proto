@@ -139,6 +139,7 @@ message CustomThemeConfig {
     DARK = 1;
   }
 
+  // DEPRECATED: Use body_font instead:
   enum FontFamily {
     SANS_SERIF = 0;
     SERIF = 1;
@@ -149,6 +150,7 @@ message CustomThemeConfig {
   string secondary_background_color = 2;
   string background_color = 3;
   string text_color = 4;
+  // DEPRECATED: Use body_font instead:
   FontFamily font = 5;
   BaseTheme base = 6;
   // DEPRECATED: This color is not applied anymore:

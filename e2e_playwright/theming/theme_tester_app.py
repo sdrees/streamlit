@@ -71,7 +71,7 @@ def run_theme_tester_app():
             )
             checkbox_col, toggle_col = st.columns(2)
             with checkbox_col:
-                st.checkbox("Checkbox", value=True)
+                st.checkbox("Check", value=True)
             with toggle_col:
                 st.toggle("Toggle", value=True)
             st.radio(

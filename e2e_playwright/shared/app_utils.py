@@ -708,3 +708,35 @@ def wait_for_all_images_to_be_loaded(page: Page) -> None:
         return images.every(img => img.complete && img.naturalHeight !== 0);
     }
     """)
+
+
+def expect_font(page: Page, font_family: str, timeout: int = 20000) -> None:
+    """
+    Wait until the given font_family is recognized as available by the browser.
+    Uses document.fonts.check within a wait_for_function call.
+
+    Only check if the browser supports the Font Loading API.
+    If the browser can render 'fontName' at 16px, it returns true.
+
+    Parameters
+    ----------
+
+        page: Page
+            The Playwright Page object.
+        font_family: str
+            The name of the font family to check.
+        timeout: int
+            How long to wait in milliseconds (default: 20000).
+
+    Raises:
+        TimeoutError: If the font isn't recognized in time
+    """
+    check_script = """
+    (fontName) => {
+        if (!('fonts' in document)) {
+            return false;
+        }
+        return document.fonts.check('16px ' + fontName);
+    }
+    """
+    page.wait_for_function(check_script, arg=font_family, timeout=timeout)

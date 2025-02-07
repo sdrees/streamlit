@@ -740,3 +740,41 @@ def expect_font(page: Page, font_family: str, timeout: int = 20000) -> None:
     }
     """
     page.wait_for_function(check_script, arg=font_family, timeout=timeout)
+
+
+def is_child_bounding_box_inside_parent(
+    child_locator: Locator, parent_locator: Locator
+) -> bool:
+    """
+    Checks if the bounding box of child_locator is fully within
+    the bounding box of parent_locator.
+
+    Parameters
+    ----------
+    child_locator : Locator
+        The locator of the child element.
+
+    parent_locator : Locator
+        The locator of the parent element.
+
+    Returns
+    -------
+    bool
+        True if the child's bounding box lies completely within
+        the parent's bounding box; otherwise, False.
+    """
+    parent_box = parent_locator.bounding_box()
+    child_box = child_locator.bounding_box()
+
+    # bounding_box() can return None if the element is invisible or not rendered.
+    if parent_box is None or child_box is None:
+        return False
+
+    return (
+        child_box["x"] >= parent_box["x"]
+        and child_box["y"] >= parent_box["y"]
+        and (child_box["x"] + child_box["width"])
+        <= (parent_box["x"] + parent_box["width"])
+        and (child_box["y"] + child_box["height"])
+        <= (parent_box["y"] + parent_box["height"])
+    )

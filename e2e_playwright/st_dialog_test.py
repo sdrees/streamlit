@@ -28,7 +28,9 @@ from e2e_playwright.shared.app_utils import (
     expect_no_exception,
     get_button,
     get_markdown,
+    is_child_bounding_box_inside_parent,
 )
+from e2e_playwright.shared.dataframe_utils import open_column_menu
 
 modal_test_id = "stDialog"
 
@@ -420,6 +422,21 @@ def test_dialog_with_dataframe_shows_toolbar(
     expect(df_toolbar).to_have_css("opacity", "1")
     expect(df_toolbar).to_be_visible()
     assert_snapshot(df_toolbar, name="st_dialog-shows_full_dataframe_toolbar")
+
+
+def test_dialog_with_dataframe_shows_column_menu_correctly(app: Page):
+    """Check that the dataframe column menu is fully visible and positioned correctly."""
+    click_button(app, "Open Dialog with dataframe")
+    dialog = app.get_by_role("dialog")
+    expect(dialog).to_be_visible()
+    df_element = dialog.get_by_test_id("stDataFrame")
+    expect(df_element).to_be_visible()
+    open_column_menu(df_element, 1, "small")
+    # Check that the column menu is within the bounds of the dataframe
+    column_menu = app.get_by_test_id("stDataFrameColumnMenu")
+    expect(column_menu).to_be_visible()
+    expect(column_menu).to_be_in_viewport()
+    assert is_child_bounding_box_inside_parent(column_menu, df_element)
 
 
 def test_dialog_with_rerun_closes_even_if_button_is_clicked_multiple_times(app: Page):

@@ -19,7 +19,11 @@ import React, { memo, ReactElement, useEffect } from "react"
 import { useTheme } from "@emotion/react"
 import { ACCESSIBILITY_TYPE, PLACEMENT, Popover } from "baseui/popover"
 
-import { EmotionTheme, hasLightBackgroundColor } from "~lib/theme"
+import {
+  convertRemToPx,
+  EmotionTheme,
+  hasLightBackgroundColor,
+} from "~lib/theme"
 import { DynamicIcon } from "~lib/components/shared/Icon"
 
 import {
@@ -164,7 +168,7 @@ function ColumnMenu({
       placement={PLACEMENT.bottomRight}
       accessibilityType={ACCESSIBILITY_TYPE.menu}
       showArrow={false}
-      popoverMargin={5}
+      popoverMargin={convertRemToPx("0.375rem")}
       onClickOutside={closeMenu}
       onEsc={closeMenu}
       overrides={{
@@ -173,6 +177,23 @@ function ColumnMenu({
             "data-testid": "stDataFrameColumnMenu",
           },
           style: {
+            paddingTop: "0 !important",
+            paddingBottom: "0 !important",
+            paddingLeft: "0 !important",
+            paddingRight: "0 !important",
+
+            backgroundColor: "transparent",
+          },
+        },
+        Inner: {
+          style: {
+            border: `${theme.sizes.borderWidth} solid ${theme.colors.borderColor}`,
+            backgroundColor: hasLightBackgroundColor(theme)
+              ? colors.bgColor
+              : colors.secondaryBg,
+            color: colors.bodyText,
+            fontSize: fontSizes.sm,
+            fontWeight: fontWeights.normal,
             // This is annoying, but a bunch of warnings get logged when the
             // shorthand version `borderRadius` is used here since the long
             // names are used by BaseWeb and mixing the two is apparently
@@ -181,24 +202,6 @@ function ColumnMenu({
             borderTopRightRadius: radii.default,
             borderBottomLeftRadius: radii.default,
             borderBottomRightRadius: radii.default,
-
-            paddingTop: "0 !important",
-            paddingBottom: "0 !important",
-            paddingLeft: "0 !important",
-            paddingRight: "0 !important",
-
-            backgroundColor: "transparent",
-            border: `${theme.sizes.borderWidth} solid ${theme.colors.borderColor}`,
-          },
-        },
-        Inner: {
-          style: {
-            backgroundColor: hasLightBackgroundColor(theme)
-              ? colors.bgColor
-              : colors.secondaryBg,
-            color: colors.bodyText,
-            fontSize: fontSizes.sm,
-            fontWeight: fontWeights.normal,
             // Prevent the menu hover background from overflowing the menu edges
             // This is only an issue if a high roundness is configured.
             overflow: "auto",
@@ -227,6 +230,7 @@ function ColumnMenu({
           top,
           left,
           visibility: "hidden",
+          transform: "unset",
         }}
       ></div>
     </Popover>

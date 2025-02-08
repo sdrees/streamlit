@@ -1026,10 +1026,27 @@ _create_option(
 _create_option(
     "theme.font",
     description="""
-        Font family for all text in the app, except code blocks. One of "sans serif",
+        The font family for all text in the app, except code blocks. One of "sans serif",
         "serif", or "monospace".
+        To use a custom font, it needs to be added via [theme.fontFaces].
     """,
 )
+
+_create_option(
+    "theme.codeFont",
+    description="""
+        The font family to use for code (monospace) in the app.
+        To use a custom font, it needs to be added via [theme.fontFaces].
+    """,
+)
+
+_create_option(
+    "theme.fontFaces",
+    description="""
+    Configure a list of font faces that you can use for the app & code fonts.
+""",
+)
+
 
 _create_option(
     "theme.roundness",

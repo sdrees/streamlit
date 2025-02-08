@@ -178,7 +178,15 @@ if st.button("Open Chart Dialog"):
 
 @st.dialog("Dialog with dataframe")
 def dialog_with_dataframe():
-    st.dataframe(pd.DataFrame(data, columns=["a", "b", "c"]), use_container_width=True)
+    st.dataframe(
+        pd.DataFrame(data, columns=["a", "b", "c"]),
+        column_config={
+            "a": st.column_config.Column(width="small"),
+            "b": st.column_config.Column(width="small"),
+            "c": st.column_config.Column(width="small"),
+        },
+        hide_index=True,
+    )
 
 
 if st.button("Open Dialog with dataframe"):

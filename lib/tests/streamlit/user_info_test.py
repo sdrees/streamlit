@@ -173,11 +173,21 @@ class UserInfoAuthTest(DeltaGeneratorTestCase):
     def test_user_login_with_invalid_provider(self):
         """Test that st.login raise exception for invalid provider."""
         with self.assertRaises(StreamlitAuthError) as ex:
-            st.login("invalid_provider")
+            st.login("invalid-provider")
 
         assert (
             "Authentication credentials in `.streamlit/secrets.toml` are missing for the "
-            'authentication provider "invalid_provider". Please check your configuration.'
+            'authentication provider "invalid-provider". Please check your configuration.'
+        ) == str(ex.exception)
+
+    def test_user_login_with_provider_with_underscore(self):
+        """Test that st.login raise exception for provider containing underscore."""
+        with self.assertRaises(StreamlitAuthError) as ex:
+            st.login("invalid_provider")
+
+        assert (
+            """Auth provider name "invalid_provider" contains an underscore. """
+            """Please use a provider name without underscores."""
         ) == str(ex.exception)
 
     def test_user_login_redirect_uri_missing(self):

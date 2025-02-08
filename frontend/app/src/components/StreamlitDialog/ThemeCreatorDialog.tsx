@@ -163,10 +163,6 @@ refresh the page.`}
           />
 
           <StyledFullRow>
-            <ThemeOption name="font" value={String(themeInput.font)} />
-          </StyledFullRow>
-
-          <StyledFullRow>
             <StyledFullRow>
               <StreamlitMarkdown
                 source={`

@@ -1186,6 +1186,12 @@ export class App extends PureComponent<Props, State> {
         this.setAndSendTheme(getHostSpecifiedTheme())
       }
     }
+
+    if (themeInput?.fontFaces) {
+      // If font faces are provided, we need to set the imported theme with the theme
+      // manager to make the font faces available.
+      this.props.theme.setImportedTheme(themeInput)
+    }
   }
 
   /**

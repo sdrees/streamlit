@@ -32,6 +32,7 @@ from streamlit.proto.BackMsg_pb2 import BackMsg
 from streamlit.proto.ClientState_pb2 import ClientState
 from streamlit.proto.Common_pb2 import FileURLs, FileURLsRequest, FileURLsResponse
 from streamlit.proto.ForwardMsg_pb2 import ForwardMsg
+from streamlit.proto.NewSession_pb2 import FontFace
 from streamlit.runtime import Runtime
 from streamlit.runtime.app_session import AppSession, AppSessionState
 from streamlit.runtime.caching.storage.dummy_cache_storage import (
@@ -677,16 +678,29 @@ def _mock_get_options_for_section(overrides=None) -> Callable[..., Any]:
         overrides = {}
 
     theme_opts = {
-        "base": "dark",
-        "primaryColor": "coral",
         "backgroundColor": "white",
-        "secondaryBackgroundColor": "blue",
-        "textColor": "black",
-        "font": "serif",
-        "roundness": 0.75,
+        "base": "dark",
         "borderColor": "#ff0000",
-        "showBorderAroundInputs": True,
+        "codeFont": "Monaspace Argon",
+        "font": "Inter",
+        "fontFaces": [
+            {
+                "family": "Inter",
+                "url": "https://raw.githubusercontent.com/rsms/inter/refs/heads/master/docs/font-files/Inter-Regular.woff2",
+                "weight": 400,
+            },
+            {
+                "family": "Monaspace Argon",
+                "url": "https://raw.githubusercontent.com/githubnext/monaspace/refs/heads/main/fonts/webfonts/MonaspaceArgon-Regular.woff2",
+                "weight": 400,
+            },
+        ],
         "linkColor": "#2EC163",
+        "primaryColor": "coral",
+        "roundness": 0.75,
+        "secondaryBackgroundColor": "blue",
+        "showBorderAroundInputs": True,
+        "textColor": "black",
     }
 
     for k, v in overrides.items():
@@ -1046,16 +1060,18 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
         patched_config.get_options_for_section.side_effect = (
             _mock_get_options_for_section(
                 {
-                    "base": None,
-                    "primaryColor": None,
                     "backgroundColor": None,
-                    "secondaryBackgroundColor": None,
-                    "textColor": None,
-                    "font": None,
-                    "roundness": None,
+                    "base": None,
                     "borderColor": None,
-                    "showBorderAroundInputs": None,
+                    "codeFont": None,
+                    "font": None,
+                    "fontFaces": None,
                     "linkColor": None,
+                    "primaryColor": None,
+                    "roundness": None,
+                    "secondaryBackgroundColor": None,
+                    "showBorderAroundInputs": None,
+                    "textColor": None,
                 }
             )
         )
@@ -1071,14 +1087,18 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
         patched_config.get_options_for_section.side_effect = (
             _mock_get_options_for_section(
                 {
-                    # Leave base, primaryColor, and font defined.
+                    # base and primaryColor are not set to None, since we want to
+                    # test here if we can set only a few selected options.
                     "backgroundColor": None,
-                    "secondaryBackgroundColor": None,
-                    "textColor": None,
-                    "roundness": None,
                     "borderColor": None,
-                    "showBorderAroundInputs": None,
+                    "codeFont": None,
+                    "font": None,
+                    "fontFaces": None,
                     "linkColor": None,
+                    "roundness": None,
+                    "secondaryBackgroundColor": None,
+                    "showBorderAroundInputs": None,
+                    "textColor": None,
                 }
             )
         )
@@ -1092,6 +1112,13 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
         # In proto3, primitive fields are technically always required and are
         # set to the type's zero value when undefined.
         assert new_session_msg.custom_theme.background_color == ""
+        assert new_session_msg.custom_theme.code_font == ""
+        # The value from `theme.font` will be placed in body_font since
+        # font field uses a deprecated enum:
+        assert new_session_msg.custom_theme.body_font == ""
+        assert not new_session_msg.custom_theme.font_faces
+
+        # Fields that are marked as optional in proto:
         assert not new_session_msg.custom_theme.HasField("roundness")
         assert not new_session_msg.custom_theme.HasField("border_color")
         assert not new_session_msg.custom_theme.HasField("show_border_around_inputs")
@@ -1117,6 +1144,22 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
         assert new_session_msg.custom_theme.border_color == "#ff0000"
         assert new_session_msg.custom_theme.show_border_around_inputs is True
         assert new_session_msg.custom_theme.link_color == "#2EC163"
+        # The value from `theme.font` will be placed in body_font since
+        # font uses a deprecated enum:
+        assert new_session_msg.custom_theme.body_font == "Inter"
+        assert new_session_msg.custom_theme.code_font == "Monaspace Argon"
+        assert list(new_session_msg.custom_theme.font_faces) == [
+            FontFace(
+                family="Inter",
+                url="https://raw.githubusercontent.com/rsms/inter/refs/heads/master/docs/font-files/Inter-Regular.woff2",
+                weight=400,
+            ),
+            FontFace(
+                family="Monaspace Argon",
+                url="https://raw.githubusercontent.com/githubnext/monaspace/refs/heads/main/fonts/webfonts/MonaspaceArgon-Regular.woff2",
+                weight=400,
+            ),
+        ]
 
     @patch("streamlit.runtime.app_session._LOGGER")
     @patch("streamlit.runtime.app_session.config")
@@ -1132,22 +1175,6 @@ class PopulateCustomThemeMsgTest(unittest.TestCase):
         patched_logger.warning.assert_called_once_with(
             '"blah" is an invalid value for theme.base.'
             " Allowed values include ['light', 'dark']. Setting theme.base to \"light\"."
-        )
-
-    @patch("streamlit.runtime.app_session._LOGGER")
-    @patch("streamlit.runtime.app_session.config")
-    def test_logs_warning_if_font_invalid(self, patched_config, patched_logger):
-        patched_config.get_options_for_section.side_effect = (
-            _mock_get_options_for_section({"font": "comic sans"})
-        )
-
-        msg = ForwardMsg()
-        new_session_msg = msg.new_session
-        app_session._populate_theme_msg(new_session_msg.custom_theme)
-
-        patched_logger.warning.assert_called_once_with(
-            '"comic sans" is an invalid value for theme.font.'
-            " Allowed values include ['sans serif', 'serif', 'monospace']. Setting theme.font to \"sans serif\"."
         )
 
 

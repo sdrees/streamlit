@@ -363,4 +363,5 @@ function SidebarWithProvider(props: SidebarProps): ReactElement {
   )
 }
 
-export default withTheme(SidebarWithProvider)
+const SidebarWithProviderAndTheme = withTheme(SidebarWithProvider)
+export default SidebarWithProviderAndTheme

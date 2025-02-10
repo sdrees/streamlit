@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { CSSProperties, ReactElement } from "react"
+import React, { CSSProperties, memo, ReactElement } from "react"
 
 import {
   ImageList as ImageListProto,
@@ -159,4 +159,4 @@ function ImageList({
   )
 }
 
-export default withFullScreenWrapper(ImageList)
+export default memo(withFullScreenWrapper(ImageList))

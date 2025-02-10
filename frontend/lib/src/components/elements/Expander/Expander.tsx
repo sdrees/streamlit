@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, useEffect, useRef, useState } from "react"
+import React, { memo, ReactElement, useEffect, useRef, useState } from "react"
 
 import { ExpandLess, ExpandMore } from "@emotion-icons/material-outlined"
 
@@ -269,4 +269,4 @@ const Expander: React.FC<React.PropsWithChildren<ExpanderProps>> = ({
   )
 }
 
-export default Expander
+export default memo(Expander)

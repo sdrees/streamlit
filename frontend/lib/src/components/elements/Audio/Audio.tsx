@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, useEffect, useMemo, useRef } from "react"
+import React, { memo, ReactElement, useEffect, useMemo, useRef } from "react"
 
 import { Audio as AudioProto } from "@streamlit/protobuf"
 
@@ -30,7 +30,7 @@ export interface AudioProps {
   elementMgr: ElementStateManager
 }
 
-export default function Audio({
+function Audio({
   element,
   endpoints,
   elementMgr,
@@ -161,3 +161,5 @@ export default function Audio({
     </StyledAudioContainer>
   )
 }
+
+export default memo(Audio)

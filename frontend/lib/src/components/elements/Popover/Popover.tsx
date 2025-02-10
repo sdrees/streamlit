@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement } from "react"
+import React, { memo, ReactElement } from "react"
 
 import { useTheme } from "@emotion/react"
 import { ExpandLess, ExpandMore } from "@emotion-icons/material-outlined"
@@ -157,4 +157,4 @@ const Popover: React.FC<React.PropsWithChildren<PopoverProps>> = ({
   )
 }
 
-export default Popover
+export default memo(Popover)

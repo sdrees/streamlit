@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement } from "react"
+import React, { memo, ReactElement } from "react"
 
 import classNames from "classnames"
 
@@ -102,4 +102,4 @@ function Spinner({ width, element }: Readonly<SpinnerProps>): ReactElement {
   )
 }
 
-export default Spinner
+export default memo(Spinner)

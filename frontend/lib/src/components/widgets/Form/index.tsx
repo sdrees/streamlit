@@ -16,5 +16,6 @@
 
 export { FormSubmitButton } from "./FormSubmitButton"
 export { FormSubmitContent } from "./FormSubmitContent"
-export { Form } from "./Form"
+
 export { FormClearHelper, useFormClearHelper } from "./FormClearHelper"
+export { default } from "./Form"

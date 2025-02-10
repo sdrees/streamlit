@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement } from "react"
+import React, { memo, ReactElement } from "react"
 
 import { useTheme } from "@emotion/react"
 import { Face, SmartToy } from "@emotion-icons/material-outlined"
@@ -132,4 +132,4 @@ const ChatMessage: React.FC<React.PropsWithChildren<ChatMessageProps>> = ({
   )
 }
 
-export default ChatMessage
+export default memo(ChatMessage)

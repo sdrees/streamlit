@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement } from "react"
+import React, { memo, ReactElement } from "react"
 
 import { Progress as ProgressProto } from "@streamlit/protobuf"
 
@@ -39,4 +39,4 @@ function Progress({ element, width }: Readonly<ProgressProps>): ReactElement {
   )
 }
 
-export default Progress
+export default memo(Progress)

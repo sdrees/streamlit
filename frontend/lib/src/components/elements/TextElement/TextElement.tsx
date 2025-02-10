@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement } from "react"
+import React, { memo, ReactElement } from "react"
 
 import { Text as TextProto } from "@streamlit/protobuf"
 
@@ -33,10 +33,7 @@ export interface TextProps {
 /**
  * Functional element representing preformatted (plain) text.
  */
-export default function TextElement({
-  width,
-  element,
-}: Readonly<TextProps>): ReactElement {
+function TextElement({ width, element }: Readonly<TextProps>): ReactElement {
   const styleProp = { width }
   return (
     <StyledLabelHelpWrapper
@@ -49,3 +46,5 @@ export default function TextElement({
     </StyledLabelHelpWrapper>
   )
 }
+
+export default memo(TextElement)

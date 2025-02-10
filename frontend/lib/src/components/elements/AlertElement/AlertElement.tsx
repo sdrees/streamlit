@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement } from "react"
+import React, { memo, ReactElement } from "react"
 
 import { useTheme } from "@emotion/react"
 
@@ -35,7 +35,7 @@ export interface AlertElementProps {
 /**
  * Display an (error|warning|info|success) box with a Markdown-formatted body.
  */
-export default function AlertElement({
+function AlertElement({
   icon,
   body,
   kind,
@@ -71,3 +71,5 @@ export default function AlertElement({
     </div>
   )
 }
+
+export default memo(AlertElement)

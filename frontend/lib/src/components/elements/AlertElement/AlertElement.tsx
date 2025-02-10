@@ -18,29 +18,12 @@ import React, { ReactElement } from "react"
 
 import { useTheme } from "@emotion/react"
 
-import { Alert as AlertProto } from "@streamlit/protobuf"
-
 import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown"
 import { DynamicIcon } from "~lib/components/shared/Icon"
 import AlertContainer, { Kind } from "~lib/components/shared/AlertContainer"
 import { EmotionTheme } from "~lib/theme"
 
 import { StyledAlertContent } from "./styled-components"
-
-export function getAlertElementKind(format: AlertProto.Format): Kind {
-  switch (format) {
-    case AlertProto.Format.ERROR:
-      return Kind.ERROR
-    case AlertProto.Format.INFO:
-      return Kind.INFO
-    case AlertProto.Format.SUCCESS:
-      return Kind.SUCCESS
-    case AlertProto.Format.WARNING:
-      return Kind.WARNING
-    default:
-      throw new Error(`Unexpected alert type: ${format}`)
-  }
-}
 
 export interface AlertElementProps {
   body: string

@@ -23,10 +23,8 @@ import { Alert as AlertProto } from "@streamlit/protobuf"
 import { render } from "~lib/test_util"
 import { Kind } from "~lib/components/shared/AlertContainer"
 
-import AlertElement, {
-  AlertElementProps,
-  getAlertElementKind,
-} from "./AlertElement"
+import AlertElement, { AlertElementProps } from "./AlertElement"
+import { getAlertElementKind } from "./utils"
 
 const getProps = (
   elementProps: Partial<AlertElementProps> = {}
@@ -103,10 +101,4 @@ describe("Alert element", () => {
     expect(screen.getByTestId("stAlertDynamicIcon")).toHaveTextContent("👉🏻")
     expect(screen.getByText("It's dangerous to go alone.")).toBeInTheDocument()
   })
-})
-
-test("getAlertElementKind throws an error on invalid format", () => {
-  expect(() => getAlertElementKind(AlertProto.Format.UNUSED)).toThrow(
-    `Unexpected alert type: ${AlertProto.Format.UNUSED}`
-  )
 })

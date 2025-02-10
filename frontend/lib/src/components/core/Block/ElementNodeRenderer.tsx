@@ -69,7 +69,9 @@ import {
 import { ElementNode } from "~lib/AppNode"
 import { Quiver } from "~lib/dataframes/Quiver"
 // Load (non-lazy) elements.
-import AlertElement from "~lib/components/elements/AlertElement"
+import AlertElement, {
+  getAlertElementKind,
+} from "~lib/components/elements/AlertElement"
 import ArrowTable from "~lib/components/elements/ArrowTable"
 import DocString from "~lib/components/elements/DocString"
 import ErrorBoundary from "~lib/components/shared/ErrorBoundary"
@@ -81,7 +83,6 @@ import { Skeleton } from "~lib/components/elements/Skeleton"
 import TextElement from "~lib/components/elements/TextElement"
 import { ComponentInstance } from "~lib/components/widgets/CustomComponent"
 import { VegaLiteChartElement } from "~lib/components/elements/ArrowVegaLiteChart"
-import { getAlertElementKind } from "~lib/components/elements/AlertElement/AlertElement"
 import Maybe from "~lib/components/core/Maybe"
 import { FormSubmitContent } from "~lib/components/widgets/Form"
 import Heading from "~lib/components/shared/StreamlitMarkdown/Heading"

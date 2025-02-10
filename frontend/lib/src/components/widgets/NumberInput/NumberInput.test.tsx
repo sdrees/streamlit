@@ -25,13 +25,11 @@ import {
 
 import { render } from "~lib/test_util"
 import { WidgetStateManager } from "~lib/WidgetStateManager"
-import { mockTheme } from "~lib/mocks/mockTheme"
 
-import {
+import NumberInput, {
   canDecrement,
   canIncrement,
   formatValue,
-  NumberInput,
   Props,
 } from "./NumberInput"
 
@@ -45,7 +43,6 @@ const getProps = (elementProps: Partial<NumberInputProto> = {}): Props => ({
   }),
   width: 300,
   disabled: false,
-  theme: mockTheme.emotion,
   widgetMgr: new WidgetStateManager({
     sendRerunBackMsg: vi.fn(),
     formsDataChanged: vi.fn(),

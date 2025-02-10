@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, useEffect, useState } from "react"
+import React, { memo, ReactElement, useEffect, useState } from "react"
 
 import { Block as BlockProto } from "@streamlit/protobuf"
 
@@ -74,4 +74,4 @@ function DialogWithProvider(
   )
 }
 
-export default DialogWithProvider
+export default memo(DialogWithProvider)

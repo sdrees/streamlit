@@ -15,6 +15,7 @@
  */
 
 import React, {
+  memo,
   ReactElement,
   useCallback,
   useEffect,
@@ -23,7 +24,7 @@ import React, {
 } from "react"
 
 import { Minus, Plus } from "@emotion-icons/open-iconic"
-import { withTheme } from "@emotion/react"
+import { useTheme } from "@emotion/react"
 import { sprintf } from "sprintf-js"
 import { Input as UIInput } from "baseui/input"
 import uniqueId from "lodash/uniqueId"
@@ -167,18 +168,18 @@ export interface Props {
   element: NumberInputProto
   widgetMgr: WidgetStateManager
   width: number
-  theme: EmotionTheme
   fragmentId?: string
 }
 
-export const NumberInput: React.FC<Props> = ({
+const NumberInput: React.FC<Props> = ({
   disabled,
   element,
   widgetMgr,
   width,
-  theme,
   fragmentId,
 }: Props): ReactElement => {
+  const theme: EmotionTheme = useTheme()
+
   const {
     dataType: elementDataType,
     id: elementId,
@@ -550,4 +551,4 @@ export const NumberInput: React.FC<Props> = ({
   )
 }
 
-export default withTheme(NumberInput)
+export default memo(NumberInput)

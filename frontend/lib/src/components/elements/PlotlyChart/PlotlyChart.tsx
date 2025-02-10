@@ -15,6 +15,7 @@
  */
 
 import React, {
+  memo,
   ReactElement,
   useCallback,
   useEffect,
@@ -789,4 +790,4 @@ export function PlotlyChart({
   )
 }
 
-export default withFullScreenWrapper(PlotlyChart)
+export default memo(withFullScreenWrapper(PlotlyChart))

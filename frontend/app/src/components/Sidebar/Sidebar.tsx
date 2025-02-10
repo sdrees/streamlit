@@ -23,7 +23,7 @@ import React, {
 } from "react"
 
 import { ChevronLeft, ChevronRight } from "@emotion-icons/material-outlined"
-import { withTheme } from "@emotion/react"
+import { useTheme } from "@emotion/react"
 import { Resizable } from "re-resizable"
 
 import { StreamlitEndpoints } from "@streamlit/connection"
@@ -61,7 +61,6 @@ export interface SidebarProps {
   chevronDownshift: number
   children?: ReactElement
   initialSidebarState?: PageConfig.SidebarState
-  theme: EmotionTheme
   hasElements: boolean
   appLogo: Logo | null
   appPages: IAppPage[]
@@ -94,7 +93,6 @@ function headerDecorationVisible(): boolean {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
-  theme,
   appLogo,
   endpoints,
   appPages,
@@ -108,6 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   expandSidebarNav,
   navSections,
 }) => {
+  const theme: EmotionTheme = useTheme()
   const mediumBreakpointPx = calculateMaxBreakpoint(theme.breakpoints.md)
   const sideBarInitiallyCollapsed = shouldCollapse(
     initialSidebarState,
@@ -363,4 +362,4 @@ function SidebarWithProvider(props: SidebarProps): ReactElement {
   )
 }
 
-export default withTheme(SidebarWithProvider)
+export default SidebarWithProvider

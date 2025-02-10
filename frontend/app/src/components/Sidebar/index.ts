@@ -14,8 +14,4 @@
  * limitations under the License.
  */
 
-export { FormSubmitButton } from "./FormSubmitButton"
-export { FormSubmitContent } from "./FormSubmitContent"
-
-export { FormClearHelper, useFormClearHelper } from "./FormClearHelper"
-export { default } from "./Form"
+export { default } from "./ThemedSidebar"

@@ -131,6 +131,12 @@ module.exports = {
       "ForInStatement",
       "LabeledStatement",
       "WithStatement",
+      {
+        selector: "CallExpression[callee.name='withTheme']",
+        message:
+          "The use of withTheme HOC is not allowed for functional components. " +
+          "Please use the useTheme hook instead.",
+      },
     ],
     "no-restricted-globals": [
       "error",

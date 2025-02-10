@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, useEffect } from "react"
+import React, { memo, ReactElement, useEffect } from "react"
 
 import { select } from "d3"
 import { Engine, graphviz } from "d3-graphviz"
@@ -103,4 +103,4 @@ function GraphVizChart({
   )
 }
 
-export default withFullScreenWrapper(GraphVizChart)
+export default memo(withFullScreenWrapper(GraphVizChart))

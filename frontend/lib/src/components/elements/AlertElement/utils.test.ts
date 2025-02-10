@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Alert as AlertProto } from "@streamlit/protobuf"
 
-export { FormSubmitButton } from "./FormSubmitButton"
-export { FormSubmitContent } from "./FormSubmitContent"
+import { getAlertElementKind } from "./utils"
 
-export { FormClearHelper, useFormClearHelper } from "./FormClearHelper"
-export { default } from "./Form"
+describe("getAlertElementKind", () => {
+  it("getAlertElementKind throws an error on invalid format", () => {
+    expect(() => getAlertElementKind(AlertProto.Format.UNUSED)).toThrow(
+      `Unexpected alert type: ${AlertProto.Format.UNUSED}`
+    )
+  })
+})

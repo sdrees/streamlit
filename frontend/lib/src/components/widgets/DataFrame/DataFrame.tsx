@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, useCallback } from "react"
+import React, { memo, ReactElement, useCallback } from "react"
 
 import { createPortal } from "react-dom"
 import {
@@ -1081,4 +1081,4 @@ function DataFrame({
   )
 }
 
-export default withFullScreenWrapper(DataFrame)
+export default memo(withFullScreenWrapper(DataFrame))

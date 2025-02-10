@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, ReactNode, useEffect, useState } from "react"
+import React, {
+  memo,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react"
 
 import AlertElement from "~lib/components/elements/AlertElement"
 import { Kind } from "~lib/components/shared/AlertContainer"
@@ -43,7 +49,7 @@ export const MISSING_SUBMIT_BUTTON_WARNING =
   "\n\nFor more information, refer to the " +
   "[documentation for forms](https://docs.streamlit.io/develop/api-reference/execution-flow/st.form)."
 
-export function Form(props: Props): ReactElement {
+function Form(props: Props): ReactElement {
   const {
     formId,
     widgetMgr,
@@ -99,3 +105,5 @@ export function Form(props: Props): ReactElement {
     </StyledForm>
   )
 }
+
+export default memo(Form)

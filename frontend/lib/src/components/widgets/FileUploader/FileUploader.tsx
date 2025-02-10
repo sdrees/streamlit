@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from "react"
+import React, { memo } from "react"
 
 import axios from "axios"
 import isEqual from "lodash/isEqual"
@@ -571,4 +571,4 @@ class FileUploader extends React.PureComponent<Props, State> {
   }
 }
 
-export default FileUploader
+export default memo(FileUploader)

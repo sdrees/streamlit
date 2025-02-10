@@ -15,6 +15,7 @@
  */
 
 import React, {
+  memo,
   ReactElement,
   useContext,
   useEffect,
@@ -251,4 +252,4 @@ function Tabs(props: Readonly<TabProps>): ReactElement {
   )
 }
 
-export default Tabs
+export default memo(Tabs)

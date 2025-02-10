@@ -77,7 +77,7 @@ import {
 } from "@streamlit/app/src/components/MainMenu/mainMenuTestHelpers"
 
 import { showDevelopmentOptions } from "./showDevelopmentOptions"
-import { App, log, Props } from "./App"
+import { App, LOG, Props } from "./App"
 
 vi.mock("~lib/baseconsts", async () => {
   return {
@@ -3218,7 +3218,7 @@ describe("App", () => {
     it("does not relay custom parent messages by default", () => {
       const hostCommunicationMgr = prepareHostCommunicationManager()
 
-      const logErrorSpy = vi.spyOn(log, "error").mockImplementation(() => {})
+      const logErrorSpy = vi.spyOn(LOG, "error").mockImplementation(() => {})
 
       sendForwardMessage("parentMessage", {
         message: "random string",

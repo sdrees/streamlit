@@ -21,7 +21,7 @@ import { render, screen } from "@testing-library/react"
 import { userEvent } from "@testing-library/user-event"
 
 import { WidgetStateManager } from "~lib/WidgetStateManager"
-import { Form } from "~lib/components/widgets/Form"
+import Form from "~lib/components/widgets/Form"
 import { ScriptRunState } from "~lib/ScriptRunState"
 import { RootStyleProvider } from "~lib/RootStyleProvider"
 import { getDefaultTheme } from "~lib/theme"

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { ReactElement, useEffect, useRef, useState } from "react"
+import React, { memo, ReactElement, useEffect, useRef, useState } from "react"
 
 import DOMPurify from "dompurify"
 
@@ -60,10 +60,7 @@ const sanitizeString = (html: string): string => {
 /**
  * HTML code to insert into the page.
  */
-export default function Html({
-  element,
-  width,
-}: Readonly<HtmlProps>): ReactElement {
+function Html({ element, width }: Readonly<HtmlProps>): ReactElement {
   const { body } = element
   const [sanitizedHtml, setSanitizedHtml] = useState(sanitizeString(body))
   const htmlRef = useRef<HTMLDivElement | null>(null)
@@ -101,3 +98,5 @@ export default function Html({
     </>
   )
 }
+
+export default memo(Html)

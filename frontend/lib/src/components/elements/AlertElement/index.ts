@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-import ThemedSidebar from "./ThemedSidebar"
-
-export { default } from "./Sidebar"
-export { ThemedSidebar }
+export { default } from "./AlertElement"
+export { getAlertElementKind } from "./utils"

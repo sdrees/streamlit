@@ -162,6 +162,7 @@ message CustomThemeConfig {
   string body_font = 13;
   string code_font = 14;
   repeated FontFace font_faces = 15;
+  // DEPRECATED: Please use the base_font_size theme config instead:
   FontSizes font_sizes = 16;
   // DEPRECATED: This color is not applied anymore:
   string skeleton_background_color = 17;
@@ -169,6 +170,7 @@ message CustomThemeConfig {
   optional string border_color = 19;
   optional bool show_border_around_inputs = 20;
   optional string link_color = 21;
+  optional int32 base_font_size = 22;
 }
 
 message FontFace {
@@ -185,6 +187,7 @@ message Radii {
   int32 checkbox_radius = 2;
 }
 
+// DEPRECATED: Please use the base_font_size theme config instead:
 message FontSizes {
   // In pixels.
   int32 tiny_font_size = 1;

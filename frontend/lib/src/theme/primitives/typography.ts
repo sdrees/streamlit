@@ -28,14 +28,12 @@ export const genericFonts = {
   iconFont: fonts.materialIcons,
 }
 
-// Same as in variables.scss
-const fontSizeTwoSmall = 12
-const fontSizeSmall = 14
-const fontSizeMedium = 16
-
 export const fontSizes = {
-  twoSm: `${fontSizeTwoSmall}px`, // Use px to force sm to be a round number.
-  sm: `${fontSizeSmall}px`, // Use px to force sm to be a round number.
+  // baseFontSize equals to md, but in pixels (this value can also be configured by the user)
+  // The baseFontSize should only be used in global styles.
+  baseFontSize: 16,
+  twoSm: `0.75rem`,
+  sm: `0.875rem`,
   md: "1rem",
   mdLg: "1.125rem",
   lg: "1.25rem",
@@ -43,10 +41,6 @@ export const fontSizes = {
   twoXL: "1.75rem",
   threeXL: "2.25rem",
   fourXL: "2.75rem",
-
-  twoSmPx: fontSizeTwoSmall, // twoSm but as a number, in pixels
-  smPx: fontSizeSmall, // sm but as a number, in pixels
-  mdPx: fontSizeMedium, // med but as a number, in pixels
 }
 
 export const fontWeights = {

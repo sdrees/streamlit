@@ -1073,6 +1073,15 @@ _create_option(
     type_=bool,
 )
 
+_create_option(
+    "theme.baseFontSize",
+    description="""
+        Sets the root font size (in pixels) for the app, which determines the overall
+        scale of text and UI elements. The default base font size is 16.
+    """,
+    type_=int,
+)
+
 # Config Section: Secrets #
 
 _create_section("secrets", "Secrets configuration.")

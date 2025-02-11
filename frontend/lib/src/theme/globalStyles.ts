@@ -28,7 +28,7 @@ import { EmotionTheme } from "~lib/theme"
 export const globalStyles = (theme: EmotionTheme): SerializedStyles => css`
   // Override the base font-size value here.
   html {
-    font-size: ${theme.fontSizes.mdPx}px;
+    font-size: ${theme.fontSizes.baseFontSize}px;
   }
 
   // Set height to 100% for printing, otherwise the page on Safari might be blank

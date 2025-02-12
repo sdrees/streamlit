@@ -37,6 +37,7 @@ function ObjectColumn(props: BaseColumnProps): BaseColumn {
     displayData: "",
     allowOverlay: true,
     contentAlignment: props.contentAlignment,
+    allowWrapping: props.isWrappingAllowed,
     readonly: true,
     // The text in pinned columns should be faded.
     style: props.isPinned ? "faded" : "normal",

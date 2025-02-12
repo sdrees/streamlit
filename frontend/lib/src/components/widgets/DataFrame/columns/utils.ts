@@ -62,6 +62,9 @@ export interface BaseColumnProps {
   readonly isStretched: boolean
   // If `True`, a value is required before the cell or row can be submitted:
   readonly isRequired?: boolean
+  // If `True`, the content of the cell is allowed to be wrapped
+  // to fill the available height of the cell.
+  readonly isWrappingAllowed?: boolean
   // The initial width of the column:
   readonly width?: number
   // A help text that is displayed on hovering the column header.

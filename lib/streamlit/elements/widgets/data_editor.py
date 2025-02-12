@@ -116,13 +116,16 @@ class EditingState(TypedDict, total=False):
     Attributes
     ----------
     edited_rows : Dict[int, Dict[str, str | int | float | bool | None]]
-        An hierarchical mapping of edited cells based on: row position -> column name -> value.
+        An hierarchical mapping of edited cells based on:
+        row position -> column name -> value.
 
     added_rows : List[Dict[str, str | int | float | bool | None]]
-        A list of added rows, where each row is a mapping from column name to the cell value.
+        A list of added rows, where each row is a mapping from column name to
+        the cell value.
 
     deleted_rows : List[int]
-        A list of deleted rows, where each row is the numerical position of the deleted row.
+        A list of deleted rows, where each row is the numerical position of
+        the deleted row.
     """
 
     edited_rows: dict[int, dict[str, str | int | float | bool | None]]
@@ -550,6 +553,7 @@ class DataEditorMixin:
         on_change: WidgetCallback | None = None,
         args: WidgetArgs | None = None,
         kwargs: WidgetKwargs | None = None,
+        row_height: int | None = None,
     ) -> EditableData:
         pass
 
@@ -570,6 +574,7 @@ class DataEditorMixin:
         on_change: WidgetCallback | None = None,
         args: WidgetArgs | None = None,
         kwargs: WidgetKwargs | None = None,
+        row_height: int | None = None,
     ) -> pd.DataFrame:
         pass
 
@@ -590,6 +595,7 @@ class DataEditorMixin:
         on_change: WidgetCallback | None = None,
         args: WidgetArgs | None = None,
         kwargs: WidgetKwargs | None = None,
+        row_height: int | None = None,
     ) -> DataTypes:
         """Display a data editor widget.
 
@@ -689,6 +695,10 @@ class DataEditorMixin:
         kwargs : dict
             An optional dict of kwargs to pass to the callback.
 
+        row_height : int or None
+            The height of each row in the data editor in pixels. If ``row_height``
+            is ``None`` (default), Streamlit will use a default row height.
+
         Returns
         -------
         pandas.DataFrame, pandas.Series, pyarrow.Table, numpy.ndarray, list, set, tuple, or dict.
@@ -738,7 +748,8 @@ class DataEditorMixin:
            https://doc-data-editor1.streamlit.app/
            height: 450px
 
-        Or you can customize the data editor via ``column_config``, ``hide_index``, ``column_order``, or ``disabled``:
+        Or you can customize the data editor via ``column_config``, ``hide_index``,
+        ``column_order``, or ``disabled``:
 
         >>> import pandas as pd
         >>> import streamlit as st
@@ -799,8 +810,9 @@ class DataEditorMixin:
         data_format = dataframe_util.determine_data_format(data)
         if data_format == dataframe_util.DataFormat.UNKNOWN:
             raise StreamlitAPIException(
-                f"The data type ({type(data).__name__}) or format is not supported by the data editor. "
-                "Please convert your data into a Pandas Dataframe or another supported data format."
+                f"The data type ({type(data).__name__}) or format is not supported by "
+                "the data editor. Please convert your data into a Pandas Dataframe or "
+                "another supported data format."
             )
 
         # The dataframe should always be a copy of the original data
@@ -893,6 +905,7 @@ class DataEditorMixin:
             column_order=column_order,
             column_config_mapping=str(column_config_mapping),
             num_rows=num_rows,
+            row_height=row_height,
         )
 
         proto = ArrowProto()
@@ -904,6 +917,9 @@ class DataEditorMixin:
             proto.width = width
         if height:
             proto.height = height
+
+        if row_height:
+            proto.row_height = row_height
 
         if column_order:
             proto.column_order[:] = column_order

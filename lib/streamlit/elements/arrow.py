@@ -235,6 +235,7 @@ class ArrowMixin:
         key: Key | None = None,
         on_select: Literal["ignore"] = "ignore",
         selection_mode: SelectionMode | Iterable[SelectionMode] = "multi-row",
+        row_height: int | None = None,
     ) -> DeltaGenerator: ...
 
     @overload
@@ -251,6 +252,7 @@ class ArrowMixin:
         key: Key | None = None,
         on_select: Literal["rerun"] | WidgetCallback,
         selection_mode: SelectionMode | Iterable[SelectionMode] = "multi-row",
+        row_height: int | None = None,
     ) -> DataframeState: ...
 
     @gather_metrics("dataframe")
@@ -267,6 +269,7 @@ class ArrowMixin:
         key: Key | None = None,
         on_select: Literal["ignore", "rerun"] | WidgetCallback = "ignore",
         selection_mode: SelectionMode | Iterable[SelectionMode] = "multi-row",
+        row_height: int | None = None,
     ) -> DeltaGenerator | DataframeState:
         """Display a dataframe as an interactive table.
 
@@ -416,6 +419,10 @@ class ArrowMixin:
 
             When column selections are enabled, column sorting is disabled.
 
+        row_height : int or None
+            The height of each row in the dataframe in pixels. If ``row_height``
+            is ``None`` (default), Streamlit will use a default row height.
+
         Returns
         -------
         element or dict
@@ -557,6 +564,9 @@ class ArrowMixin:
         if height:
             proto.height = height
 
+        if row_height:
+            proto.row_height = row_height
+
         if column_order:
             proto.column_order[:] = column_order
 
@@ -613,6 +623,7 @@ class ArrowMixin:
                 column_config=proto.columns,
                 selection_mode=selection_mode,
                 is_selection_activated=is_selection_activated,
+                row_height=row_height,
             )
 
             serde = DataframeSelectionSerde()

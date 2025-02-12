@@ -67,7 +67,7 @@ function useTableSizer(
   containerHeight?: number,
   isFullScreen?: boolean
 ): AutoSizerReturn {
-  const rowHeight = gridTheme.defaultRowHeight
+  const rowHeight = element.rowHeight ?? gridTheme.defaultRowHeight
   // Min height for the resizable table container:
   // Based on header + one column, and border threshold
   const minHeight =

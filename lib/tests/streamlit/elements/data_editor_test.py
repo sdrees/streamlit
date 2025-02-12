@@ -349,6 +349,13 @@ class DataEditorTest(DeltaGeneratorTestCase):
         proto = self.get_delta_from_queue().new_element.arrow_data_frame
         self.assertEqual(proto.column_order, ["a", "b"])
 
+    def test_row_height_parameter(self):
+        """Test that it can be called with row_height."""
+        st.data_editor(pd.DataFrame(), row_height=100)
+
+        proto = self.get_delta_from_queue().new_element.arrow_data_frame
+        self.assertEqual(proto.row_height, 100)
+
     def test_just_use_container_width(self):
         """Test that it can be called with use_container_width."""
         st.data_editor(pd.DataFrame(), use_container_width=True)

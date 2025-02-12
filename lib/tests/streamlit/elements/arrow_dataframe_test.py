@@ -114,6 +114,13 @@ class ArrowDataFrameProtoTest(DeltaGeneratorTestCase):
             json.dumps({INDEX_IDENTIFIER: {"hidden": False}}),
         )
 
+    def test_row_height_parameter(self):
+        """Test that it can be called with row_height."""
+        st.dataframe(pd.DataFrame(), row_height=100)
+
+        proto = self.get_delta_from_queue().new_element.arrow_data_frame
+        self.assertEqual(proto.row_height, 100)
+
     def test_uuid(self):
         df = mock_data_frame()
         styler = df.style

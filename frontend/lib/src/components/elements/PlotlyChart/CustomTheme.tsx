@@ -49,7 +49,7 @@ export function applyStreamlitThemeTemplateLayout(
     font: {
       color: getGray70(theme),
       family: genericFonts.bodyFont,
-      size: fontSizes.twoSmPx,
+      size: convertRemToPx(fontSizes.twoSm),
     },
     title: {
       color: colors.headingColor,
@@ -68,7 +68,7 @@ export function applyStreamlitThemeTemplateLayout(
     legend: {
       title: {
         font: {
-          size: fontSizes.twoSmPx,
+          size: convertRemToPx(fontSizes.twoSm),
           color: getGray70(theme),
         },
         side: "top",
@@ -77,7 +77,7 @@ export function applyStreamlitThemeTemplateLayout(
       bordercolor: colors.transparent,
       borderwidth: 0,
       font: {
-        size: fontSizes.twoSmPx,
+        size: convertRemToPx(fontSizes.twoSm),
         color: getGray90(theme),
       },
     },
@@ -89,14 +89,14 @@ export function applyStreamlitThemeTemplateLayout(
       title: {
         font: {
           color: getGray70(theme),
-          size: fontSizes.smPx,
+          size: convertRemToPx(fontSizes.sm),
         },
         standoff: convertRemToPx(theme.spacing.twoXL),
       },
       tickcolor: getGray30(theme),
       tickfont: {
         color: getGray70(theme),
-        size: fontSizes.twoSmPx,
+        size: convertRemToPx(fontSizes.twoSm),
       },
       gridcolor: getGray30(theme),
       minor: {
@@ -110,13 +110,13 @@ export function applyStreamlitThemeTemplateLayout(
       showgrid: false,
       tickfont: {
         color: getGray70(theme),
-        size: fontSizes.twoSmPx,
+        size: convertRemToPx(fontSizes.twoSm),
       },
       tickcolor: getGray30(theme),
       title: {
         font: {
           color: getGray70(theme),
-          size: fontSizes.smPx,
+          size: convertRemToPx(fontSizes.sm),
         },
         standoff: convertRemToPx(theme.spacing.xl),
       },
@@ -144,7 +144,7 @@ export function applyStreamlitThemeTemplateLayout(
       font: {
         color: getGray70(theme),
         family: genericFonts.bodyFont,
-        size: fontSizes.twoSmPx,
+        size: convertRemToPx(fontSizes.twoSm),
       },
     },
     coloraxis: {
@@ -159,12 +159,12 @@ export function applyStreamlitThemeTemplateLayout(
         title: {
           font: {
             color: getGray70(theme),
-            size: fontSizes.smPx,
+            size: convertRemToPx(fontSizes.sm),
           },
         },
         tickfont: {
           color: getGray70(theme),
-          size: fontSizes.twoSmPx,
+          size: convertRemToPx(fontSizes.twoSm),
         },
       },
     },
@@ -175,7 +175,7 @@ export function applyStreamlitThemeTemplateLayout(
       title: {
         font: {
           family: genericFonts.bodyFont,
-          size: fontSizes.smPx,
+          size: convertRemToPx(fontSizes.sm),
         },
       },
       color: getGray70(theme),
@@ -184,7 +184,7 @@ export function applyStreamlitThemeTemplateLayout(
         linecolor: getGray70(theme),
         tickfont: {
           family: genericFonts.bodyFont,
-          size: fontSizes.twoSmPx,
+          size: convertRemToPx(fontSizes.twoSm),
         },
       },
       baxis: {
@@ -192,7 +192,7 @@ export function applyStreamlitThemeTemplateLayout(
         gridcolor: getGray70(theme),
         tickfont: {
           family: genericFonts.bodyFont,
-          size: fontSizes.twoSmPx,
+          size: convertRemToPx(fontSizes.twoSm),
         },
       },
       caxis: {
@@ -200,7 +200,7 @@ export function applyStreamlitThemeTemplateLayout(
         gridcolor: getGray70(theme),
         tickfont: {
           family: genericFonts.bodyFont,
-          size: fontSizes.twoSmPx,
+          size: convertRemToPx(fontSizes.twoSm),
         },
       },
     },

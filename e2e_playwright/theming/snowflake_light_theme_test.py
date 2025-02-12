@@ -79,8 +79,8 @@ def configure_snowflake_light_theme():
     os.environ["STREAMLIT_THEME_CODE_FONT"] = (
         '"Monaspace Argon", Menlo, Monaco, Consolas, "Courier New", monospace'
     )
+    os.environ["STREAMLIT_THEME_BASE_FONT_SIZE"] = "14"
     os.environ["STREAMLIT_CLIENT_TOOLBAR_MODE"] = "minimal"
-    # Todo: add bodyFont, codeFont & fontFaces
     yield
     del os.environ["STREAMLIT_THEME_BASE"]
     del os.environ["STREAMLIT_THEME_PRIMARY_COLOR"]
@@ -92,6 +92,7 @@ def configure_snowflake_light_theme():
     del os.environ["STREAMLIT_THEME_FONT_FACES"]
     del os.environ["STREAMLIT_THEME_FONT"]
     del os.environ["STREAMLIT_THEME_CODE_FONT"]
+    del os.environ["STREAMLIT_THEME_BASE_FONT_SIZE"]
     del os.environ["STREAMLIT_CLIENT_TOOLBAR_MODE"]
 
 

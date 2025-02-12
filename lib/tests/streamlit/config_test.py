@@ -392,6 +392,7 @@ class ConfigTest(unittest.TestCase):
                 "theme.backgroundColor",
                 "theme.secondaryBackgroundColor",
                 "theme.textColor",
+                "theme.baseFontSize",
                 "theme.roundness",
                 "theme.font",
                 "theme.codeFont",
@@ -562,6 +563,7 @@ class ConfigTest(unittest.TestCase):
             "font": None,
             "codeFont": None,
             "fontFaces": None,
+            "baseFontSize": None,
         }
         self.assertEqual(config.get_options_for_section("theme"), expected)
 
@@ -591,6 +593,7 @@ class ConfigTest(unittest.TestCase):
             "test",
         )
         config._set_option("theme.codeFont", "Monaspace Argon", "test")
+        config._set_option("theme.baseFontSize", 14, "test")
 
         expected = {
             "base": "dark",
@@ -611,6 +614,7 @@ class ConfigTest(unittest.TestCase):
                     "weight": 400,
                 },
             ],
+            "baseFontSize": 14,
         }
         self.assertEqual(config.get_options_for_section("theme"), expected)
 

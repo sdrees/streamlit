@@ -85,6 +85,7 @@ export {
 export {
   AUTO_THEME_NAME,
   baseTheme,
+  convertRemToPx,
   createAutoTheme,
   createPresetThemes,
   createTheme,

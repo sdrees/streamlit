@@ -137,6 +137,51 @@ def get_button(locator: Locator | Page, label: str | Pattern[str]) -> Locator:
     return element
 
 
+def get_popover(locator: Locator | Page, label: str | Pattern[str]) -> Locator:
+    """Get a popover with the given label.
+
+    Parameters
+    ----------
+
+    locator : Locator
+        The locator to search for the element.
+
+    label : str or Pattern[str]
+        The label of the element to get.
+
+    Returns
+    -------
+    Locator
+        The element.
+    """
+    element = locator.get_by_test_id("stPopover").filter(has_text=label)
+    expect(element).to_be_visible()
+    return element
+
+
+def open_popover(locator: Locator | Page, label: str | Pattern[str]) -> Locator:
+    """Open a popover with the given label and return the popover container.
+
+    Parameters
+    ----------
+
+    locator : Locator
+        The locator to search for the element.
+
+    label : str or Pattern[str]
+        The label of the element to get.
+
+    Returns
+    -------
+    Locator
+        The popover container.
+    """
+    get_popover(locator, label).get_by_role("button").first.click()
+    popover_container = locator.get_by_test_id("stPopoverBody")
+    expect(popover_container).to_be_visible()
+    return popover_container
+
+
 def get_form_submit_button(
     locator: Locator | Page, label: str | Pattern[str]
 ) -> Locator:

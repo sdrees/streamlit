@@ -6,12 +6,37 @@ updates:
     directory: "/frontend"
     schedule:
       interval: "daily"
-    # Pause Dependabot updates. Security updates are unaffected
-    open-pull-requests-limit: 0
+    # Allow one update PR at a time:
+    open-pull-requests-limit: 1
 
     labels:
       - "change:chore"
       - "impact:internal"
+
+    ignore:
+      - dependency-name: "baseui"
+        # 12->13: Needs to restyle date picker
+        # 13->14: Requires rewrites of lots of overrides
+        versions: [">=12.3.0"]
+      - dependency-name: "iframe-resizer"
+        # The license was changed to GPL-3 with the 4.4.0 update.
+        # We pin the version to the last version under MIT licenses.
+        versions: [">=4.4.0"]
+      - dependency-name: "mapbox-gl"
+        # The license was changed with the 2.0 major version update.
+        versions: [">=2.0.0"]
+      - dependency-name: "react-map-gl"
+        # The license was changed with the mapbox-gl update.
+        versions: [">=5.4.0"]
+      - dependency-name: "ua-parser-js"
+        # The license was changed to AGPLv3 with the 2.0 major version update.
+        versions: [">=2.0.0"]
+      - dependency-name: "react"
+        # Updating react will need some extra work.
+        versions: [">=19.0.0"]
+      - dependency-name: "react-dom"
+        # Updating react will need some extra work.
+        versions: [">=19.0.0"]
 
   # Keep Pipfile up to date
   - package-ecosystem: "pip"

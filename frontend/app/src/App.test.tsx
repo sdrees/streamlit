@@ -2208,6 +2208,56 @@ describe("App", () => {
         expect(screen.queryByTestId("stLogo")).not.toBeInTheDocument()
       })
     })
+
+    it("will not clear logo as stale on fragment re-run", async () => {
+      renderApp(getProps())
+
+      // Initial script run, creates logo
+      sendForwardMessage("newSession", NEW_SESSION_JSON)
+      sendForwardMessage(
+        "logo",
+        {
+          image:
+            "https://global.discourse-cdn.com/business7/uploads/streamlit/original/2X/8/8cb5b6c0e1fe4e4ebfd30b769204c0d30c332fec.png",
+        },
+        {
+          activeScriptHash: "page_script_hash",
+        }
+      )
+      sendForwardMessage(
+        "scriptFinished",
+        ForwardMsg.ScriptFinishedStatus.FINISHED_SUCCESSFULLY
+      )
+      await waitFor(() => {
+        expect(screen.getByTestId("stLogo")).toBeInTheDocument()
+      })
+
+      // Fragment run - logo is not sent, but should persist (triggers scriptRunId to be updated)
+      sendForwardMessage("newSession", {
+        ...NEW_SESSION_JSON,
+        fragmentIdsThisRun: ["myFragmentId"],
+      })
+      sendForwardMessage(
+        "scriptFinished",
+        ForwardMsg.ScriptFinishedStatus.FINISHED_FRAGMENT_RUN_SUCCESSFULLY
+      )
+      await waitFor(() => {
+        expect(screen.getByTestId("stLogo")).toBeInTheDocument()
+      })
+
+      // Full re-run - logo is not sent, should be removed as stale (scriptRunId is different)
+      sendForwardMessage("newSession", {
+        ...NEW_SESSION_JSON,
+        scriptRunId: "different_script_run_id",
+      })
+      sendForwardMessage(
+        "scriptFinished",
+        ForwardMsg.ScriptFinishedStatus.FINISHED_SUCCESSFULLY
+      )
+      await waitFor(() => {
+        expect(screen.queryByTestId("stLogo")).not.toBeInTheDocument()
+      })
+    })
   })
 
   //   * handlePageNotFound has branching error messages depending on pageName

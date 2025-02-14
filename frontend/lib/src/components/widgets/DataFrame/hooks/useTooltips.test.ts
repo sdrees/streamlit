@@ -206,4 +206,23 @@ describe("useTooltips hook", () => {
 
     expect(result.current.tooltip).toBeUndefined()
   })
+
+  it("does not render a tooltip when hovering a cell in an ignored row", () => {
+    const { result } = renderHook(() => {
+      return useTooltips(MOCK_COLUMNS, getCellContentMock, [1])
+    })
+
+    act(() => {
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+      result.current.onItemHovered!({
+        kind: "cell",
+        location: [0, 1], // This is row index 1, which is ignored
+        bounds: { x: 0, y: 30, width: 100, height: 30 },
+      } as object as GridMouseEventArgs)
+
+      vi.advanceTimersByTime(DEBOUNCE_TIME_MS)
+    })
+
+    expect(result.current.tooltip).toBeUndefined()
+  })
 })

@@ -201,6 +201,9 @@ function DataFrame({
   const isSortingEnabled =
     !isLargeTable && !isEmptyTable && element.editingMode !== DYNAMIC
 
+  const isDynamicAndEditable =
+    !isEmptyTable && element.editingMode === DYNAMIC && !disabled
+
   const editingState = React.useRef<EditingState>(
     new EditingState(originalNumRows)
   )
@@ -526,7 +529,15 @@ function DataFrame({
     tooltip,
     clearTooltip,
     onItemHovered: handleTooltips,
-  } = useTooltips(columns, getCellContent)
+  } = useTooltips(
+    columns,
+    getCellContent,
+    // If dynamic editing is enabled, we need to ignore the last row (trailing row)
+    // because it would result in some undesired errors in the tooltips.
+    // The index are 0-based -> therefore, numRows will point to the trailing row
+    // (which is not part of the actual data).
+    isDynamicAndEditable ? [numRows] : []
+  )
 
   const { drawCell, customRenderers } = useCustomRenderer(columns)
 
@@ -595,9 +606,6 @@ function DataFrame({
   }, [resetEditingState, clearSelection])
 
   useFormClearHelper({ element, widgetMgr, onFormCleared })
-
-  const isDynamicAndEditable =
-    !isEmptyTable && element.editingMode === DYNAMIC && !disabled
 
   const { pinColumn, unpinColumn, freezeColumns } = useColumnPinning(
     columns,

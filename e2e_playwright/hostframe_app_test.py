@@ -247,9 +247,10 @@ def test_handles_host_terminate_and_restart_websocket_connection_messages(
     assert statuses[1] == "CONNECTING"
     assert statuses[2] == "CONNECTED"
 
-    # Check that the script state of the app indicates not running.
+    # Check that the connection state change triggers a rerun of the app.
+    expect(frame_locator.get_by_test_id("stStatusWidget")).to_be_visible()
     expect(frame_locator.get_by_test_id("stApp")).to_have_attribute(
-        "data-test-script-state", "notRunning"
+        "data-test-script-state", "running"
     )
 
 

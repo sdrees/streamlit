@@ -321,7 +321,7 @@ frontend-dev: frontend-dependencies
 
 .PHONY: frontend-lib
 # Build the frontend library.
-frontend-lib: frontend-dependencies
+frontend-lib:
 	cd frontend/ ; yarn workspaces foreach --recursive --topological --from @streamlit/lib run build;
 
 .PHONY: jslint

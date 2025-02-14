@@ -36,7 +36,7 @@
     "axios-mock-adapter": "^1.21.2",
     "eslint": "^8.33.0",
     "prettier": "^2.8.3",
-    "vite": "^5.4.12",
+    "vite": "^6.1.0",
     "vite-plugin-dts": "^4.5.0",
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^4.3.1",

@@ -259,6 +259,32 @@ THE SOFTWARE.
 
 -----
 
+The following software may be included in this product: @carto/api-client. A copy of the source code may be downloaded from git+https://github.com/CartoDB/carto-api-client.git. This software contains the following license and notice below:
+
+MIT License
+
+Copyright (c) 2024 CARTO
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----
+
 The following software may be included in this product: @date-io/core. A copy of the source code may be downloaded from https://github.com/dmtrKovalenko/date-io. This software contains the following license and notice below:
 
 MIT License
@@ -285,7 +311,7 @@ SOFTWARE.
 
 -----
 
-The following software may be included in this product: @deck.gl/aggregation-layers, @deck.gl/arcgis, @deck.gl/carto, @deck.gl/core, @deck.gl/extensions, @deck.gl/geo-layers, @deck.gl/google-maps, @deck.gl/json, @deck.gl/layers, @deck.gl/mapbox, @deck.gl/mesh-layers, @deck.gl/react, @deck.gl/widgets, deck.gl. A copy of the source code may be downloaded from https://github.com/visgl/deck.gl.git (@deck.gl/aggregation-layers), https://github.com/visgl/deck.gl.git (@deck.gl/arcgis), https://github.com/visgl/deck.gl.git (@deck.gl/carto), https://github.com/visgl/deck.gl.git (@deck.gl/core), https://github.com/visgl/deck.gl.git (@deck.gl/extensions), https://github.com/visgl/deck.gl.git (@deck.gl/geo-layers), https://github.com/visgl/deck.gl.git (@deck.gl/google-maps), https://github.com/visgl/deck.gl.git (@deck.gl/json), https://github.com/visgl/deck.gl.git (@deck.gl/layers), https://github.com/visgl/deck.gl.git (@deck.gl/mapbox), https://github.com/visgl/deck.gl.git (@deck.gl/mesh-layers), https://github.com/visgl/deck.gl.git (@deck.gl/react), https://github.com/visgl/deck.gl.git (@deck.gl/widgets), https://github.com/visgl/deck.gl.git (deck.gl). This software contains the following license and notice below:
+The following software may be included in this product: @deck.gl/aggregation-layers, @deck.gl/arcgis, @deck.gl/carto, @deck.gl/core, @deck.gl/extensions, @deck.gl/geo-layers, @deck.gl/google-maps, @deck.gl/json, @deck.gl/layers, @deck.gl/mapbox, @deck.gl/mesh-layers, @deck.gl/react, @deck.gl/widgets, @probe.gl/env, @probe.gl/log, @probe.gl/stats, deck.gl. A copy of the source code may be downloaded from https://github.com/visgl/deck.gl.git (@deck.gl/aggregation-layers), https://github.com/visgl/deck.gl.git (@deck.gl/arcgis), https://github.com/visgl/deck.gl.git (@deck.gl/carto), https://github.com/visgl/deck.gl.git (@deck.gl/core), https://github.com/visgl/deck.gl.git (@deck.gl/extensions), https://github.com/visgl/deck.gl.git (@deck.gl/geo-layers), https://github.com/visgl/deck.gl.git (@deck.gl/google-maps), https://github.com/visgl/deck.gl.git (@deck.gl/json), https://github.com/visgl/deck.gl.git (@deck.gl/layers), https://github.com/visgl/deck.gl.git (@deck.gl/mapbox), https://github.com/visgl/deck.gl.git (@deck.gl/mesh-layers), https://github.com/visgl/deck.gl.git (@deck.gl/react), https://github.com/visgl/deck.gl.git (@deck.gl/widgets), https://github.com/visgl/probe.gl.git (@probe.gl/env), https://github.com/visgl/probe.gl.git (@probe.gl/log), https://github.com/visgl/probe.gl.git (@probe.gl/stats), https://github.com/visgl/deck.gl.git (deck.gl). This software contains the following license and notice below:
 
 Copyright Vis.gl contributors.
 
@@ -1966,7 +1992,7 @@ Apache License
 
 -----
 
-The following software may be included in this product: @turf/area, @turf/bbox, @turf/boolean-clockwise, @turf/centroid, @turf/clone, @turf/helpers, @turf/invariant, @turf/meta, @turf/rewind. A copy of the source code may be downloaded from git://github.com/Turfjs/turf.git (@turf/area), git://github.com/Turfjs/turf.git (@turf/bbox), git://github.com/Turfjs/turf.git (@turf/boolean-clockwise), git://github.com/Turfjs/turf.git (@turf/centroid), git://github.com/Turfjs/turf.git (@turf/clone), git://github.com/Turfjs/turf.git (@turf/helpers), git://github.com/Turfjs/turf.git (@turf/invariant), git://github.com/Turfjs/turf.git (@turf/meta), git://github.com/Turfjs/turf.git (@turf/rewind). This software contains the following license and notice below:
+The following software may be included in this product: @turf/area, @turf/bbox, @turf/bbox-clip, @turf/bbox-polygon, @turf/boolean-clockwise, @turf/centroid, @turf/clone, @turf/helpers, @turf/invariant, @turf/meta, @turf/rewind, @turf/union. A copy of the source code may be downloaded from git://github.com/Turfjs/turf.git (@turf/area), git://github.com/Turfjs/turf.git (@turf/bbox), git://github.com/Turfjs/turf.git (@turf/bbox-clip), git://github.com/Turfjs/turf.git (@turf/bbox-polygon), git://github.com/Turfjs/turf.git (@turf/boolean-clockwise), git://github.com/Turfjs/turf.git (@turf/centroid), git://github.com/Turfjs/turf.git (@turf/clone), git://github.com/Turfjs/turf.git (@turf/helpers), git://github.com/Turfjs/turf.git (@turf/invariant), git://github.com/Turfjs/turf.git (@turf/meta), git://github.com/Turfjs/turf.git (@turf/rewind), git://github.com/Turfjs/turf.git (@turf/union). This software contains the following license and notice below:
 
 The MIT License (MIT)
 
@@ -13374,6 +13400,32 @@ SOFTWARE.
 
 -----
 
+The following software may be included in this product: polyclip-ts. A copy of the source code may be downloaded from https://github.com/luizbarboza/polyclip-ts.git. This software contains the following license and notice below:
+
+MIT License
+
+Copyright (c) 2022 Luiz Felipe Machado Barboza
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+-----
+
 The following software may be included in this product: postcss. A copy of the source code may be downloaded from git+https://github.com/postcss/postcss.git. This software contains the following license and notice below:
 
 The MIT License (MIT)
@@ -16776,6 +16828,40 @@ modification, are permitted provided that the following conditions are met:
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-----
+
+The following software may be included in this product: splaytree-ts. A copy of the source code may be downloaded from https://github.com/SBanksX/splaytree-ts.git. This software contains the following license and notice below:
+
+BSD 3-Clause License
+
+Copyright (c) 2022, Luiz Felipe Machado Barboza
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
 FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR

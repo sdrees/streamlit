@@ -101,6 +101,12 @@ PACKAGE_EXCEPTIONS: Set[PackageInfo] = {
         "stack-trace@npm:0.0.9",
         "UNKNOWN",
     ),
+    (
+        # Licenses has a typo, is meant to be BSD-3-Clause
+        # https://github.com/luizbarboza/splaytree-ts/blob/master/LICENSE
+        "splaytree-ts@npm:1.0.2",
+        "BDS-3-Clause",
+    ),
 }
 
 

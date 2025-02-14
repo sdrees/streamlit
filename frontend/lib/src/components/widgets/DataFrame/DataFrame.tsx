@@ -753,6 +753,8 @@ function DataFrame({
                 setIsFocused(true)
                 onRowAppended()
                 clearTooltip()
+                // Automatically scroll to the new row on the vertical axis:
+                dataEditorRef.current?.scrollTo(0, numRows, "vertical")
               }
             }}
           />

@@ -16,7 +16,7 @@
 
 import React, { memo, ReactElement, useEffect, useRef, useState } from "react"
 
-import DOMPurify from "dompurify"
+import dompurify from "dompurify"
 
 import { Html as HtmlProto } from "@streamlit/protobuf"
 
@@ -27,7 +27,7 @@ export interface HtmlProps {
 
 // preserve target=_blank and set security attributes (see https://github.com/cure53/DOMPurify/issues/317)
 const TEMPORARY_ATTRIBUTE = "data-temp-href-target"
-DOMPurify.addHook("beforeSanitizeAttributes", function (node) {
+dompurify.addHook("beforeSanitizeAttributes", function (node) {
   if (
     node instanceof HTMLElement &&
     node.hasAttribute("target") &&
@@ -36,7 +36,7 @@ DOMPurify.addHook("beforeSanitizeAttributes", function (node) {
     node.setAttribute(TEMPORARY_ATTRIBUTE, "_blank")
   }
 })
-DOMPurify.addHook("afterSanitizeAttributes", function (node) {
+dompurify.addHook("afterSanitizeAttributes", function (node) {
   if (node instanceof HTMLElement && node.hasAttribute(TEMPORARY_ATTRIBUTE)) {
     node.setAttribute("target", "_blank")
     // according to https://html.spec.whatwg.org/multipage/links.html#link-type-noopener,
@@ -54,7 +54,7 @@ const sanitizeString = (html: string): string => {
     // glue elements like style, script or others to document.body and prevent unintuitive browser behavior in several edge-cases
     FORCE_BODY: true,
   }
-  return DOMPurify.sanitize(html, sanitizationOptions)
+  return dompurify.sanitize(html, sanitizationOptions)
 }
 
 /**

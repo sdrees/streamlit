@@ -119,7 +119,9 @@ def test_data_editor_delete_row_via_hotkey(app: Page):
     expect(data_editor_element).to_have_css("height", "212px")
 
 
-def test_data_editor_add_row_via_toolbar(app: Page):
+def test_data_editor_add_row_via_toolbar(
+    app: Page, assert_snapshot: ImageCompareFunction
+):
     """Test that a row can be added via the toolbar."""
     data_editor_element = app.get_by_test_id("stDataFrame").nth(1)
     data_editor_toolbar = data_editor_element.get_by_test_id("stElementToolbar")
@@ -136,6 +138,17 @@ def test_data_editor_add_row_via_toolbar(app: Page):
 
     # The height should reflect that one row is added (247px+35px=282px):
     expect(data_editor_element).to_have_css("height", "282px")
+
+    # Add six more rows:
+    add_row_button.click()
+    add_row_button.click()
+    add_row_button.click()
+    add_row_button.click()
+    add_row_button.click()
+    add_row_button.click()
+
+    # Take a snapshot to check if rows are added:
+    assert_snapshot(data_editor_element, name="st_data_editor-added_rows_via_toolbar")
 
 
 def test_data_editor_add_row_via_trailing_row(app: Page):

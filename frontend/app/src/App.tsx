@@ -371,6 +371,9 @@ export class App extends PureComponent<Props, State> {
       },
       restartWebsocketConnection: () => {
         if (!this.connectionManager) {
+          // Performing an intentional restart - we want the script to rerun on load
+          // so setting RERUN_REQUESTED so handleConnectionStateChanged triggers it
+          this.setState({ scriptRunState: ScriptRunState.RERUN_REQUESTED })
           this.initializeConnectionManager()
         }
       },
@@ -633,17 +636,22 @@ export class App extends PureComponent<Props, State> {
 
     if (newState === ConnectionState.CONNECTED) {
       LOG.info("Reconnected to server.")
-
-      const lastRunWasInterrupted =
-        this.state.scriptRunState === ScriptRunState.RERUN_REQUESTED ||
-        this.state.scriptRunState === ScriptRunState.RUNNING
-
       // We request a script rerun if:
       //   1. this is the first time we establish a websocket connection to the
       //      server, or
       //   2. our last script run attempt was interrupted by the websocket
-      //      connection dropping.
-      if (!this.sessionInfo.last || lastRunWasInterrupted) {
+      //      connection dropping, or
+      //   3. the host explicitly requested a reconnect (we trigger scriptRunState to be RERUN_REQUESTED)
+      const lastRunWasInterrupted =
+        this.state.scriptRunState === ScriptRunState.RUNNING
+      const wasRerunRequested =
+        this.state.scriptRunState === ScriptRunState.RERUN_REQUESTED
+
+      if (
+        !this.sessionInfo.last ||
+        lastRunWasInterrupted ||
+        wasRerunRequested
+      ) {
         LOG.info("Requesting a script run.")
         this.widgetMgr.sendUpdateWidgetsMessage(undefined)
         this.setState({ dialog: null })

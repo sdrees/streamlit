@@ -29,7 +29,6 @@ from streamlit.runtime.media_file_storage import (
     MediaFileStorageError,
 )
 from streamlit.runtime.stats import CacheStat, CacheStatsProvider, group_stats
-from streamlit.util import HASHLIB_KWARGS
 
 _LOGGER: Final = get_logger(__name__)
 
@@ -55,7 +54,7 @@ def _calculate_file_id(data: bytes, mimetype: str, filename: str | None = None) 
     filename
         Any string. Will be converted to bytes and used to compute a hash.
     """
-    filehash = hashlib.new("sha224", **HASHLIB_KWARGS)
+    filehash = hashlib.new("sha224", usedforsecurity=False)
     filehash.update(data)
     filehash.update(bytes(mimetype.encode()))
 

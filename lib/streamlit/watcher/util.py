@@ -20,14 +20,13 @@ functions that use streamlit.config can go here to avoid a dependency cycle.
 
 from __future__ import annotations
 
-import hashlib
 import os
 import time
 from pathlib import Path
 from typing import Callable, TypeVar
 
 from streamlit.errors import Error
-from streamlit.util import HASHLIB_KWARGS
+from streamlit.util import calc_md5
 
 # How many times to try to grab the MD5 hash.
 _MAX_RETRIES = 5
@@ -67,11 +66,7 @@ def calc_md5_with_blocking_retries(
             path,
         )
 
-    md5 = hashlib.md5(**HASHLIB_KWARGS)
-    md5.update(content)
-
-    # Use hexdigest() instead of digest(), so it's easier to debug.
-    return md5.hexdigest()
+    return calc_md5(content)
 
 
 def path_modification_time(path: str, allow_nonexistent: bool = False) -> float:

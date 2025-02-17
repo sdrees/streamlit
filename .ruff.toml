@@ -48,6 +48,7 @@ select = [
   "TID",    # Helps you write tidier imports.
   "UP",     # pyupgrade
   "W",      # pycodestyle warnings
+  "S324",   # Check usage of insecure hashlib functions
 ]
 ignore = [
   "B008",    # Checks for function calls in default function arguments.

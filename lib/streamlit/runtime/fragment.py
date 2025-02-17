@@ -15,7 +15,6 @@
 from __future__ import annotations
 
 import contextlib
-import hashlib
 import inspect
 from abc import abstractmethod
 from copy import deepcopy
@@ -36,6 +35,7 @@ from streamlit.runtime.scriptrunner_utils.exceptions import (
 )
 from streamlit.runtime.scriptrunner_utils.script_run_context import get_script_run_ctx
 from streamlit.time_util import time_to_seconds
+from streamlit.util import calc_md5
 
 if TYPE_CHECKING:
     from datetime import timedelta
@@ -167,11 +167,9 @@ def _fragment(
 
         cursors_snapshot = deepcopy(ctx.cursors)
         dg_stack_snapshot = deepcopy(context_dg_stack.get())
-        h = hashlib.new("md5")
-        h.update(
-            f"{non_optional_func.__module__}.{non_optional_func.__qualname__}{dg_stack_snapshot[-1]._get_delta_path_str()}{additional_hash_info}".encode()
+        fragment_id = calc_md5(
+            f"{non_optional_func.__module__}.{non_optional_func.__qualname__}{dg_stack_snapshot[-1]._get_delta_path_str()}{additional_hash_info}"
         )
-        fragment_id = h.hexdigest()
 
         # We intentionally want to capture the active script hash here to ensure
         # that the fragment is associated with the correct script running.

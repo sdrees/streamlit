@@ -16,14 +16,13 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 from typing import TYPE_CHECKING, Final, cast
 
 from streamlit.errors import StreamlitAPIException
 from streamlit.proto.BokehChart_pb2 import BokehChart as BokehChartProto
 from streamlit.runtime.metrics_util import gather_metrics
-from streamlit.util import HASHLIB_KWARGS
+from streamlit.util import calc_md5
 
 if TYPE_CHECKING:
     from bokeh.plotting.figure import Figure
@@ -97,7 +96,7 @@ class BokehMixin:
         # Generate element ID from delta path
         delta_path = self.dg._get_delta_path_str()
 
-        element_id = hashlib.md5(delta_path.encode(), **HASHLIB_KWARGS).hexdigest()
+        element_id = calc_md5(delta_path.encode())
         bokeh_chart_proto = BokehChartProto()
         marshall(bokeh_chart_proto, figure, use_container_width, element_id)
         return self.dg._enqueue("bokeh_chart", bokeh_chart_proto)

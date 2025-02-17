@@ -16,7 +16,6 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import re
 from contextlib import nullcontext
@@ -54,7 +53,7 @@ from streamlit.proto.ArrowVegaLiteChart_pb2 import (
 from streamlit.runtime.metrics_util import gather_metrics
 from streamlit.runtime.scriptrunner_utils.script_run_context import get_script_run_ctx
 from streamlit.runtime.state import WidgetCallback, register_widget
-from streamlit.util import HASHLIB_KWARGS
+from streamlit.util import calc_md5
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
@@ -355,9 +354,7 @@ def _convert_altair_to_vega_lite_spec(
         # dataset name:
         data_bytes = dataframe_util.convert_anything_to_arrow_bytes(data)
         # Use the md5 hash of the data as the name:
-        h = hashlib.new("md5", **HASHLIB_KWARGS)
-        h.update(str(data_bytes).encode("utf-8"))
-        name = h.hexdigest()
+        name = calc_md5(str(data_bytes))
 
         datasets[name] = data_bytes
         return {"name": name}

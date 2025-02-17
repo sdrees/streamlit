@@ -14,7 +14,6 @@
 
 """st.video unit tests"""
 
-import hashlib
 from io import BytesIO
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -25,6 +24,7 @@ import streamlit as st
 from streamlit.errors import StreamlitAPIException
 from streamlit.runtime.media_file_storage import MediaFileStorageError
 from streamlit.runtime.memory_media_file_storage import _calculate_file_id
+from streamlit.util import calc_md5
 from streamlit.web.server.server import MEDIA_ENDPOINT
 from tests.delta_generator_test_case import DeltaGeneratorTestCase
 
@@ -150,7 +150,7 @@ class VideoTest(DeltaGeneratorTestCase):
         expected_subtitle_url = _calculate_file_id(
             fake_subtitle_data,
             "text/vtt",
-            filename=f"{hashlib.md5(b'default').hexdigest()}.vtt",
+            filename=f"{calc_md5(b'default')}.vtt",
         )
         self.assertIn(expected_subtitle_url, el.video.subtitles[0].url)
 
@@ -173,12 +173,12 @@ class VideoTest(DeltaGeneratorTestCase):
         expected_empty_subtitle_url = _calculate_file_id(
             b"",
             "text/vtt",
-            filename=f"{hashlib.md5(b'').hexdigest()}.vtt",
+            filename=f"{calc_md5(b'')}.vtt",
         )
         expected_english_subtitle_url = _calculate_file_id(
             fake_subtitle_data,
             "text/vtt",
-            filename=f"{hashlib.md5(b'English').hexdigest()}.vtt",
+            filename=f"{calc_md5(b'English')}.vtt",
         )
         self.assertIn(expected_empty_subtitle_url, el.video.subtitles[0].url)
         self.assertIn(expected_english_subtitle_url, el.video.subtitles[1].url)
@@ -197,7 +197,7 @@ class VideoTest(DeltaGeneratorTestCase):
         expected_english_subtitle_url = _calculate_file_id(
             fake_sub_content,
             "text/vtt",
-            filename=f"{hashlib.md5(b'default').hexdigest()}.vtt",
+            filename=f"{calc_md5(b'default')}.vtt",
         )
 
         el = self.get_delta_from_queue().new_element

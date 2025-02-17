@@ -38,22 +38,22 @@ def configure_snowflake_light_theme():
         [
             {
                 "family": "Inter",
-                "url": "https://raw.githubusercontent.com/rsms/inter/refs/heads/master/docs/font-files/Inter-Regular.woff2",
+                "url": "./app/static/Inter-Regular.woff2",
                 "weight": 400,
             },
             {
                 "family": "Inter",
-                "url": "https://raw.githubusercontent.com/rsms/inter/refs/heads/master/docs/font-files/Inter-SemiBold.woff2",
+                "url": "./app/static/Inter-SemiBold.woff2",
                 "weight": 600,
             },
             {
                 "family": "Inter",
-                "url": "https://raw.githubusercontent.com/rsms/inter/refs/heads/master/docs/font-files/Inter-Bold.woff2",
+                "url": "./app/static/Inter-Bold.woff2",
                 "weight": 700,
             },
             {
                 "family": "Inter",
-                "url": "https://raw.githubusercontent.com/rsms/inter/refs/heads/master/docs/font-files/Inter-Black.woff2",
+                "url": "./app/static/Inter-Black.woff2",
                 "weight": 900,
             },
             {

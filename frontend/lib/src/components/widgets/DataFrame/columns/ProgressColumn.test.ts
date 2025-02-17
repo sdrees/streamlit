@@ -69,7 +69,7 @@ describe("ProgressColumn", () => {
     const mockCell = mockColumn.getCell(0.5)
     expect(mockCell.kind).toEqual(GridCellKind.Custom)
     expect((mockCell as RangeCellType).data?.value).toEqual(0.5)
-    expect((mockCell as RangeCellType).data?.label).toEqual("50.00%")
+    expect((mockCell as RangeCellType).data?.label).toEqual("50%")
   })
 
   it("supports configuring min/max scale", () => {
@@ -154,8 +154,15 @@ describe("ProgressColumn", () => {
     [1234567898765432, "%d ⭐", "1234567898765432 ⭐"],
     [72.3, "%.1f%%", "72.3%"],
     [-5.678, "%.1f", "-5.7"],
-    [0.12, "percent", "12.00%"],
+    [0.12, "percent", "12%"],
     [1100, "compact", "1.1K"],
+    [-1234.567, "accounting", "(1,234.57)"],
+    [-1234.567, "dollar", "-$1,234.57"],
+    [-1234.567, "euro", "-€1,234.57"],
+    [-1234.567, "localized", "-1,234.567"],
+    [-1234.567, "plain", "-1234.567"],
+    [-1234.567, "scientific", "-1.235E3"],
+    [-1234.567, "engineering", "-1.235E3"],
   ])(
     "formats %p with sprintf format %p to %p",
     (input: number, format: string, displayValue: string) => {

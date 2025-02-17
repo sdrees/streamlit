@@ -472,7 +472,7 @@ export function formatNumber(
       }
 
       return numbro(value).format({
-        thousandSeparated: true,
+        thousandSeparated: false,
         mantissa: maxPrecision,
         trimMantissa: false,
       })
@@ -480,22 +480,51 @@ export function formatNumber(
 
     // Use a default format if no precision is given
     return numbro(value).format({
-      thousandSeparated: true,
+      thousandSeparated: false,
       mantissa: determineDefaultMantissa(value),
       trimMantissa: true,
     })
   }
 
-  if (format === "percent") {
+  if (format === "plain") {
+    return numbro(value).format({
+      thousandSeparated: false,
+      // Use a large mantissa to avoid cutting off decimals
+      mantissa: 20,
+      trimMantissa: true,
+    })
+  } else if (format === "localized") {
+    return new Intl.NumberFormat().format(value)
+  } else if (format === "percent") {
     return new Intl.NumberFormat(undefined, {
       style: "percent",
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(value)
+  } else if (format === "dollar") {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: "USD",
+      currencyDisplay: "narrowSymbol",
+      maximumFractionDigits: 2,
+    }).format(value)
+  } else if (format === "euro") {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: "EUR",
       maximumFractionDigits: 2,
     }).format(value)
   } else if (["compact", "scientific", "engineering"].includes(format)) {
     return new Intl.NumberFormat(undefined, {
       notation: format as any,
     }).format(value)
+  } else if (format === "accounting") {
+    return numbro(value).format({
+      thousandSeparated: true,
+      negative: "parenthesis",
+      mantissa: 2,
+      trimMantissa: false,
+    })
   }
 
   return sprintf(format, value)
@@ -506,21 +535,37 @@ export function formatNumber(
  *
  * @param momentDate The moment date to format.
  * @param format The format to use.
- *   If the format is `locale` the date will be formatted according to the user's locale.
- *   If the format is `relative` the date will be formatted as a relative time (e.g. "2 hours ago").
+ *   If the format is `localized` the date will be formatted according to the user's locale.
+ *   If the format is `distance` the date will be formatted as a relative time distance (e.g. "2 hours ago").
+ *   If the format is `calendar` the date will be formatted as a calendar date (e.g. "Tomorrow 12:00").
+ *   If the format is `iso8601` the date will be formatted according to ISO 8601 standard:
+ *     - For date: YYYY-MM-DD
+ *     - For time: HH:mm:ss.sssZ
+ *     - For datetime: YYYY-MM-DDTHH:mm:ss.sssZ
  *   Otherwise, it is interpreted as momentJS format string: https://momentjs.com/docs/#/displaying/format/
  * @returns The formatted date as a string.
  */
-export function formatMoment(momentDate: Moment, format: string): string {
-  if (format === "locale") {
+export function formatMoment(
+  momentDate: Moment,
+  format: string,
+  momentKind: "date" | "time" | "datetime" = "datetime"
+): string {
+  if (format === "localized") {
     return new Intl.DateTimeFormat(undefined, {
-      dateStyle: "medium",
-      timeStyle: "medium",
+      dateStyle: momentKind === "time" ? undefined : "medium",
+      timeStyle: momentKind === "date" ? undefined : "medium",
     }).format(momentDate.toDate())
   } else if (format === "distance") {
     return momentDate.fromNow()
-  } else if (format === "relative") {
+  } else if (format === "calendar") {
     return momentDate.calendar()
+  } else if (format === "iso8601") {
+    if (momentKind === "date") {
+      return momentDate.format("YYYY-MM-DD")
+    } else if (momentKind === "time") {
+      return momentDate.format("HH:mm:ss.SSS[Z]")
+    }
+    return momentDate.toISOString()
   }
   return momentDate.format(format)
 }

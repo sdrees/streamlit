@@ -80,7 +80,7 @@ export interface DateTimeColumnParams {
  * @returns A BaseColumn object
  */
 function BaseDateTimeColumn(
-  kind: string,
+  kind: "date" | "time" | "datetime",
   props: BaseColumnProps,
   defaultFormat: string, // used for rendering and copy data
   defaultStep: number,
@@ -238,7 +238,8 @@ function BaseDateTimeColumn(
         try {
           displayDate = formatMoment(
             momentDate,
-            parameters.format || defaultFormat
+            parameters.format || defaultFormat,
+            kind
           )
         } catch (error) {
           return getErrorCell(
@@ -247,7 +248,7 @@ function BaseDateTimeColumn(
           )
         }
         // Copy data should always use the default format
-        copyData = formatMoment(momentDate, defaultFormat)
+        copyData = formatMoment(momentDate, defaultFormat, kind)
       }
 
       return {

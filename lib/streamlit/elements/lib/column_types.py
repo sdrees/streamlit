@@ -1989,7 +1989,7 @@ def ProgressColumn(
         the Markdown directives described in the ``body`` parameter of
         ``st.markdown``.
 
-    format str, "plain", "localized", "percent", "dollar", "euro", "accounting", "compact", "scientific", "engineering", or None
+    format: str, "plain", "localized", "percent", "dollar", "euro", "accounting", "compact", "scientific", "engineering", or None
         A format string controlling how numbers are displayed.
         Can be one of the following:
 

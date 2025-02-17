@@ -48,13 +48,12 @@ from streamlit.runtime.caching.hashing import (
 )
 from streamlit.runtime.uploaded_file_manager import UploadedFile, UploadedFileRec
 from streamlit.type_util import is_type
-from streamlit.util import HASHLIB_KWARGS
 
 get_main_script_director = MagicMock(return_value=os.getcwd())
 
 
 def get_hash(value, hash_funcs=None, cache_type=None):
-    hasher = hashlib.new("md5", **HASHLIB_KWARGS)
+    hasher = hashlib.new("md5", usedforsecurity=False)
     update_hash(
         value, hasher, cache_type=cache_type or MagicMock(), hash_funcs=hash_funcs
     )

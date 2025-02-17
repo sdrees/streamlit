@@ -13,7 +13,6 @@
 # limitations under the License.
 from __future__ import annotations
 
-import hashlib
 import inspect
 import tempfile
 import textwrap
@@ -85,7 +84,7 @@ from streamlit.testing.v1.element_tree import (
 )
 from streamlit.testing.v1.local_script_runner import LocalScriptRunner
 from streamlit.testing.v1.util import patch_config_options
-from streamlit.util import HASHLIB_KWARGS, calc_md5
+from streamlit.util import calc_md5
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -208,8 +207,7 @@ class AppTest:
     def _from_string(
         cls, script: str, *, default_timeout: float = 3, args=None, kwargs=None
     ) -> AppTest:
-        hasher = hashlib.md5(bytes(script, "utf-8"), **HASHLIB_KWARGS)
-        script_name = hasher.hexdigest()
+        script_name = calc_md5(bytes(script, "utf-8"))
 
         path = Path(TMP_DIR.name, script_name)
         aligned_script = textwrap.dedent(script)

@@ -14,7 +14,6 @@
 
 from __future__ import annotations
 
-import hashlib
 from typing import TYPE_CHECKING, Final
 from weakref import WeakKeyDictionary
 
@@ -22,7 +21,6 @@ from streamlit import config, util
 from streamlit.logger import get_logger
 from streamlit.proto.ForwardMsg_pb2 import ForwardMsg
 from streamlit.runtime.stats import CacheStat, CacheStatsProvider, group_stats
-from streamlit.util import HASHLIB_KWARGS
 
 if TYPE_CHECKING:
     from collections.abc import MutableMapping
@@ -56,9 +54,7 @@ def populate_hash_if_needed(msg: ForwardMsg) -> str:
         msg.ClearField("metadata")
 
         # MD5 is good enough for what we need, which is uniqueness.
-        hasher = hashlib.md5(**HASHLIB_KWARGS)
-        hasher.update(msg.SerializeToString())
-        msg.hash = hasher.hexdigest()
+        msg.hash = util.calc_md5(msg.SerializeToString())
 
         # Restore metadata.
         msg.metadata.CopyFrom(metadata)

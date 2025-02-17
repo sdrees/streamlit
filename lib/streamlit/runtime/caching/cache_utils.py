@@ -49,7 +49,6 @@ from streamlit.runtime.caching.hashing import HashFuncsDict, update_hash
 from streamlit.runtime.scriptrunner_utils.script_run_context import (
     in_cached_function,
 )
-from streamlit.util import HASHLIB_KWARGS
 
 if TYPE_CHECKING:
     from types import FunctionType
@@ -430,7 +429,7 @@ def _make_value_key(
     # Create the hash from each arg value, except for those args whose name
     # starts with "_". (Underscore-prefixed args are deliberately excluded from
     # hashing.)
-    args_hasher = hashlib.new("md5", **HASHLIB_KWARGS)
+    args_hasher = hashlib.new("md5", usedforsecurity=False)
     for arg_name, arg_value in arg_pairs:
         if arg_name is not None and arg_name.startswith("_"):
             _LOGGER.debug("Not hashing %s because it starts with _", arg_name)
@@ -468,7 +467,7 @@ def _make_function_key(cache_type: CacheType, func: FunctionType) -> str:
     A function's key is stable across reruns of the app, and changes when
     the function's source code changes.
     """
-    func_hasher = hashlib.new("md5", **HASHLIB_KWARGS)
+    func_hasher = hashlib.new("md5", usedforsecurity=False)
 
     # Include the function's __module__ and __qualname__ strings in the hash.
     # This means that two identical functions in different modules

@@ -43,7 +43,6 @@ from streamlit.errors import StreamlitAPIException
 from streamlit.runtime.caching.cache_errors import UnhashableTypeError
 from streamlit.runtime.caching.cache_type import CacheType
 from streamlit.runtime.uploaded_file_manager import UploadedFile
-from streamlit.util import HASHLIB_KWARGS
 
 # If a dataframe has more than this many rows, we consider it large and hash a sample.
 _PANDAS_ROWS_LARGE: Final = 100000
@@ -351,7 +350,7 @@ class _CacheFuncHasher:
         runs.
         """
 
-        h = hashlib.new("md5", **HASHLIB_KWARGS)
+        h = hashlib.new("md5", usedforsecurity=False)
 
         if type_util.is_type(obj, "unittest.mock.Mock") or type_util.is_type(
             obj, "unittest.mock.MagicMock"

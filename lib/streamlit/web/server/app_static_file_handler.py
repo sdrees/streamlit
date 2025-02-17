@@ -30,7 +30,17 @@ _LOGGER: Final = get_logger(__name__)
 MAX_APP_STATIC_FILE_SIZE = 200 * 1024 * 1024  # 200 MB
 # The list of file extensions that we serve with the corresponding Content-Type header.
 # All files with other extensions will be served with Content-Type: text/plain
-SAFE_APP_STATIC_FILE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".pdf", ".gif", ".webp")
+SAFE_APP_STATIC_FILE_EXTENSIONS = (
+    # Common image types:
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".webp",
+    # Other types:
+    ".pdf",
+    ".xml",
+)
 
 
 class AppStaticFileHandler(tornado.web.StaticFileHandler):

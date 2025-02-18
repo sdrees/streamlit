@@ -287,11 +287,11 @@ describe("formatNumber", () => {
   )
 
   it.each([
-    [0.5, "percent", "50.00%"],
+    [0.5, "percent", "50%"],
     [0.51236, "percent", "51.24%"],
-    [1.1, "percent", "110.00%"],
-    [0, "percent", "0.00%"],
-    [0.00001, "percent", "0.00%"],
+    [-1.123456, "percent", "-112.35%"],
+    [0, "percent", "0%"],
+    [0.00001, "percent", "0%"],
     [1000, "compact", "1K"],
     [1100, "compact", "1.1K"],
     [10, "compact", "10"],
@@ -301,6 +301,29 @@ describe("formatNumber", () => {
     [123456789, "scientific", "1.235E8"],
     [1000, "engineering", "1E3"],
     [123456789, "engineering", "123.457E6"],
+    [1234.567, "engineering", "1.235E3"],
+    // plain
+    [10.1231234, "plain", "10.1231234"],
+    [-1234.456789, "plain", "-1234.456789"],
+    [0.00000001, "plain", "0.00000001"],
+    // dollar
+    [10.123, "dollar", "$10.12"],
+    [-1234.456789, "dollar", "-$1,234.46"],
+    [0.00000001, "dollar", "$0.00"],
+    // euro
+    [10.123, "euro", "€10.12"],
+    [-1234.456789, "euro", "-€1,234.46"],
+    [0.00000001, "euro", "€0.00"],
+    // localized
+    [10.123, "localized", "10.123"],
+    [-1234.456789, "localized", "-1,234.457"],
+    [0.001, "localized", "0.001"],
+    // accounting
+    [10.123, "accounting", "10.12"],
+    [-10.126, "accounting", "(10.13)"],
+    [-10.1, "accounting", "(10.10)"],
+    [1000000.123412, "accounting", "1,000,000.12"],
+    [-1000000.123412, "accounting", "(1,000,000.12)"],
     // sprintf format
     [10.123, "%d", "10"],
     [10.123, "%i", "10"],
@@ -593,15 +616,21 @@ withTimezones(() => {
       ["distance", moment.utc("2022-04-27T23:59:59Z"), "a few seconds ago"],
       ["distance", moment.utc("2022-04-20T00:00:00Z"), "8 days ago"],
       ["distance", moment.utc("2022-05-27T23:59:59Z"), "in a month"],
-      // Relative:
-      ["relative", moment.utc("2022-04-30T15:30:00Z"), "Saturday at 3:30 PM"],
+      // Calendar:
+      ["calendar", moment.utc("2022-04-30T15:30:00Z"), "Saturday at 3:30 PM"],
       [
-        "relative",
+        "calendar",
         moment.utc("2022-04-24T12:20:30Z"),
         "Last Sunday at 12:20 PM",
       ],
-      ["relative", moment.utc("2022-04-28T12:00:00Z"), "Today at 12:00 PM"],
-      ["relative", moment.utc("2022-04-29T12:00:00Z"), "Tomorrow at 12:00 PM"],
+      ["calendar", moment.utc("2022-04-28T12:00:00Z"), "Today at 12:00 PM"],
+      ["calendar", moment.utc("2022-04-29T12:00:00Z"), "Tomorrow at 12:00 PM"],
+      // ISO8601:
+      [
+        "iso8601",
+        moment.utc("2023-04-27T10:20:30.123Z"),
+        "2023-04-27T10:20:30.123Z",
+      ],
     ])(
       "uses %s format to format %s to %s",
       (format: string, momentDate: Moment, expected: string) => {

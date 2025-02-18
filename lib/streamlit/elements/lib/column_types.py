@@ -24,6 +24,18 @@ from streamlit.runtime.metrics_util import gather_metrics
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
+NumberFormat: TypeAlias = Literal[
+    "plain",
+    "localized",
+    "dollar",
+    "euro",
+    "percent",
+    "compact",
+    "scientific",
+    "engineering",
+    "accounting",
+]
+
 ColumnWidth: TypeAlias = Literal["small", "medium", "large"]
 
 # Type alias that represents all available column types
@@ -49,7 +61,7 @@ ColumnType: TypeAlias = Literal[
 
 class NumberColumnConfig(TypedDict):
     type: Literal["number"]
-    format: NotRequired[str | None]
+    format: NotRequired[str | NumberFormat | None]
     min_value: NotRequired[int | float | None]
     max_value: NotRequired[int | float | None]
     step: NotRequired[int | float | None]
@@ -105,7 +117,9 @@ class ListColumnConfig(TypedDict):
 
 class DatetimeColumnConfig(TypedDict):
     type: Literal["datetime"]
-    format: NotRequired[str | None]
+    format: NotRequired[
+        str | Literal["localized", "distance", "calendar", "iso8601"] | None
+    ]
     min_value: NotRequired[str | None]
     max_value: NotRequired[str | None]
     step: NotRequired[int | float | None]
@@ -114,7 +128,7 @@ class DatetimeColumnConfig(TypedDict):
 
 class TimeColumnConfig(TypedDict):
     type: Literal["time"]
-    format: NotRequired[str | None]
+    format: NotRequired[str | Literal["localized", "iso8601"] | None]
     min_value: NotRequired[str | None]
     max_value: NotRequired[str | None]
     step: NotRequired[int | float | None]
@@ -122,7 +136,7 @@ class TimeColumnConfig(TypedDict):
 
 class DateColumnConfig(TypedDict):
     type: Literal["date"]
-    format: NotRequired[str | None]
+    format: NotRequired[str | Literal["localized", "distance", "iso8601"] | None]
     min_value: NotRequired[str | None]
     max_value: NotRequired[str | None]
     step: NotRequired[int | None]
@@ -130,7 +144,7 @@ class DateColumnConfig(TypedDict):
 
 class ProgressColumnConfig(TypedDict):
     type: Literal["progress"]
-    format: NotRequired[str | None]
+    format: NotRequired[str | NumberFormat | None]
     min_value: NotRequired[int | float | None]
     max_value: NotRequired[int | float | None]
 
@@ -337,7 +351,7 @@ def NumberColumn(
     required: bool | None = None,
     pinned: bool | None = None,
     default: int | float | None = None,
-    format: str | None = None,
+    format: str | NumberFormat | None = None,
     min_value: int | float | None = None,
     max_value: int | float | None = None,
     step: int | float | None = None,
@@ -397,15 +411,27 @@ def NumberColumn(
         Specifies the default value in this column when a new row is added by
         the user. This defaults to ``None``.
 
-    format: str or None
-        A printf-style format string controlling how numbers are displayed.
-        This does not impact the return value. The following formatters are
-        valid: ``%d``, ``%e``, ``%f``, ``%g``, ``%i``, ``%u``. You can also add
-        prefixes and suffixes, e.g. ``"$ %.2f"`` to show a dollar prefix. If
-        this is ``None`` (default), the numbers are not formatted.
+    format:  str, "plain", "localized", "percent", "dollar", "euro", "accounting", "compact", "scientific", "engineering", or None
+        A format string controlling how numbers are displayed.
+        Can be one of the following:
+
+        - ``"plain"``: Shows the full number without any formatting (1234.567)
+        - ``"localized"``: Shows the number in the default locale format (1,234.567)
+        - ``"percent"``: Shows the number as a percentage (123456.70%)
+        - ``"dollar"``: Shows the number as a dollar amount ($1,234.57)
+        - ``"euro"``: Shows the number as a euro amount (€1,234.57)
+        - ``"accounting"``: Shows the number in an accounting format (1,234.00)
+        - ``"compact"``: Shows the number in a compact format (1.2K)
+        - ``"scientific"``: Shows the number in a scientific notation (1.235E3)
+        - ``"engineering"``: Shows the number in an engineering notation (1.235E3)
+        - printf-style format string: The following formatters are valid:
+          ``%d``, ``%e``, ``%f``, ``%g``, ``%i``, ``%u``. You can also add
+          prefixes and suffixes, e.g. ``"$ %.2f"`` to show a dollar prefix.
+        - ``None`` (default): the numbers are formatted via a default formatter.
 
         Number formatting from ``column_config`` always takes precedence over
-        number formatting from ``pandas.Styler``.
+        number formatting from ``pandas.Styler``. The number formatting does
+        not impact the return value when used in ``st.data_editor``.
 
     min_value: int, float, or None
         The minimum value that can be entered. If this is ``None`` (default),
@@ -1475,7 +1501,7 @@ def DatetimeColumn(
     required: bool | None = None,
     pinned: bool | None = None,
     default: datetime.datetime | None = None,
-    format: str | None = None,
+    format: str | Literal["localized", "distance", "calendar", "iso8601"] | None = None,
     min_value: datetime.datetime | None = None,
     max_value: datetime.datetime | None = None,
     step: int | float | datetime.timedelta | None = None,
@@ -1537,14 +1563,20 @@ def DatetimeColumn(
         Specifies the default value in this column when a new row is added by
         the user. This defaults to ``None``.
 
-    format: str or None
-        A momentJS format string controlling how datetimes are displayed. See
-        `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_ for
-        available formats. If this is ``None`` (default), the format is
-        ``YYYY-MM-DD HH:mm:ss``.
+    format: str, "localized", "distance", "calendar", "iso8601", or None
+        A format string controlling how datetimes are displayed.
+        Can be one of the following:
 
-        Number formatting from ``column_config`` always takes precedence over
-        number formatting from ``pandas.Styler``.
+        - ``"localized"``: Shows the datetime in the default locale format.
+        - ``"distance"``: Shows the datetime in a relative format.
+        - ``"calendar"``: Shows the datetime in a calendar format.
+        - ``"iso8601"``: Shows the datetime in ISO 8601 format.
+        - A momentJS format string: See `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_
+        for available formats.
+        - ``None`` (default): uses ``YYYY-MM-DD HH:mm:ss`` as format.
+
+        Formatting from ``column_config`` always takes precedence over
+        datetime formatting from ``pandas.Styler``.
 
     min_value: datetime.datetime or None
         The minimum datetime that can be entered. If this is ``None``
@@ -1628,7 +1660,7 @@ def TimeColumn(
     required: bool | None = None,
     pinned: bool | None = None,
     default: datetime.time | None = None,
-    format: str | None = None,
+    format: str | Literal["localized", "iso8601"] | None = None,
     min_value: datetime.time | None = None,
     max_value: datetime.time | None = None,
     step: int | float | datetime.timedelta | None = None,
@@ -1688,14 +1720,17 @@ def TimeColumn(
         Specifies the default value in this column when a new row is added by
         the user. This defaults to ``None``.
 
-    format: str or None
-        A momentJS format string controlling how times are displayed. See
-        `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_ for
-        available formats. If this is ``None`` (default), the format is
-        ``HH:mm:ss``.
+    format: str, "localized", "iso8601", or None
+        A format string controlling how times are displayed.
+        Can be one of the following:
+        - ``"localized"``: Shows the time in the default locale format.
+        - ``"iso8601"``: Shows the time in ISO 8601 format.
+        - A momentJS format string: See `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_
+        for available formats.
+        - ``None`` (default): uses ``HH:mm:ss`` as format.
 
-        Number formatting from ``column_config`` always takes precedence over
-        number formatting from ``pandas.Styler``.
+        Time formatting from ``column_config`` always takes precedence over
+        time formatting from ``pandas.Styler``.
 
     min_value: datetime.time or None
         The minimum time that can be entered. If this is ``None`` (default),
@@ -1774,7 +1809,7 @@ def DateColumn(
     required: bool | None = None,
     pinned: bool | None = None,
     default: datetime.date | None = None,
-    format: str | None = None,
+    format: str | Literal["localized", "distance", "iso8601"] | None = None,
     min_value: datetime.date | None = None,
     max_value: datetime.date | None = None,
     step: int | None = None,
@@ -1834,14 +1869,18 @@ def DateColumn(
         Specifies the default value in this column when a new row is added by
         the user. This defaults to ``None``.
 
-    format: str or None
-        A momentJS format string controlling how times are displayed. See
-        `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_ for
-        available formats. If this is ``None`` (default), the format is
-        ``YYYY-MM-DD``.
+    format: str, "localized", "distance", "iso8601", or None
+        A format string controlling how the dates are displayed.
+        Can be one of the following:
+        - ``"localized"``: Shows the date in the default locale format.
+        - ``"distance"``: Shows the date in a relative format (e.g. "1 day ago").
+        - ``"iso8601"``: Shows the date in ISO 8601 format.
+        - A momentJS format string: See `momentJS docs <https://momentjs.com/docs/#/displaying/format/>`_
+        for available formats.
+        - ``None`` (default): uses ``YYYY-MM-DD`` as format.
 
-        Number formatting from ``column_config`` always takes precedence over
-        number formatting from ``pandas.Styler``.
+        Date formatting from ``column_config`` always takes precedence over
+        date formatting from ``pandas.Styler``.
 
     min_value: datetime.date or None
         The minimum date that can be entered. If this is ``None`` (default),
@@ -1916,7 +1955,7 @@ def ProgressColumn(
     width: ColumnWidth | None = None,
     help: str | None = None,
     pinned: bool | None = None,
-    format: str | None = None,
+    format: str | NumberFormat | None = None,
     min_value: int | float | None = None,
     max_value: int | float | None = None,
 ) -> ColumnConfig:
@@ -1950,12 +1989,26 @@ def ProgressColumn(
         the Markdown directives described in the ``body`` parameter of
         ``st.markdown``.
 
-    format: str or None
-        A printf-style format string controlling how numbers are displayed.
-        This does not impact the return value. The following formatters are
-        valid: ``%d``, ``%e``, ``%f``, ``%g``, ``%i``, ``%u``. You can also add
-        prefixes and suffixes, e.g. ``"$ %.2f"`` to show a dollar prefix. If
-        this is ``None`` (default), the numbers are not formatted.
+    format: str, "plain", "localized", "percent", "dollar", "euro", "accounting", "compact", "scientific", "engineering", or None
+        A format string controlling how numbers are displayed.
+        Can be one of the following:
+
+        - ``"plain"``: Shows the full number without any formatting (1234.567)
+        - ``"localized"``: Shows the number in the default locale format (1,234.567)
+        - ``"percent"``: Shows the number as a percentage (123456.70%)
+        - ``"dollar"``: Shows the number as a dollar amount ($1,234.57)
+        - ``"euro"``: Shows the number as a euro amount (€1,234.57)
+        - ``"accounting"``: Shows the number in an accounting format (1,234.00)
+        - ``"compact"``: Shows the number in a compact format (1.2K)
+        - ``"scientific"``: Shows the number in a scientific notation (1.235E3)
+        - ``"engineering"``: Shows the number in an engineering notation (1.235E3)
+        - printf-style format string: The following formatters are valid:
+        ``%d``, ``%e``, ``%f``, ``%g``, ``%i``, ``%u``. You can also add
+        prefixes and suffixes, e.g. ``"$ %.2f"`` to show a dollar prefix.
+        - ``None`` (default): the numbers are formatted via a default formatter.
+
+        The number formatting does not impact the return value when used in
+        ``st.data_editor``.
 
     pinned: bool or None
         Whether the column is pinned. A pinned column will stay visible on the

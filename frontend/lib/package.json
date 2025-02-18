@@ -1,6 +1,6 @@
 {
   "name": "@streamlit/lib",
-  "version": "1.42.0",
+  "version": "1.42.1",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
@@ -22,7 +22,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build",
+    "build": "env NODE_OPTIONS=--max_old_space_size=8192 vite build",
     "typecheck": "yarn run typecheck:all",
     "test": "vitest run",
     "testWatch": "vitest",

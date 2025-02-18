@@ -37,6 +37,11 @@ SAFE_APP_STATIC_FILE_EXTENSIONS = (
     ".png",
     ".gif",
     ".webp",
+    # Common font types:
+    ".otf",
+    ".ttf",
+    ".woff",
+    ".woff2",
     # Other types:
     ".pdf",
     ".xml",

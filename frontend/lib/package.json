@@ -55,7 +55,7 @@
     "@loaders.gl/gltf": "^4.2.5",
     "@streamlit/protobuf": "workspace:^",
     "@streamlit/utils": "workspace:^",
-    "@wavesurfer/react": "^1.0.7",
+    "@wavesurfer/react": "^1.0.9",
     "apache-arrow": "^18.0.0",
     "axios": "^1.7.9",
     "baseui": "12.2.0",

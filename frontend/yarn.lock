@@ -3183,7 +3183,7 @@ __metadata:
     "@types/wavesurfer.js": "npm:^6.0.12"
     "@types/xxhashjs": "npm:^0.2.2"
     "@vitejs/plugin-react-swc": "npm:^3.6.0"
-    "@wavesurfer/react": "npm:^1.0.7"
+    "@wavesurfer/react": "npm:^1.0.9"
     apache-arrow: "npm:^18.0.0"
     axios: "npm:^1.7.9"
     axios-mock-adapter: "npm:^1.21.4"
@@ -5125,13 +5125,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wavesurfer/react@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "@wavesurfer/react@npm:1.0.7"
+"@wavesurfer/react@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "@wavesurfer/react@npm:1.0.9"
   peerDependencies:
-    react: ^18.2.0
+    react: ^18.2.0 || ^19.0.0
     wavesurfer.js: ">=7.7.14"
-  checksum: 10c0/fa077b6a2c75c5c8074186fe0ba9f8c62441e6837c48e4badefa46e7c97c46a7c4e9fdc994b7986509ea97fd8e62d9a123bb5493028b37cdf2bc377b4168da35
+  checksum: 10c0/184213fec70d7e3d38aba5ed7e2d197870a9ef672e94234b67d715610cd31ceb628b22a8bf9703c9ab3ea23c1f9eef452b5f9c615ea4c8648497b0296458f181
   languageName: node
   linkType: hard
 

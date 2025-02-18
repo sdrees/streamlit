@@ -70,3 +70,5 @@ st.subheader("st.write(generator)")
 st.write(stream_text)
 
 st.write(stream_text())
+
+st.write((["zero", " one", "    two"], 3))

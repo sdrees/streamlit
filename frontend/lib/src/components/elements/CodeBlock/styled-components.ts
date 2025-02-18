@@ -27,6 +27,7 @@ const codeLink: CSSObject = {
 export const StyledInlineCode = styled.code(({ theme }) => ({
   padding: "0.2em 0.4em",
   wordWrap: "break-word",
+  whiteSpace: "pre-wrap",
   margin: 0,
   borderRadius: theme.radii.md,
   background: theme.colors.codeHighlightColor,

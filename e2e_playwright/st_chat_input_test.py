@@ -329,6 +329,28 @@ def test_uploads_and_deletes_multiple_files(
     expect(uploaded_file_names).to_have_text(files[1]["name"], use_inner_text=True)
 
 
+def test_single_file_upload_button_tooltip(
+    app: Page, assert_snapshot: ImageCompareFunction
+):
+    """Test that the single file upload button tooltip renders correctly."""
+    chat_input = app.get_by_test_id("stChatInput").nth(3)
+    chat_input.get_by_role("button").nth(0).hover()
+    wait_for_app_run(app, wait_delay=1500)
+
+    expect(app.get_by_text("Upload or drag and drop a file")).to_be_visible()
+
+
+def test_multi_file_upload_button_tooltip(
+    app: Page, assert_snapshot: ImageCompareFunction
+):
+    """Test that the single file upload button tooltip renders correctly."""
+    chat_input = app.get_by_test_id("stChatInput").nth(4)
+    chat_input.get_by_role("button").nth(0).hover()
+    wait_for_app_run(app, wait_delay=1500)
+
+    expect(app.get_by_text("Upload or drag and drop files")).to_be_visible()
+
+
 def test_check_top_level_class(app: Page):
     """Check that the top level class is correctly set."""
     check_top_level_class(app, "stChatInput")

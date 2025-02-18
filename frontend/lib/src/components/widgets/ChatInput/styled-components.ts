@@ -22,38 +22,38 @@ export interface StyledChatInputContainerProps {
 }
 
 export const StyledChatInputContainer =
-  styled.div<StyledChatInputContainerProps>(({ theme, width }) => {
-    return {
-      border: `${theme.sizes.borderWidth} solid`,
-      borderColor: theme.colors.widgetBorderColor ?? theme.colors.transparent,
-      borderRadius: theme.radii.chatInput,
-      display: "flex",
-      backgroundColor: theme.colors.secondaryBg,
-      width: `${width}px`,
-      overflow: "hidden",
+  styled.div<StyledChatInputContainerProps>(({ width }) => ({
+    border: "none",
+    position: "relative",
+    display: "flex",
+    width: `${width}px`,
+  }))
 
-      ":focus-within": {
-        borderColor: theme.colors.primary,
-      },
+export interface StyledChatInputProps {
+  extended: boolean
+}
 
-      "&.dropzone": {
-        borderColor: theme.colors.primary,
-        borderRadius: theme.radii.full,
-        height: theme.sizes.emptyDropdownHeight,
-      },
-    }
-  })
-
-export const StyledChatInput = styled.div(({ theme }) => {
-  return {
+export const StyledChatInput = styled.div<StyledChatInputProps>(
+  ({ theme, extended }) => ({
+    border: `${theme.sizes.borderWidth} solid`,
+    borderColor: theme.colors.widgetBorderColor ?? theme.colors.transparent,
+    borderRadius: theme.radii.chatInput,
+    backgroundColor:
+      theme.colors.widgetBackgroundColor ?? theme.colors.secondaryBg,
     position: "relative",
     flexGrow: 1,
     display: "flex",
     alignItems: "center",
     paddingLeft: theme.spacing.lg,
+    maxHeight: extended ? "none" : theme.sizes.minElementHeight,
     gap: theme.spacing.sm,
-  }
-})
+    overflow: "hidden",
+
+    ":focus-within": {
+      borderColor: theme.colors.primary,
+    },
+  })
+)
 
 interface StyledSendIconButtonProps {
   disabled: boolean
@@ -103,14 +103,16 @@ export const StyledSendIconButton = styled.button<StyledSendIconButtonProps>(
   }
 )
 
-export const StyledSendIconButtonContainer = styled.div({
+export const StyledSendIconButtonContainer = styled.div(({ theme }) => ({
   display: "flex",
   alignItems: "flex-end",
   height: "100%",
   position: "absolute",
   right: 0,
+  // Negative margin to offset the parent border width when we align button to end
+  marginBottom: `-${theme.sizes.borderWidth}`,
   pointerEvents: "none",
-})
+}))
 
 export const StyledInputInstructionsContainer = styled.div(({ theme }) => ({
   position: "absolute",

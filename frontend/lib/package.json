@@ -88,7 +88,7 @@
     "numbro": "^2.5.0",
     "plotly.js": "^2.34.0",
     "protobufjs": "^7.2.5",
-    "query-string": "^8.1.0",
+    "query-string": "^9.1.1",
     "re-resizable": "^6.10.1",
     "react-color": "^2.18.1",
     "react-debounce-render": "^8.0.2",

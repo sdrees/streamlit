@@ -6,8 +6,9 @@ updates:
     directory: "/frontend"
     schedule:
       interval: "daily"
-    # Allow one update PR at a time:
-    open-pull-requests-limit: 1
+    # Allow a limited number of update PRs at a time
+    # to keep the number of parallel dependency updates manageable.
+    open-pull-requests-limit: 3
 
     labels:
       - "change:chore"

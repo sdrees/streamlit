@@ -15,6 +15,7 @@
  */
 
 import React, {
+  FC,
   memo,
   ReactElement,
   useCallback,
@@ -377,11 +378,12 @@ export function PlotlyChart({
   const theme: EmotionTheme = useTheme()
   const {
     expanded: isFullScreen,
-    width,
+    width: elWidth,
     height,
     expand,
     collapse,
   } = useRequiredContext(ElementFullscreenContext)
+  const width = elWidth || 0
 
   // Load the initial figure spec from the element message
   const initialFigureSpec = useMemo<PlotlyFigureType>(() => {
@@ -592,7 +594,7 @@ export function PlotlyChart({
       : Math.max(
           element.useContainerWidth
             ? width
-            : Math.min(initialFigureSpec.layout.width ?? width, width),
+            : Math.min(initialFigureSpec.layout.width ?? width, width ?? 0),
           // Apply a min width to prevent the chart running into issues with negative
           // width values if the browser window is too small:
           MIN_WIDTH
@@ -790,4 +792,17 @@ export function PlotlyChart({
   )
 }
 
-export default memo(withFullScreenWrapper(PlotlyChart))
+const PlotlyChartWidthCheck: FC<Omit<PlotlyChartProps, "width">> = props => {
+  const { width } = useRequiredContext(ElementFullscreenContext)
+
+  // If the width is not defined yet, we don't want to render the chart because
+  // it can cause issues with Plotly's rendering where elements will be
+  // positioned incorrectly
+  if (!width) {
+    return null
+  }
+
+  return <PlotlyChart width={width} {...props} />
+}
+
+export default memo(withFullScreenWrapper(PlotlyChartWidthCheck))

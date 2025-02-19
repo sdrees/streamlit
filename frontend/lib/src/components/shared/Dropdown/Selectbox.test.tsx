@@ -32,7 +32,6 @@ const getProps = (props: Partial<Props> = {}): Props => ({
   value: 0,
   label: "Label",
   options: ["a", "b", "c"],
-  width: 0,
   disabled: false,
   onChange: vi.fn(),
   placeholder: "Select...",
@@ -56,11 +55,10 @@ describe("Selectbox widget", () => {
     expect(screen.getByRole("combobox")).toBeInTheDocument()
   })
 
-  it("has correct className and style", () => {
+  it("has correct className", () => {
     render(<Selectbox {...props} />)
     const selectbox = screen.getByTestId("stSelectbox")
     expect(selectbox).toHaveClass("stSelectbox")
-    expect(selectbox).toHaveStyle(`width: ${props.width}px`)
   })
 
   it("renders a label", () => {

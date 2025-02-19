@@ -45,6 +45,7 @@ SAFE_APP_STATIC_FILE_EXTENSIONS = (
     # Other types:
     ".pdf",
     ".xml",
+    ".json",
 )
 
 

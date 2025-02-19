@@ -34,7 +34,6 @@ const getProps = (
     messageIsMarkdown: false,
     ...elementProps,
   }),
-  width: 0,
 })
 
 describe("ExceptionElement Element", () => {

@@ -48,7 +48,6 @@ export type WrappedMapboxProps<P extends InjectedProps> = Omit<
   "mapboxToken"
 > & {
   element: DeckGlJsonChart
-  width: number
 }
 
 export class MapboxTokenNotProvidedError extends Error {}
@@ -144,16 +143,11 @@ const withMapboxToken =
 
       public render = (): ReactNode => {
         const { mapboxToken, mapboxTokenError, isFetching } = this.state
-        const { width } = this.props
 
         // We got an error when fetching our mapbox token: show the error.
         if (mapboxTokenError) {
           return (
-            <MapboxTokenError
-              width={width}
-              error={mapboxTokenError}
-              deltaType={deltaType}
-            />
+            <MapboxTokenError error={mapboxTokenError} deltaType={deltaType} />
           )
         }
 
@@ -176,7 +170,6 @@ const withMapboxToken =
           <WrappedComponent
             {...(this.props as unknown as P)}
             mapboxToken={mapboxToken}
-            width={width}
           />
         )
       }

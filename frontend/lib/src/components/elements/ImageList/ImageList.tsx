@@ -22,13 +22,13 @@ import {
 } from "@streamlit/protobuf"
 
 import { StreamlitEndpoints } from "~lib/StreamlitEndpoints"
+import { ElementFullscreenContext } from "~lib/components/shared/ElementFullscreen/ElementFullscreenContext"
+import { withFullScreenWrapper } from "~lib/components/shared/FullScreenWrapper"
+import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown"
 import Toolbar, {
   StyledToolbarElementContainer,
 } from "~lib/components/shared/Toolbar"
-import { ElementFullscreenContext } from "~lib/components/shared/ElementFullscreen/ElementFullscreenContext"
 import { useRequiredContext } from "~lib/hooks/useRequiredContext"
-import { withFullScreenWrapper } from "~lib/components/shared/FullScreenWrapper"
-import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown"
 
 import {
   StyledCaption,
@@ -38,7 +38,6 @@ import {
 
 export interface ImageListProps {
   endpoints: StreamlitEndpoints
-  width: number
   element: ImageListProto
   disableFullscreenMode?: boolean
 }
@@ -62,20 +61,19 @@ enum WidthBehavior {
  */
 function ImageList({
   element,
-  width,
   endpoints,
   disableFullscreenMode,
 }: Readonly<ImageListProps>): ReactElement {
   const {
     expanded: isFullScreen,
-    width: fullScreenWidth,
+    width,
     height,
     expand,
     collapse,
   } = useRequiredContext(ElementFullscreenContext)
 
   // The width of the element is the width of the container, not necessarily the image.
-  const elementWidth: number = isFullScreen ? fullScreenWidth : width
+  const elementWidth = width || 0
   // The width field in the proto sets the image width, but has special
   // cases the values in the WidthBehavior enum.
   let imageWidth: number | undefined

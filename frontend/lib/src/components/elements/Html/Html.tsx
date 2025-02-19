@@ -21,7 +21,6 @@ import dompurify from "dompurify"
 import { Html as HtmlProto } from "@streamlit/protobuf"
 
 export interface HtmlProps {
-  width: number
   element: HtmlProto
 }
 
@@ -60,7 +59,7 @@ const sanitizeString = (html: string): string => {
 /**
  * HTML code to insert into the page.
  */
-function Html({ element, width }: Readonly<HtmlProps>): ReactElement {
+function Html({ element }: Readonly<HtmlProps>): ReactElement {
   const { body } = element
   const [sanitizedHtml, setSanitizedHtml] = useState(sanitizeString(body))
   const htmlRef = useRef<HTMLDivElement | null>(null)
@@ -91,7 +90,6 @@ function Html({ element, width }: Readonly<HtmlProps>): ReactElement {
           className="stHtml"
           data-testid="stHtml"
           ref={htmlRef}
-          style={{ width }}
           dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
       )}

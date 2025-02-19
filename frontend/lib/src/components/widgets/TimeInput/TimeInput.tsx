@@ -45,7 +45,6 @@ export interface Props {
   disabled: boolean
   element: TimeInputProto
   widgetMgr: WidgetStateManager
-  width: number
   fragmentId?: string
 }
 
@@ -53,7 +52,6 @@ function TimeInput({
   disabled,
   element,
   widgetMgr,
-  width,
   fragmentId,
 }: Props): ReactElement {
   const [value, setValueWithSource] = useBasicWidgetState<
@@ -70,7 +68,6 @@ function TimeInput({
   })
 
   const clearable = isNullOrUndefined(element.default) && !disabled
-  const style = { width }
   const theme = useTheme()
 
   const selectOverrides = {
@@ -179,7 +176,7 @@ function TimeInput({
   }, [handleChange])
 
   return (
-    <div className="stTimeInput" data-testid="stTimeInput" style={style}>
+    <div className="stTimeInput" data-testid="stTimeInput">
       <WidgetLabel
         label={element.label}
         disabled={disabled}

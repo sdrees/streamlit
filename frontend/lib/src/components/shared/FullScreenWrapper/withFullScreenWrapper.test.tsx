@@ -19,6 +19,7 @@ import React, { PureComponent, ReactNode } from "react"
 import { screen } from "@testing-library/react"
 
 import { render } from "~lib/test_util"
+import * as UseResizeObserver from "~lib/hooks/useResizeObserver"
 
 import withFullScreenWrapper from "./withFullScreenWrapper"
 
@@ -54,6 +55,14 @@ const getProps = (props: Partial<TestProps> = {}): TestProps => ({
 const WrappedTestComponent = withFullScreenWrapper(TestComponent)
 
 describe("withFullScreenWrapper HOC", () => {
+  beforeEach(() => {
+    vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+      elementRef: React.createRef(),
+      forceRecalculate: vitest.fn(),
+      values: [250],
+    })
+  })
+
   it("renders without crashing", () => {
     render(<WrappedTestComponent {...getProps()} />)
 
@@ -64,18 +73,14 @@ describe("withFullScreenWrapper HOC", () => {
     const props = getProps()
     render(<WrappedTestComponent {...props} />)
 
-    expect(screen.getByTestId("stFullScreenFrame")).toHaveStyle(
-      `width: ${props.width}`
-    )
+    expect(screen.getByTestId("stFullScreenFrame")).toHaveStyle(`width: 100%`)
   })
 
   it("renders FullScreenWrapper with specified height", () => {
     const props = getProps({ width: 123, label: "label", height: 455 })
     render(<WrappedTestComponent {...props} />)
 
-    expect(screen.getByTestId("stFullScreenFrame")).toHaveStyle(
-      `width: ${props.width}`
-    )
+    expect(screen.getByTestId("stFullScreenFrame")).toHaveStyle(`width: 100%`)
     expect(screen.getByTestId("stFullScreenFrame")).toHaveStyle(
       `height: ${props.height}`
     )

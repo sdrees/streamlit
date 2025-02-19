@@ -24,6 +24,7 @@ import {
   TextArea as TextAreaProto,
 } from "@streamlit/protobuf"
 
+import * as UseResizeObserver from "~lib/hooks/useResizeObserver"
 import { render } from "~lib/test_util"
 import { WidgetStateManager } from "~lib/WidgetStateManager"
 
@@ -40,7 +41,6 @@ const getProps = (
     placeholder: "Placeholder",
     ...elementProps,
   }),
-  width: 300,
   disabled: false,
   widgetMgr: new WidgetStateManager({
     sendRerunBackMsg: vi.fn(),
@@ -85,13 +85,12 @@ describe("TextArea widget", () => {
     )
   })
 
-  it("has correct className and style", () => {
+  it("has correct className", () => {
     const props = getProps()
     render(<TextArea {...props} />)
     const textArea = screen.getByTestId("stTextArea")
 
     expect(textArea).toHaveClass("stTextArea")
-    expect(textArea).toHaveStyle(`width: ${props.width}px`)
   })
 
   it("renders a label", () => {
@@ -227,7 +226,13 @@ describe("TextArea widget", () => {
 
   it("hides Please enter to apply text when width is smaller than 180px", async () => {
     const user = userEvent.setup()
-    const props = getProps({}, { width: 100 })
+    const props = getProps({}, {})
+    vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+      elementRef: React.createRef(),
+      forceRecalculate: vitest.fn(),
+      values: [100],
+    })
+
     render(<TextArea {...props} />)
 
     const textArea = screen.getByRole("textbox")
@@ -237,8 +242,14 @@ describe("TextArea widget", () => {
   })
 
   it("shows Please enter to apply text when width is bigger than 180px", async () => {
+    vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+      elementRef: React.createRef(),
+      forceRecalculate: vitest.fn(),
+      values: [190],
+    })
+
     const user = userEvent.setup()
-    const props = getProps({}, { width: 190 })
+    const props = getProps({}, {})
     render(<TextArea {...props} />)
 
     const textArea = screen.getByRole("textbox")

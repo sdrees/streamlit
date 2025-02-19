@@ -37,13 +37,11 @@ export const ThemedStyledSpinner = styled(Spinner, {
 })
 
 interface StyledSpinnerProps {
-  width: number
   cache: boolean
 }
 
 export const StyledSpinner = styled.div<StyledSpinnerProps>(
-  ({ theme, width, cache }) => ({
-    width: width,
+  ({ theme, cache }) => ({
     ...(cache
       ? {
           paddingBottom: theme.spacing.lg,

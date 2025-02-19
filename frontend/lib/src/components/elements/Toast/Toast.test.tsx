@@ -48,7 +48,6 @@ const createContainer = (): ReactElement => (
 const getProps = (elementProps: Partial<ToastProto> = {}): ToastProps => ({
   body: "This is a toast message",
   icon: "🐶",
-  width: 0,
   ...elementProps,
 })
 

@@ -37,7 +37,6 @@ import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown/Streamli
 export interface Props {
   disabled: boolean
   horizontal: boolean
-  width?: number
   value: number | null
   onChange: (selectedIndex: number) => any
   options: any[]
@@ -50,7 +49,6 @@ export interface Props {
 function Radio({
   disabled,
   horizontal,
-  width,
   value: defaultValue,
   onChange,
   options,
@@ -84,7 +82,6 @@ function Radio({
   )
 
   const theme = useTheme()
-  const style = { width }
   const hasCaptions = captions.length > 0
   const hasOptions = options.length > 0
   const cleanedOptions = hasOptions ? options : ["No options to select."]
@@ -100,7 +97,7 @@ function Radio({
   }
 
   return (
-    <div className="stRadio" data-testid="stRadio" style={style}>
+    <div className="stRadio" data-testid="stRadio">
       <WidgetLabel
         label={label}
         disabled={shouldDisable}

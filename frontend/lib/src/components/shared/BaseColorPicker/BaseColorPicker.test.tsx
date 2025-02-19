@@ -71,14 +71,6 @@ describe("ColorPicker widget", () => {
     expect(screen.getByTestId("stWidgetLabel")).toHaveStyle("display: none")
   })
 
-  it("should have correct style", () => {
-    const props = getProps()
-    render(<BaseColorPicker {...props} />)
-    const colorPicker = screen.getByTestId("stColorPicker")
-
-    expect(colorPicker).toHaveStyle(`width: ${props.width}px`)
-  })
-
   it("should render a default color in the preview and the color picker", async () => {
     const user = userEvent.setup()
     const props = getProps()

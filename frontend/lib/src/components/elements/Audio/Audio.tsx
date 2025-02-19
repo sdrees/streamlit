@@ -25,7 +25,6 @@ import { StyledAudio, StyledAudioContainer } from "./styled-components"
 
 export interface AudioProps {
   endpoints: StreamlitEndpoints
-  width: number
   element: AudioProto
   elementMgr: ElementStateManager
 }

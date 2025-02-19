@@ -28,15 +28,15 @@ import { EmotionTheme, hasLightBackgroundColor } from "~lib/theme"
 import { ensureError } from "~lib/util/ErrorHandling"
 
 import { StyledJsonWrapper } from "./styled-components"
+
 export interface JsonProps {
-  width: number
   element: JsonProto
 }
 
 /**
  * Functional element representing JSON structured text.
  */
-function Json({ width, element }: Readonly<JsonProps>): ReactElement {
+function Json({ element }: Readonly<JsonProps>): ReactElement {
   const theme: EmotionTheme = useTheme()
 
   const elementRef = useRef<HTMLDivElement>(null)
@@ -74,7 +74,6 @@ function Json({ width, element }: Readonly<JsonProps>): ReactElement {
     <StyledJsonWrapper
       className="stJson"
       data-testid="stJson"
-      width={width}
       ref={elementRef}
     >
       <ReactJson

@@ -33,7 +33,6 @@ import {
 } from "./styled-components"
 
 export interface ExceptionElementProps {
-  width: number
   element: ExceptionProto
 }
 
@@ -108,14 +107,10 @@ function StackTrace({ stackTrace }: Readonly<StackTraceProps>): ReactElement {
  */
 function ExceptionElement({
   element,
-  width,
 }: Readonly<ExceptionElementProps>): ReactElement {
   return (
     <div className="stException" data-testid="stException">
-      <AlertContainer
-        kind={element.isWarning ? Kind.WARNING : Kind.ERROR}
-        width={width}
-      >
+      <AlertContainer kind={element.isWarning ? Kind.WARNING : Kind.ERROR}>
         <StyledExceptionMessage data-testid="stExceptionMessage">
           <ExceptionMessage
             type={element.type}

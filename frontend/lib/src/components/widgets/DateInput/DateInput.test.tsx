@@ -45,7 +45,6 @@ const getProps = (
     format: "YYYY/MM/DD",
     ...elementProps,
   }),
-  width: 0,
   disabled: false,
   widgetMgr: new WidgetStateManager({
     sendRerunBackMsg: vi.fn(),
@@ -128,13 +127,12 @@ describe("DateInput widget", () => {
     )
   })
 
-  it("has correct className and style", () => {
+  it("has correct className", () => {
     const props = getProps()
     render(<DateInput {...props} />)
 
     const dateInput = screen.getByTestId("stDateInput")
     expect(dateInput).toHaveAttribute("class", "stDateInput")
-    expect(dateInput).toHaveStyle("width: 0px;")
   })
 
   it("renders a default value", () => {

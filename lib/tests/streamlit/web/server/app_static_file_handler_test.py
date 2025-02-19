@@ -79,6 +79,10 @@ class AppStaticFileHandlerTest(tornado.testing.AsyncHTTPTestCase):
             dir=self._tmpdir.name, suffix="file.xml", delete=False
         )
 
+        self._tmp_json_file = tempfile.NamedTemporaryFile(
+            dir=self._tmpdir.name, suffix="file.json", delete=False
+        )
+
         self._tmp_dir_inside_static_folder = tempfile.TemporaryDirectory(
             dir=self._tmpdir.name
         )
@@ -102,6 +106,7 @@ class AppStaticFileHandlerTest(tornado.testing.AsyncHTTPTestCase):
             "pdf": os.path.basename(self._tmp_pdf_document_file.name),
             "webp": os.path.basename(self._tmp_webp_image_file.name),
             "xml": os.path.basename(self._tmp_xml_file.name),
+            "json": os.path.basename(self._tmp_json_file.name),
             "woff2": os.path.basename(self._tmp_woff2_file.name),
             "woff": os.path.basename(self._tmp_woff_file.name),
             "ttf": os.path.basename(self._tmp_ttf_file.name),
@@ -157,6 +162,7 @@ class AppStaticFileHandlerTest(tornado.testing.AsyncHTTPTestCase):
             ("woff", "font/woff"),
             ("ttf", "font/ttf"),
             ("otf", "font/otf"),
+            ("json", "application/json"),
         ],
     )
     def test_static_files_with_safe_extensions_200(

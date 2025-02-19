@@ -62,7 +62,6 @@ describe("FormSubmitButton", () => {
       }),
       disabled: false,
       hasInProgressUpload: false,
-      width: 250,
       widgetMgr,
       ...props,
     }
@@ -73,14 +72,13 @@ describe("FormSubmitButton", () => {
     expect(screen.getByRole("button")).toBeInTheDocument()
   })
 
-  it("has correct className and style", () => {
+  it("has correct className", () => {
     const props = getProps()
     render(<FormSubmitButton {...props} />)
 
     const formSubmitButton = screen.getByTestId("stFormSubmitButton")
 
     expect(formSubmitButton).toHaveClass("stFormSubmitButton")
-    expect(formSubmitButton).toHaveStyle(`width: ${props.width}px`)
   })
 
   it("renders a label within the button", () => {
@@ -172,30 +170,5 @@ describe("FormSubmitButton", () => {
     unmountView2()
 
     expect(formsData.submitButtons.get("mockFormId")?.length).toBe(0)
-  })
-
-  it("does not use container width by default", () => {
-    render(<FormSubmitButton {...getProps()} />)
-
-    const formSubmitButton = screen.getByRole("button")
-    expect(formSubmitButton).toHaveStyle("width: auto")
-  })
-
-  it("passes useContainerWidth property with help correctly", () => {
-    render(<FormSubmitButton {...getProps({}, { useContainerWidth: true })} />)
-
-    const formSubmitButton = screen.getByRole("button")
-    expect(formSubmitButton).toHaveStyle(`width: ${250}px`)
-  })
-
-  it("passes useContainerWidth property without help correctly", () => {
-    render(
-      <FormSubmitButton
-        {...getProps({}, { useContainerWidth: true, help: "" })}
-      />
-    )
-
-    const formSubmitButton = screen.getByRole("button")
-    expect(formSubmitButton).toHaveStyle("width: 100%")
   })
 })

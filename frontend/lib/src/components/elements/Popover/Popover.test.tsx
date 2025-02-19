@@ -37,7 +37,6 @@ const getProps = (
     ...elementProps,
   }),
   empty: false,
-  width: 100,
   ...props,
 })
 

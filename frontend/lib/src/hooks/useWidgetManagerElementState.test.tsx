@@ -107,7 +107,6 @@ describe("useWidgetManagerElementState hook", () => {
             formId={formId}
             clearOnSubmit={true}
             enterToSubmit={false}
-            width={0}
             hasSubmitButton={true}
             widgetMgr={widgetMgr}
             border={false}

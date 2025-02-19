@@ -33,19 +33,18 @@ import {
 } from "./styled-components"
 
 export interface DocStringProps {
-  width: number
   element: DocStringProto
 }
 
 /**
  * Functional element representing formatted text.
  */
-function DocString({ width, element }: DocStringProps): ReactElement {
+function DocString({ element }: DocStringProps): ReactElement {
   const { name, type, value, docString, members } = element
 
   // Put it all together into a nice little html view.
   return (
-    <StyledDocContainer className="stHelp" data-testid="stHelp" width={width}>
+    <StyledDocContainer className="stHelp" data-testid="stHelp">
       <StyledDocHeader>
         <StyledDocSummary>
           {name ? (

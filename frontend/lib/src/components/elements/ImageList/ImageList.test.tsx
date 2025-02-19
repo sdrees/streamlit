@@ -22,6 +22,7 @@ import { ImageList as ImageListProto } from "@streamlit/protobuf"
 
 import { render } from "~lib/test_util"
 import { mockEndpoints } from "~lib/mocks/mocks"
+import * as UseResizeObserver from "~lib/hooks/useResizeObserver"
 
 import ImageList, { ImageListProps } from "./ImageList"
 
@@ -40,7 +41,14 @@ describe("ImageList Element", () => {
       ...elementProps,
     }),
     endpoints: mockEndpoints({ buildMediaURL: buildMediaURL }),
-    width: 0,
+  })
+
+  beforeEach(() => {
+    vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+      elementRef: React.createRef(),
+      forceRecalculate: vitest.fn(),
+      values: [250],
+    })
   })
 
   it("renders without crashing", () => {

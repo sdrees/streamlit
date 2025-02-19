@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import math
 import re
 
 from playwright.sync_api import Page, expect
@@ -41,29 +42,41 @@ def test_components_iframe_rendering(
 
 
 def test_html_correctly_sets_attr(app: Page):
-    """Test that html correctly sets attributes."""
+    """Test that html correctly sets attributes and rendered size."""
 
     html_component = app.locator("iframe").nth(0)
 
     expect(html_component).to_have_attribute("srcDoc", "<h1>Hello, Streamlit!</h1>")
-    expect(html_component).to_have_attribute("width", "200")
-    expect(html_component).to_have_attribute("height", "500")
     expect(html_component).to_have_attribute("scrolling", "no")
+
+    # Check the actual rendered size
+    box = html_component.bounding_box()
+    if box is None:
+        raise AssertionError("Bounding box is None")
+
+    assert math.floor(box["width"]) == 200
+    assert math.floor(box["height"]) == 500
 
 
 def test_iframe_correctly_sets_attr(app: Page):
-    """Test that iframe correctly sets attributes."""
+    """Test that iframe correctly sets attributes and rendered size."""
 
     iframe_component = app.locator("iframe").nth(1)
 
     expect(iframe_component).to_have_attribute("src", "http://not.a.real.url")
-    expect(iframe_component).to_have_attribute("width", "200")
-    expect(iframe_component).to_have_attribute("height", "500")
     expect(iframe_component).to_have_attribute("scrolling", "auto")
+
+    # Check the actual rendered size
+    box = iframe_component.bounding_box()
+    if box is None:
+        raise AssertionError("Bounding box is None")
+
+    assert math.floor(box["width"]) == 200
+    assert math.floor(box["height"]) == 500
 
 
 def test_declare_component_correctly_sets_attr(app: Page):
-    """Test that components.declare_component correctly sets attributes."""
+    """Test that components.declare_component correctly sets attributes and rendered size."""
 
     declare_component = app.locator("iframe").nth(2)
 

@@ -44,12 +44,10 @@ export interface Props {
   disabled: boolean
   element: CheckboxProto
   widgetMgr: WidgetStateManager
-  width: number
   fragmentId?: string
 }
 
 function Checkbox({
-  width,
   element,
   disabled,
   widgetMgr,
@@ -84,11 +82,7 @@ function Checkbox({
   const color = disabled ? colors.fadedText40 : colors.bodyText
 
   return (
-    <StyledCheckbox
-      className="row-widget stCheckbox"
-      data-testid="stCheckbox"
-      width={width}
-    >
+    <StyledCheckbox className="row-widget stCheckbox" data-testid="stCheckbox">
       <UICheckbox
         checked={value}
         disabled={disabled}

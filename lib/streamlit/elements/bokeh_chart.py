@@ -90,7 +90,9 @@ class BokehMixin:
                 f"Streamlit only supports Bokeh version {ST_BOKEH_VERSION}, "
                 f"but you have version {bokeh.__version__} installed. Please "
                 f"run `pip install --force-reinstall --no-deps bokeh=="
-                f"{ST_BOKEH_VERSION}` to install the correct version."
+                f"{ST_BOKEH_VERSION}` to install the correct version.\n\n\n"
+                f"To use the latest version of Bokeh, install our custom component, "
+                f"[streamlit-bokeh](https://github.com/streamlit/streamlit-bokeh)."
             )
 
         # Generate element ID from delta path

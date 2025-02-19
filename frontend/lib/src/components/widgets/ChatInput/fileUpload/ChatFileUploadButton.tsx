@@ -26,8 +26,7 @@ import { AcceptFileValue } from "~lib/util/utils"
 import { Placement } from "~lib/components/shared/Tooltip"
 
 import {
-  StyledFileUploadArea,
-  StyledFileUploadDropzone,
+  StyledFileUploadButton,
   StyledVerticalDivider,
 } from "./styled-components"
 
@@ -35,45 +34,38 @@ export interface Props {
   getRootProps: any
   getInputProps: any
   acceptFile: AcceptFileValue
-  showDropzone: boolean
   disabled: boolean
   theme: EmotionTheme
 }
 
-const FileUploadArea = ({
+const ChatFileUploadButton = ({
   getRootProps,
   getInputProps,
   acceptFile,
-  showDropzone,
   disabled,
   theme,
-}: Props): React.ReactElement =>
-  showDropzone ? (
-    <StyledFileUploadDropzone {...getRootProps()}>
+}: Props): React.ReactElement => (
+  <StyledFileUploadButton>
+    <div data-testid="stChatInputFileUploadButton" {...getRootProps()}>
       <input {...getInputProps()} />
-      Drag and drop files here
-    </StyledFileUploadDropzone>
-  ) : (
-    <StyledFileUploadArea>
-      <div data-testid="stChatInputFileUploadButton" {...getRootProps()}>
-        <input {...getInputProps()} />
-        <TooltipIcon
-          content={`Upload or drag and drop ${
-            acceptFile === AcceptFileValue.Multiple ? "files" : "a file"
-          }`}
-          placement={Placement.TOP}
-        >
-          <BaseButton kind={BaseButtonKind.MINIMAL} disabled={disabled}>
-            <Icon
-              content={AttachFile}
-              size="lg"
-              color={theme.colors.fadedText60}
-            />
-          </BaseButton>
-        </TooltipIcon>
-      </div>
-      <StyledVerticalDivider />
-    </StyledFileUploadArea>
-  )
+      <TooltipIcon
+        content={`Upload or drag and drop ${
+          acceptFile === AcceptFileValue.Multiple ? "files" : "a file"
+        }`}
+        placement={Placement.TOP}
+        onMouseEnterDelay={500}
+      >
+        <BaseButton kind={BaseButtonKind.MINIMAL} disabled={disabled}>
+          <Icon
+            content={AttachFile}
+            size="lg"
+            color={theme.colors.fadedText60}
+          />
+        </BaseButton>
+      </TooltipIcon>
+    </div>
+    <StyledVerticalDivider />
+  </StyledFileUploadButton>
+)
 
-export default FileUploadArea
+export default ChatFileUploadButton

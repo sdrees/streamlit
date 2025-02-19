@@ -28,7 +28,6 @@ describe("Form", () => {
   function getProps(props: Partial<Props> = {}): Props {
     return {
       formId: "mockFormId",
-      width: 100,
       hasSubmitButton: false,
       scriptRunState: ScriptRunState.RUNNING,
       clearOnSubmit: false,

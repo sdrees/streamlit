@@ -33,7 +33,6 @@ export interface Props {
   formId: string
   clearOnSubmit: boolean
   enterToSubmit: boolean
-  width: number
   hasSubmitButton: boolean
   scriptRunState: ScriptRunState
   children?: ReactNode
@@ -55,7 +54,6 @@ function Form(props: Props): ReactElement {
     widgetMgr,
     hasSubmitButton,
     children,
-    width,
     scriptRunState,
     clearOnSubmit,
     enterToSubmit,
@@ -89,11 +87,7 @@ function Form(props: Props): ReactElement {
   if (showWarning) {
     submitWarning = (
       <StyledErrorContainer>
-        <AlertElement
-          body={MISSING_SUBMIT_BUTTON_WARNING}
-          kind={Kind.ERROR}
-          width={width}
-        />
+        <AlertElement body={MISSING_SUBMIT_BUTTON_WARNING} kind={Kind.ERROR} />
       </StyledErrorContainer>
     )
   }

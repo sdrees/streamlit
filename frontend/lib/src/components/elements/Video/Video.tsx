@@ -20,6 +20,7 @@ import { ISubtitleTrack, Video as VideoProto } from "@streamlit/protobuf"
 
 import { StreamlitEndpoints } from "~lib/StreamlitEndpoints"
 import { WidgetStateManager as ElementStateManager } from "~lib/WidgetStateManager"
+import { withCalculatedWidth } from "~lib/components/core/Layout/withCalculatedWidth"
 
 import { StyledVideoIframe } from "./styled-components"
 
@@ -235,4 +236,4 @@ function Video({
   )
 }
 
-export default memo(Video)
+export default withCalculatedWidth(memo(Video))

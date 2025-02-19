@@ -53,13 +53,29 @@ export const StyledChatFileUploadDropzoneLabel =
     fontWeight: theme.fontWeights.bold,
   }))
 
-export const StyledFileUploadButton = styled.div(({ theme }) => ({
-  display: "flex",
-  alignItems: "top",
-  height: "100%",
-  // Negative margin to offset the parent border width when we align to top
-  marginTop: `-${theme.sizes.borderWidth}`,
-}))
+export interface StyledFileUploadButtonContainerProps {
+  disabled: boolean
+}
+
+export const StyledFileUploadButtonContainer =
+  styled.div<StyledFileUploadButtonContainerProps>(({ theme, disabled }) => ({
+    display: "flex",
+    alignItems: "top",
+    height: "100%",
+    // Negative margin to offset the parent border width when we align to top
+    marginTop: `-${theme.sizes.borderWidth}`,
+    cursor: disabled ? "not-allowed" : "auto",
+  }))
+
+export interface StyledFileUploadButtonProps {
+  disabled: boolean
+}
+
+export const StyledFileUploadButton = styled.div<StyledFileUploadButtonProps>(
+  ({ disabled }) => ({
+    pointerEvents: disabled ? "none" : "auto",
+  })
+)
 
 export const StyledVerticalDivider = styled.div(({ theme }) => ({
   // We need to use hard-coded in order to align the divider centered

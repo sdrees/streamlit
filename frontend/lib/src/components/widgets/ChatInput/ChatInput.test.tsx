@@ -44,7 +44,7 @@ const getProps = (
     ...elementProps,
   }),
   width: 300,
-  disabled: false,
+  disabled: elementProps.disabled ?? false,
   widgetMgr: new WidgetStateManager({
     sendRerunBackMsg: vi.fn(),
     formsDataChanged: vi.fn(),
@@ -295,14 +295,18 @@ describe("ChatInput widget", () => {
   })
 
   it("disables the textarea and button", () => {
-    const props = getProps({ disabled: true })
+    const props = getProps({
+      disabled: true,
+      acceptFile: ChatInputProto.AcceptFile.SINGLE,
+    })
     render(<ChatInput {...props} />)
 
     const chatInput = screen.getByTestId("stChatInputTextArea")
     expect(chatInput).toBeDisabled()
 
-    const button = screen.getByRole("button")
-    expect(button).toBeDisabled()
+    screen.getAllByRole("button").forEach(button => {
+      expect(button).toBeDisabled()
+    })
   })
 
   it("not disable the textarea by default", () => {
@@ -336,7 +340,6 @@ describe("ChatInput widget", () => {
     expect(button).not.toBeDisabled()
 
     await user.clear(chatInput)
-    // await user.type(chatInput, "")
     expect(button).toBeDisabled()
   })
 })

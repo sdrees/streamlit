@@ -257,7 +257,7 @@ def test_uploads_and_deletes_single_file(
     app.get_by_test_id("stApp").click(position={"x": 0, "y": 0})
     wait_for_app_run(app)
 
-    uploaded_files = app.get_by_test_id("stChatUploadedFiles").nth(0)
+    uploaded_files = app.get_by_test_id("stChatUploadedFiles").nth(1)
     expect(uploaded_files.get_by_text(file_name1)).to_be_visible()
     assert_snapshot(uploaded_files, name="st_chat_input-single_file_uploaded")
 
@@ -271,7 +271,6 @@ def test_uploads_and_deletes_single_file(
     app.get_by_test_id("stApp").click(position={"x": 0, "y": 0})
     wait_for_app_run(app)
 
-    uploaded_files = app.get_by_test_id("stChatUploadedFiles").nth(0)
     expect(uploaded_files.get_by_text(file_name1)).not_to_be_visible()
     expect(uploaded_files.get_by_text(file_name2)).to_be_visible()
 
@@ -280,9 +279,7 @@ def test_uploads_and_deletes_single_file(
 
     wait_for_app_run(app)
 
-    expect(app.get_by_test_id("stChatUploadedFiles").nth(0)).not_to_have_text(
-        file_name2, use_inner_text=True
-    )
+    expect(uploaded_files).not_to_have_text(file_name2, use_inner_text=True)
 
 
 def test_uploads_and_deletes_multiple_files(
@@ -312,7 +309,7 @@ def test_uploads_and_deletes_multiple_files(
     app.get_by_test_id("stApp").click(position={"x": 0, "y": 0})
     wait_for_app_run(app, wait_delay=500)
 
-    uploaded_files = app.get_by_test_id("stChatUploadedFiles").nth(1)
+    uploaded_files = app.get_by_test_id("stChatUploadedFiles").nth(2)
     assert_snapshot(uploaded_files, name="st_chat_input-multiple_files_uploaded")
 
     uploaded_file_names = uploaded_files.get_by_test_id("stChatInputFileName")

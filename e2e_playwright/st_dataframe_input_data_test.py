@@ -15,7 +15,7 @@
 from playwright.sync_api import Page, expect
 
 from e2e_playwright.conftest import ImageCompareFunction
-from e2e_playwright.shared.app_utils import wait_for_app_run
+from e2e_playwright.shared.app_utils import expect_markdown, wait_for_app_run
 from e2e_playwright.shared.data_mocks import SHARED_TEST_CASES
 
 
@@ -25,11 +25,17 @@ def test_dataframe_input_format_rendering(
     """Test that st.dataframe renders various data formats correctly via snapshot
     testing."""
 
-    for index, _ in enumerate(SHARED_TEST_CASES):
+    for index, test_case in enumerate(SHARED_TEST_CASES):
         number_input = app.get_by_test_id("stNumberInput").locator("input")
         number_input.fill(str(index))
         number_input.press("Enter")
-        wait_for_app_run(app)
+        # Use more delay here to tackle some flakiness in webkit.
+        # The flakiness seems to come from the app still showing the old
+        # dataframe when the visibility check is done.
+        wait_for_app_run(app, wait_delay=200)
+
+        # Expect the data format being shown in the app
+        expect_markdown(app, str(test_case[1].expected_data_format))
 
         dataframe_element = app.get_by_test_id("stDataFrame")
         expect(dataframe_element).to_be_visible()

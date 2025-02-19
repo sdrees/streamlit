@@ -34,7 +34,6 @@ const getProps = (
     type: "method",
     ...elementProps,
   }),
-  width: 0,
 })
 
 describe("DocString Element", () => {

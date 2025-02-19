@@ -35,7 +35,6 @@ export enum Size {
 }
 
 export interface ProgressBarProps {
-  width?: number
   value: number
   overrides?: Overrides<any>
   size?: Size
@@ -43,7 +42,6 @@ export interface ProgressBarProps {
 
 function ProgressBar({
   value,
-  width,
   size = Size.SMALL,
   overrides,
 }: ProgressBarProps): ReactElement {
@@ -66,7 +64,6 @@ function ProgressBar({
     },
     Bar: {
       style: ({ $theme }: { $theme: any }) => ({
-        width: width ? width.toString() : undefined,
         marginTop: theme.spacing.none,
         marginBottom: theme.spacing.none,
         marginRight: theme.spacing.none,

@@ -39,7 +39,6 @@ const getProps = (
     label: "Label",
     ...elementProps,
   }),
-  width: 250,
   disabled: false,
   // @ts-expect-error
   widgetMgr: new WidgetStateManager(sendBackMsg),
@@ -62,7 +61,6 @@ describe("Button widget", () => {
     const stButtonDiv = screen.getByTestId("stButton")
 
     expect(stButtonDiv).toHaveClass("stButton")
-    expect(stButtonDiv).toHaveStyle(`width: ${props.width}px`)
   })
 
   it("should render a label within the button", () => {
@@ -141,6 +139,6 @@ describe("Button widget", () => {
     )
 
     const buttonWidget = screen.getByRole("button")
-    expect(buttonWidget).toHaveStyle(`width: ${250}px`)
+    expect(buttonWidget).toHaveStyle(`width: 100%`)
   })
 })

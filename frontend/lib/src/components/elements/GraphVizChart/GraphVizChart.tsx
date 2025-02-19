@@ -33,7 +33,6 @@ import { StyledGraphVizChart } from "./styled-components"
 
 export interface GraphVizChartProps {
   element: GraphVizChartProto
-  width: number
   disableFullscreenMode?: boolean
 }
 export const log = getLogger("GraphVizChart")
@@ -81,7 +80,7 @@ function GraphVizChart({
 
   return (
     <StyledToolbarElementContainer
-      width={width}
+      width={width ?? 0}
       height={height}
       useContainerWidth={isFullScreen || element.useContainerWidth}
     >

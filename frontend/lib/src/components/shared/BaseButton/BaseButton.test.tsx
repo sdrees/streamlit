@@ -113,13 +113,4 @@ describe("Button element", () => {
     const buttonWidget = screen.getByRole("button")
     expect(buttonWidget).toHaveStyle("width: 100%")
   })
-
-  it("renders use container width buttons correctly when explicit width passed", () => {
-    // Fluid width is a number when the button has a help tooltip
-    // (need to pass explicit width down otherwise tooltip breaks use_container_width=True)
-    render(<BaseButton {...getProps({ fluidWidth: 250 })}>Hello</BaseButton>)
-
-    const buttonWidget = screen.getByRole("button")
-    expect(buttonWidget).toHaveStyle("width: 250px")
-  })
 })

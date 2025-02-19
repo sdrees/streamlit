@@ -45,7 +45,6 @@ describe("Audio Element", () => {
       ...elementProps,
     }),
     endpoints: mockEndpoints({ buildMediaURL: buildMediaURL }),
-    width: 0,
     elementMgr: elementMgrMock as unknown as ElementStateManager,
   })
 

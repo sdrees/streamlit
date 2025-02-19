@@ -50,7 +50,6 @@ export interface Props {
   disabled: boolean
   element: MultiSelectProto
   widgetMgr: WidgetStateManager
-  width: number
   fragmentId?: string
 }
 
@@ -95,7 +94,7 @@ const updateWidgetMgrState = (
 }
 
 const Multiselect: FC<Props> = props => {
-  const { element, widgetMgr, width, fragmentId } = props
+  const { element, widgetMgr, fragmentId } = props
 
   const theme: EmotionTheme = useTheme()
   const [value, setValueWithSource] = useBasicWidgetState<
@@ -191,7 +190,6 @@ const Multiselect: FC<Props> = props => {
     [overMaxSelections, value]
   )
 
-  const style = { width }
   const { options } = element
   const disabled = options.length === 0 ? true : props.disabled
   const placeholder =
@@ -210,7 +208,7 @@ const Multiselect: FC<Props> = props => {
   const showKeyboardOnMobile = options.length > 10
 
   return (
-    <div className="stMultiSelect" data-testid="stMultiSelect" style={style}>
+    <div className="stMultiSelect" data-testid="stMultiSelect">
       <WidgetLabel
         label={element.label}
         disabled={disabled}

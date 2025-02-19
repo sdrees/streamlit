@@ -23,6 +23,7 @@ import { Video as VideoProto } from "@streamlit/protobuf"
 import { render } from "~lib/test_util"
 import { mockEndpoints } from "~lib/mocks/mocks"
 import { WidgetStateManager as ElementStateManager } from "~lib/WidgetStateManager"
+import * as UseResizeObserver from "~lib/hooks/useResizeObserver"
 
 import Video, { VideoProps } from "./Video"
 
@@ -46,43 +47,40 @@ describe("Video Element", () => {
       ...elementProps,
     }),
     endpoints: mockEndpoints({ buildMediaURL: buildMediaURL }),
-    width: 0,
+    width: 250,
     elementMgr: elementMgrMock as unknown as ElementStateManager,
   })
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+      elementRef: React.createRef(),
+      forceRecalculate: vitest.fn(),
+      values: [250],
+    })
   })
 
-  it("renders without crashing", () => {
+  it("renders without crashing", async () => {
     const props = getProps()
     render(<Video {...props} />)
 
-    const videoElement = screen.getByTestId("stVideo")
+    const videoElement = await screen.findByTestId("stVideo")
     expect(videoElement).toBeInTheDocument()
-    expect(videoElement).toHaveClass("stVideo")
+    expect(videoElement.classList).toContain("stVideo")
   })
 
-  it("has correct style", () => {
-    const props = getProps()
-    render(<Video {...props} />)
-    const video = screen.getByTestId("stVideo")
-
-    expect(video).toHaveAttribute("class", "stVideo")
-    expect(video).toHaveStyle("width: 0px; height: 528px;")
-  })
-
-  it("has controls", () => {
+  it("has controls", async () => {
     const props = getProps()
     render(<Video {...props} />)
 
-    expect(screen.getByTestId("stVideo")).toHaveAttribute("controls")
+    expect(await screen.findByTestId("stVideo")).toHaveAttribute("controls")
   })
 
-  it("creates its `src` attribute using buildMediaURL", () => {
+  it("creates its `src` attribute using buildMediaURL", async () => {
     render(<Video {...getProps({ url: "/media/mockVideoFile.mp4" })} />)
     expect(buildMediaURL).toHaveBeenCalledWith("/media/mockVideoFile.mp4")
-    expect(screen.getByTestId("stVideo")).toHaveAttribute(
+    expect(await screen.findByTestId("stVideo")).toHaveAttribute(
       "src",
       "https://mock.media.url"
     )
@@ -93,19 +91,19 @@ describe("Video Element", () => {
     mockGetElementState.mockReturnValue(false) // By default, assume autoplay is not prevented
   })
 
-  it("does not autoplay if preventAutoplay is set", () => {
+  it("does not autoplay if preventAutoplay is set", async () => {
     mockGetElementState.mockReturnValueOnce(true) // Autoplay should be prevented
     const props = getProps({ autoplay: true, id: "uniqueVideoId" })
     render(<Video {...props} />)
-    const audioElement = screen.getByTestId("stVideo")
+    const audioElement = await screen.findByTestId("stVideo")
     expect(audioElement).not.toHaveAttribute("autoPlay")
   })
 
-  it("autoplays if preventAutoplay is not set and autoplay is true", () => {
+  it("autoplays if preventAutoplay is not set and autoplay is true", async () => {
     mockGetElementState.mockReturnValueOnce(false) // Autoplay is not prevented
     const props = getProps({ autoplay: true, id: "uniqueVideoId" })
     render(<Video {...props} />)
-    const audioElement = screen.getByTestId("stVideo")
+    const audioElement = await screen.findByTestId("stVideo")
     expect(audioElement).toHaveAttribute("autoPlay")
   })
 
@@ -130,12 +128,12 @@ describe("Video Element", () => {
   })
 
   describe("YouTube", () => {
-    it("renders a youtube iframe", () => {
+    it("renders a youtube iframe", async () => {
       const props = getProps({
         type: VideoProto.Type.YOUTUBE_IFRAME,
       })
       render(<Video {...props} />)
-      const videoElement = screen.getByTestId("stVideo")
+      const videoElement = await screen.findByTestId("stVideo")
       expect(videoElement).toBeInstanceOf(HTMLIFrameElement)
       expect(videoElement).toHaveAttribute(
         "src",
@@ -143,13 +141,13 @@ describe("Video Element", () => {
       )
     })
 
-    it("renders a youtube iframe with an starting time", () => {
+    it("renders a youtube iframe with an starting time", async () => {
       const props = getProps({
         type: VideoProto.Type.YOUTUBE_IFRAME,
         startTime: 10,
       })
       render(<Video {...props} />)
-      const videoElement = screen.getByTestId("stVideo")
+      const videoElement = await screen.findByTestId("stVideo")
       expect(videoElement).toBeInstanceOf(HTMLIFrameElement)
       expect(videoElement).toHaveAttribute(
         "src",
@@ -161,15 +159,19 @@ describe("Video Element", () => {
   describe("updateTime", () => {
     const props = getProps()
 
-    it("sets the current time to startTime on render", () => {
+    it("sets the current time to startTime on render", async () => {
       render(<Video {...props} />)
-      const videoElement = screen.getByTestId("stVideo") as HTMLMediaElement
+      const videoElement = (await screen.findByTestId(
+        "stVideo"
+      )) as HTMLMediaElement
       expect(videoElement.currentTime).toBe(0)
     })
 
-    it("updates the current time when startTime is changed", () => {
+    it("updates the current time when startTime is changed", async () => {
       const { rerender } = render(<Video {...props} />)
-      const videoElement = screen.getByTestId("stVideo") as HTMLMediaElement
+      const videoElement = (await screen.findByTestId(
+        "stVideo"
+      )) as HTMLMediaElement
       expect(videoElement.currentTime).toBe(0)
 
       rerender(<Video {...getProps({ startTime: 10 })} />)

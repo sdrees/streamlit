@@ -20,7 +20,6 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useRef,
 } from "react"
 
 import classNames from "classnames"
@@ -38,6 +37,8 @@ import ChatMessage from "~lib/components/elements/ChatMessage"
 import Dialog from "~lib/components/elements/Dialog"
 import Expander from "~lib/components/elements/Expander"
 import { useScrollToBottom } from "~lib/hooks/useScrollToBottom"
+import { useResizeObserver } from "~lib/hooks/useResizeObserver"
+import { useLayoutStyles } from "~lib/components/core/Layout/useLayoutStyles"
 
 import {
   assignDividerColor,
@@ -63,7 +64,7 @@ export interface BlockPropsWithoutWidth extends BaseBlockProps {
 
 interface BlockPropsWithWidth extends BaseBlockProps {
   node: BlockNode
-  width: number
+  width: React.CSSProperties["width"]
 }
 
 // Render BlockNodes (i.e. container nodes).
@@ -126,7 +127,6 @@ const BlockNodeRenderer = (props: BlockPropsWithWidth): ReactElement => {
       <Popover
         empty={node.isEmpty}
         element={node.deltaBlock.popover as BlockProto.Popover}
-        width={props.width}
       >
         {child}
       </Popover>
@@ -144,7 +144,6 @@ const BlockNodeRenderer = (props: BlockPropsWithWidth): ReactElement => {
         formId={formId}
         clearOnSubmit={clearOnSubmit}
         enterToSubmit={enterToSubmit}
-        width={props.width}
         hasSubmitButton={hasSubmitButton}
         scriptRunState={props.scriptRunState}
         widgetMgr={props.widgetMgr}
@@ -184,6 +183,14 @@ const BlockNodeRenderer = (props: BlockPropsWithWidth): ReactElement => {
   }
 
   if (node.deltaBlock.tabContainer) {
+    // Due to an issue with unnecessary unmounts/remounts, we see undesired
+    // horizontal scrolling in Webkit/Safari. We are planning a fix for the
+    // underlying issue, but, for now, only rendering the component when we have
+    // a width != 0 fixes the scrolling issue.
+    if (!childProps.width) {
+      return <div />
+    }
+
     const renderTabContent = (
       mappedChildProps: JSX.IntrinsicAttributes & BlockPropsWithoutWidth
     ): ReactElement => {
@@ -288,51 +295,28 @@ function ScrollToBottomVerticalBlockWrapper(
 // Currently, only VerticalBlocks will ever contain leaf elements. But this is only enforced on the
 // Python side.
 const VerticalBlock = (props: BlockPropsWithoutWidth): ReactElement => {
-  const wrapperElement = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = React.useState(-1)
-
-  const observer = useMemo(
-    () =>
-      new ResizeObserver(([entry]) => {
-        // Since the setWidth will perform changes to the DOM,
-        // we need wrap it in a requestAnimationFrame to avoid this error:
-        // ResizeObserver loop completed with undelivered notifications.
-        window.requestAnimationFrame(() => {
-          // We need to determine the available width here to be able to set
-          // an explicit width for the `StyledVerticalBlock`.
-
-          // The width should never be set to 0 since it can cause
-          // flickering effects.
-          setWidth(entry.target.getBoundingClientRect().width || -1)
-        })
-      }),
-    [setWidth]
-  )
+  const {
+    values: [calculatedWidth],
+    elementRef: wrapperElement,
+    forceRecalculate,
+  } = useResizeObserver(useMemo(() => ["width"], []))
 
   const border = props.node.deltaBlock.vertical?.border ?? false
   const height = props.node.deltaBlock.vertical?.height || undefined
 
   const activateScrollToBottom =
     height &&
-    props.node.children.find(node => {
+    props.node.children.some(node => {
       return (
         node instanceof BlockNode && node.deltaBlock.type === "chatMessage"
       )
-    }) !== undefined
+    })
 
+  // We need to update the observer whenever the scrolling is activated or deactivated
+  // Otherwise, it still tries to measure the width of the old wrapper element.
   useEffect(() => {
-    if (wrapperElement.current) {
-      observer.observe(wrapperElement.current)
-    }
-    return () => {
-      observer.disconnect()
-    }
-    // We need to update the observer whenever the scrolling is activated or deactivated
-    // Otherwise, it still tries to measure the width of the old wrapper element.
-    // TODO: Update to match React best practices
-    // eslint-disable-next-line react-compiler/react-compiler
-    /* eslint-disable react-hooks/exhaustive-deps */
-  }, [observer, activateScrollToBottom])
+    forceRecalculate()
+  }, [forceRecalculate, activateScrollToBottom])
 
   // Decide which wrapper to use based on whether we need to activate scrolling to bottom
   // This is done for performance reasons, to prevent the usage of useScrollToBottom
@@ -341,12 +325,17 @@ const VerticalBlock = (props: BlockPropsWithoutWidth): ReactElement => {
     ? ScrollToBottomVerticalBlockWrapper
     : StyledVerticalBlockBorderWrapper
 
-  const propsWithNewWidth = {
-    ...props,
-    ...{ width },
-  }
   // Extract the user-specified key from the block ID (if provided):
   const userKey = getKeyFromId(props.node.deltaBlock.id)
+  const styles = useLayoutStyles({
+    width: calculatedWidth,
+    element: undefined,
+  })
+
+  const propsWithCalculatedWidth = {
+    ...props,
+    width: styles.width,
+  }
 
   // Widths of children autosizes to container width (and therefore window width).
   // StyledVerticalBlocks are the only things that calculate their own widths. They should never use
@@ -363,14 +352,14 @@ const VerticalBlock = (props: BlockPropsWithoutWidth): ReactElement => {
     >
       <StyledVerticalBlockWrapper ref={wrapperElement}>
         <StyledVerticalBlock
-          width={width}
           className={classNames(
             "stVerticalBlock",
             convertKeyToClassName(userKey)
           )}
           data-testid="stVerticalBlock"
+          {...styles}
         >
-          <ChildRenderer {...propsWithNewWidth} />
+          <ChildRenderer {...propsWithCalculatedWidth} />
         </StyledVerticalBlock>
       </StyledVerticalBlockWrapper>
     </VerticalBlockBorderWrapper>

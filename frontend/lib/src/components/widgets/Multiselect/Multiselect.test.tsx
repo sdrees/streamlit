@@ -43,7 +43,6 @@ const getProps = (
     placeholder: "Please select",
     ...elementProps,
   }),
-  width: 0,
   disabled: false,
   widgetMgr: new WidgetStateManager({
     sendRerunBackMsg: vi.fn(),
@@ -99,13 +98,12 @@ describe("Multiselect widget", () => {
     )
   })
 
-  it("has correct className and style", () => {
+  it("has correct className", () => {
     const props = getProps()
     render(<Multiselect {...props} />)
     const multiSelect = screen.getByTestId("stMultiSelect")
 
     expect(multiSelect).toHaveClass("stMultiSelect")
-    expect(multiSelect).toHaveStyle(`width: ${props.width}px`)
   })
 
   it("renders a label", () => {

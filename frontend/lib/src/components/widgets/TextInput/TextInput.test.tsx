@@ -26,6 +26,7 @@ import {
 
 import { render } from "~lib/test_util"
 import { WidgetStateManager } from "~lib/WidgetStateManager"
+import * as UseResizeObserver from "~lib/hooks/useResizeObserver"
 
 import TextInput, { Props } from "./TextInput"
 
@@ -40,7 +41,6 @@ const getProps = (
     type: TextInputProto.Type.DEFAULT,
     ...elementProps,
   }),
-  width: 300,
   disabled: false,
   widgetMgr: new WidgetStateManager({
     sendRerunBackMsg: vi.fn(),
@@ -50,6 +50,14 @@ const getProps = (
 })
 
 describe("TextInput widget", () => {
+  beforeEach(() => {
+    vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+      elementRef: React.createRef(),
+      forceRecalculate: vitest.fn(),
+      values: [190],
+    })
+  })
+
   it("renders without crashing", () => {
     const props = getProps()
     render(<TextInput {...props} />)
@@ -162,13 +170,12 @@ describe("TextInput widget", () => {
     )
   })
 
-  it("has correct className and style", () => {
+  it("has correct className", () => {
     const props = getProps()
     render(<TextInput {...props} />)
     const textInput = screen.getByTestId("stTextInput")
 
     expect(textInput).toHaveClass("stTextInput")
-    expect(textInput).toHaveStyle(`width: ${props.width}px`)
   })
 
   it("can be disabled", () => {
@@ -446,8 +453,13 @@ describe("TextInput widget", () => {
   })
 
   it("hides Please enter to apply text when width is smaller than 180px", async () => {
+    vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+      elementRef: React.createRef(),
+      forceRecalculate: vitest.fn(),
+      values: [100],
+    })
     const user = userEvent.setup()
-    const props = getProps({}, { width: 100 })
+    const props = getProps({}, {})
     render(<TextInput {...props} />)
 
     // Focus on input
@@ -459,7 +471,7 @@ describe("TextInput widget", () => {
 
   it("shows Please enter to apply text when width is bigger than 180px", async () => {
     const user = userEvent.setup()
-    const props = getProps({}, { width: 190 })
+    const props = getProps({}, {})
     render(<TextInput {...props} />)
 
     // Focus on input

@@ -33,7 +33,6 @@ import {
 } from "./StreamlitMarkdown"
 
 export interface HeadingProtoProps {
-  width: number
   element: HeadingProto
 }
 
@@ -55,7 +54,7 @@ function makeMarkdownHeading(tag: string, markdown: string): string {
 }
 
 function Heading(props: HeadingProtoProps): ReactElement {
-  const { width, element } = props
+  const { element } = props
   const { tag, anchor, body, help, hideAnchor, divider } = element
   const isInSidebar = React.useContext(IsSidebarContext)
   const isInDialog = React.useContext(IsDialogContext)
@@ -64,11 +63,10 @@ function Heading(props: HeadingProtoProps): ReactElement {
   const [heading, ...rest] = body.split("\n")
 
   return (
-    <div style={{ width }} className="stHeading" data-testid="stHeading">
+    <div className="stHeading" data-testid="stHeading">
       <StyledStreamlitMarkdown
         isCaption={Boolean(false)}
         isInSidebarOrDialog={isInSidebar || isInDialog}
-        style={{ width }}
         data-testid="stMarkdownContainer"
       >
         <HeadingWithActionElements

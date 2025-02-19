@@ -54,7 +54,6 @@ export interface Props {
   disabled: boolean
   element: DateInputProto
   widgetMgr: WidgetStateManager
-  width: number
   fragmentId?: string
 }
 
@@ -78,7 +77,6 @@ function DateInput({
   disabled,
   element,
   widgetMgr,
-  width,
   fragmentId,
 }: Props): ReactElement {
   const theme: EmotionTheme = useTheme()
@@ -107,7 +105,6 @@ function DateInput({
   const { locale } = useContext(LibContext)
   const loadedLocale = useIntlLocale(locale)
 
-  const style = { width }
   const minDate = moment(element.min, DATE_FORMAT).toDate()
   const maxDate = getMaxDate(element)
   const clearable = element.default.length === 0 && !disabled
@@ -171,7 +168,7 @@ function DateInput({
   }, [isEmpty, element, setValueWithSource])
 
   return (
-    <div className="stDateInput" data-testid="stDateInput" style={style}>
+    <div className="stDateInput" data-testid="stDateInput">
       <WidgetLabel
         label={element.label}
         disabled={disabled}

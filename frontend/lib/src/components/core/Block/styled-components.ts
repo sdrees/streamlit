@@ -55,7 +55,7 @@ export const StyledHorizontalBlock = styled.div<StyledHorizontalBlockProps>(
 
 export interface StyledElementContainerProps {
   isStale: boolean
-  width: number
+  width: React.CSSProperties["width"]
   elementType: string
 }
 
@@ -160,12 +160,14 @@ export const StyledColumn = styled.div<StyledColumnProps>(
 
 export interface StyledVerticalBlockProps {
   ref?: React.RefObject<any>
-  width?: number
+  width?: React.CSSProperties["width"]
+  maxWidth?: React.CSSProperties["maxWidth"]
 }
 
 export const StyledVerticalBlock = styled.div<StyledVerticalBlockProps>(
-  ({ width, theme }) => ({
+  ({ width, maxWidth, theme }) => ({
     width,
+    maxWidth,
     position: "relative", // Required for the automatic width computation.
     display: "flex",
     flex: 1,

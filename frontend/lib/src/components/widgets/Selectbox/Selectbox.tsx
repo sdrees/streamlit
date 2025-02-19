@@ -33,7 +33,6 @@ export interface Props {
   disabled: boolean
   element: SelectboxProto
   widgetMgr: WidgetStateManager
-  width: number
   fragmentId?: string
 }
 
@@ -76,7 +75,6 @@ const Selectbox: FC<Props> = ({
   disabled,
   element,
   widgetMgr,
-  width,
   fragmentId,
 }) => {
   const { options, help, label, labelVisibility, placeholder } = element
@@ -109,7 +107,6 @@ const Selectbox: FC<Props> = ({
       labelVisibility={labelVisibilityProtoValueToEnum(labelVisibility?.value)}
       options={options}
       disabled={disabled}
-      width={width}
       onChange={onChange}
       value={value}
       help={help}

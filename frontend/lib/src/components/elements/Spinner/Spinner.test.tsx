@@ -33,7 +33,6 @@ const getProps = (
     text: "Loading...",
     ...elementOverrides,
   }),
-  width: 0,
   ...propOverrides,
 })
 
@@ -53,16 +52,12 @@ describe("Spinner component", () => {
   it("sets the text and width correctly", () => {
     render(
       <BaseProvider theme={LightTheme}>
-        <Spinner {...getProps({ width: 100 })} />
+        <Spinner {...getProps()} />
       </BaseProvider>
     )
 
     const markdownText = screen.getByText("Loading...")
     expect(markdownText).toBeInTheDocument()
-
-    // For the width, as it's a style attribute, we can test it this way:
-    const spinnerElement = screen.getByTestId("stSpinner")
-    expect(spinnerElement).toHaveStyle(`width: 100px`)
   })
 
   it("sets additional className/CSS for caching spinner", () => {

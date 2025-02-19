@@ -27,6 +27,7 @@ import {
 
 import { render } from "~lib/test_util"
 import { WidgetStateManager } from "~lib/WidgetStateManager"
+import * as UseResizeObserver from "~lib/hooks/useResizeObserver"
 
 import ChatInput, { Props } from "./ChatInput"
 
@@ -81,6 +82,14 @@ const mockChatInputValue = (text: string): IChatInputValue => {
 describe("ChatInput widget", () => {
   afterEach(() => {
     vi.restoreAllMocks()
+  })
+
+  beforeEach(() => {
+    vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+      elementRef: React.createRef(),
+      forceRecalculate: vitest.fn(),
+      values: [250],
+    })
   })
 
   it("renders without crashing", () => {

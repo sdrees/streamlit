@@ -23,18 +23,17 @@ import { StyledProgressLabelContainer } from "~lib/components/elements/Progress/
 import StreamlitMarkdown from "~lib/components/shared/StreamlitMarkdown"
 
 export interface ProgressProps {
-  width: number
   element: ProgressProto
 }
 
-function Progress({ element, width }: Readonly<ProgressProps>): ReactElement {
+function Progress({ element }: Readonly<ProgressProps>): ReactElement {
   return (
     <div className="stProgress" data-testid="stProgress">
       <StyledProgressLabelContainer>
         <StreamlitMarkdown source={element.text} allowHTML={false} isLabel />
       </StyledProgressLabelContainer>
 
-      <ProgressBar value={element.value} width={width} />
+      <ProgressBar value={element.value} />
     </div>
   )
 }

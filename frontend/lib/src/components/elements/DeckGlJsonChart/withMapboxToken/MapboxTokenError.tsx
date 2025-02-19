@@ -27,18 +27,12 @@ import {
 interface Props {
   error: Error | MapboxTokenFetchingError | MapboxTokenNotProvidedError
   deltaType: string
-  width: number
 }
 
-const MapboxTokenError = ({
-  error,
-  width,
-  deltaType,
-}: Props): ReactElement => {
+const MapboxTokenError = ({ error, deltaType }: Props): ReactElement => {
   if (error instanceof MapboxTokenNotProvidedError) {
     return (
       <ErrorElement
-        width={width}
         name="No Mapbox token provided"
         message={
           <>
@@ -77,7 +71,6 @@ const MapboxTokenError = ({
   if (error instanceof MapboxTokenFetchingError) {
     return (
       <ErrorElement
-        width={width}
         name="Error fetching Streamlit Mapbox token"
         message={
           <>
@@ -98,7 +91,6 @@ const MapboxTokenError = ({
 
   return (
     <ErrorElement
-      width={width}
       name="Error fetching Streamlit Mapbox token"
       message={error.message}
     />

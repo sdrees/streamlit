@@ -55,8 +55,8 @@ export interface BaseButtonProps {
   size?: BaseButtonSize
   onClick?: (event: MouseEvent<HTMLButtonElement>) => any
   disabled?: boolean
-  // If true or number, the button should take up container's full width
-  fluidWidth?: boolean | number
+  // If true, the button should take up container's full width
+  fluidWidth?: boolean
   children: ReactNode
   autoFocus?: boolean
   "data-testid"?: string
@@ -89,9 +89,6 @@ function getSizeStyle(size: BaseButtonSize, theme: EmotionTheme): CSSObject {
 
 export const StyledBaseButton = styled.button<RequiredBaseButtonProps>(
   ({ fluidWidth, size, theme }) => {
-    const buttonWidth =
-      typeof fluidWidth == "number" ? `${fluidWidth}px` : "100%"
-
     return {
       display: "inline-flex",
       alignItems: "center",
@@ -106,7 +103,7 @@ export const StyledBaseButton = styled.button<RequiredBaseButtonProps>(
       fontSize: "inherit",
       fontFamily: "inherit",
       color: "inherit",
-      width: fluidWidth ? buttonWidth : "auto",
+      width: fluidWidth ? "100%" : "auto",
       cursor: "pointer",
       userSelect: "none",
       "&:focus": {
@@ -538,6 +535,7 @@ export const StyledElementToolbarButton = styled(
     minHeight: "unset",
     // line height should be the same as the icon size
     lineHeight: theme.iconSizes.md,
+    width: "auto",
 
     "&:focus": {
       outline: "none",

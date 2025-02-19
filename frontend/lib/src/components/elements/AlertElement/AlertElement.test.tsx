@@ -31,7 +31,6 @@ const getProps = (
 ): AlertElementProps => ({
   body: "Something happened!",
   kind: Kind.INFO,
-  width: 100,
   ...elementProps,
 })
 

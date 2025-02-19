@@ -33,20 +33,14 @@ export const StyledDocType = styled.span(({ theme }) => ({
 
 export const StyledDocValue = styled.span()
 
-export interface StyledDocContainerProps {
-  width: number
-}
-
-export const StyledDocContainer = styled.span<StyledDocContainerProps>(
-  ({ theme }) => ({
-    display: "flex",
-    flexDirection: "column",
-    borderRadius: theme.radii.default,
-    border: `${theme.sizes.borderWidth} solid ${theme.colors.borderColor}`,
-    fontFamily: theme.genericFonts.codeFont,
-    fontSize: theme.fontSizes.sm,
-  })
-)
+export const StyledDocContainer = styled.span(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  borderRadius: theme.radii.default,
+  border: `${theme.sizes.borderWidth} solid ${theme.colors.borderColor}`,
+  fontFamily: theme.genericFonts.codeFont,
+  fontSize: theme.fontSizes.sm,
+}))
 
 export const StyledDocHeader = styled.div(({ theme }) => ({
   padding: `${theme.spacing.sm} ${theme.spacing.lg}`,

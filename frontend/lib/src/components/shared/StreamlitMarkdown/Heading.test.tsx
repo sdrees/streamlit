@@ -29,7 +29,6 @@ import Heading, { HeadingProtoProps } from "./Heading"
 const getHeadingProps = (
   elementProps: Partial<HeadingProto> = {}
 ): HeadingProtoProps => ({
-  width: 300,
   element: HeadingProto.create({
     anchor: "some-anchor",
     tag: "h1",

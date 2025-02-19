@@ -17,17 +17,11 @@ import styled from "@emotion/styled"
 
 import { hasLightBackgroundColor } from "~lib/theme"
 
-export interface StyledChatInputContainerProps {
-  width: number
-}
-
-export const StyledChatInputContainer =
-  styled.div<StyledChatInputContainerProps>(({ width }) => ({
-    border: "none",
-    position: "relative",
-    display: "flex",
-    width: `${width}px`,
-  }))
+export const StyledChatInputContainer = styled.div`
+  border: none;
+  position: relative;
+  display: flex;
+`
 
 export interface StyledChatInputProps {
   extended: boolean

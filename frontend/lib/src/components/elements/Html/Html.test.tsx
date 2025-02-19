@@ -29,7 +29,6 @@ const getProps = (elementProps: Partial<HtmlProto> = {}): HtmlProps => ({
     body: "<div>Test Html</div>",
     ...elementProps,
   }),
-  width: 100,
 })
 
 describe("HTML element", () => {
@@ -39,7 +38,6 @@ describe("HTML element", () => {
     const html = screen.getByTestId("stHtml")
     expect(html).toBeInTheDocument()
     expect(html).toHaveTextContent("Test Html")
-    expect(html).toHaveStyle("width: 100px")
     expect(html).toHaveClass("stHtml")
   })
 

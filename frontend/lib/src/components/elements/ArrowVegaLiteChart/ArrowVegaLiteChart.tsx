@@ -36,7 +36,6 @@ import { useVegaEmbed } from "./useVegaEmbed"
 
 export interface Props {
   element: VegaLiteChartElement
-  width: number
   widgetMgr: WidgetStateManager
   fragmentId?: string
   disableFullscreenMode?: boolean

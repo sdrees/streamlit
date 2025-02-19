@@ -184,7 +184,7 @@ export const useVegaElementPreprocessor = (
         selectionMode,
         theme,
         isFullScreen,
-        width,
+        width || 0,
         height
       ),
     [

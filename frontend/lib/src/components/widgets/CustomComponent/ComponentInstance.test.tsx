@@ -33,6 +33,7 @@ import { bgColorToBaseString, toExportedTheme } from "~lib/theme"
 import { mockEndpoints } from "~lib/mocks/mocks"
 import { mockTheme } from "~lib/mocks/mockTheme"
 import { render } from "~lib/test_util"
+import * as UseResizeObserver from "~lib/hooks/useResizeObserver"
 
 import ComponentInstance, {
   COMPONENT_READY_WARNING_TIME_MS,
@@ -79,6 +80,12 @@ describe("ComponentInstance", () => {
     logWarnSpy = vi
       .spyOn(componentUtilsLog, "warn")
       .mockImplementation(() => {})
+
+    vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+      elementRef: React.createRef(),
+      forceRecalculate: vitest.fn(),
+      values: [250],
+    })
   })
 
   it("registers a message listener on render", () => {
@@ -88,7 +95,6 @@ describe("ComponentInstance", () => {
       <ComponentInstance
         element={createElementProp()}
         registry={componentRegistry}
-        width={100}
         disabled={false}
         widgetMgr={
           new WidgetStateManager({
@@ -111,7 +117,6 @@ describe("ComponentInstance", () => {
       <ComponentInstance
         element={createElementProp()}
         registry={componentRegistry}
-        width={100}
         disabled={false}
         widgetMgr={
           new WidgetStateManager({
@@ -131,7 +136,6 @@ describe("ComponentInstance", () => {
       <ComponentInstance
         element={createElementProp()}
         registry={componentRegistry}
-        width={100}
         disabled={false}
         widgetMgr={
           new WidgetStateManager({
@@ -157,7 +161,6 @@ describe("ComponentInstance", () => {
       <ComponentInstance
         element={createElementProp()}
         registry={componentRegistry}
-        width={100}
         disabled={false}
         widgetMgr={
           new WidgetStateManager({
@@ -181,7 +184,6 @@ describe("ComponentInstance", () => {
       <ComponentInstance
         element={createElementProp({ height: 0 })}
         registry={componentRegistry}
-        width={100}
         disabled={false}
         widgetMgr={
           new WidgetStateManager({
@@ -205,7 +207,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={createElementProp(jsonArgs)}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -240,7 +241,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={createElementProp()}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -277,7 +277,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={createElementProp(jsonArgs)}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -303,7 +302,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={createElementProp(jsonArgs)}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -352,7 +350,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={createElementProp(jsonArgs)}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -383,7 +380,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={createElementProp(jsonArgs)}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -398,14 +394,19 @@ describe("ComponentInstance", () => {
     })
 
     it("send render message when viewport changes", () => {
-      const jsonArgs = { foo: "string", bar: 5 }
       let width = 100
+      vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+        elementRef: React.createRef(),
+        forceRecalculate: vitest.fn(),
+        values: [width],
+      })
+
+      const jsonArgs = { foo: "string", bar: 5 }
       const componentRegistry = getComponentRegistry()
       const { rerender } = render(
         <ComponentInstance
           element={createElementProp(jsonArgs)}
           registry={componentRegistry}
-          width={width}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -432,11 +433,18 @@ describe("ComponentInstance", () => {
         })
       )
       width = width + 1
+
+      // Update the spy to return the new width
+      vi.spyOn(UseResizeObserver, "useResizeObserver").mockReturnValue({
+        elementRef: React.createRef(),
+        forceRecalculate: vitest.fn(),
+        values: [width],
+      })
+
       rerender(
         <ComponentInstance
           element={createElementProp(jsonArgs)}
           registry={componentRegistry}
-          width={width}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -458,7 +466,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={createElementProp(jsonArgs)}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -495,7 +502,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={element}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -516,7 +522,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={createElementProp()}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -549,7 +554,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={element}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -609,7 +613,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={element}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -677,7 +680,6 @@ describe("ComponentInstance", () => {
         <ComponentInstance
           element={element}
           registry={componentRegistry}
-          width={100}
           disabled={false}
           widgetMgr={
             new WidgetStateManager({
@@ -720,7 +722,6 @@ describe("ComponentInstance", () => {
           <ComponentInstance
             element={element}
             registry={componentRegistry}
-            width={100}
             disabled={false}
             widgetMgr={
               new WidgetStateManager({
@@ -778,7 +779,6 @@ describe("ComponentInstance", () => {
           <ComponentInstance
             element={element}
             registry={componentRegistry}
-            width={100}
             disabled={false}
             widgetMgr={
               new WidgetStateManager({

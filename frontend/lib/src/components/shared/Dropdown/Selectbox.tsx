@@ -37,7 +37,6 @@ const NO_OPTIONS_MSG = "No options to select."
 
 export interface Props {
   disabled: boolean
-  width?: number
   value: number | null
   onChange: (value: number | null) => void
   options: any[]
@@ -76,7 +75,6 @@ export function fuzzyFilterSelectOptions(
 
 const Selectbox: React.FC<Props> = ({
   disabled,
-  width,
   value: propValue,
   onChange,
   options: propOptions,
@@ -148,7 +146,7 @@ const Selectbox: React.FC<Props> = ({
   const showKeyboardOnMobile = options.length > 10
 
   return (
-    <div className="stSelectbox" data-testid="stSelectbox" style={{ width }}>
+    <div className="stSelectbox" data-testid="stSelectbox">
       <WidgetLabel
         label={label}
         labelVisibility={labelVisibility}

@@ -78,7 +78,6 @@ export interface BaseColorPickerProps {
 const BaseColorPicker = (props: BaseColorPickerProps): React.ReactElement => {
   const {
     disabled,
-    width,
     value: propValue,
     showValue,
     label,
@@ -133,7 +132,6 @@ const BaseColorPicker = (props: BaseColorPickerProps): React.ReactElement => {
     <StyledColorPicker
       className="stColorPicker"
       data-testid="stColorPicker"
-      width={width}
       disabled={disabled}
     >
       <WidgetLabel

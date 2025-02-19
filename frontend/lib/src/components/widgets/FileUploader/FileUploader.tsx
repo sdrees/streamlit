@@ -43,20 +43,23 @@ import {
 } from "~lib/components/widgets/BaseWidget"
 import TooltipIcon from "~lib/components/shared/TooltipIcon"
 import { Placement } from "~lib/components/shared/Tooltip"
+import { withCalculatedWidth } from "~lib/components/core/Layout/withCalculatedWidth"
 
 import FileDropzone from "./FileDropzone"
 import { StyledFileUploader } from "./styled-components"
 import UploadedFiles from "./UploadedFiles"
 import { UploadedStatus, UploadFileInfo } from "./UploadFileInfo"
 
-export interface Props {
+interface InnerProps {
   disabled: boolean
   element: FileUploaderProto
   widgetMgr: WidgetStateManager
   uploadClient: FileUploadClient
-  width: number
   fragmentId?: string
+  width: number
 }
+
+export type Props = Omit<InnerProps, "width">
 
 type FileUploaderStatus =
   | "ready" // FileUploader can upload or delete files
@@ -70,7 +73,7 @@ export interface State {
   files: UploadFileInfo[]
 }
 
-class FileUploader extends React.PureComponent<Props, State> {
+class FileUploader extends React.PureComponent<InnerProps, State> {
   private readonly formClearHelper = new FormClearHelper()
 
   /**
@@ -91,7 +94,7 @@ class FileUploader extends React.PureComponent<Props, State> {
    */
   private forceUpdatingStatus = false
 
-  public constructor(props: Props) {
+  public constructor(props: InnerProps) {
     super(props)
     this.state = this.initialValue
   }
@@ -571,4 +574,4 @@ class FileUploader extends React.PureComponent<Props, State> {
   }
 }
 
-export default memo(FileUploader)
+export default withCalculatedWidth(memo(FileUploader))

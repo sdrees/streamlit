@@ -32,7 +32,6 @@ const getProps = (elementProps: Partial<IFrameProto> = {}): IFrameProps => ({
   element: IFrameProto.create({
     ...elementProps,
   }),
-  width: 100,
 })
 
 describe("st.iframe", () => {
@@ -109,23 +108,6 @@ describe("st.iframe", () => {
         "sandbox",
         DEFAULT_IFRAME_SANDBOX_POLICY
       )
-    })
-  })
-
-  describe("Render iframe with specified width", () => {
-    const props = getProps({
-      hasWidth: true,
-      width: 200,
-    })
-    it("should set element width", () => {
-      render(<IFrame {...props} />)
-      expect(screen.getByTestId("stIFrame")).toHaveAttribute("width", "200")
-    })
-
-    it("should set app width", () => {
-      const props = getProps({})
-      render(<IFrame {...props} />)
-      expect(screen.getByTestId("stIFrame")).toHaveAttribute("width", "100")
     })
   })
 

@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.21.2",
-    "eslint": "^8.33.0",
+    "eslint": "^9.20.1",
     "prettier": "^2.8.3",
     "vite": "^6.1.0",
     "vite-plugin-dts": "^4.5.0",

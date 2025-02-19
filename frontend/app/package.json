@@ -58,7 +58,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@swc/plugin-emotion": "^3.0.9",
+    "@swc/plugin-emotion": "^8.6.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^14.1.2",
     "@testing-library/react-hooks": "^8.0.1",

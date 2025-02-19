@@ -43,8 +43,7 @@ export const StyledChatFileUploadDropzoneLabel =
     border: `${theme.sizes.borderWidth} solid`,
     borderColor: theme.colors.primary,
     borderRadius: theme.radii.chatInput,
-    backgroundColor:
-      theme.colors.widgetBackgroundColor ?? theme.colors.secondaryBg,
+    backgroundColor: theme.colors.secondaryBg,
     color: theme.colors.primary,
     display: "flex",
     alignItems: "center",

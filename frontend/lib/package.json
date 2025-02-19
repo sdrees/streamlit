@@ -31,7 +31,7 @@
     "formatCheck": "prettier --check --config ../.prettierrc --ignore-path ../.prettierignore './src/**/*.{js,ts,jsx,tsx}'"
   },
   "dependencies": {
-    "@deck.gl/aggregation-layers": "^9.0.37",
+    "@deck.gl/aggregation-layers": "^9.1.2",
     "@deck.gl/carto": "^9.1.1",
     "@deck.gl/core": "^9.0.37",
     "@deck.gl/geo-layers": "^9.0.37",

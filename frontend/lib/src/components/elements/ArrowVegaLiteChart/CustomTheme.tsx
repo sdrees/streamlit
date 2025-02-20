@@ -121,7 +121,7 @@ export function applyStreamlitTheme(config: any, theme: EmotionTheme): any {
       columns: 1,
     },
     mark: {
-      tooltip: true,
+      tooltip: { content: "encoding" },
       color: getBlue80(theme),
     },
     bar: {

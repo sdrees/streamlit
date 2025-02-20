@@ -51,6 +51,7 @@ import IsSidebarContext from "~lib/components/core/IsSidebarContext"
 import ErrorBoundary from "~lib/components/shared/ErrorBoundary"
 import { InlineTooltipIcon } from "~lib/components/shared/TooltipIcon"
 import {
+  convertRemToPx,
   EmotionTheme,
   getMarkdownBgColors,
   getMarkdownTextColors,
@@ -169,7 +170,8 @@ const HeaderActionElements: FunctionComponent<HeadingActionElements> = ({
       {help && <InlineTooltipIcon content={help} />}
       {elementId && !hideAnchor && (
         <StyledLinkIcon href={`#${elementId}`}>
-          <LinkIcon size={theme.iconSizes.base} />
+          {/* Convert size to px because using rem works but logs a console error (at least on webkit) */}
+          <LinkIcon size={convertRemToPx(theme.iconSizes.base)} />
         </StyledLinkIcon>
       )}
     </StyledHeadingActionElements>

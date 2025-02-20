@@ -91,6 +91,7 @@ export const StyledSendIconButton = styled.button<StyledSendIconButtonProps>(
         backgroundColor: theme.colors.transparent,
         borderColor: theme.colors.transparent,
         color: theme.colors.gray,
+        cursor: "not-allowed",
       },
     }
   }

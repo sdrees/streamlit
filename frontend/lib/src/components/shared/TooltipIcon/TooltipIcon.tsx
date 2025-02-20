@@ -23,7 +23,7 @@ import Tooltip, { Placement } from "~lib/components/shared/Tooltip"
 import StreamlitMarkdown, {
   StreamlitMarkdownProps,
 } from "~lib/components/shared/StreamlitMarkdown"
-import { EmotionTheme } from "~lib/theme"
+import { convertRemToPx, EmotionTheme } from "~lib/theme"
 
 import {
   StyledLabelHelpInline,
@@ -68,7 +68,11 @@ function TooltipIcon({
         inline
       >
         {children || (
-          <HelpCircleIcon className="icon" size={theme.iconSizes.base} />
+          <HelpCircleIcon
+            className="icon"
+            /* Convert size to px because using rem works but logs a console error (at least on webkit) */
+            size={convertRemToPx(theme.iconSizes.base)}
+          />
         )}
       </Tooltip>
     </StyledTooltipIconWrapper>

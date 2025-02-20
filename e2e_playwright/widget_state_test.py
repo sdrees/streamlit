@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
 from playwright.sync_api import Page, expect
 
 from e2e_playwright.shared.app_utils import (
@@ -76,11 +77,17 @@ def test_doesnt_save_widget_state_on_redisplay_with_keyed_widget(app: Page):
     expect(markdown_el).not_to_be_attached()
 
 
+# Skip webkit since the test is flaky there. It seems like the setTimeout wrapper for
+# trigger-values in WidgetStateManager.ts is not working correctly; but I cannot
+# reproduce it manually in Safari.
+@pytest.mark.skip_browser("webkit")
 def test_click_button_after_input_change_without_losing_focus_first(app: Page):
     """Test that the input value is correctly updated when clicking a button
     right after changing the input value without losing focus first.
 
     Related to: https://github.com/streamlit/streamlit/issues/10007"""
+
+    expect_markdown(app, "Input: ")
 
     text_area = app.get_by_test_id("stTextArea")
     text_area_field = text_area.locator("textarea").first

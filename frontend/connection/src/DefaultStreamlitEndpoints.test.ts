@@ -329,7 +329,7 @@ describe("DefaultStreamlitEndpoints", () => {
           MOCK_FILE,
           "mockSessionId"
         )
-      ).rejects.toEqual(new Error("Request failed with status code 400"))
+      ).rejects.toThrow("Request failed with status code 400")
     })
   })
 
@@ -444,7 +444,7 @@ describe("DefaultStreamlitEndpoints", () => {
 
       await expect(
         endpoints.fetchCachedForwardMsg("mockHash")
-      ).rejects.toEqual(new Error("Request failed with status code 400"))
+      ).rejects.toThrow("Request failed with status code 400")
     })
   })
 

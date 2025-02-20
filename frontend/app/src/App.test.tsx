@@ -2562,6 +2562,11 @@ describe("App", () => {
   })
 
   describe("App.handleConnectionStateChanged", () => {
+    beforeEach(() => {
+      // Clean all mocks
+      vi.clearAllMocks()
+    })
+
     it("sends WEBSOCKET_CONNECTED and WEBSOCKET_DISCONNECTED messages", () => {
       renderApp(getProps())
 
@@ -2797,6 +2802,9 @@ describe("App", () => {
         widgetStateManager,
         "sendUpdateWidgetsMessage"
       )
+      // Somehow the spy still registers one previous call to the function.
+      // To work around this, we clear the spy
+      sendUpdateWidgetsMessageSpy.mockClear()
 
       act(() => {
         getMockConnectionManagerProp("connectionStateChanged")(

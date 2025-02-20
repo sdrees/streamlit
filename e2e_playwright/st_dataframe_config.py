@@ -93,7 +93,7 @@ st.header("Text column:")
 st.dataframe(
     pd.DataFrame(
         {
-            "col_0": ["Hello World", "Lorem ipsum", "", None],
+            "col_0": ["Hello World", "{'foo': 'bar', 'baz': 123}", "", None],
             "col_1": [1, 2, 3, None],
         }
     ),
@@ -110,6 +110,7 @@ st.dataframe(
         ),
         "col_1": st.column_config.TextColumn(),
     },
+    hide_index=True,
 )
 
 st.header("Number column:")
@@ -665,6 +666,55 @@ st.dataframe(
         # We cannot reliably test distance via e2e tests because it wouldn't
         # stay stable.
         # "distance": st.column_config.DatetimeColumn(format="distance"),
+    },
+    hide_index=True,
+)
+
+st.header("Json column:")
+
+st.dataframe(
+    pd.DataFrame(
+        {
+            "dict": [
+                {"name": "test", "value": 123},
+                {"name": "test2", "value": 456},
+                {},
+                None,
+            ],
+            "string json": [
+                '{"name": {"foo": "bar"}, "value": 456}',
+                '{"name": "test", "value": 123}',
+                "",
+                None,
+            ],
+            "list": [
+                ["Foo", "Bar", "Baz"],
+                ["Hello", "World"],
+                [],
+                None,
+            ],
+            "string list": [
+                "[1, 2, 3]",
+                "[4, 5]",
+                "[]",
+                None,
+            ],
+            "incompatible values": [
+                "{hello world}",
+                "foo",
+                "{ this is no JSON!",
+                None,
+            ],
+        }
+    ),
+    column_config={
+        "dict": st.column_config.JsonColumn(width="medium"),
+        # We explicitly don't set the string json column to json
+        # to test the behavior that text based columns should auto activate
+        # the json renderer.
+        "list": st.column_config.JsonColumn(width="medium"),
+        "string list": st.column_config.JsonColumn(width="medium"),
+        "incompatible values": st.column_config.JsonColumn(width="medium"),
     },
     hide_index=True,
 )

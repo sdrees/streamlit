@@ -405,7 +405,7 @@ export function getCellFromArrow(
   cssStyles: string | undefined = undefined
 ): GridCell {
   let cellTemplate
-  if (column.kind === "object") {
+  if (column.kind === "object" || column.kind === "json") {
     // Always use display value from Quiver for object types
     // these are special types that the dataframe only support in read-only mode.
 

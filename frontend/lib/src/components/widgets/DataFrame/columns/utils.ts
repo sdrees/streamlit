@@ -328,6 +328,20 @@ export function toSafeArray(data: any): any[] {
 }
 
 /**
+ * Efficient check to determine if a string is looks like a JSON string.
+ *
+ * This is only a heuristic check and does not guarantee that the string is a
+ * valid JSON string.
+ *
+ * @param data - The data to check.
+ *
+ * @returns `true` if the data might be a JSON string.
+ */
+export function isMaybeJson(data: any): boolean {
+  return data && data.startsWith("{") && data.endsWith("}")
+}
+
+/**
  * Converts the given value of unknown type to a string without
  * the risks of any exceptions.
  *
@@ -424,6 +438,37 @@ export function toSafeNumber(value: any): number | null {
   }
 
   return Number(value)
+}
+
+/**
+ * Tries to convert a given value of unknown type to a JSON string without
+ * the risks of any exceptions.
+ *
+ * @param value - The value to convert to a JSON string.
+ *
+ * @returns The converted JSON string or a string showing the type of the object as fallback.
+ */
+export function toJsonString(value: any): string {
+  if (isNullOrUndefined(value)) {
+    return ""
+  }
+
+  if (typeof value === "string") {
+    // If the value is already a string, return it as-is
+    return value
+  }
+
+  try {
+    // Try to convert the value to a JSON string
+    return JSON.stringify(value, (_key, val) =>
+      // BigInt are not supported by JSON.stringify
+      // so we convert them to a number as fallback
+      typeof val === "bigint" ? Number(val) : val
+    )
+  } catch (error) {
+    // If the value cannot be converted to a JSON string, return the stringified value
+    return toSafeString(value)
+  }
 }
 
 /**

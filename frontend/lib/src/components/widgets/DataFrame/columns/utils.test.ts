@@ -34,6 +34,7 @@ import {
   mergeColumnParameters,
   removeLineBreaks,
   toGlideColumn,
+  toJsonString,
   toSafeArray,
   toSafeBoolean,
   toSafeDate,
@@ -726,4 +727,41 @@ describe("getLinkDisplayValueFromRegex", () => {
       expect(getLinkDisplayValueFromRegex(regex, href)).toBe(expected)
     }
   )
+})
+
+describe("toJsonString", () => {
+  it.each([
+    // Simple values
+    ["hello", "hello"],
+    [123, "123"],
+    [true, "true"],
+    [false, "false"],
+    [null, ""],
+    [undefined, ""],
+    // Arrays
+    [[1, 2, 3], "[1,2,3]"],
+    [["a", "b", "c"], '["a","b","c"]'],
+    [[1, "a", true], '[1,"a",true]'],
+    // Objects
+    [{ a: 1, b: 2 }, '{"a":1,"b":2}'],
+    [{ name: "test", active: true }, '{"name":"test","active":true}'],
+    // Nested structures
+    [{ arr: [1, 2, { x: "y" }] }, '{"arr":[1,2,{"x":"y"}]}'],
+    // BigInt handling
+    [BigInt(123), "123"],
+    [{ big: BigInt(9007199254740991) }, '{"big":9007199254740991}'],
+    // Already stringified JSON
+    ['{"test":123}', '{"test":123}'],
+    // Circular reference (should use toSafeString fallback)
+    [
+      (() => {
+        const circular: any = { a: 1 }
+        circular.self = circular
+        return circular
+      })(),
+      "[object Object]",
+    ],
+  ])("converts %o to JSON string %s", (input: any, expected: string) => {
+    expect(toJsonString(input)).toBe(expected)
+  })
 })

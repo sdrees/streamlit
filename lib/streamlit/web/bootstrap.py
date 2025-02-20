@@ -340,10 +340,14 @@ def run(
     async def main():
         await run_server()
 
-    # Check if we're already in an event loop
-    if asyncio.get_event_loop().is_running():
-        # Use `asyncio.create_task` if we're in an async context
-        asyncio.create_task(main())
-    else:
-        # Otherwise, use `asyncio.run`
+    try:
+        # Check if we're already in an event loop
+        if asyncio.get_running_loop().is_running():
+            # Use `asyncio.create_task` if we're in an async context
+            asyncio.create_task(main())
+        else:
+            # Otherwise, use `asyncio.run`
+            asyncio.run(main())
+    except RuntimeError:
+        # get_running_loop throws RuntimeError if no running event loop
         asyncio.run(main())

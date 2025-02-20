@@ -34,7 +34,7 @@ def Page(
     icon: str | None = None,
     url_path: str | None = None,
     default: bool = False,
-):
+) -> StreamlitPage:
     """Configure a page for ``st.navigation`` in a multipage app.
 
     Call ``st.Page`` to initialize a ``StreamlitPage`` object, and pass it to

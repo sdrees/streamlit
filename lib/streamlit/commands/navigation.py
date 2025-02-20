@@ -15,12 +15,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Callable, Literal
 
 from typing_extensions import TypeAlias
 
 from streamlit import config
 from streamlit.errors import StreamlitAPIException
+from streamlit.navigation.page import StreamlitPage
 from streamlit.proto.ForwardMsg_pb2 import ForwardMsg
 from streamlit.proto.Navigation_pb2 import Navigation as NavigationProto
 from streamlit.runtime.metrics_util import gather_metrics
@@ -30,10 +31,32 @@ from streamlit.runtime.scriptrunner_utils.script_run_context import (
 )
 
 if TYPE_CHECKING:
-    from streamlit.navigation.page import StreamlitPage
     from streamlit.source_util import PageHash, PageInfo
 
 SectionHeader: TypeAlias = str
+
+
+def convert_to_streamlit_page(
+    page_input: str | Path | Callable[[], None] | StreamlitPage,
+) -> StreamlitPage:
+    """Convert various input types to StreamlitPage objects."""
+    if isinstance(page_input, StreamlitPage):
+        return page_input
+
+    if isinstance(page_input, str):
+        return StreamlitPage(page_input)
+
+    if isinstance(page_input, Path):
+        return StreamlitPage(page_input)
+
+    if callable(page_input):
+        # Convert function to StreamlitPage
+        return StreamlitPage(page_input)
+
+    raise StreamlitAPIException(
+        f"Invalid page type: {type(page_input)}. Must be either a string path, "
+        "a pathlib.Path, a callable function, or a st.Page object."
+    )
 
 
 def pages_from_nav_sections(
@@ -55,7 +78,8 @@ def send_page_not_found(ctx: ScriptRunContext):
 
 @gather_metrics("navigation")
 def navigation(
-    pages: list[StreamlitPage] | dict[SectionHeader, list[StreamlitPage]],
+    pages: list[str | Path | Callable[[], None] | StreamlitPage]
+    | dict[SectionHeader, list[str | Path | Callable[[], None] | StreamlitPage]],
     *,
     position: Literal["sidebar", "hidden"] = "sidebar",
     expanded: bool = False,
@@ -63,161 +87,142 @@ def navigation(
     """
     Configure the available pages in a multipage app.
 
-    Call ``st.navigation`` in your entrypoint file with one or more pages
-    defined by ``st.Page``. ``st.navigation`` returns the current page, which
-    can be executed using ``.run()`` method.
+    Call ``st.navigation`` in your entrypoint file to define the structure and navigation
+    of your multipage application. The function accepts pages defined as file paths,
+    callable functions, or StreamlitPage objects. It returns the current page, which
+    can be executed using the ``.run()`` method.
 
-    When using ``st.navigation``, your entrypoint file (the file passed to
-    ``streamlit run``) acts like a router or frame of common elements around
-    each of your pages. Streamlit executes the entrypoint file with every app
-    rerun. To execute the current page, you must call the ``.run()`` method on
+    When using ``st.navigation``, your entrypoint file acts as a router or frame
+    containing common elements for all pages. Streamlit executes the entrypoint file
+    with every app rerun. To execute the current page, call the ``.run()`` method on
     the ``StreamlitPage`` object returned by ``st.navigation``.
 
-    The set of available pages can be updated with each rerun for dynamic
-    navigation. By default, ``st.navigation`` draws the available pages in the
-    side navigation if there is more than one page. This behavior can be
-    changed using the ``position`` keyword argument.
+    The set of available pages can be dynamically updated with each rerun.
+    By default, the navigation menu appears in the sidebar if there is more than
+    one page. This behavior can be modified using the ``position`` parameter.
 
-    As soon as any session of your app executes the ``st.navigation`` command,
-    your app will ignore the ``pages/`` directory (across all sessions).
+    Note: When any session of your app executes ``st.navigation``, the app will
+    ignore the ``pages/`` directory across all sessions.
 
     Parameters
     ----------
-    pages : list[StreamlitPage] or dict[str, list[StreamlitPage]]
-        The available pages for the app.
+    pages : Union[List[Union[str, Path, Callable, StreamlitPage]], Dict[str, List[Union[str, Path, Callable, StreamlitPage]]]]
+        The available pages for the app. Can be specified in several ways:
 
-        To create labeled sections or page groupings within the navigation
-        menu, ``pages`` must be a dictionary. Each key is the label of a
-        section and each value is the list of ``StreamlitPage`` objects for
-        that section.
+        As a list:
+        - List of file paths as strings or Path objects (e.g., ["page1.py", Path("page2.py")])
+        - List of callable functions (e.g., [page1_func, page2_func])
+        - List of StreamlitPage objects (e.g., [st.Page("page1.py"), st.Page(page2_func)])
+        - Mixed list of the above types
 
-        To create a navigation menu with no sections or page groupings,
-        ``pages`` must be a list of ``StreamlitPage`` objects.
+        As a dictionary for grouped sections:
+        - Keys are section labels
+        - Values are lists containing any combination of the above types
 
-        Use ``st.Page`` to create ``StreamlitPage`` objects.
+        Example dictionary:
+        {
+            "Section 1": ["page1.py", Path("page2.py"), page3_func],
+            "Section 2": [st.Page("page3.py")]
+        }
 
-    position : "sidebar" or "hidden"
-        The position of the navigation menu. If ``position`` is ``"sidebar"``
-        (default), the navigation widget appears at the top of the sidebar. If
-        ``position`` is ``"hidden"``, the navigation widget is not displayed.
-
-        If there is only one page in ``pages``, the navigation will be hidden
-        for any value of ``position``.
+    position : Literal["sidebar", "hidden"]
+        Controls the navigation menu position:
+        - "sidebar" (default): Places the navigation at the top of the sidebar
+        - "hidden": Hides the navigation widget
+        Note: Navigation is always hidden when there's only one page.
 
     expanded : bool
-        Whether the navigation menu should be expanded. If this is ``False``
-        (default), the navigation menu will be collapsed and will include a
-        button to view more options when there are too many pages to display.
-        If this is ``True``, the navigation menu will always be expanded; no
-        button to collapse the menu will be displayed.
-
-        If ``st.navigation`` changes from ``expanded=True`` to
-        ``expanded=False`` on a rerun, the menu will stay expanded and a
-        collapse button will be displayed.
+        Controls the navigation menu's expansion state:
+        - False (default): Menu starts collapsed with a "more" button
+        - True: Menu stays permanently expanded
+        Note: When changing from True to False, the menu remains expanded
+        but displays a collapse button.
 
     Returns
     -------
     StreamlitPage
-        The current page selected by the user.
+        The currently selected page object that can be executed with .run()
 
     Examples
     --------
-    The following examples show possible entrypoint files, which is the file
-    you pass to ``streamlit run``. Your entrypoint file manages your app's
-    navigation and serves as a router between pages.
-
-    **Example 1: Use a callable or Python file as a page**
-
-    You can declare pages from callables or file paths.
-
-    ``page_1.py`` (in the same directory as your entrypoint file):
-
+    Basic usage with file paths:
     >>> import streamlit as st
+    >>> pages = ["home.py", "about.py", "contact.py"]
+    >>> page = st.navigation(pages)
+    >>> page.run()
+
+    Using functions as pages:
+    >>> def home():
+    ...     st.title("Home")
+    >>> def about():
+    ...     st.title("About")
     >>>
-    >>> st.title("Page 1")
+    >>> pages = [home, about]
+    >>> page = st.navigation(pages)
+    >>> page.run()
 
-    Your entrypoint file:
-
-    >>> import streamlit as st
-    >>>
-    >>> def page_2():
-    ...     st.title("Page 2")
-    >>>
-    >>> pg = st.navigation([st.Page("page_1.py"), st.Page(page_2)])
-    >>> pg.run()
-
-    .. output::
-        https://doc-navigation-example-1.streamlit.app/
-        height: 200px
-
-    **Example 2: Group pages into sections**
-
-    You can use a dictionary to create sections within your navigation menu. In
-    the following example, each page is similar to Page 1 in Example 1, and all
-    pages are in the same directory. However, you can use Python files from
-    anywhere in your repository. For more information, see |st.Page|_.
-
-    Directory structure:
-
-    >>> your_repository/
-    >>> ├── create_account.py
-    >>> ├── learn.py
-    >>> ├── manage_account.py
-    >>> ├── streamlit_app.py
-    >>> └── trial.py
-
-    ``streamlit_app.py``:
-
-    >>> import streamlit as st
-    >>>
+    Mixed usage with sections:
     >>> pages = {
-    ...     "Your account": [
-    ...         st.Page("create_account.py", title="Create your account"),
-    ...         st.Page("manage_account.py", title="Manage your account"),
-    ...     ],
-    ...     "Resources": [
-    ...         st.Page("learn.py", title="Learn about us"),
-    ...         st.Page("trial.py", title="Try it out"),
-    ...     ],
+    ...     "Main": ["home.py", about_func],Page
+    ...     "Info": [st.Page("help.py", title="Help Center")],
     ... }
-    >>>
-    >>> pg = st.navigation(pages)
-    >>> pg.run()
+    >>> page = st.navigation(pages)
+    >>> page.run()
 
-    .. output::
-        https://doc-navigation-example-2.streamlit.app/
-        height: 300px
-
-    **Example 3: Stateful widgets across multiple pages**
-
-    Call widget functions in your entrypoint file when you want a widget to be
-    stateful across pages. Assign keys to your common widgets and access their
-    values through Session State within your pages.
-
-    >>> import streamlit as st
-    >>>
+    Stateful widgets across pages:
     >>> def page1():
-    >>>     st.write(st.session_state.foo)
-    >>>
+    ...     st.write(st.session_state.user_name)
     >>> def page2():
-    >>>     st.write(st.session_state.bar)
+    ...     st.write(st.session_state.user_email)
     >>>
-    >>> # Widgets shared by all the pages
-    >>> st.sidebar.selectbox("Foo", ["A", "B", "C"], key="foo")
-    >>> st.sidebar.checkbox("Bar", key="bar")
+    >>> # Common widgets in entrypoint
+    >>> st.text_input("Name", key="user_name")
+    >>> st.text_input("Email", key="user_email")
     >>>
-    >>> pg = st.navigation([st.Page(page1), st.Page(page2)])
-    >>> pg.run()
+    >>> page = st.navigation([page1, page2])
+    >>> page.run()
 
-    .. output::
-        https://doc-navigation-multipage-widgets.streamlit.app/
-        height: 350px
+    Using Path objects:
+    >>> from pathlib import Path
+    >>> pages = [Path("home.py"), Path("about.py")]
+    >>> page = st.navigation(pages)
+    >>> page.run()
 
-    .. |st.Page| replace:: ``st.Page``
-    .. _st.Page: https://docs.streamlit.io/develop/api-reference/navigation/st.page
+    Mixed usage with Path and sections:
+    >>> pages = {
+    ...     "Main": [Path("home.py"), about_func],
+    ...     "Info": [st.Page(Path("help.py"), title="Help Center")],
+    ... }
+    >>> page = st.navigation(pages)
+    >>> page.run()
 
+    Raises
+    ------
+    StreamlitAPIException
+        In the following cases:
+        - No pages provided
+        - Multiple pages set as default
+        - Duplicate URL pathnames
+        - Invalid page type provided
+
+    Notes
+    -----
+    - File paths can be relative or absolute
+    - Function names are used as default page titles
+    - URL pathnames must be unique across all pages
+    - Only one page can be set as default
+    - The first page is automatically set as default if none specified
+    - Common widgets should be defined in the entrypoint file for state sharing
     """
-    nav_sections = {"": pages} if isinstance(pages, list) else pages
+    if isinstance(pages, list):
+        converted_pages = [convert_to_streamlit_page(p) for p in pages]
+        nav_sections = {"": converted_pages}
+    else:
+        nav_sections = {
+            section: [convert_to_streamlit_page(p) for p in section_pages]
+            for section, section_pages in pages.items()
+        }
+
     page_list = pages_from_nav_sections(nav_sections)
 
     if not page_list:

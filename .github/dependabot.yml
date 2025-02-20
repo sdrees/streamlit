@@ -38,6 +38,9 @@ updates:
       - dependency-name: "react-dom"
         # Updating react will need some extra work.
         versions: [">=19.0.0"]
+      - dependency-name: "remark-gfm"
+        # Breaks our current markdown rendering logic.
+        versions: [">=4.0.0"]
 
   # Keep Pipfile up to date
   - package-ecosystem: "pip"

@@ -668,7 +668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@deck.gl/react@npm:9.0.37, @deck.gl/react@npm:^9.0.37":
+"@deck.gl/react@npm:9.0.37":
   version: 9.0.37
   resolution: "@deck.gl/react@npm:9.0.37"
   peerDependencies:
@@ -676,6 +676,18 @@ __metadata:
     react: ">=16.3.0"
     react-dom: ">=16.3.0"
   checksum: 10c0/72d8a35c2c8e3c726edb1c64690e2e0dca6a6f433fd85043e6afa634a3d191907a5012105244b1d93625c21dc4fd76a9172ec12d2a35b24a1e98043b7dc93f2c
+  languageName: node
+  linkType: hard
+
+"@deck.gl/react@npm:^9.1.2":
+  version: 9.1.2
+  resolution: "@deck.gl/react@npm:9.1.2"
+  peerDependencies:
+    "@deck.gl/core": ^9.1.0
+    "@deck.gl/widgets": ^9.1.0
+    react: ">=16.3.0"
+    react-dom: ">=16.3.0"
+  checksum: 10c0/bbd787810fefd2492c640557860e97795668107ed1bfb3ab84496e2ce381270f3cb25bd603958b3f832a545f5dfb32633dba80d01f583a46cb4f599038a2d346
   languageName: node
   linkType: hard
 
@@ -3145,7 +3157,7 @@ __metadata:
     "@deck.gl/json": "npm:^9.0.37"
     "@deck.gl/layers": "npm:^9.0.37"
     "@deck.gl/mesh-layers": "npm:^9.0.37"
-    "@deck.gl/react": "npm:^9.0.37"
+    "@deck.gl/react": "npm:^9.1.2"
     "@emotion-icons/emotion-icon": "npm:^4.1.0"
     "@emotion-icons/material-outlined": "npm:^3.14.0"
     "@emotion-icons/material-rounded": "npm:^3.14.0"

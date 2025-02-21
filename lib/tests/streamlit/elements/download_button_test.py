@@ -32,6 +32,7 @@ class DownloadButtonTest(DeltaGeneratorTestCase):
         self.assertEqual(c.label, "the label")
         self.assertEqual(c.type, "secondary")
         self.assertEqual(c.disabled, False)
+        self.assertEqual(c.ignore_rerun, False)
 
     def test_emoji_icon(self):
         """Test that it can be called with emoji icon."""
@@ -60,6 +61,13 @@ class DownloadButtonTest(DeltaGeneratorTestCase):
 
         c = self.get_delta_from_queue().new_element.download_button
         self.assertTrue("/media/" in c.url)
+
+    def test_sets_ignore_rerun(self):
+        """Test that it can be called with on_click="ignore"."""
+        st.download_button("the label", data="juststring", on_click="ignore")
+
+        c = self.get_delta_from_queue().new_element.download_button
+        self.assertEqual(c.ignore_rerun, True)
 
     @parameterized.expand(["primary", "secondary", "tertiary"])
     def test_type(self, type):

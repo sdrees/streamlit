@@ -64,9 +64,11 @@ function DownloadButton(props: Props): ReactElement {
   }
 
   const handleDownloadClick: () => void = () => {
+    if (!element.ignoreRerun) {
+      widgetMgr.setTriggerValue(element, { fromUi: true }, fragmentId)
+    }
     // Downloads are only done on links, so create a hidden one and click it
     // for the user.
-    widgetMgr.setTriggerValue(element, { fromUi: true }, fragmentId)
     const link = createDownloadLink(
       endpoints,
       element.url,

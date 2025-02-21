@@ -558,6 +558,27 @@ def test_row_hover_highlight(themed_app: Page, assert_snapshot: ImageCompareFunc
     assert_snapshot(df, name="st_dataframe-row_hover_highlight")
 
 
+def test_autosize_column_via_ui(app: Page, assert_snapshot: ImageCompareFunction):
+    """Test that a column can be autosized via the UI via the column menu."""
+    df = app.get_by_test_id("stDataFrame").nth(0)
+    expect_canvas_to_be_visible(df)
+
+    initial_canvas_bounding_box = df.locator("canvas").first.bounding_box()
+    assert initial_canvas_bounding_box is not None
+
+    # Open the column menu of the index column and autosize the column:
+    open_column_menu(df, 0, "small")
+    app.get_by_test_id("stDataFrameColumnMenu").get_by_text("Autosize").click()
+    unfocus_dataframe(app)
+    # Take a screenshot of the dataframe with the autosized column:
+    assert_snapshot(df, name="st_dataframe-autosized_column")
+
+    autosized_canvas_bounding_box = df.locator("canvas").first.bounding_box()
+    assert autosized_canvas_bounding_box is not None
+    # Ensure that the new bounding box is smaller than the initial bounding box
+    assert initial_canvas_bounding_box["width"] > autosized_canvas_bounding_box["width"]
+
+
 def test_sorting_column_via_ui(app: Page, assert_snapshot: ImageCompareFunction):
     """Test that a column can be sorted via the UI by clicking on the column
     header and via the column menu."""

@@ -48,6 +48,8 @@ export interface ColumnMenuProps {
   onPinColumn: () => void
   // Callback to unpin the column
   onUnpinColumn: () => void
+  // Callback to autosize the column
+  onAutosize?: () => void
 }
 
 /**
@@ -61,6 +63,7 @@ function ColumnMenu({
   onUnpinColumn,
   onCloseMenu,
   onSortColumn,
+  onAutosize,
 }: ColumnMenuProps): ReactElement {
   const theme: EmotionTheme = useTheme()
   const { colors, fontSizes, radii, fontWeights } = theme
@@ -130,6 +133,22 @@ function ColumnMenu({
               </StyledMenuListItem>
               <StyledMenuDivider />
             </>
+          )}
+          {onAutosize && (
+            <StyledMenuListItem
+              onClick={() => {
+                onAutosize()
+                closeMenu()
+              }}
+            >
+              <DynamicIcon
+                size={"base"}
+                margin="0"
+                color="inherit"
+                iconValue=":material/fit_width:"
+              />
+              Autosize
+            </StyledMenuListItem>
           )}
           {isColumnPinned && (
             <StyledMenuListItem

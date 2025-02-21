@@ -82,7 +82,7 @@
     "mdast-util-find-and-replace": "^2.2.2",
     "moment": "^2.30.1",
     "moment-duration-format": "^2.3.2",
-    "moment-timezone": "^0.5.45",
+    "moment-timezone": "^0.5.47",
     "native-file-system-adapter": "^3.0.1",
     "node-emoji": "^1.11.0",
     "numbro": "^2.5.0",

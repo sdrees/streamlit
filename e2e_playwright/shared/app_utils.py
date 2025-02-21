@@ -533,10 +533,21 @@ def expect_help_tooltip(
     expect(tooltip_content).to_have_text(tooltip_text)
 
     # reset the hovering in case this method is called multiple times in the same test
-    app.get_by_test_id("stApp").hover(
+    reset_hovering(app)
+    expect(tooltip_content).not_to_be_attached()
+
+
+def reset_hovering(locator: Locator | Page):
+    """Reset the hovering of the app.
+
+    This can be used to ensure that there aren't unexpected UI elements visible
+    based on the current mouse position.
+    """
+    page = locator.page if isinstance(locator, Locator) else locator
+
+    page.get_by_test_id("stApp").hover(
         position={"x": 0, "y": 0}, no_wait_after=True, force=True
     )
-    expect(tooltip_content).not_to_be_attached()
 
 
 def expect_script_state(

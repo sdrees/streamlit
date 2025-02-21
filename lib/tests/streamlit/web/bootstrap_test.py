@@ -441,3 +441,12 @@ class BootstrapRunTest(IsolatedAsyncioTestCase):
                 bootstrap.run("", False, [], {}, stop_immediately_for_testing=True)
 
             event_loop.run_until_complete(_run())
+
+    def test_bootstrap_run_without_existing_event_loop(self):
+        import asyncio
+
+        # Remove the existing event loop
+        asyncio.set_event_loop(None)
+
+        with testutil.patch_config_options({"server.headless": True}):
+            bootstrap.run("", False, [], {}, stop_immediately_for_testing=True)

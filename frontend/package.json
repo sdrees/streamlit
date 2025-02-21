@@ -1,6 +1,6 @@
 {
   "name": "streamlit",
-  "version": "1.42.1",
+  "version": "1.42.2",
   "private": true,
   "workspaces": [
     "app",
@@ -19,6 +19,7 @@
   "resolutions": {
     "nwsapi": "2.2.9",
     "d3-color": "^3.1.0",
+    "dompurify": "^3.2.4",
     "@protobufjs/inquire@npm:^1.1.0": "patch:@protobufjs/inquire@npm%3A1.1.0#~/.yarn/patches/@protobufjs-inquire-npm-1.1.0-3c7759e9ce.patch"
   },
   "browserslist": [

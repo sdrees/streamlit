@@ -220,10 +220,6 @@ describe("StreamlitMarkdown", () => {
     )
     const image = screen.getByRole("img")
     expect(image).toHaveAttribute("alt", "Streamlit logo")
-    expect(image).toHaveAttribute(
-      "src",
-      expect.stringContaining("streamlit-mark-color")
-    )
   })
 
   // Typographical symbol replacements

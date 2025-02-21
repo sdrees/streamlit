@@ -56,6 +56,7 @@ ColumnType: TypeAlias = Literal[
     "area_chart",
     "image",
     "progress",
+    "json",
 ]
 
 
@@ -149,6 +150,10 @@ class ProgressColumnConfig(TypedDict):
     max_value: NotRequired[int | float | None]
 
 
+class JsonColumnConfig(TypedDict):
+    type: Literal["json"]
+
+
 class ColumnConfig(TypedDict, total=False):
     """Configuration options for columns in ``st.dataframe`` and ``st.data_editor``.
 
@@ -232,6 +237,7 @@ class ColumnConfig(TypedDict, total=False):
         | BarChartColumnConfig
         | AreaChartColumnConfig
         | ImageColumnConfig
+        | JsonColumnConfig
         | None
     )
 
@@ -2066,4 +2072,86 @@ def ProgressColumn(
             min_value=min_value,
             max_value=max_value,
         ),
+    )
+
+
+@gather_metrics("column_config.JsonColumn")
+def JsonColumn(
+    label: str | None = None,
+    *,
+    width: ColumnWidth | None = None,
+    help: str | None = None,
+    pinned: bool | None = None,
+) -> ColumnConfig:
+    """Configure a JSON column in ``st.dataframe`` or ``st.data_editor``.
+
+    Cells need to contain a JSON string or JSON-compatible objects.
+    JSON columns are not editable at the moment. This command needs to be used in the
+    ``column_config`` parameter of ``st.dataframe`` or ``st.data_editor``.
+
+    Parameters
+    ----------
+
+    label: str or None
+        The label shown at the top of the column. If this is ``None``
+        (default), the column name is used.
+
+    width: "small", "medium", "large", or None
+        The display width of the column. If this is ``None`` (default), the
+        column will be sized to fit the cell contents. Otherwise, this can be
+        one of the following:
+
+        - ``"small"``: 75px wide
+        - ``"medium"``: 200px wide
+        - ``"large"``: 400px wide
+
+    help: str or None
+        An optional tooltip that gets displayed when hovering over the column
+        label. If this is ``None`` (default), no tooltip is displayed.
+
+    pinned: bool or None
+        Whether the column is pinned. A pinned column will stay visible on the
+        left side no matter where the user scrolls. If this is ``None``
+        (default), Streamlit will decide: index columns are pinned, and data
+        columns are not pinned.
+
+    Examples
+    --------
+
+    >>> import pandas as pd
+    >>> import streamlit as st
+    >>>
+    >>> data_df = pd.DataFrame(
+    >>>     {
+    >>>         "json": [
+    >>>             {"foo": "bar", "bar": "baz"},
+    >>>             {"foo": "baz", "bar": "qux"},
+    >>>             {"foo": "qux", "bar": "foo"},
+    >>>             None,
+    >>>         ],
+    >>>     }
+    >>> )
+    >>>
+    >>> st.dataframe(
+    >>>     data_df,
+    >>>     column_config={
+    >>>         "json": st.column_config.JsonColumn(
+    >>>             "JSON Data",
+    >>>             help="JSON strings or objects",
+    >>>             width="large",
+    >>>         ),
+    >>>     },
+    >>>     hide_index=True,
+    >>> )
+
+    .. output::
+        https://doc-json-column.streamlit.app/
+        height: 300px
+    """
+    return ColumnConfig(
+        label=label,
+        width=width,
+        help=help,
+        pinned=pinned,
+        type_config=JsonColumnConfig(type="json"),
     )

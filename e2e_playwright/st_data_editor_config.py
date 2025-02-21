@@ -87,7 +87,7 @@ st.caption(
 st.data_editor(
     pd.DataFrame(
         {
-            "col_0": ["Hello World", "Lorem ipsum", "", None],
+            "col_0": ["Hello World", '{"foo": "bar", "baz": 123}', "", None],
             "col_1": ["1", "2", "3", None],
         }
     ),
@@ -105,6 +105,7 @@ st.data_editor(
             validate="^[0-9]+$",
         ),
     },
+    hide_index=True,
 )
 
 st.header("Number column:")

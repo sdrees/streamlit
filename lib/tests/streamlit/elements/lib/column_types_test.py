@@ -22,6 +22,7 @@ from streamlit.elements.lib.column_types import (
     DateColumn,
     DatetimeColumn,
     ImageColumn,
+    JsonColumn,
     LineChartColumn,
     LinkColumn,
     ListColumn,
@@ -538,6 +539,31 @@ class ColumnTypesTest(unittest.TestCase):
                 "pinned": True,
                 "type_config": {
                     "type": "image",
+                },
+            },
+            "Should have all the properties defined.",
+        )
+
+    def test_json_column(self):
+        """Test JsonColumn creation."""
+
+        self.assertEqual(
+            remove_none_values(JsonColumn()),
+            {"type_config": {"type": "json"}},
+            "Should only have the type defined and nothing else.",
+        )
+
+        self.assertEqual(
+            remove_none_values(
+                JsonColumn("Col1", width="small", help="Help text", pinned=True)
+            ),
+            {
+                "label": "Col1",
+                "width": "small",
+                "help": "Help text",
+                "pinned": True,
+                "type_config": {
+                    "type": "json",
                 },
             },
             "Should have all the properties defined.",

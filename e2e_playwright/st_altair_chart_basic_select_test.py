@@ -76,40 +76,44 @@ def _get_selection_interval_scatter_chart(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(1)
 
 
-def _get_selection_point_bar_chart(app: Page) -> Locator:
+def _get_selection_interval_scatter_chart_tooltip(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(2)
 
 
-def _get_selection_interval_bar_chart(app: Page) -> Locator:
+def _get_selection_point_bar_chart(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(3)
 
 
-def _get_selection_point_area_chart(app: Page) -> Locator:
+def _get_selection_interval_bar_chart(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(4)
 
 
-def _get_selection_interval_area_chart(app: Page) -> Locator:
+def _get_selection_point_area_chart(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(5)
 
 
-def _get_selection_point_histogram(app: Page) -> Locator:
+def _get_selection_interval_area_chart(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(6)
 
 
-def _get_selection_interval_histogram(app: Page) -> Locator:
+def _get_selection_point_histogram(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(7)
 
 
-def _get_in_form_chart(app: Page) -> Locator:
+def _get_selection_interval_histogram(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(8)
 
 
-def _get_callback_chart(app: Page) -> Locator:
+def _get_in_form_chart(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(9)
 
 
-def _get_in_fragment_chart(app: Page) -> Locator:
+def _get_callback_chart(app: Page) -> Locator:
     return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(10)
+
+
+def _get_in_fragment_chart(app: Page) -> Locator:
+    return app.get_by_test_id("stVegaLiteChart").locator("canvas").nth(11)
 
 
 def test_point_bar_chart_displays_selection_text(app: Page):
@@ -242,6 +246,43 @@ def test_interval_selection_scatter_chart_displays_selection_snapshot(
     expect_prefixed_markdown(app, expected_prefix, expected_selection)
 
     assert_snapshot(chart, name="st_altair_chart-scatter_interval_selection")
+
+
+def test_interval_selection_scatter_chart_no_tooltip_in_selection(app: Page):
+    chart = _get_selection_interval_scatter_chart_tooltip(app)
+
+    # create selection
+    _create_selection_rectangle(
+        app, chart, _MousePosition(260, 110), _MousePosition(433, 220)
+    )
+
+    # hover over a point in the selection
+    chart.hover(position={"x": 300, "y": 150})
+
+    # get the tooltip
+    tooltip = app.locator("#vg-tooltip-element")
+
+    # check tooltip empty - doesn't have "true" as content (Issue #10448)
+    expect(tooltip).to_have_text("")
+
+
+def test_interval_selection_scatter_chart_tooltip_outside_selection(app: Page):
+    chart = _get_selection_interval_scatter_chart_tooltip(app)
+
+    # create selection
+    _create_selection_rectangle(
+        app, chart, _MousePosition(260, 110), _MousePosition(433, 220)
+    )
+
+    # hover over a point outside the selection
+    chart.hover(position={"x": 250, "y": 110})
+
+    # get the tooltip
+    tooltip = app.locator("#vg-tooltip-element")
+
+    # check the tooltip has expected content
+    expect(tooltip).to_contain_text("Horsepower")
+    expect(tooltip).to_contain_text("Miles_per_Gallon")
 
 
 def _test_shift_click_point_selection_scatter_chart_displays_selection(

@@ -38,6 +38,16 @@ updates:
       - dependency-name: "react-dom"
         # Updating react will need some extra work.
         versions: [">=19.0.0"]
+      - dependency-name: "remark-gfm"
+        # Breaks our current markdown rendering logic.
+        versions: [">=4.0.0"]
+      - dependency-name: "@typescript-eslint/eslint-plugin"
+        # It will take a bit more work to get this updated
+        # since it requires updates for other eslint dependencies as well
+        versions: [">=8.0.0"]
+      - dependency-name: "eslint"
+        # It will take a bit more work to get this updated
+        versions: [">=9.0.0"]
 
   # Keep Pipfile up to date
   - package-ecosystem: "pip"

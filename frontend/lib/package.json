@@ -119,7 +119,7 @@
     "vega-embed": "^6.26.0",
     "vega-interpreter": "^1.0.5",
     "vega-lite": "5.21.0",
-    "wavesurfer.js": "^7.8.10",
+    "wavesurfer.js": "^7.9.1",
     "xxhashjs": "^0.2.2"
   },
   "peerDependencies": {

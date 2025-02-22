@@ -262,6 +262,7 @@ export const DeckGlJsonChart: FC<DeckGLProps> = props => {
   )
 }
 
-export default memo(
-  withFullScreenWrapper(withMapboxToken("st.pydeck_chart")(DeckGlJsonChart))
+const DeckGlJsonChartWrapped = withFullScreenWrapper(
+  withMapboxToken("st.pydeck_chart")(DeckGlJsonChart)
 )
+export default memo(DeckGlJsonChartWrapped)

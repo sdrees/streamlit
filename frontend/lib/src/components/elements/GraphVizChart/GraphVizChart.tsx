@@ -102,4 +102,5 @@ function GraphVizChart({
   )
 }
 
-export default memo(withFullScreenWrapper(GraphVizChart))
+const GraphVizChartWithFullScreen = withFullScreenWrapper(GraphVizChart)
+export default memo(GraphVizChartWithFullScreen)

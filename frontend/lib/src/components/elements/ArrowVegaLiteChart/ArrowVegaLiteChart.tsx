@@ -119,4 +119,6 @@ const ArrowVegaLiteChart: FC<Props> = ({
   )
 }
 
-export default withFullScreenWrapper(ArrowVegaLiteChart)
+const ArrowVegaLiteChartWithFullScreen =
+  withFullScreenWrapper(ArrowVegaLiteChart)
+export default ArrowVegaLiteChartWithFullScreen

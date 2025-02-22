@@ -315,15 +315,42 @@ class CredentialsClassTest(unittest.TestCase):
         """Test that saving a new Credential sends an email"""
 
         with requests_mock.mock() as m:
-            m.post("https://api.segment.io/v1/t", status_code=200)
+            m.get(
+                "https://data.streamlit.io/metrics.json",
+                status_code=200,
+                json={"url": "https://www.example.com"},
+            )
+            m.post("https://www.example.com", status_code=200)
             creds: Credentials = Credentials.get_current()  # type: ignore
             creds._conf_file = str(Path(temp_dir.path) / "config.toml")
             creds.activation = _verify_email("email@example.com")
             creds.save()
+            # Check that metrics url fetched
+            first_request = m.request_history[0]
+            assert first_request.method == "GET"
+            assert first_request.url == "https://data.streamlit.io/metrics.json"
+            # Check that email sent to the url fetched
             last_request = m.request_history[-1]
             assert last_request.method == "POST"
-            assert last_request.url == "https://api.segment.io/v1/t"
+            assert last_request.url == "https://www.example.com/"
             assert '"userId": "email@example.com"' in last_request.text
+
+    @tempdir()
+    def test_email_failed_metrics_fetch(self, temp_dir):
+        """Test that saving a new Credential does not send an email if metrics fetch fails"""
+
+        with requests_mock.mock() as m:
+            m.get("https://data.streamlit.io/metrics.json", status_code=404)
+            creds: Credentials = Credentials.get_current()
+            creds._conf_file = str(Path(temp_dir.path) / "config.toml")
+            creds.activation = _verify_email("email@example.com")
+            with self.assertLogs(
+                "streamlit.runtime.credentials", level="ERROR"
+            ) as mock_logger:
+                creds.save()
+                assert len(m.request_history) == 1
+                assert len(mock_logger.output) == 1
+                assert "Failed to fetch metrics URL" in mock_logger.output[0]
 
     @tempdir()
     def test_email_not_send(self, temp_dir):
@@ -332,7 +359,12 @@ class CredentialsClassTest(unittest.TestCase):
         """
 
         with requests_mock.mock() as m:
-            m.post("https://api.segment.io/v1/t", status_code=200)
+            m.get(
+                "https://data.streamlit.io/metrics.json",
+                status_code=200,
+                json={"url": "https://www.example.com"},
+            )
+            m.post("https://www.example.com", status_code=200)
             creds: Credentials = Credentials.get_current()  # type: ignore
             creds._conf_file = str(Path(temp_dir.path) / "config.toml")
             creds.activation = _verify_email("some_email")
@@ -346,7 +378,12 @@ class CredentialsClassTest(unittest.TestCase):
         endpoint
         """
         with requests_mock.mock() as m:
-            m.post("https://api.segment.io/v1/t", status_code=403)
+            m.get(
+                "https://data.streamlit.io/metrics.json",
+                status_code=200,
+                json={"url": "https://www.example.com"},
+            )
+            m.post("https://www.example.com", status_code=403)
             creds: Credentials = Credentials.get_current()  # type: ignore
             creds._conf_file = str(Path(temp_dir.path) / "config.toml")
             creds.activation = _verify_email("email@example.com")

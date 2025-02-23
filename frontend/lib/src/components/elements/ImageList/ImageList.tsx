@@ -157,4 +157,5 @@ function ImageList({
   )
 }
 
-export default memo(withFullScreenWrapper(ImageList))
+const ImageListWithFullScreen = withFullScreenWrapper(ImageList)
+export default memo(ImageListWithFullScreen)
